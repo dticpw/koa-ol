@@ -3,59 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Koa-OL - 探索、创造、分享">
-    <title>欢迎访问 Koa-OL</title>
-    <!-- 引用Scholar Parchment风格CSS -->
-    <link rel="stylesheet" href="style-scholar.css">
+    <meta name="description" content="Koa-OL Manager - 内容管理与搜索">
+    <title>Koa-OL Manager</title>
+    <link rel="stylesheet" href="style-manager.css">
 </head>
 <body>
-    <div class="container">
-        <!-- 头像 -->
-        <div class="avatar">📚</div>
-        
-        <!-- 主标题 -->
-        <h1>欢迎来到 Koa-OL</h1>
-        
-        <!-- 副标题 -->
-        <p class="subtitle">探索 · 创造 · 分享</p>
-        
-        <!-- 装饰分隔线 -->
-        <div class="divider"></div>
-        
-        <!-- 描述文字 -->
-        <p class="description">
-            这是一个展示我的作品、想法和项目的地方。在这里，我记录学习的足迹，分享创作的灵感，与志同道合的朋友交流思想。欢迎浏览我的内容，如果你有任何问题或想法，随时联系我！
-        </p>
-        
-        <!-- 按钮链接 -->
-        <div class="links">
-            <a href="#about" class="btn btn-primary">了解更多</a>
-            <a href="#contact" class="btn btn-secondary">联系我</a>
-        </div>
-        
-        <!-- 社交媒体链接 -->
-        <div class="social-links">
-            <p class="social-links-title">关注我</p>
-            <div class="social-icons">
-                <a href="#" title="GitHub" aria-label="GitHub">
-                    <span>💻</span>
-                </a>
-                <a href="#" title="Twitter" aria-label="Twitter">
-                    <span>🐦</span>
-                </a>
-                <a href="#" title="邮箱" aria-label="Email">
-                    <span>📧</span>
-                </a>
-                <a href="#" title="LinkedIn" aria-label="LinkedIn">
-                    <span>💼</span>
-                </a>
+    <div class="app-container">
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>Koa-OL</h1>
+                <p>内容管理工具</p>
             </div>
-        </div>
+            
+            <nav class="nav-section">
+                <div class="nav-label">操作</div>
+                <a href="#connect" class="nav-item">
+                    <span>🔗</span>
+                    连接
+                </a>
+                <a href="#import" class="nav-item">
+                    <span>📥</span>
+                    导入
+                </a>
+                <a href="#search" class="nav-item active">
+                    <span>🔍</span>
+                    查询
+                </a>
+                <a href="#manage" class="nav-item">
+                    <span>⚙️</span>
+                    管理
+                </a>
+            </nav>
+            
+            <div class="nav-section">
+                <div class="nav-label">连接状态</div>
+                <div style="padding: 0 24px;">
+                    <span class="status-badge status-connected">已连接</span>
+                </div>
+            </div>
+        </aside>
         
-        <!-- 页脚 -->
-        <div class="footer">
-            <p>© 2026 Koa-OL. 用心记录，认真生活。</p>
-        </div>
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2>内容搜索</h2>
+                <p>搜索和查询您存储的内容</p>
+            </div>
+            
+            <!-- 搜索表单卡片 -->
+            <div class="content-card">
+                <div class="form-section">
+                    <label class="form-label">搜索内容</label>
+                    <textarea 
+                        class="input" 
+                        placeholder="输入您要搜索的内容..."
+                        rows="3"
+                    >优秀CSS风格</textarea>
+                    <p class="form-hint">将与已存储的「查询键值」进行语义匹配</p>
+                </div>
+                
+                <div class="input-group">
+                    <div class="form-field">
+                        <label class="form-label">命名空间</label>
+                        <input 
+                            type="text" 
+                            class="input" 
+                            placeholder="留空使用默认"
+                        >
+                    </div>
+                    
+                    <div class="form-field">
+                        <label class="form-label">返回数量 (Top K)</label>
+                        <input 
+                            type="number" 
+                            class="input" 
+                            value="10"
+                        >
+                    </div>
+                </div>
+                
+                <div class="form-section" style="margin-top: 24px;">
+                    <label class="form-label">元数据过滤 (JSON, 可选)</label>
+                    <textarea 
+                        class="input" 
+                        placeholder='{"category": {"$eq": "article"}}'
+                        rows="3"
+                    ></textarea>
+                    <p class="form-hint">使用 Pinecone 过滤语法筛选结果</p>
+                </div>
+                
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="includeMetadata" checked>
+                    <label for="includeMetadata">在结果中包含元数据</label>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary">搜索</button>
+                    <button class="btn btn-secondary">清除内容</button>
+                </div>
+            </div>
+            
+            <!-- 搜索结果区域 -->
+            <div class="results-section">
+                <div class="result-card">
+                    <div class="result-header">
+                        <span class="result-title">css_1</span>
+                        <span class="result-score">相似度: 64.02%</span>
+                    </div>
+                    <p style="font-size: 15px; color: var(--text-secondary); margin-bottom: 16px;">
+                        优秀CSS风格 书卷气 羊皮纸 温暖白色系 UI
+                    </p>
+                    <div class="result-content">
+{
+  "_text": "优秀CSS风格 书卷气 羊皮纸 温暖白色系 UI",
+  "accent_hover": "#3d7a5f",
+  "accent_primary": "#2d5a47",
+  "accent_secondary": "#8b6914",
+  "bg_card": "#f5f2eb",
+  "bg_input": "#fffefa",
+  "bg_main": "#faf9f7",
+  "border_color": "#d4cfc4",
+  "description": "温暖白色系、书卷气、专业简洁的UI风格",
+  "title": "Scholar Parchment 风格"
+}
+                    </div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-header">
+                        <span class="result-title">css_2</span>
+                        <span class="result-score">相似度: 58.76%</span>
+                    </div>
+                    <p style="font-size: 15px; color: var(--text-secondary); margin-bottom: 16px;">
+                        现代简约 深色主题 科技感
+                    </p>
+                    <div class="result-content">
+{
+  "_text": "现代简约 深色主题 科技感",
+  "accent_primary": "#007bff",
+  "bg_main": "#1a1a1a",
+  "bg_card": "#2d2d2d",
+  "text_primary": "#ffffff",
+  "description": "现代科技感的深色UI主题"
+}
+                    </div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-header">
+                        <span class="result-title">css_3</span>
+                        <span class="result-score">相似度: 52.34%</span>
+                    </div>
+                    <p style="font-size: 15px; color: var(--text-secondary); margin-bottom: 16px;">
+                        清新自然 绿色系 环保主题
+                    </p>
+                    <div class="result-content">
+{
+  "_text": "清新自然 绿色系 环保主题",
+  "accent_primary": "#4caf50",
+  "bg_main": "#f1f8f4",
+  "text_primary": "#2e7d32",
+  "description": "清新自然的绿色环保主题"
+}
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 </body>
 </html>
