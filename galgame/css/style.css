@@ -1,0 +1,428 @@
+/* ========================================
+   Galgame 视觉小说 - 主样式表
+   ======================================== */
+
+/* CSS 变量定义 */
+:root {
+    --primary-color: #ff6b9d;
+    --primary-dark: #e91e63;
+    --secondary-color: #7c4dff;
+    --bg-dark: #0a0a12;
+    --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    --text-light: #f5f5f5;
+    --text-muted: #b0b0b0;
+    --dialog-bg: rgba(10, 10, 20, 0.92);
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --shadow-glow: 0 0 30px rgba(255, 107, 157, 0.3);
+    --font-main: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 重置和基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg-dark);
+    color: var(--text-light);
+    overflow: hidden;
+    min-height: 100vh;
+}
+
+/* 屏幕基础样式 */
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ========================================
+   标题界面
+   ======================================== */
+#title-screen {
+    background: var(--bg-gradient);
+    flex-direction: column;
+}
+
+.title-container {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    animation: fadeInUp 1.5s ease-out;
+}
+
+.title-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 107, 157, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulse 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.game-title {
+    font-size: 4.5rem;
+    font-weight: 300;
+    letter-spacing: 0.5rem;
+    background: linear-gradient(135deg, #fff 0%, var(--primary-color) 50%, var(--secondary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.game-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-muted);
+    letter-spacing: 0.3rem;
+    margin-bottom: 3rem;
+    font-weight: 300;
+}
+
+.menu-btn {
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    font-family: inherit;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-glow);
+    letter-spacing: 0.2rem;
+}
+
+.menu-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 40px rgba(255, 107, 157, 0.5);
+}
+
+.menu-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* 樱花飘落效果 */
+.sakura-petals {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.sakura-petals::before,
+.sakura-petals::after {
+    content: '🌸';
+    position: absolute;
+    font-size: 1.5rem;
+    animation: falling 10s linear infinite;
+    opacity: 0.6;
+}
+
+.sakura-petals::before {
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.sakura-petals::after {
+    left: 70%;
+    animation-delay: 5s;
+}
+
+/* ========================================
+   游戏界面
+   ======================================== */
+#game-screen {
+    background: #000;
+}
+
+/* 背景 */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.8s ease;
+}
+
+/* 角色立绘 */
+.character-container {
+    position: absolute;
+    bottom: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.character {
+    max-height: 100%;
+    max-width: 50%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.character.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* 对话框 */
+.dialog-box {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-height: 180px;
+    background: var(--dialog-bg);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem 3rem 2rem;
+    cursor: pointer;
+    display: none;
+}
+
+.dialog-box.active {
+    display: block;
+    animation: slideUp 0.3s ease-out;
+}
+
+.speaker-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.1rem;
+}
+
+.speaker-name:empty {
+    display: none;
+}
+
+.dialog-text {
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: var(--text-light);
+    max-width: 900px;
+}
+
+.click-indicator {
+    position: absolute;
+    bottom: 1rem;
+    right: 2rem;
+    color: var(--primary-color);
+    animation: bounce 1s ease-in-out infinite;
+    font-size: 0.9rem;
+}
+
+/* 选项容器 */
+.choices-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 10;
+}
+
+.choices-container.active {
+    display: flex;
+    animation: fadeIn 0.5s ease;
+}
+
+.choice-btn {
+    padding: 1.2rem 3rem;
+    font-size: 1.1rem;
+    font-family: inherit;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 300px;
+    text-align: center;
+}
+
+.choice-btn:hover {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-color: transparent;
+    transform: translateX(10px);
+    box-shadow: var(--shadow-glow);
+}
+
+/* ========================================
+   结局界面
+   ======================================== */
+#ending-screen {
+    background: var(--bg-gradient);
+}
+
+.ending-container {
+    text-align: center;
+    animation: fadeInUp 1s ease-out;
+}
+
+.ending-title {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #fff 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ending-text {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    line-height: 2;
+    max-width: 500px;
+}
+
+/* ========================================
+   动画
+   ======================================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes falling {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ========================================
+   响应式设计
+   ======================================== */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.8rem;
+        letter-spacing: 0.2rem;
+    }
+
+    .game-subtitle {
+        font-size: 1rem;
+    }
+
+    .dialog-box {
+        padding: 1rem 1.5rem 1.5rem;
+        min-height: 150px;
+    }
+
+    .dialog-text {
+        font-size: 1rem;
+    }
+
+    .choice-btn {
+        min-width: 250px;
+        padding: 1rem 2rem;
+    }
+
+    .character {
+        max-width: 80%;
+    }
+}

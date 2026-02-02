@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="一个轻量级视觉小说游戏 - 邂逅与心动的故事">
+    <title>邂逅物语 | Galgame</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 主菜单界面 -->
+    <div id="title-screen" class="screen active">
+        <div class="title-container">
+            <div class="title-glow"></div>
+            <h1 class="game-title">邂逅物语</h1>
+            <p class="game-subtitle">～ 两段心动的相遇 ～</p>
+            <button id="start-btn" class="menu-btn">开始游戏</button>
+        </div>
+        <div class="sakura-petals"></div>
+    </div>
+
+    <!-- 游戏主界面 -->
+    <div id="game-screen" class="screen">
+        <!-- 背景层 -->
+        <div id="background" class="background"></div>
+        
+        <!-- 角色立绘层 -->
+        <div id="character-container" class="character-container">
+            <img id="character" class="character" src="" alt="">
+        </div>
+        
+        <!-- 对话框层 -->
+        <div id="dialog-box" class="dialog-box">
+            <div class="speaker-name" id="speaker-name"></div>
+            <div class="dialog-text" id="dialog-text"></div>
+            <div class="click-indicator">▼</div>
+        </div>
+        
+        <!-- 选项层 -->
+        <div id="choices-container" class="choices-container"></div>
+    </div>
+
+    <!-- 结局界面 -->
+    <div id="ending-screen" class="screen">
+        <div class="ending-container">
+            <h2 id="ending-title" class="ending-title"></h2>
+            <p id="ending-text" class="ending-text"></p>
+            <button id="restart-btn" class="menu-btn">返回标题</button>
+        </div>
+    </div>
+
+    <script src="js/story.js"></script>
+    <script src="js/engine.js"></script>
+</body>
+</html>
