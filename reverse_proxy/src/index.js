@@ -55,12 +55,23 @@ async function handleChatRequest(request, env) {
       return jsonResponse({ error: 'API 密钥未配置' }, 500);
     }
 
+    // 调试信息：检查密钥格式（不输出密钥本身）
+    const apiKey = env.ANTHROPIC_API_KEY.trim();
+    const keyLength = apiKey.length;
+    const keyPrefix = apiKey.substring(0, 7);
+
+    console.log('API Key Debug:', {
+      length: keyLength,
+      prefix: keyPrefix,
+      startsWithSkAnt: apiKey.startsWith('sk-ant-')
+    });
+
     // 转发请求到 Anthropic API
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
