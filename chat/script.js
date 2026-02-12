@@ -1,5 +1,5 @@
 // API 配置
-const API_URL = '/api/chat';
+const API_URL = 'https://koa-ol.com/api/chat';
 
 // 对话历史
 let conversationHistory = [];
