@@ -1,0 +1,12 @@
+name = "koa-ol-api-proxy"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# Worker 路由配置
+routes = [
+  { pattern = "koa-ol.com/api/*", zone_name = "koa-ol.com" }
+]
+
+# 环境变量（需要在 Cloudflare Dashboard 设置）
+[vars]
+# ANTHROPIC_API_KEY 需要通过 wrangler secret 命令设置
