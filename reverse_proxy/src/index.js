@@ -14,7 +14,7 @@ export default {
 
     // 只处理 /api/ 路径
     if (!url.pathname.startsWith('/api/')) {
-      return new Response('Not Found', { status: 404 });
+      return jsonResponse({ error: 'Not Found' }, 404);
     }
 
     // 处理聊天请求
@@ -22,7 +22,7 @@ export default {
       return handleChatRequest(request, env);
     }
 
-    return new Response('Not Found', { status: 404 });
+    return jsonResponse({ error: 'Not Found' }, 404);
   }
 };
 
