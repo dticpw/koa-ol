@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Chat with Claude - 与 Claude 对话">
-    <title>Chat with Claude | Koa-OL</title>
+    <meta name="description" content="Chat with Claude - 与 Claude 对话（调试模式）">
+    <title>Chat with Claude | Koa-OL [DEBUG]</title>
     <style>
         :root {
             --bg-main: #faf9f7;
@@ -26,28 +26,10 @@
             color: var(--text);
             line-height: 1.6;
         }
-        h1 { color: var(--accent); margin: 0 0 8px 0; }
+        h1 { color: var(--accent); margin: 0 0 8px 0; cursor: pointer; }
         .subtitle { color: var(--text-secondary); margin: 0 0 24px 0; font-size: 14px; }
+        .banner { background: #fff4e5; border: 1px solid #f0c674; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 13px; color: #7a5100; }
 
-        /* 密码门 */
-        #gate {
-            text-align: center;
-            padding: 60px 20px;
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-        #gate input {
-            padding: 12px 16px;
-            font-size: 16px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            width: 280px;
-            margin: 16px 8px 0 0;
-            background: var(--bg-input);
-        }
-
-        /* 聊天界面 */
         #messages {
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -70,7 +52,6 @@
         .role { font-weight: 600; font-size: 12px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
         .empty-state { color: var(--text-secondary); text-align: center; padding: 80px 20px; }
 
-        /* 输入区 */
         #input-row { display: flex; gap: 10px; }
         #input {
             flex: 1;
@@ -97,119 +78,79 @@
         button:hover:not(:disabled) { background: var(--accent-hover); }
         button:disabled { background: #bbb; cursor: not-allowed; }
 
-        .status {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin: 10px 2px 0;
-            min-height: 18px;
-        }
+        .status { font-size: 13px; color: var(--text-secondary); margin: 10px 2px 0; min-height: 18px; }
         .error { color: #c1393d; }
+
+        /* 错误详情面板 */
+        #debug-panel {
+            margin-top: 12px;
+            background: #fff5f5;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: #721c24;
+            display: none;
+        }
+        #debug-panel pre {
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 8px 0 0;
+            font-size: 12px;
+            line-height: 1.45;
+        }
         .hint { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
     </style>
 </head>
 <body>
 
-    <!-- 密码门 -->
-    <div id="gate">
-        <h1>🔐 Chat with Claude</h1>
-        <p class="subtitle">请输入访问密码</p>
-        <div>
-            <input id="pwd" type="password" placeholder="密码" autocomplete="off" />
-            <button id="enter-btn">进入</button>
+    <div class="banner">⚙️ 调试模式：当前已关闭密码保护。正式使用前务必重新启用。</div>
+
+    <h1 id="title">💬 Chat with Claude</h1>
+    <p class="subtitle">Model: claude-sonnet-4-5 &nbsp;·&nbsp; 会话历史仅保存在本地浏览器 &nbsp;·&nbsp; 点标题清空对话</p>
+
+    <div id="messages">
+        <div class="empty-state" id="empty-state">
+            还没有消息。在下方输入框开始对话吧 ～
         </div>
-        <p id="gate-status" class="status"></p>
     </div>
 
-    <!-- 聊天界面 -->
-    <div id="chat" style="display: none;">
-        <h1>💬 Chat with Claude</h1>
-        <p class="subtitle">Model: claude-sonnet-4-5 &nbsp;·&nbsp; 会话历史仅保存在本地浏览器</p>
-
-        <div id="messages">
-            <div class="empty-state" id="empty-state">
-                还没有消息。在下方输入框开始对话吧 ～
-            </div>
-        </div>
-
-        <div id="input-row">
-            <textarea id="input" rows="2" placeholder="输入消息... (Ctrl+Enter 发送)"></textarea>
-            <button id="send-btn">发送</button>
-        </div>
-        <p class="status" id="status"></p>
-        <p class="hint">提示：点击左上角标题可清空对话</p>
+    <div id="input-row">
+        <textarea id="input" rows="2" placeholder="输入消息... (Ctrl+Enter 发送)"></textarea>
+        <button id="send-btn">发送</button>
     </div>
+    <p class="status" id="status"></p>
+
+    <div id="debug-panel">
+        <strong>⚠️ 详细错误信息（方便排查 503）</strong>
+        <pre id="debug-content"></pre>
+    </div>
+
+    <p class="hint">Tips：错误时会在下方展开详细信息。按 F12 也能在 Console / Network 里看完整响应。</p>
 
     <script>
-        // ====== 状态 ======
-        let password = '';
         let history = []; // [{role: 'user'|'assistant', content: string}]
-
-        // ====== DOM ======
-        const gate = document.getElementById('gate');
-        const chat = document.getElementById('chat');
-        const pwdInput = document.getElementById('pwd');
-        const enterBtn = document.getElementById('enter-btn');
-        const gateStatus = document.getElementById('gate-status');
 
         const messagesEl = document.getElementById('messages');
         const emptyState = document.getElementById('empty-state');
         const input = document.getElementById('input');
         const sendBtn = document.getElementById('send-btn');
         const statusEl = document.getElementById('status');
+        const debugPanel = document.getElementById('debug-panel');
+        const debugContent = document.getElementById('debug-content');
+        const titleEl = document.getElementById('title');
 
-        // ====== 密码门 ======
-        enterBtn.onclick = async () => {
-            const pwd = pwdInput.value.trim();
-            if (!pwd) return;
-            enterBtn.disabled = true;
-            gateStatus.textContent = '验证中...';
-            gateStatus.className = 'status';
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        password: pwd,
-                        messages: [{ role: 'user', content: 'ping' }],
-                    }),
-                });
-                if (res.status === 401) {
-                    gateStatus.textContent = '❌ 密码错误';
-                    gateStatus.className = 'status error';
-                    enterBtn.disabled = false;
-                    return;
-                }
-                if (!res.ok) {
-                    const data = await res.json().catch(() => ({}));
-                    gateStatus.textContent = '⚠️ 验证失败: ' + (data.error || res.statusText);
-                    gateStatus.className = 'status error';
-                    enterBtn.disabled = false;
-                    return;
-                }
-                // 成功
-                password = pwd;
-                gate.style.display = 'none';
-                chat.style.display = 'block';
-                input.focus();
-            } catch (e) {
-                gateStatus.textContent = '⚠️ 连接失败: ' + e.message;
-                gateStatus.className = 'status error';
-                enterBtn.disabled = false;
-            }
-        };
-        pwdInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') enterBtn.click();
-        });
-
-        // ====== 聊天 ======
-        document.querySelector('#chat h1').onclick = () => {
+        titleEl.onclick = () => {
             if (confirm('清空当前对话？')) {
                 history = [];
+                debugPanel.style.display = 'none';
                 render();
             }
         };
-        document.querySelector('#chat h1').style.cursor = 'pointer';
 
         function render() {
             messagesEl.innerHTML = '';
@@ -236,32 +177,56 @@
 
             history.push({ role: 'user', content: text });
             input.value = '';
+            debugPanel.style.display = 'none';
             render();
             sendBtn.disabled = true;
             statusEl.textContent = 'Claude 思考中...';
             statusEl.className = 'status';
 
+            let res, rawText;
             try {
-                const res = await fetch('/api/chat', {
+                res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password, messages: history }),
+                    body: JSON.stringify({ messages: history }),
                 });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || res.statusText);
-
-                history.push({ role: 'assistant', content: data.reply });
-                render();
-                statusEl.textContent = '';
+                rawText = await res.text();
             } catch (e) {
-                statusEl.textContent = '❌ ' + e.message;
+                statusEl.textContent = '❌ 请求未发出：' + e.message;
                 statusEl.className = 'status error';
-                history.pop(); // 撤回最后一条 user 消息
+                debugContent.textContent = String(e);
+                debugPanel.style.display = 'block';
+                history.pop();
                 render();
-            } finally {
+                sendBtn.disabled = false;
+                return;
+            }
+
+            let data = null;
+            try { data = JSON.parse(rawText); } catch { /* 不是 JSON */ }
+
+            if (!res.ok) {
+                statusEl.textContent = `❌ HTTP ${res.status} ${res.statusText}`;
+                statusEl.className = 'status error';
+                debugContent.textContent = data
+                    ? JSON.stringify(data, null, 2)
+                    : rawText.slice(0, 2000) + (rawText.length > 2000 ? '\n...(截断)' : '');
+                debugPanel.style.display = 'block';
+                history.pop();
+                render();
                 sendBtn.disabled = false;
                 input.focus();
+                return;
             }
+
+            // 成功
+            history.push({ role: 'assistant', content: data.reply || '(空回复)' });
+            render();
+            statusEl.textContent = data._debug
+                ? `✓ ${data._debug.elapsed_ms}ms · model: ${data._debug.model || 'unknown'}`
+                : '';
+            sendBtn.disabled = false;
+            input.focus();
         }
 
         sendBtn.onclick = send;
@@ -271,6 +236,7 @@
                 send();
             }
         });
+        input.focus();
     </script>
 
 </body>

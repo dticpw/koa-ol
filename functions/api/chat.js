@@ -1,13 +1,10 @@
 // Cloudflare Pages Function: POST /api/chat
-// 功能：
-//   1. 校验请求中的访问密码（和环境变量 CHAT_PASSWORD 对比）
-//   2. 代理到 Anthropic Claude API（API Key 从环境变量 ANTHROPIC_API_KEY 读取）
-//   3. 返回 Claude 的回复给前端
+// 调试版：暂时无密码校验；错误信息尽量详细便于定位 503
 
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  // --- 1. 解析并校验请求体 ---
+  // --- 1. 解析请求体 ---
   let body;
   try {
     body = await request.json();
@@ -15,58 +12,86 @@ export async function onRequestPost(context) {
     return json({ error: 'Invalid JSON' }, 400);
   }
 
-  const { password, messages } = body;
-
-  if (password !== env.CHAT_PASSWORD) {
-    return json({ error: 'Unauthorized' }, 401);
-  }
+  const { messages } = body;
 
   if (!Array.isArray(messages) || messages.length === 0) {
     return json({ error: 'messages must be a non-empty array' }, 400);
   }
 
-  // --- 2. 调用 Claude API ---
-  const claudePayload = {
-    model: 'claude-sonnet-4-5',
-    max_tokens: 1024,
-    messages: messages.map(m => ({
-      role: m.role,
-      content: m.content,
-    })),
-  };
-
-  // 支持自定义 BASE_URL（用于代理 / 镜像 / 第三方中转服务）
-  // 约定：BASE_URL 只填主机名（末尾不加 /v1），代码会自动拼 /v1/messages
+  // --- 2. 拼接上游 URL ---
   const baseUrl = (env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/+$/, '');
   const apiUrl = `${baseUrl}/v1/messages`;
 
+  const claudePayload = {
+    model: 'claude-sonnet-4-5',
+    max_tokens: 1024,
+    messages: messages.map(m => ({ role: m.role, content: m.content })),
+  };
+
+  // --- 3. 调上游 ---
   let apiResponse;
+  const requestStart = Date.now();
   try {
     apiResponse = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': env.ANTHROPIC_API_KEY,
+        'x-api-key': env.ANTHROPIC_API_KEY ?? '',
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify(claudePayload),
     });
   } catch (err) {
-    return json({ error: `Network error (${apiUrl}): ${String(err)}` }, 502);
+    // 网络层错误：DNS 失败、TLS 失败、connection refused 等
+    return json({
+      error: 'Upstream fetch threw',
+      stage: 'network',
+      apiUrl,
+      elapsed_ms: Date.now() - requestStart,
+      detail: String(err),
+    }, 502);
   }
 
+  const elapsed = Date.now() - requestStart;
+
+  // --- 4. 上游回 non-2xx 时，把 body 完整透给我们 ---
   if (!apiResponse.ok) {
-    const errText = await apiResponse.text();
-    return json({ error: `Claude API ${apiResponse.status}: ${errText}` }, apiResponse.status);
+    let upstreamText = '';
+    try {
+      upstreamText = await apiResponse.text();
+    } catch (e) {
+      upstreamText = `<无法读取 body: ${e}>`;
+    }
+    return json({
+      error: 'Upstream returned non-2xx',
+      stage: 'upstream_status',
+      apiUrl,
+      upstream_status: apiResponse.status,
+      upstream_statusText: apiResponse.statusText,
+      upstream_content_type: apiResponse.headers.get('content-type'),
+      upstream_body_preview: upstreamText.slice(0, 2000),
+      elapsed_ms: elapsed,
+    }, apiResponse.status);
   }
 
-  const data = await apiResponse.json();
-  const replyText = data.content?.[0]?.text ?? '';
+  // --- 5. 成功 ---
+  let data;
+  try {
+    data = await apiResponse.json();
+  } catch (e) {
+    return json({
+      error: 'Upstream returned non-JSON',
+      stage: 'parse',
+      apiUrl,
+      elapsed_ms: elapsed,
+      detail: String(e),
+    }, 502);
+  }
 
-  return json({ reply: replyText });
+  const replyText = data.content?.[0]?.text ?? '';
+  return json({ reply: replyText, _debug: { elapsed_ms: elapsed, model: data.model } });
 }
 
-// 允许浏览器预检（OPTIONS），虽然同源部署不需要，但留着保险
 export async function onRequestOptions() {
   return new Response(null, {
     headers: {
@@ -78,7 +103,7 @@ export async function onRequestOptions() {
 }
 
 function json(obj, status = 200) {
-  return new Response(JSON.stringify(obj), {
+  return new Response(JSON.stringify(obj, null, 2), {
     status,
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
   });
