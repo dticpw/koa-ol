@@ -54,6 +54,51 @@
         .msg .file-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.04); border-radius: 6px; padding: 4px 10px; margin: 4px 0; font-size: 13px; }
         .empty-state { color: var(--text-secondary); text-align: center; padding: 80px 20px; }
 
+        /* 代码块渲染（可下载） */
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 12px;
+            background: #2d2d2d;
+            border-bottom: 1px solid #3e3e3e;
+        }
+        .code-lang { color: #9b9b9b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .code-actions { display: flex; gap: 6px; }
+        .code-btn {
+            background: #3c3c3c;
+            color: #d4d4d4;
+            border: 1px solid #4e4e4e;
+            border-radius: 4px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .code-btn:hover { background: #4e4e4e; }
+        .code-body {
+            padding: 12px 14px;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 4;
+            margin: 0;
+            background: transparent;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+        }
+        .msg .text-segment { white-space: pre-wrap; }
+
         /* 附件区 */
         #attachments {
             display: none;
@@ -181,6 +226,31 @@
             text:     1 * 1024 * 1024,   // 1 MB
         };
 
+        // 语言 → 文件扩展名映射（用于下载命名）
+        const LANG_EXT = {
+            python: 'py', py: 'py',
+            javascript: 'js', js: 'js',
+            typescript: 'ts', ts: 'ts',
+            tsx: 'tsx', jsx: 'jsx',
+            html: 'html', css: 'css', scss: 'scss',
+            json: 'json',
+            yaml: 'yml', yml: 'yml', toml: 'toml',
+            bash: 'sh', shell: 'sh', sh: 'sh', zsh: 'sh',
+            markdown: 'md', md: 'md',
+            sql: 'sql', xml: 'xml',
+            go: 'go', golang: 'go',
+            rust: 'rs', rs: 'rs',
+            java: 'java', kotlin: 'kt',
+            cpp: 'cpp', 'c++': 'cpp', c: 'c', h: 'h',
+            ruby: 'rb', rb: 'rb',
+            php: 'php',
+            swift: 'swift',
+            csharp: 'cs', 'c#': 'cs', cs: 'cs',
+            dockerfile: 'Dockerfile',
+            vue: 'vue', svelte: 'svelte',
+            r: 'r',
+        };
+
         // ================= 状态 =================
         // history 里存储的 content 可能是 string（纯文本）或 array（多模态）
         // 渲染和发送时都兼容两种格式
@@ -233,6 +303,116 @@
                 reader.onerror = () => reject(reader.error);
                 reader.readAsText(file);
             });
+        }
+
+        // ============= 代码块解析 + 下载 =============
+        // 把含 ```lang\n...\n``` 的文本切成 [{type:'text'|'code', ...}]
+        function parseCodeBlocks(text) {
+            const segments = [];
+            const regex = /```([\w+#.-]*)\n?([\s\S]*?)```/g;
+            let lastIndex = 0;
+            let m;
+            while ((m = regex.exec(text)) !== null) {
+                if (m.index > lastIndex) {
+                    segments.push({ type: 'text', content: text.slice(lastIndex, m.index) });
+                }
+                segments.push({
+                    type: 'code',
+                    lang: (m[1] || '').toLowerCase(),
+                    content: m[2].replace(/\n$/, ''),
+                });
+                lastIndex = regex.lastIndex;
+            }
+            if (lastIndex < text.length) {
+                segments.push({ type: 'text', content: text.slice(lastIndex) });
+            }
+            return segments;
+        }
+
+        function downloadText(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function suggestFilename(lang, content) {
+            // 尝试从代码注释里嗅探文件名，比如 "# file: app.py" 或 "// File: App.tsx"
+            const firstLine = (content.split('\n')[0] || '').trim();
+            const hint = firstLine.match(/(?:file|filename|@file)[:：\s]+([\w./-]+\.[\w]+)/i);
+            if (hint) return hint[1];
+
+            const ext = LANG_EXT[lang] || (lang ? lang : 'txt');
+            const ts = new Date().toTimeString().slice(0, 8).replace(/:/g, '');
+            return `snippet-${ts}.${ext}`;
+        }
+
+        function renderCodeBlock(seg, container) {
+            const box = document.createElement('div');
+            box.className = 'code-block';
+
+            const header = document.createElement('div');
+            header.className = 'code-header';
+
+            const lang = document.createElement('span');
+            lang.className = 'code-lang';
+            lang.textContent = seg.lang || 'text';
+            header.appendChild(lang);
+
+            const actions = document.createElement('div');
+            actions.className = 'code-actions';
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'code-btn';
+            copyBtn.textContent = '📋 Copy';
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(seg.content).then(() => {
+                    copyBtn.textContent = '✓ Copied';
+                    setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 1500);
+                }).catch(() => {
+                    copyBtn.textContent = '❌ Failed';
+                });
+            };
+            actions.appendChild(copyBtn);
+
+            const dlBtn = document.createElement('button');
+            dlBtn.className = 'code-btn';
+            dlBtn.textContent = '⬇ Download';
+            dlBtn.onclick = () => {
+                const filename = suggestFilename(seg.lang, seg.content);
+                downloadText(seg.content, filename);
+            };
+            actions.appendChild(dlBtn);
+
+            header.appendChild(actions);
+            box.appendChild(header);
+
+            const body = document.createElement('pre');
+            body.className = 'code-body';
+            body.textContent = seg.content;
+            box.appendChild(body);
+
+            container.appendChild(box);
+        }
+
+        function renderTextWithCodeBlocks(text, container) {
+            const segments = parseCodeBlocks(text);
+            for (const seg of segments) {
+                if (seg.type === 'text') {
+                    if (seg.content.length === 0) continue;
+                    const p = document.createElement('div');
+                    p.className = 'text-segment';
+                    p.textContent = seg.content;
+                    container.appendChild(p);
+                } else if (seg.type === 'code') {
+                    renderCodeBlock(seg, container);
+                }
+            }
         }
 
         function classifyFile(file) {
@@ -399,15 +579,13 @@
         function renderMessageContent(content, container) {
             // content 可能是 string 或 array of blocks
             if (typeof content === 'string') {
-                container.appendChild(document.createTextNode(content));
+                renderTextWithCodeBlocks(content, container);
                 return;
             }
             // array 形式
             for (const block of content) {
                 if (block.type === 'text') {
-                    const p = document.createElement('div');
-                    p.textContent = block.text;
-                    container.appendChild(p);
+                    renderTextWithCodeBlocks(block.text, container);
                 } else if (block.type === 'image') {
                     const img = document.createElement('img');
                     img.className = 'attached';
