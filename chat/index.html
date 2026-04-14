@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chat with Claude - 与 Claude 对话">
+    <title>Chat with Claude | Koa-OL</title>
+    <style>
+        :root {
+            --bg-main: #faf9f7;
+            --bg-card: #ffffff;
+            --bg-input: #fffefa;
+            --accent: #2d5a47;
+            --accent-hover: #3d7a5f;
+            --border: #d4cfc4;
+            --text: #1a1a1a;
+            --text-secondary: #6b6b6b;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 24px;
+            background: var(--bg-main);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        h1 { color: var(--accent); margin: 0 0 8px 0; }
+        .subtitle { color: var(--text-secondary); margin: 0 0 24px 0; font-size: 14px; }
+
+        /* 密码门 */
+        #gate {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        #gate input {
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 280px;
+            margin: 16px 8px 0 0;
+            background: var(--bg-input);
+        }
+
+        /* 聊天界面 */
+        #messages {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 420px;
+            max-height: 65vh;
+            overflow-y: auto;
+            background: var(--bg-card);
+            margin-bottom: 16px;
+        }
+        .msg {
+            margin: 14px 0;
+            padding: 14px 18px;
+            border-radius: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .msg.user { background: #e8f0ea; border-left: 3px solid var(--accent); }
+        .msg.assistant { background: #f5f2eb; border-left: 3px solid #8b6914; }
+        .role { font-weight: 600; font-size: 12px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .empty-state { color: var(--text-secondary); text-align: center; padding: 80px 20px; }
+
+        /* 输入区 */
+        #input-row { display: flex; gap: 10px; }
+        #input {
+            flex: 1;
+            padding: 14px;
+            font-size: 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-input);
+            resize: vertical;
+            font-family: inherit;
+            min-height: 54px;
+        }
+        button {
+            padding: 0 28px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        button:hover:not(:disabled) { background: var(--accent-hover); }
+        button:disabled { background: #bbb; cursor: not-allowed; }
+
+        .status {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 10px 2px 0;
+            min-height: 18px;
+        }
+        .error { color: #c1393d; }
+        .hint { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- 密码门 -->
+    <div id="gate">
+        <h1>🔐 Chat with Claude</h1>
+        <p class="subtitle">请输入访问密码</p>
+        <div>
+            <input id="pwd" type="password" placeholder="密码" autocomplete="off" />
+            <button id="enter-btn">进入</button>
+        </div>
+        <p id="gate-status" class="status"></p>
+    </div>
+
+    <!-- 聊天界面 -->
+    <div id="chat" style="display: none;">
+        <h1>💬 Chat with Claude</h1>
+        <p class="subtitle">Model: claude-sonnet-4-5 &nbsp;·&nbsp; 会话历史仅保存在本地浏览器</p>
+
+        <div id="messages">
+            <div class="empty-state" id="empty-state">
+                还没有消息。在下方输入框开始对话吧 ～
+            </div>
+        </div>
+
+        <div id="input-row">
+            <textarea id="input" rows="2" placeholder="输入消息... (Ctrl+Enter 发送)"></textarea>
+            <button id="send-btn">发送</button>
+        </div>
+        <p class="status" id="status"></p>
+        <p class="hint">提示：点击左上角标题可清空对话</p>
+    </div>
+
+    <script>
+        // ====== 状态 ======
+        let password = '';
+        let history = []; // [{role: 'user'|'assistant', content: string}]
+
+        // ====== DOM ======
+        const gate = document.getElementById('gate');
+        const chat = document.getElementById('chat');
+        const pwdInput = document.getElementById('pwd');
+        const enterBtn = document.getElementById('enter-btn');
+        const gateStatus = document.getElementById('gate-status');
+
+        const messagesEl = document.getElementById('messages');
+        const emptyState = document.getElementById('empty-state');
+        const input = document.getElementById('input');
+        const sendBtn = document.getElementById('send-btn');
+        const statusEl = document.getElementById('status');
+
+        // ====== 密码门 ======
+        enterBtn.onclick = async () => {
+            const pwd = pwdInput.value.trim();
+            if (!pwd) return;
+            enterBtn.disabled = true;
+            gateStatus.textContent = '验证中...';
+            gateStatus.className = 'status';
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: pwd,
+                        messages: [{ role: 'user', content: 'ping' }],
+                    }),
+                });
+                if (res.status === 401) {
+                    gateStatus.textContent = '❌ 密码错误';
+                    gateStatus.className = 'status error';
+                    enterBtn.disabled = false;
+                    return;
+                }
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    gateStatus.textContent = '⚠️ 验证失败: ' + (data.error || res.statusText);
+                    gateStatus.className = 'status error';
+                    enterBtn.disabled = false;
+                    return;
+                }
+                // 成功
+                password = pwd;
+                gate.style.display = 'none';
+                chat.style.display = 'block';
+                input.focus();
+            } catch (e) {
+                gateStatus.textContent = '⚠️ 连接失败: ' + e.message;
+                gateStatus.className = 'status error';
+                enterBtn.disabled = false;
+            }
+        };
+        pwdInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') enterBtn.click();
+        });
+
+        // ====== 聊天 ======
+        document.querySelector('#chat h1').onclick = () => {
+            if (confirm('清空当前对话？')) {
+                history = [];
+                render();
+            }
+        };
+        document.querySelector('#chat h1').style.cursor = 'pointer';
+
+        function render() {
+            messagesEl.innerHTML = '';
+            if (history.length === 0) {
+                messagesEl.appendChild(emptyState);
+                return;
+            }
+            for (const m of history) {
+                const div = document.createElement('div');
+                div.className = 'msg ' + m.role;
+                const role = document.createElement('div');
+                role.className = 'role';
+                role.textContent = m.role === 'user' ? '你' : 'Claude';
+                div.appendChild(role);
+                div.appendChild(document.createTextNode(m.content));
+                messagesEl.appendChild(div);
+            }
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        async function send() {
+            const text = input.value.trim();
+            if (!text) return;
+
+            history.push({ role: 'user', content: text });
+            input.value = '';
+            render();
+            sendBtn.disabled = true;
+            statusEl.textContent = 'Claude 思考中...';
+            statusEl.className = 'status';
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password, messages: history }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || res.statusText);
+
+                history.push({ role: 'assistant', content: data.reply });
+                render();
+                statusEl.textContent = '';
+            } catch (e) {
+                statusEl.textContent = '❌ ' + e.message;
+                statusEl.className = 'status error';
+                history.pop(); // 撤回最后一条 user 消息
+                render();
+            } finally {
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        sendBtn.onclick = send;
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                send();
+            }
+        });
+    </script>
+
+</body>
+</html>
