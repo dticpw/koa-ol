@@ -50,9 +50,43 @@
         .msg.user { background: #e8f0ea; border-left: 3px solid var(--accent); }
         .msg.assistant { background: #f5f2eb; border-left: 3px solid #8b6914; }
         .role { font-weight: 600; font-size: 12px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .msg img.attached { max-width: 100%; max-height: 280px; border-radius: 8px; margin: 6px 0; display: block; }
+        .msg .file-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.04); border-radius: 6px; padding: 4px 10px; margin: 4px 0; font-size: 13px; }
         .empty-state { color: var(--text-secondary); text-align: center; padding: 80px 20px; }
 
-        #input-row { display: flex; gap: 10px; }
+        /* 附件区 */
+        #attachments {
+            display: none;
+            margin-bottom: 10px;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+        }
+        #attachments.active { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .attachment-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f5f2eb;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+        .attachment-chip .remove-btn {
+            background: none;
+            border: none;
+            color: #c1393d;
+            cursor: pointer;
+            padding: 0 4px;
+            font-size: 16px;
+            line-height: 1;
+        }
+        .attachment-chip img.thumb { width: 36px; height: 36px; object-fit: cover; border-radius: 4px; }
+
+        /* 输入行 */
+        #input-row { display: flex; gap: 10px; align-items: stretch; }
         #input {
             flex: 1;
             padding: 14px;
@@ -65,7 +99,7 @@
             min-height: 54px;
         }
         button {
-            padding: 0 28px;
+            padding: 0 22px;
             background: var(--accent);
             color: white;
             border: none;
@@ -77,11 +111,12 @@
         }
         button:hover:not(:disabled) { background: var(--accent-hover); }
         button:disabled { background: #bbb; cursor: not-allowed; }
+        button.icon-btn { padding: 0 16px; background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
+        button.icon-btn:hover:not(:disabled) { background: #f0ece3; }
 
         .status { font-size: 13px; color: var(--text-secondary); margin: 10px 2px 0; min-height: 18px; }
         .error { color: #c1393d; }
 
-        /* 错误详情面板 */
         #debug-panel {
             margin-top: 12px;
             background: #fff5f5;
@@ -111,39 +146,248 @@
     <div class="banner">⚙️ 调试模式：当前已关闭密码保护。正式使用前务必重新启用。</div>
 
     <h1 id="title">💬 Chat with Claude</h1>
-    <p class="subtitle">Model: claude-sonnet-4-5 &nbsp;·&nbsp; 会话历史仅保存在本地浏览器 &nbsp;·&nbsp; 点标题清空对话</p>
+    <p class="subtitle">Model: claude-opus-4-6 &nbsp;·&nbsp; 支持图片 / PDF / 文本文件 &nbsp;·&nbsp; 点标题清空对话</p>
 
     <div id="messages">
         <div class="empty-state" id="empty-state">
-            还没有消息。在下方输入框开始对话吧 ～
+            还没有消息。点左下 📎 可附加文件 ～
         </div>
     </div>
 
+    <!-- 待发送的附件预览区 -->
+    <div id="attachments"></div>
+
     <div id="input-row">
+        <button id="attach-btn" class="icon-btn" title="附加文件（图片/PDF/文本）">📎</button>
+        <input id="file-input" type="file" hidden
+               accept="image/jpeg,image/png,image/gif,image/webp,application/pdf,text/plain,text/markdown,.md,.txt,.csv,.json,.js,.py,.html,.css">
         <textarea id="input" rows="2" placeholder="输入消息... (Ctrl+Enter 发送)"></textarea>
         <button id="send-btn">发送</button>
     </div>
     <p class="status" id="status"></p>
 
     <div id="debug-panel">
-        <strong>⚠️ 详细错误信息（方便排查 503）</strong>
+        <strong>⚠️ 详细错误信息</strong>
         <pre id="debug-content"></pre>
     </div>
 
-    <p class="hint">Tips：错误时会在下方展开详细信息。按 F12 也能在 Console / Network 里看完整响应。</p>
+    <p class="hint">Tips：附件会和你的文字一起发给 Claude。Claude 能"看"图片和 PDF 的内容。</p>
 
     <script>
-        let history = []; // [{role: 'user'|'assistant', content: string}]
+        // ================= 常量 =================
+        const LIMITS = {
+            image:    5 * 1024 * 1024,   // 5 MB
+            pdf:     10 * 1024 * 1024,   // 10 MB
+            text:     1 * 1024 * 1024,   // 1 MB
+        };
 
-        const messagesEl = document.getElementById('messages');
-        const emptyState = document.getElementById('empty-state');
-        const input = document.getElementById('input');
-        const sendBtn = document.getElementById('send-btn');
-        const statusEl = document.getElementById('status');
-        const debugPanel = document.getElementById('debug-panel');
+        // ================= 状态 =================
+        // history 里存储的 content 可能是 string（纯文本）或 array（多模态）
+        // 渲染和发送时都兼容两种格式
+        let history = [];
+        // 待发送的附件列表。每项形如:
+        //   { kind: 'image', name, size, mediaType, base64, previewUrl }
+        //   { kind: 'pdf',   name, size, mediaType, base64 }
+        //   { kind: 'text',  name, size, text }
+        let pendingAttachments = [];
+
+        // ================= DOM =================
+        const messagesEl   = document.getElementById('messages');
+        const emptyState   = document.getElementById('empty-state');
+        const input        = document.getElementById('input');
+        const sendBtn      = document.getElementById('send-btn');
+        const statusEl     = document.getElementById('status');
+        const debugPanel   = document.getElementById('debug-panel');
         const debugContent = document.getElementById('debug-content');
-        const titleEl = document.getElementById('title');
+        const titleEl      = document.getElementById('title');
+        const attachBtn    = document.getElementById('attach-btn');
+        const fileInput    = document.getElementById('file-input');
+        const attachmentsEl = document.getElementById('attachments');
 
+        // ================= 工具函数 =================
+        function humanSize(n) {
+            if (n < 1024) return n + ' B';
+            if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+            return (n / 1024 / 1024).toFixed(2) + ' MB';
+        }
+
+        // 把 DataURL 变成纯 base64（去掉 "data:image/png;base64," 前缀）
+        function stripDataUrlPrefix(dataUrl) {
+            const comma = dataUrl.indexOf(',');
+            return comma >= 0 ? dataUrl.slice(comma + 1) : dataUrl;
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload  = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload  = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsText(file);
+            });
+        }
+
+        function classifyFile(file) {
+            const mt = file.type;
+            if (mt.startsWith('image/')) {
+                if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(mt)) {
+                    throw new Error(`不支持的图片格式: ${mt}。支持 JPEG/PNG/GIF/WebP。`);
+                }
+                if (file.size > LIMITS.image) throw new Error(`图片超过 ${humanSize(LIMITS.image)} 限制`);
+                return 'image';
+            }
+            if (mt === 'application/pdf') {
+                if (file.size > LIMITS.pdf) throw new Error(`PDF 超过 ${humanSize(LIMITS.pdf)} 限制`);
+                return 'pdf';
+            }
+            // 其它按文本处理（纯文本/markdown/代码/csv/json）
+            if (file.size > LIMITS.text) throw new Error(`文本文件超过 ${humanSize(LIMITS.text)} 限制`);
+            return 'text';
+        }
+
+        // ================= 附件处理 =================
+        attachBtn.onclick = () => fileInput.click();
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            fileInput.value = ''; // 允许再次选同一个文件
+
+            try {
+                const kind = classifyFile(file);
+                statusEl.textContent = `读取中: ${file.name}...`;
+                statusEl.className = 'status';
+
+                if (kind === 'image') {
+                    const dataUrl = await readFileAsDataURL(file);
+                    pendingAttachments.push({
+                        kind: 'image',
+                        name: file.name,
+                        size: file.size,
+                        mediaType: file.type,
+                        base64: stripDataUrlPrefix(dataUrl),
+                        previewUrl: dataUrl,
+                    });
+                } else if (kind === 'pdf') {
+                    const dataUrl = await readFileAsDataURL(file);
+                    pendingAttachments.push({
+                        kind: 'pdf',
+                        name: file.name,
+                        size: file.size,
+                        mediaType: file.type,
+                        base64: stripDataUrlPrefix(dataUrl),
+                    });
+                } else {
+                    const text = await readFileAsText(file);
+                    pendingAttachments.push({
+                        kind: 'text',
+                        name: file.name,
+                        size: file.size,
+                        text: text,
+                    });
+                }
+
+                statusEl.textContent = '';
+                renderAttachments();
+            } catch (err) {
+                statusEl.textContent = '❌ ' + err.message;
+                statusEl.className = 'status error';
+            }
+        });
+
+        function renderAttachments() {
+            attachmentsEl.innerHTML = '';
+            if (pendingAttachments.length === 0) {
+                attachmentsEl.classList.remove('active');
+                return;
+            }
+            attachmentsEl.classList.add('active');
+
+            pendingAttachments.forEach((att, idx) => {
+                const chip = document.createElement('div');
+                chip.className = 'attachment-chip';
+
+                if (att.kind === 'image') {
+                    const thumb = document.createElement('img');
+                    thumb.className = 'thumb';
+                    thumb.src = att.previewUrl;
+                    chip.appendChild(thumb);
+                } else {
+                    const icon = document.createElement('span');
+                    icon.textContent = att.kind === 'pdf' ? '📄' : '📝';
+                    chip.appendChild(icon);
+                }
+
+                const info = document.createElement('span');
+                info.textContent = `${att.name} · ${humanSize(att.size)}`;
+                chip.appendChild(info);
+
+                const remove = document.createElement('button');
+                remove.className = 'remove-btn';
+                remove.textContent = '×';
+                remove.title = '移除';
+                remove.onclick = () => {
+                    pendingAttachments.splice(idx, 1);
+                    renderAttachments();
+                };
+                chip.appendChild(remove);
+
+                attachmentsEl.appendChild(chip);
+            });
+        }
+
+        // ================= 构造 messages content =================
+        function buildUserContent(userText, attachments) {
+            // 如果没附件 & 文本有内容 → 用字符串形式，保持简洁
+            if (attachments.length === 0) {
+                return userText;
+            }
+
+            // 有附件 → 构造 content block 数组
+            const blocks = [];
+            for (const att of attachments) {
+                if (att.kind === 'image') {
+                    blocks.push({
+                        type: 'image',
+                        source: {
+                            type: 'base64',
+                            media_type: att.mediaType,
+                            data: att.base64,
+                        },
+                    });
+                } else if (att.kind === 'pdf') {
+                    blocks.push({
+                        type: 'document',
+                        source: {
+                            type: 'base64',
+                            media_type: 'application/pdf',
+                            data: att.base64,
+                        },
+                    });
+                } else if (att.kind === 'text') {
+                    // 纯文本作为 text block 拼到 prompt 里
+                    blocks.push({
+                        type: 'text',
+                        text: `[以下是用户上传的文件 "${att.name}" 的内容]\n\n${att.text}\n\n[文件内容结束]`,
+                    });
+                }
+            }
+            // 用户自己的提问文本放最后
+            if (userText) {
+                blocks.push({ type: 'text', text: userText });
+            }
+            return blocks;
+        }
+
+        // ================= 渲染历史 =================
         titleEl.onclick = () => {
             if (confirm('清空当前对话？')) {
                 history = [];
@@ -151,6 +395,32 @@
                 render();
             }
         };
+
+        function renderMessageContent(content, container) {
+            // content 可能是 string 或 array of blocks
+            if (typeof content === 'string') {
+                container.appendChild(document.createTextNode(content));
+                return;
+            }
+            // array 形式
+            for (const block of content) {
+                if (block.type === 'text') {
+                    const p = document.createElement('div');
+                    p.textContent = block.text;
+                    container.appendChild(p);
+                } else if (block.type === 'image') {
+                    const img = document.createElement('img');
+                    img.className = 'attached';
+                    img.src = `data:${block.source.media_type};base64,${block.source.data}`;
+                    container.appendChild(img);
+                } else if (block.type === 'document') {
+                    const chip = document.createElement('div');
+                    chip.className = 'file-chip';
+                    chip.textContent = '📄 PDF 附件';
+                    container.appendChild(chip);
+                }
+            }
+        }
 
         function render() {
             messagesEl.innerHTML = '';
@@ -165,21 +435,27 @@
                 role.className = 'role';
                 role.textContent = m.role === 'user' ? '你' : 'Claude';
                 div.appendChild(role);
-                div.appendChild(document.createTextNode(m.content));
+                renderMessageContent(m.content, div);
                 messagesEl.appendChild(div);
             }
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
+        // ================= 发送 =================
         async function send() {
             const text = input.value.trim();
-            if (!text) return;
+            if (!text && pendingAttachments.length === 0) return;
 
-            history.push({ role: 'user', content: text });
+            const userContent = buildUserContent(text, pendingAttachments);
+            history.push({ role: 'user', content: userContent });
+
             input.value = '';
+            pendingAttachments = [];
+            renderAttachments();
             debugPanel.style.display = 'none';
             render();
             sendBtn.disabled = true;
+            attachBtn.disabled = true;
             statusEl.textContent = 'Claude 思考中...';
             statusEl.className = 'status';
 
@@ -199,6 +475,7 @@
                 history.pop();
                 render();
                 sendBtn.disabled = false;
+                attachBtn.disabled = false;
                 return;
             }
 
@@ -215,17 +492,18 @@
                 history.pop();
                 render();
                 sendBtn.disabled = false;
+                attachBtn.disabled = false;
                 input.focus();
                 return;
             }
 
-            // 成功
             history.push({ role: 'assistant', content: data.reply || '(空回复)' });
             render();
             statusEl.textContent = data._debug
                 ? `✓ ${data._debug.elapsed_ms}ms · model: ${data._debug.model || 'unknown'}`
                 : '';
             sendBtn.disabled = false;
+            attachBtn.disabled = false;
             input.focus();
         }
 
