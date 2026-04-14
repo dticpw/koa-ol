@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Stats | Koa-OL Admin</title>
+    <style>
+        :root {
+            --bg-main: #faf9f7;
+            --bg-card: #ffffff;
+            --accent: #2d5a47;
+            --accent-hover: #3d7a5f;
+            --border: #d4cfc4;
+            --text: #1a1a1a;
+            --text-secondary: #6b6b6b;
+            --ok: #2d5a47;
+            --warn: #a86100;
+            --err: #c1393d;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+            background: var(--bg-main);
+            color: var(--text);
+            line-height: 1.55;
+        }
+        h1 { color: var(--accent); margin: 0 0 8px 0; }
+        h2 { color: var(--accent); margin: 28px 0 12px; font-size: 18px; }
+        .subtitle { color: var(--text-secondary); margin: 0 0 20px; font-size: 14px; }
+
+        /* 密码门 */
+        #gate {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        #gate input {
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 280px;
+            margin: 16px 8px 0 0;
+        }
+        button {
+            padding: 10px 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        button:hover:not(:disabled) { background: var(--accent-hover); }
+        button:disabled { background: #bbb; cursor: not-allowed; }
+
+        /* 卡片 */
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        .card-label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .card-value { font-size: 24px; font-weight: 600; margin-top: 4px; color: var(--accent); }
+        .card-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+        /* 表格 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 13px;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background: #f5f2eb;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-size: 11px;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fafaf5; }
+        td.num { text-align: right; font-variant-numeric: tabular-nums; }
+        td.ip { font-family: 'Menlo', 'Monaco', 'Consolas', monospace; }
+        .stage-success { color: var(--ok); }
+        .stage-network, .stage-upstream_status, .stage-parse { color: var(--err); }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .refresh-btn { padding: 6px 14px; font-size: 13px; }
+        .logout-btn { background: transparent; color: var(--text-secondary); padding: 6px 12px; }
+        .logout-btn:hover { background: #f0ece3; }
+
+        .error-banner {
+            background: #fff5f5;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+        .gate-error { color: var(--err); margin-top: 12px; }
+    </style>
+</head>
+<body>
+
+    <!-- 密码门 -->
+    <div id="gate">
+        <h1>🔐 Admin Stats</h1>
+        <p>输入管理密码查看统计数据</p>
+        <div>
+            <input id="pwd" type="password" placeholder="STATS_PASSWORD" autocomplete="off" />
+            <button id="enter-btn">进入</button>
+        </div>
+        <p id="gate-error" class="gate-error"></p>
+    </div>
+
+    <!-- 主界面 -->
+    <div id="main" style="display: none;">
+        <div class="top-bar">
+            <div>
+                <h1>📊 Chat Stats</h1>
+                <p class="subtitle" id="updated-at">加载中...</p>
+            </div>
+            <div>
+                <button class="refresh-btn" id="refresh-btn">🔄 刷新</button>
+                <button class="logout-btn" id="logout-btn">退出</button>
+            </div>
+        </div>
+
+        <!-- 总览卡片 -->
+        <h2>总览</h2>
+        <div class="cards" id="overall-cards"></div>
+
+        <!-- 每 IP 统计 -->
+        <h2>每个 IP 的使用情况（按调用次数降序）</h2>
+        <div style="overflow-x: auto;">
+            <table id="ip-table">
+                <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>国家</th>
+                        <th class="num">次数</th>
+                        <th class="num">输入 tokens</th>
+                        <th class="num">输出 tokens</th>
+                        <th class="num">错误</th>
+                        <th>首次访问</th>
+                        <th>最近访问</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- 按国家 -->
+        <h2>按国家聚合</h2>
+        <div style="overflow-x: auto;">
+            <table id="country-table">
+                <thead>
+                    <tr>
+                        <th>国家</th>
+                        <th class="num">调用次数</th>
+                        <th class="num">独立 IP 数</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- 按天 -->
+        <h2>近 30 天每日活动</h2>
+        <div style="overflow-x: auto;">
+            <table id="daily-table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th class="num">调用次数</th>
+                        <th class="num">独立 IP</th>
+                        <th class="num">输入 tokens</th>
+                        <th class="num">输出 tokens</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- 最近 20 条 -->
+        <h2>最近 20 次调用</h2>
+        <div style="overflow-x: auto;">
+            <table id="recent-table">
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>IP</th>
+                        <th>国家</th>
+                        <th>模型</th>
+                        <th class="num">in</th>
+                        <th class="num">out</th>
+                        <th class="num">ms</th>
+                        <th class="num">轮数</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'koa_stats_pwd';
+
+        // ===== DOM =====
+        const gate        = document.getElementById('gate');
+        const main        = document.getElementById('main');
+        const pwdInput    = document.getElementById('pwd');
+        const enterBtn    = document.getElementById('enter-btn');
+        const gateError   = document.getElementById('gate-error');
+        const refreshBtn  = document.getElementById('refresh-btn');
+        const logoutBtn   = document.getElementById('logout-btn');
+        const updatedAt   = document.getElementById('updated-at');
+
+        // ===== 工具 =====
+        function fmtTime(ts) {
+            if (!ts) return '-';
+            return new Date(ts).toLocaleString('zh-CN', { hour12: false });
+        }
+        function fmtNum(n) {
+            if (n == null) return '-';
+            return Number(n).toLocaleString();
+        }
+        function escape(s) {
+            return String(s || '').replace(/[<>&"']/g, c => ({
+                '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;',
+            }[c]));
+        }
+
+        // ===== 密码门 =====
+        enterBtn.onclick = () => {
+            const pwd = pwdInput.value.trim();
+            if (!pwd) return;
+            enterBtn.disabled = true;
+            gateError.textContent = '验证中...';
+            fetchStats(pwd).then(data => {
+                // 成功 → 保存密码 + 进入主页
+                localStorage.setItem(STORAGE_KEY, pwd);
+                gate.style.display = 'none';
+                main.style.display = 'block';
+                renderAll(data);
+            }).catch(err => {
+                gateError.textContent = '❌ ' + err.message;
+                enterBtn.disabled = false;
+            });
+        };
+        pwdInput.addEventListener('keypress', e => { if (e.key === 'Enter') enterBtn.click(); });
+
+        logoutBtn.onclick = () => {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+        };
+
+        refreshBtn.onclick = async () => {
+            const pwd = localStorage.getItem(STORAGE_KEY);
+            refreshBtn.disabled = true;
+            try {
+                const data = await fetchStats(pwd);
+                renderAll(data);
+            } catch (e) {
+                alert('刷新失败: ' + e.message);
+            }
+            refreshBtn.disabled = false;
+        };
+
+        // ===== 拉数据 =====
+        async function fetchStats(pwd) {
+            const res = await fetch(`/api/stats?key=${encodeURIComponent(pwd)}`);
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || `HTTP ${res.status}`);
+            }
+            return data;
+        }
+
+        // ===== 渲染 =====
+        function renderAll(data) {
+            renderOverall(data.overall);
+            renderIpTable(data.per_ip);
+            renderCountryTable(data.by_country);
+            renderDailyTable(data.daily);
+            renderRecentTable(data.recent);
+            updatedAt.textContent = `更新于 ${fmtTime(data.generated_at)}`;
+        }
+
+        function renderOverall(o) {
+            const cards = document.getElementById('overall-cards');
+            const successRate = o.total_requests
+                ? Math.round((o.successful / o.total_requests) * 100)
+                : 0;
+            const items = [
+                { label: '总调用次数', value: fmtNum(o.total_requests) },
+                { label: '独立访客 (IP)', value: fmtNum(o.unique_ips) },
+                { label: '成功率', value: `${successRate}%`, sub: `${fmtNum(o.successful)}/${fmtNum(o.total_requests)}` },
+                { label: '平均耗时', value: `${Math.round(o.avg_elapsed_ms || 0)}ms` },
+                { label: '输入 tokens', value: fmtNum(o.total_input_tokens) },
+                { label: '输出 tokens', value: fmtNum(o.total_output_tokens) },
+            ];
+            cards.innerHTML = items.map(i => `
+                <div class="card">
+                    <div class="card-label">${i.label}</div>
+                    <div class="card-value">${i.value}</div>
+                    ${i.sub ? `<div class="card-sub">${i.sub}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function renderIpTable(rows) {
+            const tbody = document.querySelector('#ip-table tbody');
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#888;padding:30px">暂无数据</td></tr>';
+                return;
+            }
+            tbody.innerHTML = rows.map(r => `
+                <tr>
+                    <td class="ip">${escape(r.ip)}</td>
+                    <td>${escape(r.country)}</td>
+                    <td class="num">${fmtNum(r.requests)}</td>
+                    <td class="num">${fmtNum(r.total_input)}</td>
+                    <td class="num">${fmtNum(r.total_output)}</td>
+                    <td class="num">${r.errors > 0 ? `<span class="stage-network">${r.errors}</span>` : '0'}</td>
+                    <td>${fmtTime(r.first_seen)}</td>
+                    <td>${fmtTime(r.last_seen)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderCountryTable(rows) {
+            const tbody = document.querySelector('#country-table tbody');
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#888;padding:30px">暂无数据</td></tr>';
+                return;
+            }
+            tbody.innerHTML = rows.map(r => `
+                <tr>
+                    <td>${escape(r.country)}</td>
+                    <td class="num">${fmtNum(r.requests)}</td>
+                    <td class="num">${fmtNum(r.unique_ips)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderDailyTable(rows) {
+            const tbody = document.querySelector('#daily-table tbody');
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;padding:30px">暂无数据</td></tr>';
+                return;
+            }
+            tbody.innerHTML = rows.map(r => `
+                <tr>
+                    <td>${escape(r.day)}</td>
+                    <td class="num">${fmtNum(r.requests)}</td>
+                    <td class="num">${fmtNum(r.unique_ips)}</td>
+                    <td class="num">${fmtNum(r.input_tokens)}</td>
+                    <td class="num">${fmtNum(r.output_tokens)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderRecentTable(rows) {
+            const tbody = document.querySelector('#recent-table tbody');
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#888;padding:30px">暂无数据</td></tr>';
+                return;
+            }
+            tbody.innerHTML = rows.map(r => `
+                <tr>
+                    <td>${fmtTime(r.ts)}</td>
+                    <td class="ip">${escape(r.ip)}</td>
+                    <td>${escape(r.country)}</td>
+                    <td>${escape(r.model)}</td>
+                    <td class="num">${fmtNum(r.input_tokens)}</td>
+                    <td class="num">${fmtNum(r.output_tokens)}</td>
+                    <td class="num">${fmtNum(r.elapsed_ms)}</td>
+                    <td class="num">${fmtNum(r.history_len)}</td>
+                    <td class="stage-${r.stage}">${escape(r.stage)}${r.error ? ' ⚠️' : ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== 自动登录（如果 localStorage 里已经有密码） =====
+        (async () => {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) return;
+            try {
+                const data = await fetchStats(saved);
+                gate.style.display = 'none';
+                main.style.display = 'block';
+                renderAll(data);
+            } catch {
+                // 密码失效了，等用户重新输入
+                localStorage.removeItem(STORAGE_KEY);
+            }
+        })();
+    </script>
+
+</body>
+</html>
