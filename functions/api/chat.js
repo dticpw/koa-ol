@@ -18,27 +18,35 @@ export async function onRequestPost(context) {
     return json({ error: 'messages must be a non-empty array' }, 400);
   }
 
-  // --- 2. 拼接上游 URL ---
+  // --- 2. 拼接上游 URL + 读取可配置参数 ---
   const baseUrl = (env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/+$/, '');
   const apiUrl = `${baseUrl}/v1/messages`;
+  const model = env.ANTHROPIC_MODEL || 'claude-opus-4-6';
+  const maxTokens = parseInt(env.ANTHROPIC_MAX_TOKENS || '1024', 10);
 
   const claudePayload = {
-    model: 'claude-sonnet-4-5',
-    max_tokens: 1024,
+    model,
+    max_tokens: maxTokens,
     messages: messages.map(m => ({ role: m.role, content: m.content })),
   };
 
   // --- 3. 调上游 ---
+  const upstreamHeaders = {
+    'Content-Type': 'application/json',
+    'x-api-key': env.ANTHROPIC_API_KEY ?? '',
+    'anthropic-version': '2023-06-01',
+  };
+  // 支持 1M context 等 beta 特性（设 ANTHROPIC_BETA 环境变量即开启）
+  if (env.ANTHROPIC_BETA) {
+    upstreamHeaders['anthropic-beta'] = env.ANTHROPIC_BETA;
+  }
+
   let apiResponse;
   const requestStart = Date.now();
   try {
     apiResponse = await fetch(apiUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': env.ANTHROPIC_API_KEY ?? '',
-        'anthropic-version': '2023-06-01',
-      },
+      headers: upstreamHeaders,
       body: JSON.stringify(claudePayload),
     });
   } catch (err) {
@@ -89,7 +97,10 @@ export async function onRequestPost(context) {
   }
 
   const replyText = data.content?.[0]?.text ?? '';
-  return json({ reply: replyText, _debug: { elapsed_ms: elapsed, model: data.model } });
+  return json({
+    reply: replyText,
+    _debug: { elapsed_ms: elapsed, model: data.model, requested_model: model },
+  });
 }
 
 export async function onRequestOptions() {
