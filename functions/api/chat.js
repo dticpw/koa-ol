@@ -18,7 +18,7 @@ export async function onRequestPost(context) {
     return json({ error: 'Invalid JSON' }, 400);
   }
 
-  const { messages } = body;
+  const { messages, model: requestedProvider } = body;
 
   if (!Array.isArray(messages) || messages.length === 0) {
     await logChat(env, { ip, country, userAgent, stage: 'parse', error: 'messages must be non-empty array' });
@@ -27,35 +27,51 @@ export async function onRequestPost(context) {
 
   const historyLen = messages.length;
 
-  // --- 2. 拼接上游 URL + 读取配置 ---
-  const baseUrl = (env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/+$/, '');
-  const apiUrl = `${baseUrl}/v1/messages`;
-  const model = env.ANTHROPIC_MODEL || 'claude-opus-4-6';
+  // --- 2. 路由到对应模型 ---
+  const provider = requestedProvider === 'claude' ? 'claude' : 'qwen';
   const maxTokens = parseInt(env.ANTHROPIC_MAX_TOKENS || '1024', 10);
 
-  const claudePayload = {
-    model,
-    max_tokens: maxTokens,
-    messages: messages.map(m => ({ role: m.role, content: m.content })),
-  };
+  let apiUrl, model, upstreamHeaders, payload;
 
-  // --- 3. 调上游 ---
-  const upstreamHeaders = {
-    'Content-Type': 'application/json',
-    'x-api-key': env.ANTHROPIC_API_KEY ?? '',
-    'anthropic-version': '2023-06-01',
-  };
-  if (env.ANTHROPIC_BETA) {
-    upstreamHeaders['anthropic-beta'] = env.ANTHROPIC_BETA;
+  if (provider === 'claude') {
+    const baseUrl = (env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/+$/, '');
+    apiUrl = `${baseUrl}/v1/messages`;
+    model = env.ANTHROPIC_MODEL || 'claude-opus-4-6';
+    upstreamHeaders = {
+      'Content-Type': 'application/json',
+      'x-api-key': env.ANTHROPIC_API_KEY ?? '',
+      'anthropic-version': '2023-06-01',
+    };
+    if (env.ANTHROPIC_BETA) upstreamHeaders['anthropic-beta'] = env.ANTHROPIC_BETA;
+    payload = {
+      model,
+      max_tokens: maxTokens,
+      messages: messages.map(m => ({ role: m.role, content: m.content })),
+    };
+  } else {
+    // Qwen — OpenAI-compatible API
+    const baseUrl = (env.QWEN_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1').replace(/\/+$/, '');
+    apiUrl = `${baseUrl}/chat/completions`;
+    model = env.QWEN_MODEL || 'qwen-plus';
+    upstreamHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${env.QWEN_API_KEY ?? ''}`,
+    };
+    payload = {
+      model,
+      max_tokens: maxTokens,
+      messages: messages.map(m => ({ role: m.role, content: m.content })),
+    };
   }
 
+  // --- 3. 调上游 ---
   let apiResponse;
   const requestStart = Date.now();
   try {
     apiResponse = await fetch(apiUrl, {
       method: 'POST',
       headers: upstreamHeaders,
-      body: JSON.stringify(claudePayload),
+      body: JSON.stringify(payload),
     });
   } catch (err) {
     const elapsed = Date.now() - requestStart;
@@ -108,14 +124,18 @@ export async function onRequestPost(context) {
     }, 502);
   }
 
-  const replyText = data.content?.[0]?.text ?? '';
+  // Claude: data.content[0].text; Qwen (OpenAI-compat): data.choices[0].message.content
+  const replyText = data.content?.[0]?.text ?? data.choices?.[0]?.message?.content ?? '';
   const usage = data.usage || {};
+  // Qwen uses prompt_tokens/completion_tokens; Claude uses input_tokens/output_tokens
+  const inputTokens = usage.input_tokens ?? usage.prompt_tokens ?? 0;
+  const outputTokens = usage.output_tokens ?? usage.completion_tokens ?? 0;
 
   await logChat(env, {
     ip, country, userAgent,
     model: data.model || model,
-    input_tokens: usage.input_tokens || 0,
-    output_tokens: usage.output_tokens || 0,
+    input_tokens: inputTokens,
+    output_tokens: outputTokens,
     elapsed_ms: elapsed,
     history_len: historyLen,
     stage: 'success',

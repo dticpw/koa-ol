@@ -184,6 +184,16 @@
             line-height: 1.45;
         }
         .hint { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
+        #model-select {
+            padding: 6px 10px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -191,7 +201,7 @@
     <div class="banner">⚙️ 调试模式：当前已关闭密码保护。正式使用前务必重新启用。</div>
 
     <h1 id="title">💬 Chat with Claude</h1>
-    <p class="subtitle">Model: claude-opus-4-6 &nbsp;·&nbsp; 支持图片 / PDF / 文本文件 &nbsp;·&nbsp; 点标题清空对话</p>
+    <p class="subtitle">支持图片 / PDF / 文本文件 &nbsp;·&nbsp; 点标题清空对话</p>
 
     <div id="messages">
         <div class="empty-state" id="empty-state">
@@ -201,6 +211,11 @@
 
     <!-- 待发送的附件预览区 -->
     <div id="attachments"></div>
+
+    <select id="model-select">
+        <option value="qwen" selected>千问 (Qwen)</option>
+        <option value="claude">Claude</option>
+    </select>
 
     <div id="input-row">
         <button id="attach-btn" class="icon-btn" title="附加文件（图片/PDF/文本）">📎</button>
@@ -273,6 +288,7 @@
         const attachBtn    = document.getElementById('attach-btn');
         const fileInput    = document.getElementById('file-input');
         const attachmentsEl = document.getElementById('attachments');
+        const modelSelect  = document.getElementById('model-select');
 
         // ================= 工具函数 =================
         function humanSize(n) {
@@ -642,7 +658,7 @@
                 res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: history }),
+                    body: JSON.stringify({ messages: history, model: modelSelect.value }),
                 });
                 rawText = await res.text();
             } catch (e) {
