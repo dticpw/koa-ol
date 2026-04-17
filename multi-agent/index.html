@@ -124,7 +124,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 <p class="subtitle">Qwen Orchestrator 自主调度 · 多 Agent 并行协作</p>
 
 <div class="input-row">
-  <input id="task-input" type="text" placeholder="输入任务，例如：计算 2^10 + 3^5，同时查找丝绸之路的起点城市，然后用这两个结果写一句话" />
+  <input id="task-input" type="text" placeholder="输入任务，例如：分别取e和\pi小数点后第12位到第17位的数字作为新整数记为A，B，然后计算A，B的和" />
   <button id="run-btn" onclick="run()">运行</button>
 </div>
 
@@ -216,17 +216,18 @@ function handleEvent(ev) {
       addRow(`${badge('dispatched')}第${ev.round}轮 派发<br><small>${tasks}</small>`, '', '');
     }
   } else if (ev.type === 'agent') {
-    const r = ev.name === 'reasoning_agent';
-    const k = ev.name === 'knowledge_agent';
+    const r = ev.name.startsWith('reasoning_agent');
+    const k = ev.name.startsWith('knowledge_agent');
+    const label = ev.name;
     if (ev.status === 'start') {
       addRow('',
-        r ? `${badge('start')}${ev.task.slice(0, 50)}` : '',
-        k ? `${badge('start')}${ev.task.slice(0, 50)}` : ''
+        r ? `${badge('start')}[${label}] ${ev.task.slice(0, 50)}` : '',
+        k ? `${badge('start')}[${label}] ${ev.task.slice(0, 50)}` : ''
       );
     } else if (ev.status === 'done') {
       addRow('',
-        r ? `${badge('done')}(${ev.elapsed}s) ${ev.result.slice(0, 80)}` : '',
-        k ? `${badge('done')}(${ev.elapsed}s) ${ev.result.slice(0, 80)}` : ''
+        r ? `${badge('done')}[${label}] (${ev.elapsed}s) ${ev.result.slice(0, 80)}` : '',
+        k ? `${badge('done')}[${label}] (${ev.elapsed}s) ${ev.result.slice(0, 80)}` : ''
       );
     }
   } else if (ev.type === 'finish') {
