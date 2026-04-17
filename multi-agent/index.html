@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Agent | Koa-OL</title>
+<style>
+:root {
+  --bg: #faf9f7;
+  --card: #ffffff;
+  --accent: #2d5a47;
+  --accent2: #7b5ea7;
+  --border: #d4cfc4;
+  --text: #1a1a1a;
+  --muted: #6b6b6b;
+  --orch-color: #2d5a47;
+  --reasoning-color: #c0622a;
+  --knowledge-color: #7b5ea7;
+  --done-bg: #e8f5e9;
+  --thinking-bg: #fff8e1;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+h1 { color: var(--accent); margin-bottom: 4px; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+.input-row { display: flex; gap: 10px; margin-bottom: 24px; }
+#task-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  background: var(--card);
+}
+#task-input:focus { outline: 2px solid var(--accent); }
+button {
+  padding: 10px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Timeline */
+#timeline-wrap {
+  display: none;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.tl-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 1fr;
+  background: #f0ede8;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+}
+.tl-header div, .tl-row > div {
+  padding: 8px 12px;
+  border-right: 1px solid var(--border);
+}
+.tl-header div:last-child, .tl-row > div:last-child { border-right: none; }
+.tl-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 1fr;
+  border-bottom: 1px solid #ece9e3;
+  font-size: 13px;
+  align-items: start;
+}
+.tl-row:last-child { border-bottom: none; }
+.tl-time { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+.cell-orch { color: var(--orch-color); }
+.cell-reasoning { color: var(--reasoning-color); }
+.cell-knowledge { color: var(--knowledge-color); }
+
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 4px;
+}
+.badge-thinking { background: #fff8e1; color: #b8860b; }
+.badge-dispatched { background: #e3f2fd; color: #1565c0; }
+.badge-start { background: #fce4ec; color: #c62828; }
+.badge-done { background: #e8f5e9; color: #2e7d32; }
+.badge-finish { background: #e8f5e9; color: #2e7d32; }
+
+.cell-text { word-break: break-word; }
+
+/* Result */
+#result-box {
+  display: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+#result-box h3 { color: var(--accent); margin-bottom: 8px; font-size: 15px; }
+#result-text { white-space: pre-wrap; font-size: 15px; }
+#elapsed { color: var(--muted); font-size: 13px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>Multi-Agent</h1>
+<p class="subtitle">Qwen Orchestrator 自主调度 · 多 Agent 并行协作</p>
+
+<div class="input-row">
+  <input id="task-input" type="text" placeholder="输入任务，例如：计算 2^10 + 3^5，同时查找丝绸之路的起点城市，然后用这两个结果写一句话" />
+  <button id="run-btn" onclick="run()">运行</button>
+</div>
+
+<div id="timeline-wrap">
+  <div class="tl-header">
+    <div>时间</div>
+    <div style="color:var(--orch-color)">Orchestrator</div>
+    <div style="color:var(--reasoning-color)">reasoning_agent</div>
+    <div style="color:var(--knowledge-color)">knowledge_agent</div>
+  </div>
+  <div id="timeline-body"></div>
+</div>
+
+<div id="result-box">
+  <h3>最终答案</h3>
+  <div id="result-text"></div>
+  <div id="elapsed"></div>
+</div>
+
+<script>
+let startTime;
+
+function relTime() {
+  return ((Date.now() - startTime) / 1000).toFixed(2) + 's';
+}
+
+function addRow(orchContent, reasoningContent, knowledgeContent) {
+  const body = document.getElementById('timeline-body');
+  const row = document.createElement('div');
+  row.className = 'tl-row';
+  row.innerHTML = `
+    <div class="tl-time">${relTime()}</div>
+    <div class="cell-text cell-orch">${orchContent}</div>
+    <div class="cell-text cell-reasoning">${reasoningContent}</div>
+    <div class="cell-text cell-knowledge">${knowledgeContent}</div>
+  `;
+  body.appendChild(row);
+  row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function badge(type) {
+  return `<span class="badge badge-${type}">${type}</span>`;
+}
+
+async function run() {
+  const task = document.getElementById('task-input').value.trim();
+  if (!task) return;
+
+  document.getElementById('run-btn').disabled = true;
+  document.getElementById('timeline-body').innerHTML = '';
+  document.getElementById('timeline-wrap').style.display = 'block';
+  document.getElementById('result-box').style.display = 'none';
+  startTime = Date.now();
+
+  const resp = await fetch('/api/multi-agent', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ task }),
+  });
+
+  const reader = resp.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const parts = buf.split('\n\n');
+    buf = parts.pop();
+    for (const part of parts) {
+      if (!part.startsWith('data: ')) continue;
+      const ev = JSON.parse(part.slice(6));
+      handleEvent(ev);
+    }
+  }
+
+  document.getElementById('run-btn').disabled = false;
+}
+
+function handleEvent(ev) {
+  if (ev.type === 'start') {
+    addRow(`${badge('start')}启动`, '', '');
+  } else if (ev.type === 'orchestrator') {
+    if (ev.status === 'thinking') {
+      addRow(`${badge('thinking')}第${ev.round}轮 思考中…`, '', '');
+    } else if (ev.status === 'dispatched') {
+      const tasks = ev.actions.map(a => `→ ${a.agent}: ${a.task.slice(0, 40)}`).join('<br>');
+      addRow(`${badge('dispatched')}第${ev.round}轮 派发<br><small>${tasks}</small>`, '', '');
+    }
+  } else if (ev.type === 'agent') {
+    const r = ev.name === 'reasoning_agent';
+    const k = ev.name === 'knowledge_agent';
+    if (ev.status === 'start') {
+      addRow('',
+        r ? `${badge('start')}${ev.task.slice(0, 50)}` : '',
+        k ? `${badge('start')}${ev.task.slice(0, 50)}` : ''
+      );
+    } else if (ev.status === 'done') {
+      addRow('',
+        r ? `${badge('done')}(${ev.elapsed}s) ${ev.result.slice(0, 80)}` : '',
+        k ? `${badge('done')}(${ev.elapsed}s) ${ev.result.slice(0, 80)}` : ''
+      );
+    }
+  } else if (ev.type === 'finish') {
+    addRow(`${badge('finish')}完成 (${ev.elapsed}s)`, '', '');
+    document.getElementById('result-text').textContent = ev.result;
+    document.getElementById('elapsed').textContent = `总耗时 ${ev.elapsed}s`;
+    document.getElementById('result-box').style.display = 'block';
+  } else if (ev.type === 'error') {
+    addRow(`❌ ${ev.message}`, '', '');
+  }
+}
+
+document.getElementById('task-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') run();
+});
+</script>
+</body>
+</html>
