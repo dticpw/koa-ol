@@ -4,19 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Koa-OL</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --accent: #2d5a47;
   --accent-hover: #3d7a5f;
+  --accent2: #8b6914;
   --bg: #faf9f7;
-  --card: #ffffff;
+  --card: #f5f2eb;
   --border: #d4cfc4;
-  --text: #1a1a1a;
-  --muted: #6b6b6b;
+  --text: #3d3831;
+  --text-secondary: #6b6560;
+  --muted: #9a948c;
+  --shadow-sm: 0 1px 3px rgba(61,56,49,0.08);
+  --shadow-md: 0 4px 12px rgba(61,56,49,0.1);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Lato', sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -24,67 +29,127 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px;
+  padding: 48px 24px;
 }
-header { text-align: center; margin-bottom: 48px; }
-header h1 { font-size: 2rem; color: var(--accent); margin-bottom: 8px; }
-header p { color: var(--muted); font-size: 15px; }
+header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+header p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+.divider {
+  width: 48px;
+  height: 2px;
+  background: var(--accent2);
+  margin: 16px auto 0;
+  opacity: 0.6;
+}
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
   width: 100%;
-  max-width: 800px;
+  max-width: 860px;
 }
 a.card {
   display: block;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 28px 24px;
+  border-radius: 6px;
+  padding: 32px 28px;
   text-decoration: none;
   color: var(--text);
-  transition: box-shadow 0.15s, border-color 0.15s;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
 }
 a.card:hover {
+  box-shadow: var(--shadow-md);
   border-color: var(--accent);
-  box-shadow: 0 4px 16px rgba(45,90,71,0.12);
+  transform: translateY(-2px);
 }
-.card-icon { font-size: 2rem; margin-bottom: 12px; }
-.card h2 { font-size: 1.1rem; margin-bottom: 6px; color: var(--accent); }
-.card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
-footer { margin-top: 48px; color: var(--muted); font-size: 13px; }
+.card-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 10px;
+}
+.card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.card p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-weight: 300;
+}
+footer {
+  margin-top: 56px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
 </style>
 </head>
 <body>
+
 <header>
   <h1>Koa-OL</h1>
   <p>个人项目集合</p>
+  <div class="divider"></div>
 </header>
 
 <div class="grid">
   <a class="card" href="/chat/">
-    <div class="card-icon">💬</div>
+    <div class="card-label">对话</div>
     <h2>AI Chat</h2>
     <p>支持 Claude 与 Qwen 的在线对话，含多轮上下文与文件上传。</p>
   </a>
   <a class="card" href="/multi-agent/">
-    <div class="card-icon">🤖</div>
+    <div class="card-label">调度</div>
     <h2>Multi-Agent</h2>
     <p>Qwen Orchestrator 自主调度多 Agent 并行协作，实时可视化执行过程。</p>
   </a>
   <a class="card" href="/galgame/">
-    <div class="card-icon">🎮</div>
+    <div class="card-label">游戏</div>
     <h2>Galgame</h2>
     <p>文字冒险游戏。</p>
   </a>
   <a class="card" href="/stats/">
-    <div class="card-icon">📊</div>
+    <div class="card-label">数据</div>
     <h2>Stats</h2>
     <p>Chat 页面的访问数据统计与可视化。</p>
+  </a>
+  <a class="card" href="https://github.com/dticpw" target="_blank" rel="noopener">
+    <div class="card-label">代码</div>
+    <h2>GitHub</h2>
+    <p>个人开源项目与代码仓库。</p>
+  </a>
+  <a class="card" href="https://dash.cloudflare.com" target="_blank" rel="noopener">
+    <div class="card-label">运维</div>
+    <h2>Cloudflare</h2>
+    <p>域名、Pages 与 Workers 管理后台。</p>
   </a>
 </div>
 
 <footer>koa-ol.com</footer>
+
 </body>
 </html>
