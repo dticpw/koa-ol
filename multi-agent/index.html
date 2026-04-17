@@ -64,7 +64,6 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 .tl-header {
   display: grid;
-  grid-template-columns: 80px 1fr 1fr 1fr;
   background: #f0ede8;
   border-bottom: 1px solid var(--border);
   font-size: 13px;
@@ -77,7 +76,6 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .tl-header div:last-child, .tl-row > div:last-child { border-right: none; }
 .tl-row {
   display: grid;
-  grid-template-columns: 80px 1fr 1fr 1fr;
   border-bottom: 1px solid #ece9e3;
   font-size: 13px;
   align-items: start;
@@ -129,12 +127,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 </div>
 
 <div id="timeline-wrap">
-  <div class="tl-header">
-    <div>时间</div>
-    <div style="color:var(--orch-color)">Orchestrator</div>
-    <div style="color:var(--reasoning-color)">reasoning_agent</div>
-    <div style="color:var(--knowledge-color)">knowledge_agent</div>
-  </div>
+  <div id="tl-header" class="tl-header"></div>
   <div id="timeline-body"></div>
 </div>
 
@@ -146,21 +139,52 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 <script>
 let startTime;
+// columns: ['orchestrator', ...agentNames]
+let columns = [];
 
-function relTime() {
-  return ((Date.now() - startTime) / 1000).toFixed(2) + 's';
+const AGENT_COLORS = [
+  '#c0622a', '#7b5ea7', '#1565c0', '#2e7d32', '#6a1b9a', '#00838f'
+];
+
+function colColor(name) {
+  if (name === 'orchestrator') return 'var(--orch-color)';
+  const idx = columns.indexOf(name) - 1;
+  return AGENT_COLORS[idx % AGENT_COLORS.length];
 }
 
-function addRow(orchContent, reasoningContent, knowledgeContent) {
+function gridCols() {
+  return `80px repeat(${columns.length}, 1fr)`;
+}
+
+function rebuildHeader() {
+  const h = document.getElementById('tl-header');
+  h.style.gridTemplateColumns = gridCols();
+  h.innerHTML = '<div>时间</div>' +
+    columns.map(c => `<div style="color:${colColor(c)}">${c}</div>`).join('');
+  // update all existing rows
+  document.querySelectorAll('.tl-row').forEach(r => {
+    r.style.gridTemplateColumns = gridCols();
+  });
+}
+
+function ensureAgent(name) {
+  if (!columns.includes(name)) {
+    columns.push(name);
+    rebuildHeader();
+  }
+}
+
+function addRow(cells) {
+  // cells: { orchestrator?: html, [agentName]?: html }
   const body = document.getElementById('timeline-body');
   const row = document.createElement('div');
   row.className = 'tl-row';
-  row.innerHTML = `
-    <div class="tl-time">${relTime()}</div>
-    <div class="cell-text cell-orch">${orchContent}</div>
-    <div class="cell-text cell-reasoning">${reasoningContent}</div>
-    <div class="cell-text cell-knowledge">${knowledgeContent}</div>
-  `;
+  row.style.gridTemplateColumns = gridCols();
+  const time = `<div class="tl-time">${((Date.now()-startTime)/1000).toFixed(2)}s</div>`;
+  const cols = columns.map(c =>
+    `<div class="cell-text" style="color:${colColor(c)}">${cells[c] || ''}</div>`
+  ).join('');
+  row.innerHTML = time + cols;
   body.appendChild(row);
   row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
@@ -173,10 +197,12 @@ async function run() {
   const task = document.getElementById('task-input').value.trim();
   if (!task) return;
 
+  columns = ['orchestrator'];
   document.getElementById('run-btn').disabled = true;
   document.getElementById('timeline-body').innerHTML = '';
   document.getElementById('timeline-wrap').style.display = 'block';
   document.getElementById('result-box').style.display = 'none';
+  rebuildHeader();
   startTime = Date.now();
 
   const resp = await fetch('/api/multi-agent', {
@@ -188,7 +214,6 @@ async function run() {
   const reader = resp.body.getReader();
   const dec = new TextDecoder();
   let buf = '';
-
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -197,46 +222,36 @@ async function run() {
     buf = parts.pop();
     for (const part of parts) {
       if (!part.startsWith('data: ')) continue;
-      const ev = JSON.parse(part.slice(6));
-      handleEvent(ev);
+      handleEvent(JSON.parse(part.slice(6)));
     }
   }
-
   document.getElementById('run-btn').disabled = false;
 }
 
 function handleEvent(ev) {
   if (ev.type === 'start') {
-    addRow(`${badge('start')}启动`, '', '');
+    addRow({ orchestrator: `${badge('start')}启动` });
   } else if (ev.type === 'orchestrator') {
     if (ev.status === 'thinking') {
-      addRow(`${badge('thinking')}第${ev.round}轮 思考中…`, '', '');
+      addRow({ orchestrator: `${badge('thinking')}第${ev.round}轮 思考中…` });
     } else if (ev.status === 'dispatched') {
       const tasks = ev.actions.map(a => `→ ${a.agent}: ${a.task.slice(0, 40)}`).join('<br>');
-      addRow(`${badge('dispatched')}第${ev.round}轮 派发<br><small>${tasks}</small>`, '', '');
+      addRow({ orchestrator: `${badge('dispatched')}第${ev.round}轮 派发<br><small>${tasks}</small>` });
     }
   } else if (ev.type === 'agent') {
-    const r = ev.name.startsWith('reasoning_agent');
-    const k = ev.name.startsWith('knowledge_agent');
-    const label = ev.name;
+    ensureAgent(ev.name);
     if (ev.status === 'start') {
-      addRow('',
-        r ? `${badge('start')}[${label}] ${ev.task.slice(0, 50)}` : '',
-        k ? `${badge('start')}[${label}] ${ev.task.slice(0, 50)}` : ''
-      );
+      addRow({ [ev.name]: `${badge('start')}${ev.task.slice(0, 60)}` });
     } else if (ev.status === 'done') {
-      addRow('',
-        r ? `${badge('done')}[${label}] (${ev.elapsed}s) ${ev.result.slice(0, 80)}` : '',
-        k ? `${badge('done')}[${label}] (${ev.elapsed}s) ${ev.result.slice(0, 80)}` : ''
-      );
+      addRow({ [ev.name]: `${badge('done')}(${ev.elapsed}s) ${ev.result.slice(0, 80)}` });
     }
   } else if (ev.type === 'finish') {
-    addRow(`${badge('finish')}完成 (${ev.elapsed}s)`, '', '');
+    addRow({ orchestrator: `${badge('finish')}完成 (${ev.elapsed}s)` });
     document.getElementById('result-text').textContent = ev.result;
     document.getElementById('elapsed').textContent = `总耗时 ${ev.elapsed}s`;
     document.getElementById('result-box').style.display = 'block';
   } else if (ev.type === 'error') {
-    addRow(`❌ ${ev.message}`, '', '');
+    addRow({ orchestrator: `❌ ${ev.message}` });
   }
 }
 
