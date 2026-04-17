@@ -7,11 +7,11 @@ const MAX_ITERATIONS = 8;
 const WORKERS = {
   reasoning_agent: {
     description: '逻辑推理、数学计算、规律分析',
-    system: '你是逻辑推理专家，擅长数学计算、规律分析和逻辑推导。只输出结果，不解释过程。',
+    system: '你是逻辑推理专家。只输出最终答案，不超过一句话，不解释过程，不列步骤。',
   },
   knowledge_agent: {
     description: '知识问答、文学、历史、科学、诗词',
-    system: '你是知识专家，擅长文学、历史、科学、诗词等领域的知识问答。直接给出准确答案。',
+    system: '你是知识专家。只输出最终答案，不超过一句话，不列表格，不解释，不验证。',
   },
 };
 
@@ -32,9 +32,11 @@ ${agentList}
 
 规则：
 - 只输出 JSON，不要其他文字
-- 若子任务相互独立可同一轮列多个 agent（并行执行）
-- 若子任务B依赖子任务A的结果，必须分两轮派发
-- 子任务描述要具体，包含必要上下文
+- 同一轮中每个 agent 最多出现一次
+- 若子任务 B 依赖子任务 A 的结果，必须分两轮派发，不可同轮并行
+- 若多个 worker 返回同一问题的一致答案，直接采用，不再派发确认任务
+- 相互独立的子任务可同一轮列多个 agent 并行执行
+- 子任务描述要具体，包含所有必要上下文
 - 收到所有结果后整合并 finish`;
 }
 
@@ -102,18 +104,33 @@ export async function onRequestPost(context) {
 
       await send({ type: 'orchestrator', round: i + 1, status: 'dispatched', actions });
 
+      // 同名 agent 自动编号
+      const nameCount = {};
+      for (const a of actions) nameCount[a.agent] = (nameCount[a.agent] || 0) + 1;
+      const nameIdx = {};
+      const labeled = actions.map(a => {
+        let label;
+        if (nameCount[a.agent] > 1) {
+          nameIdx[a.agent] = (nameIdx[a.agent] || 0) + 1;
+          label = `${a.agent}_${nameIdx[a.agent]}`;
+        } else {
+          label = a.agent;
+        }
+        return { ...a, label };
+      });
+
       // 并行执行所有 worker
       const results = await Promise.all(
-        actions.map(async (a) => {
+        labeled.map(async (a) => {
           const t0 = Date.now();
-          await send({ type: 'agent', name: a.agent, status: 'start', task: a.task, round: i + 1 });
+          await send({ type: 'agent', name: a.label, status: 'start', task: a.task, round: i + 1 });
           const result = await runWorker(env, a.agent, a.task);
-          await send({ type: 'agent', name: a.agent, status: 'done', result, elapsed: ((Date.now() - t0) / 1000).toFixed(2), round: i + 1 });
-          return { agent: a.agent, result };
+          await send({ type: 'agent', name: a.label, status: 'done', result, elapsed: ((Date.now() - t0) / 1000).toFixed(2), round: i + 1 });
+          return { label: a.label, task: a.task, result };
         })
       );
 
-      const resultText = results.map(r => `${r.agent}: ${r.result}`).join('\n');
+      const resultText = results.map(r => `[${r.label}] 任务：${r.task}\n结果：${r.result}`).join('\n');
       messages.push({ role: 'user', content: `Worker 结果：\n${resultText}` });
     }
 
