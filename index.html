@@ -1,175 +1,90 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Koa-OL Manager - 内容管理与搜索">
-    <title>Koa-OL Manager</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koa-OL</title>
+<style>
+:root {
+  --accent: #2d5a47;
+  --accent-hover: #3d7a5f;
+  --bg: #faf9f7;
+  --card: #ffffff;
+  --border: #d4cfc4;
+  --text: #1a1a1a;
+  --muted: #6b6b6b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+header { text-align: center; margin-bottom: 48px; }
+header h1 { font-size: 2rem; color: var(--accent); margin-bottom: 8px; }
+header p { color: var(--muted); font-size: 15px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+a.card {
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-decoration: none;
+  color: var(--text);
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+a.card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px rgba(45,90,71,0.12);
+}
+.card-icon { font-size: 2rem; margin-bottom: 12px; }
+.card h2 { font-size: 1.1rem; margin-bottom: 6px; color: var(--accent); }
+.card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+footer { margin-top: 48px; color: var(--muted); font-size: 13px; }
+</style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- 左侧导航栏 -->
-        <aside class="sidebar">
-            <div class="brand">
-                <h1>Koa-OL</h1>
-                <p>内容管理工具</p>
-            </div>
-            
-            <nav class="nav-section">
-                <div class="nav-label">操作</div>
-                <a href="#connect" class="nav-item">
-                    <span>🔗</span>
-                    连接
-                </a>
-                <a href="#import" class="nav-item">
-                    <span>📥</span>
-                    导入
-                </a>
-                <a href="#search" class="nav-item active">
-                    <span>🔍</span>
-                    查询
-                </a>
-                <a href="#manage" class="nav-item">
-                    <span>⚙️</span>
-                    管理
-                </a>
-            </nav>
-            
-            <div class="nav-section">
-                <div class="nav-label">连接状态</div>
-                <div style="padding: 0 24px;">
-                    <span class="status-badge status-connected">已连接</span>
-                </div>
-            </div>
-        </aside>
-        
-        <!-- 主内容区域 -->
-        <main class="main-content">
-            <div class="page-header">
-                <h2>内容搜索</h2>
-                <p>搜索和查询您存储的内容</p>
-            </div>
-            
-            <!-- 搜索表单卡片 -->
-            <div class="content-card">
-                <div class="form-section">
-                    <label class="form-label">搜索内容</label>
-                    <textarea 
-                        class="input" 
-                        placeholder="输入您要搜索的内容..."
-                        rows="3"
-                    >优秀CSS风格</textarea>
-                    <p class="form-hint">将与已存储的「查询键值」进行语义匹配</p>
-                </div>
-                
-                <div class="input-group">
-                    <div class="form-field">
-                        <label class="form-label">命名空间</label>
-                        <input 
-                            type="text" 
-                            class="input" 
-                            placeholder="留空使用默认"
-                        >
-                    </div>
-                    
-                    <div class="form-field">
-                        <label class="form-label">返回数量 (Top K)</label>
-                        <input 
-                            type="number" 
-                            class="input" 
-                            value="10"
-                        >
-                    </div>
-                </div>
-                
-                <div class="form-section" style="margin-top: 24px;">
-                    <label class="form-label">元数据过滤 (JSON, 可选)</label>
-                    <textarea 
-                        class="input" 
-                        placeholder='{"category": {"$eq": "article"}}'
-                        rows="3"
-                    ></textarea>
-                    <p class="form-hint">使用 Pinecone 过滤语法筛选结果</p>
-                </div>
-                
-                <div class="checkbox-wrapper">
-                    <input type="checkbox" id="includeMetadata" checked>
-                    <label for="includeMetadata">在结果中包含元数据</label>
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn btn-primary">搜索</button>
-                    <button class="btn btn-secondary">清除内容</button>
-                </div>
-            </div>
-            
-            <!-- 搜索结果区域 -->
-            <div class="results-section">
-                <div class="result-card">
-                    <div class="result-header">
-                        <span class="result-title">css_1</span>
-                        <span class="result-score">相似度: 64.02%</span>
-                    </div>
-                    <p style="font-size: 15px; color: var(--text-secondary); margin-bottom: 16px;">
-                        优秀CSS风格 书卷气 羊皮纸 温暖白色系 UI
-                    </p>
-                    <div class="result-content">
-{
-  "_text": "优秀CSS风格 书卷气 羊皮纸 温暖白色系 UI",
-  "accent_hover": "#3d7a5f",
-  "accent_primary": "#2d5a47",
-  "accent_secondary": "#8b6914",
-  "bg_card": "#f5f2eb",
-  "bg_input": "#fffefa",
-  "bg_main": "#faf9f7",
-  "border_color": "#d4cfc4",
-  "description": "温暖白色系、书卷气、专业简洁的UI风格",
-  "title": "Scholar Parchment 风格"
-}
-                    </div>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-header">
-                        <span class="result-title">css_2</span>
-                        <span class="result-score">相似度: 58.76%</span>
-                    </div>
-                    <p style="font-size: 15px; color: var(--text-secondary); margin-bottom: 16px;">
-                        现代简约 深色主题 科技感
-                    </p>
-                    <div class="result-content">
-{
-  "_text": "现代简约 深色主题 科技感",
-  "accent_primary": "#007bff",
-  "bg_main": "#1a1a1a",
-  "bg_card": "#2d2d2d",
-  "text_primary": "#ffffff",
-  "description": "现代科技感的深色UI主题"
-}
-                    </div>
-                </div>
-                
-                <div class="result-card">
-                    <div class="result-header">
-                        <span class="result-title">css_3</span>
-                        <span class="result-score">相似度: 52.34%</span>
-                    </div>
-                    <p style="font-size: 15px; color: var(--text-secondary); margin-bottom: 16px;">
-                        清新自然 绿色系 环保主题
-                    </p>
-                    <div class="result-content">
-{
-  "_text": "清新自然 绿色系 环保主题",
-  "accent_primary": "#4caf50",
-  "bg_main": "#f1f8f4",
-  "text_primary": "#2e7d32",
-  "description": "清新自然的绿色环保主题"
-}
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+<header>
+  <h1>Koa-OL</h1>
+  <p>个人项目集合</p>
+</header>
+
+<div class="grid">
+  <a class="card" href="/chat/">
+    <div class="card-icon">💬</div>
+    <h2>AI Chat</h2>
+    <p>支持 Claude 与 Qwen 的在线对话，含多轮上下文与文件上传。</p>
+  </a>
+  <a class="card" href="/multi-agent/">
+    <div class="card-icon">🤖</div>
+    <h2>Multi-Agent</h2>
+    <p>Qwen Orchestrator 自主调度多 Agent 并行协作，实时可视化执行过程。</p>
+  </a>
+  <a class="card" href="/galgame/">
+    <div class="card-icon">🎮</div>
+    <h2>Galgame</h2>
+    <p>文字冒险游戏。</p>
+  </a>
+  <a class="card" href="/stats/">
+    <div class="card-icon">📊</div>
+    <h2>Stats</h2>
+    <p>Chat 页面的访问数据统计与可视化。</p>
+  </a>
+</div>
+
+<footer>koa-ol.com</footer>
 </body>
 </html>
