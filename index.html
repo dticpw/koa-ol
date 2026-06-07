@@ -12,7 +12,7 @@ Assumptions:
 - Keep this as a static homepage for Cloudflare Pages, with no build step.
 - Preserve all existing routes and external links.
 - Treat Koa-OL as a personal project index, not a generic landing page.
-- Use existing galgame artwork as the real visual asset; other previews are UI abstractions.
+- Use lightweight CSS previews on the homepage so project cards render immediately.
 */
 :root {
   --paper: #f7f4ef;
@@ -293,10 +293,44 @@ h1 {
 .node:nth-child(3) { background: var(--plum); }
 .node:nth-child(4) { grid-column: 1 / 4; aspect-ratio: auto; height: 18px; background: var(--blue); }
 
-.thumb.gal img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.thumb.gal {
+  position: relative;
+  align-content: end;
+  justify-items: center;
+  gap: 8px;
+  padding: 12px;
+  background:
+    linear-gradient(180deg, #efe2cf 0 42%, #d6a05c 42% 46%, #f6efe3 46% 100%);
+}
+
+.thumb.gal::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 14px;
+  width: 32px;
+  height: 46px;
+  border: 1px solid rgba(23, 23, 22, 0.72);
+  background:
+    linear-gradient(90deg, #9c3f47 0 18%, transparent 18%),
+    linear-gradient(#fff8ed 0 0);
+  box-shadow: 41px 8px 0 -1px #fff8ed, 41px 8px 0 0 rgba(23, 23, 22, 0.72);
+}
+
+.thumb.gal::after {
+  content: "";
+  width: 76%;
+  height: 24px;
+  border: 1px solid rgba(23, 23, 22, 0.7);
+  background: #fffdf8;
+  box-shadow: inset 0 0 0 5px #fffdf8, inset 0 -6px 0 #c6b19a;
+}
+
+.dialog-line {
+  width: 58%;
+  height: 5px;
+  background: var(--rose);
+  z-index: 1;
 }
 
 .thumb.stats {
@@ -536,12 +570,12 @@ h1 {
 
         <a class="project-card" href="/galgame/" style="--accent: var(--rose);">
           <span class="thumb gal" aria-hidden="true">
-            <img src="/galgame/assets/backgrounds/bg_library.png" alt="">
+            <span class="dialog-line"></span>
           </span>
           <span class="project-meta">
             <span class="project-label">Story</span>
             <h2>Galgame</h2>
-            <p>文字冒险游戏入口，使用现有场景素材呈现项目本体。</p>
+            <p>文字冒险游戏入口，首页使用轻量预览，进入后再加载游戏素材。</p>
           </span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>
