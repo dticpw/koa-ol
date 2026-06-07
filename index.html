@@ -3,153 +3,583 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Koa-OL</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="description" content="Koa-OL personal project index: AI Chat, Multi-Agent, Galgame and Stats.">
+<title>Koa-OL | Project Index</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
+/*
+Assumptions:
+- Keep this as a static homepage for Cloudflare Pages, with no build step.
+- Preserve all existing routes and external links.
+- Treat Koa-OL as a personal project index, not a generic landing page.
+- Use existing galgame artwork as the real visual asset; other previews are UI abstractions.
+*/
 :root {
-  --accent: #2d5a47;
-  --accent-hover: #3d7a5f;
-  --accent2: #8b6914;
-  --bg: #faf9f7;
-  --card: #f5f2eb;
-  --border: #d4cfc4;
-  --text: #3d3831;
-  --text-secondary: #6b6560;
-  --muted: #9a948c;
-  --shadow-sm: 0 1px 3px rgba(61,56,49,0.08);
-  --shadow-md: 0 4px 12px rgba(61,56,49,0.1);
+  --paper: #f7f4ef;
+  --paper-strong: #fffdf8;
+  --ink: #171716;
+  --muted: #65635f;
+  --line: #d8d0c1;
+  --forest: #255744;
+  --forest-2: #133629;
+  --amber: #b66d18;
+  --plum: #6f4aa0;
+  --blue: #355f8a;
+  --rose: #b74c55;
+  --shadow: 0 22px 70px rgba(35, 31, 24, 0.12);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: 'Lato', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  margin: 0;
   min-height: 100vh;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, rgba(23, 23, 22, 0.045) 1px, transparent 1px) 0 0 / 36px 36px,
+    linear-gradient(rgba(23, 23, 22, 0.035) 1px, transparent 1px) 0 0 / 36px 36px,
+    var(--paper);
+}
+
+a { color: inherit; }
+
+.page {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.topbar {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 48px 24px;
+  justify-content: space-between;
+  min-height: 76px;
+  gap: 20px;
 }
-header {
-  text-align: center;
-  margin-bottom: 56px;
-}
-header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.6rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.02em;
-  margin-bottom: 10px;
-}
-header p {
-  color: var(--text-secondary);
-  font-size: 15px;
-  font-weight: 300;
-  letter-spacing: 0.04em;
-}
-.divider {
-  width: 48px;
-  height: 2px;
-  background: var(--accent2);
-  margin: 16px auto 0;
-  opacity: 0.6;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
-  width: 100%;
-  max-width: 860px;
-}
-a.card {
-  display: block;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 32px 28px;
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   text-decoration: none;
-  color: var(--text);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
 }
-a.card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--accent);
-  transform: translateY(-2px);
+
+.mark-symbol {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--ink);
+  background: var(--paper-strong);
+  color: var(--forest);
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 4px 4px 0 var(--amber);
 }
-.card-label {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent2);
-  margin-bottom: 10px;
+
+.mark-text {
+  display: grid;
+  gap: 2px;
 }
-.card h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 10px;
+
+.mark-text strong {
+  font-size: 15px;
+  letter-spacing: 0.08em;
 }
-.card p {
-  font-size: 13.5px;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  font-weight: 300;
-}
-footer {
-  margin-top: 56px;
+
+.mark-text span {
   color: var(--muted);
   font-size: 12px;
-  letter-spacing: 0.06em;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.76);
+  backdrop-filter: blur(10px);
+}
+
+.nav a {
+  min-height: 36px;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.nav a:hover {
+  color: var(--ink);
+  background: #eee7dc;
+}
+
+.hero {
+  min-height: calc(100svh - 92px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
+  gap: 42px;
+  align-items: center;
+  padding: 20px 0 64px;
+}
+
+.hero-copy {
+  display: grid;
+  gap: 28px;
+  align-content: center;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--forest);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 42px;
+  height: 2px;
+  background: var(--amber);
+}
+
+h1 {
+  margin: 0;
+  max-width: 10ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(68px, 9vw, 132px);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: 0;
+}
+
+.intro {
+  max-width: 540px;
+  margin: 0;
+  color: #4d4a45;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: #fffdf8;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 750;
+  box-shadow: 5px 5px 0 rgba(37, 87, 68, 0.28);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 rgba(37, 87, 68, 0.34);
+}
+
+.button.secondary {
+  background: var(--paper-strong);
+  color: var(--ink);
+  box-shadow: 5px 5px 0 rgba(182, 109, 24, 0.25);
+}
+
+.project-board {
+  display: grid;
+  gap: 14px;
+}
+
+.project-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 138px;
+  padding: 16px;
+  border: 1px solid var(--ink);
+  background: var(--paper-strong);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 28px 76px rgba(35, 31, 24, 0.16);
+}
+
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--accent, var(--forest));
+}
+
+.project-card.primary {
+  min-height: 172px;
+  background: #f1efe7;
+}
+
+.thumb {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1.08;
+  border: 1px solid var(--line);
+  background: #ede6da;
+  overflow: hidden;
+}
+
+.thumb.chat {
+  align-content: center;
+  gap: 9px;
+  padding: 12px;
+}
+
+.bubble {
+  width: 100%;
+  height: 16px;
+  background: var(--forest);
+}
+
+.bubble:nth-child(2) {
+  width: 78%;
+  justify-self: end;
+  background: var(--amber);
+}
+
+.bubble:nth-child(3) {
+  width: 58%;
+  background: var(--plum);
+}
+
+.thumb.agents {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 13px;
+}
+
+.node {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--ink);
+  background: var(--paper-strong);
+}
+
+.node:nth-child(1) { background: var(--forest); }
+.node:nth-child(2) { background: var(--amber); }
+.node:nth-child(3) { background: var(--plum); }
+.node:nth-child(4) { grid-column: 1 / 4; aspect-ratio: auto; height: 18px; background: var(--blue); }
+
+.thumb.gal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb.stats {
+  align-items: end;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 14px;
+}
+
+.bar {
+  width: 100%;
+  background: var(--accent, var(--forest));
+}
+
+.bar:nth-child(1) { height: 34%; }
+.bar:nth-child(2) { height: 62%; }
+.bar:nth-child(3) { height: 48%; }
+.bar:nth-child(4) { height: 78%; }
+.bar:nth-child(5) { height: 52%; }
+
+.project-meta {
+  display: grid;
+  gap: 8px;
+}
+
+.project-label {
+  color: var(--accent, var(--forest));
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.project-card h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.project-card p {
+  max-width: 460px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.62;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ink);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.utility {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0 0 72px;
+}
+
+.utility a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 78px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.72);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.utility strong {
+  font-size: 16px;
+}
+
+.utility span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px 0 38px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 940px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    align-items: start;
+    padding-top: 34px;
+  }
+
+  h1 {
+    max-width: none;
+    font-size: clamp(58px, 16vw, 102px);
+  }
+}
+
+@media (max-width: 680px) {
+  .page {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px 0 4px;
+  }
+
+  .nav {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-bottom: 40px;
+  }
+
+  .intro {
+    font-size: 16px;
+  }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .project-card,
+  .project-card.primary {
+    grid-template-columns: 82px minmax(0, 1fr);
+    min-height: 132px;
+    gap: 12px;
+    padding: 12px 12px 12px 16px;
+  }
+
+  .project-card h2 {
+    font-size: 23px;
+  }
+
+  .project-card p {
+    font-size: 13px;
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  .utility {
+    grid-template-columns: 1fr;
+    padding-bottom: 46px;
+  }
+
+  .footer {
+    flex-direction: column;
+  }
 }
 </style>
 </head>
 <body>
+<div class="page">
+  <header class="topbar">
+    <a class="mark" href="/" aria-label="Koa-OL homepage">
+      <span class="mark-symbol">K</span>
+      <span class="mark-text">
+        <strong>Koa-OL</strong>
+        <span>personal project index</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="/chat/">Chat</a>
+      <a href="/multi-agent/">Multi-Agent</a>
+      <a href="/galgame/">Galgame</a>
+      <a href="/stats/">Stats</a>
+    </nav>
+  </header>
 
-<header>
-  <h1>Koa-OL</h1>
-  <p>个人项目集合</p>
-  <div class="divider"></div>
-</header>
+  <main>
+    <section class="hero" aria-labelledby="site-title">
+      <div class="hero-copy">
+        <div class="eyebrow">Cloudflare Pages</div>
+        <h1 id="site-title">Koa-OL</h1>
+        <p class="intro">一个给个人实验项目使用的入口页。AI 对话、多 Agent 调度、文字冒险和访问统计都保留在首屏，打开后可以直接进入实际工具。</p>
+        <div class="quick-actions" aria-label="Featured actions">
+          <a class="button" href="/chat/">进入 AI Chat</a>
+          <a class="button secondary" href="/multi-agent/">查看 Multi-Agent</a>
+        </div>
+      </div>
 
-<div class="grid">
-  <a class="card" href="/chat/">
-    <div class="card-label">对话</div>
-    <h2>AI Chat</h2>
-    <p>支持 Claude 与 Qwen 的在线对话，含多轮上下文与文件上传。</p>
-  </a>
-  <a class="card" href="/multi-agent/">
-    <div class="card-label">调度</div>
-    <h2>Multi-Agent</h2>
-    <p>Qwen Orchestrator 自主调度多 Agent 并行协作，实时可视化执行过程。</p>
-  </a>
-  <a class="card" href="/galgame/">
-    <div class="card-label">游戏</div>
-    <h2>Galgame</h2>
-    <p>文字冒险游戏。</p>
-  </a>
-  <a class="card" href="/stats/">
-    <div class="card-label">数据</div>
-    <h2>Stats</h2>
-    <p>Chat 页面的访问数据统计与可视化。</p>
-  </a>
-  <a class="card" href="https://github.com/dticpw" target="_blank" rel="noopener">
-    <div class="card-label">代码</div>
-    <h2>GitHub</h2>
-    <p>个人开源项目与代码仓库。</p>
-  </a>
-  <a class="card" href="https://dash.cloudflare.com" target="_blank" rel="noopener">
-    <div class="card-label">运维</div>
-    <h2>Cloudflare</h2>
-    <p>域名、Pages 与 Workers 管理后台。</p>
-  </a>
+      <div class="project-board" aria-label="Project links">
+        <a class="project-card primary" href="/chat/" style="--accent: var(--forest);">
+          <span class="thumb chat" aria-hidden="true">
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+          </span>
+          <span class="project-meta">
+            <span class="project-label">Conversation</span>
+            <h2>AI Chat</h2>
+            <p>支持 Claude 与 Qwen 的在线对话，含多轮上下文与文件上传。</p>
+          </span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="project-card" href="/multi-agent/" style="--accent: var(--plum);">
+          <span class="thumb agents" aria-hidden="true">
+            <span class="node"></span>
+            <span class="node"></span>
+            <span class="node"></span>
+            <span class="node"></span>
+          </span>
+          <span class="project-meta">
+            <span class="project-label">Orchestration</span>
+            <h2>Multi-Agent</h2>
+            <p>Qwen Orchestrator 自主调度多 Agent 并行协作，并展示执行过程。</p>
+          </span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="project-card" href="/galgame/" style="--accent: var(--rose);">
+          <span class="thumb gal" aria-hidden="true">
+            <img src="/galgame/assets/backgrounds/bg_library.png" alt="">
+          </span>
+          <span class="project-meta">
+            <span class="project-label">Story</span>
+            <h2>Galgame</h2>
+            <p>文字冒险游戏入口，使用现有场景素材呈现项目本体。</p>
+          </span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="project-card" href="/stats/" style="--accent: var(--blue);">
+          <span class="thumb stats" aria-hidden="true">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </span>
+          <span class="project-meta">
+            <span class="project-label">Admin</span>
+            <h2>Stats</h2>
+            <p>Chat 页面的访问数据统计与可视化。</p>
+          </span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="utility" aria-label="External links">
+      <a href="https://github.com/dticpw" target="_blank" rel="noopener">
+        <strong>GitHub</strong>
+        <span>个人开源项目与代码仓库</span>
+      </a>
+      <a href="https://dash.cloudflare.com" target="_blank" rel="noopener">
+        <strong>Cloudflare</strong>
+        <span>域名、Pages 与 Workers 管理后台</span>
+      </a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>koa-ol.com</span>
+    <span>Static project hub deployed on Cloudflare Pages</span>
+  </footer>
 </div>
-
-<footer>koa-ol.com</footer>
-
 </body>
 </html>
