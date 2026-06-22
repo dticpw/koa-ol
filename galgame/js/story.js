@@ -1,13 +1,11 @@
-/**
+﻿/**
  * Galgame 剧情脚本数据
- * 包含所有章节的对话、选项和分支
+ * 主题：一个人把无法说出口的心意，借给了黄昏、书页和奔跑的风。
  */
 
 window.storyData = {
-    // 章节定义
     chapters: {
-        // ========== 第一章：邂逅 ==========
-        chapter1_start: [
+        prologue: [
             {
                 type: 'background',
                 image: 'assets/backgrounds/bg_library.png'
@@ -15,45 +13,60 @@ window.storyData = {
             {
                 type: 'dialog',
                 speaker: '',
-                text: '午后的阳光透过窗户洒进图书馆，空气中弥漫着书籍的淡淡香气。'
+                text: '转学的第一天，我在图书馆最里面的书架后方，发现了一本没有书名的薄册。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '这是我第一次来到这所学校的图书馆。作为转学生，我对这里的一切都充满好奇。'
+                text: '它被夹在《古典文学》和《校史年鉴》之间，封面干净得像从来没有被任何人触碰过。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '正当我在书架间徘徊时，两道身影同时吸引了我的注意...'
+                text: '我翻开第一页。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '纸上只有一句话：\n“请在今天黄昏之前，替我记住一个人。”'
             },
             {
                 type: 'character',
-                image: 'assets/characters/yukine.png'
+                image: 'assets/characters/yukine_v2.png'
             },
             {
                 type: 'dialog',
                 speaker: '???',
-                text: '请问...你是在找什么书吗？'
+                text: '那本书，最好不要一个人读完。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '一位长发飘飘的女生轻声问道，她手中抱着一本古典文学集，紫色的眼眸中透着温柔的光芒。'
-            },
-            {
-                type: 'character',
-                image: 'assets/characters/haru.png'
+                text: '说话的女生站在光里，怀里抱着一本旧诗集。她的声音很轻，却像把整间图书馆的尘埃都叫醒了。'
             },
             {
                 type: 'dialog',
                 speaker: '???',
-                text: '哇！你是新来的转学生吧！我叫天野晴，叫我小晴就好！'
+                text: '我是樱井雪音。这里的书，我大概都认识。包括一些本来不该存在的书。'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/haru_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '???',
+                text: '雪音！你又在吓唬新同学了！'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '一位充满活力的短发女生突然出现在我面前，金色的眼睛闪烁着兴奋的光芒。'
+                text: '另一个女生从书架尽头探出头来，笑得像把窗外的太阳直接带进了室内。'
+            },
+            {
+                type: 'dialog',
+                speaker: '???',
+                text: '我叫天野晴。你可以叫我小晴。以及，先声明，我不是幽灵。至少今天不是。'
             },
             {
                 type: 'character',
@@ -62,322 +75,557 @@ window.storyData = {
             {
                 type: 'dialog',
                 speaker: '',
-                text: '两位女生风格截然不同，却都让我感到一种莫名的亲切。'
+                text: '我低头看那本薄册。刚才空白的第二页，已经浮现出新的字迹。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '“一个会把明天写成诗的人。一个会把昨天跑成风的人。请选择你愿意靠近的奇迹。”'
             },
             {
                 type: 'choice',
-                question: '我应该先和谁交谈呢？',
+                question: '我应该先把这份不可思议交给谁？',
                 choices: [
-                    { text: '和温柔的长发女生说话', next: 'chapter1_yukine' },
-                    { text: '和活泼的短发女生说话', next: 'chapter1_haru' }
+                    { text: '交给安静读诗的雪音', next: 'yukine_library' },
+                    { text: '追上像风一样的小晴', next: 'haru_library' },
+                    { text: '把书合上，问她们到底发生了什么', next: 'truth_library' }
                 ]
             }
         ],
 
-        // 第一章 - 雪音线
-        chapter1_yukine: [
+        yukine_library: [
             {
                 type: 'character',
-                image: 'assets/characters/yukine.png'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '我走向那位温柔的长发女生，她的气质让我感到很平静。'
+                image: 'assets/characters/yukine_v2.png'
             },
             {
                 type: 'dialog',
                 speaker: '我',
-                text: '你好，我确实是新来的转学生。请问你是图书馆的管理员吗？'
+                text: '雪音，这本书说它想让我记住一个人。你知道是什么意思吗？'
             },
             {
                 type: 'dialog',
                 speaker: '樱井雪音',
-                text: '嗯，我是樱井雪音，负责图书馆的日常管理工作。很高兴认识你。'
+                text: '知道一点。每年樱花落下前，图书馆都会多出一本没有书名的书。'
             },
             {
                 type: 'dialog',
                 speaker: '樱井雪音',
-                text: '如果你有什么想找的书，可以告诉我。我对这里的每一本书都很熟悉。'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '她的声音如同潺潺流水，让人不自觉地放松下来。'
+                text: '它会找一个刚来到这里、还没有被任何回忆固定住的人。'
             },
             {
                 type: 'dialog',
                 speaker: '我',
-                text: '那太好了。其实我想找一些诗集...'
+                text: '然后呢？'
             },
             {
                 type: 'dialog',
                 speaker: '樱井雪音',
-                text: '诗集？你也喜欢诗歌吗？'
+                text: '然后，把某个人最珍贵、也最害怕遗失的一天，托付给他。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '她的眼中闪过一丝惊喜，嘴角微微上扬。'
+                text: '她把诗集放在桌上。书页自动翻动，停在一首没有作者的短诗。'
             },
             {
                 type: 'dialog',
                 speaker: '樱井雪音',
-                text: '请跟我来，我知道有一个角落收藏了很多珍贵的诗集。'
+                text: '“若你曾在黄昏握住我的名字，明天醒来，请不要假装那只是梦。”'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '那个午后，我们在诗集的海洋中度过了美好的时光。不知不觉间，我对雪音产生了淡淡的好感...'
+                text: '我忽然觉得这句话不像诗，更像一封很久以前就写给我的信。'
             },
             {
                 type: 'dialog',
-                speaker: '',
-                text: '— 第一章 完 —'
+                speaker: '樱井雪音',
+                text: '放学后，陪我去公园吧。那里有一棵树，会在黄昏回答所有迟到的问题。'
             },
             {
-                type: 'goto',
-                next: 'chapter2_yukine'
+                type: 'choice',
+                question: '我该怎样回应雪音？',
+                choices: [
+                    { text: '答应她，并把薄册交给她保管', next: 'yukine_park_book' },
+                    { text: '答应她，但把薄册留在自己手中', next: 'yukine_park_self' }
+                ]
             }
         ],
 
-        // 第一章 - 小晴线
-        chapter1_haru: [
+        haru_library: [
             {
                 type: 'character',
-                image: 'assets/characters/haru.png'
+                image: 'assets/characters/haru_v2.png'
             },
             {
                 type: 'dialog',
-                speaker: '',
-                text: '那位活泼女生的热情感染了我，我决定先和她聊聊。'
+                speaker: '天野晴',
+                text: '你别听雪音说得那么玄。简单讲，就是这本书有点任性。'
             },
             {
                 type: 'dialog',
                 speaker: '我',
-                text: '你好，我是刚转来的。你怎么知道我是新生？'
+                text: '任性？'
             },
             {
                 type: 'dialog',
                 speaker: '天野晴',
-                text: '因为我认识学校里所有人呀！毕竟我是田径队队长嘛！'
-            },
-            {
-                type: 'dialog',
-                speaker: '天野晴',
-                text: '对了对了，你有没有加入什么社团的打算？我们田径队正在招新哦！'
+                text: '它总是在别人快要忘记重要事情的时候出现。然后装作自己很伟大。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '她说话时手舞足蹈，充满了感染力。'
+                text: '小晴笑着把手背到身后，语气很轻松，眼神却不知为何避开了我。'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '我以前也被它选中过。结果第二天醒来，只有我记得那一天。'
             },
             {
                 type: 'dialog',
                 speaker: '我',
-                text: '田径队吗？我运动细胞不太好...'
+                text: '那不是很寂寞吗？'
             },
             {
                 type: 'dialog',
                 speaker: '天野晴',
-                text: '没关系没关系！运动最重要的是开心！我可以教你的！'
+                text: '所以我才跑得很快啊。只要跑得够快，寂寞就追不上来。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '她说完，像害怕我看见她真正的表情一样，立刻举起手。'
             },
             {
                 type: 'dialog',
                 speaker: '天野晴',
-                text: '不如这样，明天放学后来操场找我，让我看看你的潜力！'
+                text: '放学后来公园。我要带你看一个只有黄昏才能抵达的终点。'
             },
             {
-                type: 'dialog',
-                speaker: '',
-                text: '她的笑容像阳光一样灿烂，让人无法拒绝。'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '那天，小晴拉着我逛遍了整个学校。她的活力和热情让原本有些紧张的我完全放松了下来...'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '— 第一章 完 —'
-            },
-            {
-                type: 'goto',
-                next: 'chapter2_haru'
+                type: 'choice',
+                question: '我该怎样回应小晴？',
+                choices: [
+                    { text: '答应她，和她一起跑到终点', next: 'haru_park_run' },
+                    { text: '答应她，但问她是否也想停下来', next: 'haru_park_stay' }
+                ]
             }
         ],
 
-        // ========== 第二章：心动 - 雪音线 ==========
-        chapter2_yukine: [
+        truth_library: [
+            {
+                type: 'character',
+                image: ''
+            },
+            {
+                type: 'dialog',
+                speaker: '我',
+                text: '在选择之前，我想知道真相。你们两个都认识这本书，对吧？'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/yukine_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '樱井雪音',
+                text: '认识。只是我习惯把真相慢慢说。'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/haru_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '而我习惯把真相先跑赢，再回头解释。'
+            },
+            {
+                type: 'character',
+                image: ''
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '薄册的书页忽然被风翻开。上面浮出一张很淡的合照。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '照片里，雪音和小晴坐在樱花树下。中间的位置空着，像是在等一个迟到的人。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '照片背面写着：\n“如果第三个人没有来，我们就会忘记彼此曾经等待过。”'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '我胸口一紧。原来这不是一场关于谁被选择的故事。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '这是两个人在被世界轻轻擦掉之前，最后一次向陌生人求救。'
+            },
+            {
+                type: 'choice',
+                question: '我想成为怎样的第三个人？',
+                choices: [
+                    { text: '记住雪音没有说完的诗', next: 'yukine_park_self' },
+                    { text: '追上小晴没有跑完的路', next: 'haru_park_stay' },
+                    { text: '把她们都带去那棵黄昏的树下', next: 'shared_park' }
+                ]
+            }
+        ],
+
+        yukine_park_book: [
             {
                 type: 'background',
                 image: 'assets/backgrounds/bg_park.png'
             },
             {
-                type: 'dialog',
-                speaker: '',
-                text: '几周后的一个傍晚，雪音邀请我一起去公园散步。'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '樱花正值盛开的季节，粉色的花瓣在微风中轻轻飘落。'
-            },
-            {
                 type: 'character',
-                image: 'assets/characters/yukine.png'
+                image: 'assets/characters/yukine_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '黄昏的公园像被温柔地浸在蜂蜜里。雪音抱着那本薄册，站在樱花树下等我。'
             },
             {
                 type: 'dialog',
                 speaker: '樱井雪音',
-                text: '这里是我最喜欢的地方。每年春天，我都会来这里读书。'
+                text: '你把书交给我时，我很高兴，也有点害怕。'
             },
             {
                 type: 'dialog',
                 speaker: '我',
-                text: '确实很美。谢谢你愿意和我分享这个地方。'
+                text: '为什么？'
             },
             {
                 type: 'dialog',
                 speaker: '樱井雪音',
-                text: '......'
+                text: '因为被信任的人，最容易变得贪心。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '她低下头，脸颊微微泛红。'
+                text: '她翻开薄册。书页上不是文字，而是一片片正在变透明的樱花。'
             },
             {
                 type: 'dialog',
                 speaker: '樱井雪音',
-                text: '其实...自从遇见你之后，我一直在想一件事。'
+                text: '如果我在这里写下你的名字，明天你会忘记今天发生过什么。'
             },
             {
                 type: 'dialog',
                 speaker: '樱井雪音',
-                text: '以前，我总觉得书本就是我的一切。但是现在...'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '她抬起头，紫色的眼眸注视着我。'
-            },
-            {
-                type: 'dialog',
-                speaker: '樱井雪音',
-                text: '现在，我发现...有些故事，必须要和特别的人一起书写。'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '一片樱花瓣轻轻落在她的发丝上，美得令人心醉。'
+                text: '但我可以记得。记很久，久到你某天再次路过图书馆，会忽然觉得某本书很熟悉。'
             },
             {
                 type: 'dialog',
                 speaker: '我',
-                text: '雪音...'
+                text: '那样你会不会太孤单？'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '我轻轻握住她的手。在这个樱花飘落的傍晚，我们的故事才刚刚开始...'
+                text: '雪音沉默了一会儿，把笔递给我。'
+            },
+            {
+                type: 'dialog',
+                speaker: '樱井雪音',
+                text: '所以我希望你来写。不是写我的名字，是写你想留下的那一句。'
             },
             {
                 type: 'ending',
-                title: 'Ending A：诗与远方',
-                text: '与雪音相伴的日子，像一首优美的长诗，\n细腻而深情。在书香与花香中，\n我们找到了彼此的归宿。'
+                title: 'Ending A：写在明天背面的诗',
+                text: '我写下：“如果明天忘记了你，\n请让风替我翻到这一页。”\n第二天，我在图书馆醒来，什么都想不起来。\n可每当黄昏靠近，我总会无端想念一个温柔的名字。'
             }
         ],
 
-        // ========== 第二章：心动 - 小晴线 ==========
-        chapter2_haru: [
+        yukine_park_self: [
             {
                 type: 'background',
                 image: 'assets/backgrounds/bg_park.png'
             },
             {
-                type: 'dialog',
-                speaker: '',
-                text: '运动会结束后的傍晚，小晴拉着我来到公园。'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '夕阳将天空染成橙红色，樱花在微风中轻轻摇曳。'
-            },
-            {
                 type: 'character',
-                image: 'assets/characters/haru.png'
+                image: 'assets/characters/yukine_v2.png'
             },
             {
                 type: 'dialog',
-                speaker: '天野晴',
-                text: '呼——今天真的太累了！但是拿到冠军好开心！'
+                speaker: '',
+                text: '我把薄册带到公园。雪音看见它还在我手里，像是松了一口气。'
+            },
+            {
+                type: 'dialog',
+                speaker: '樱井雪音',
+                text: '你选择自己保管它。这样很好。'
             },
             {
                 type: 'dialog',
                 speaker: '我',
-                text: '恭喜你啊，小晴。你在赛场上真的很耀眼。'
-            },
-            {
-                type: 'dialog',
-                speaker: '天野晴',
-                text: '嘿嘿，当然啦！不过...'
+                text: '因为我不想让任何一个人独自承担记忆。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '她突然安静下来，这对她来说很不寻常。'
+                text: '树影摇晃。薄册里飘出细小的光点，像有无数无人寄出的信终于找到了地址。'
             },
             {
                 type: 'dialog',
-                speaker: '天野晴',
-                text: '其实，今天我能跑这么快，是因为知道你在看着我。'
+                speaker: '樱井雪音',
+                text: '我一直以为，喜欢一个人，就是替他保存所有他会遗忘的东西。'
             },
             {
                 type: 'dialog',
-                speaker: '我',
-                text: '诶？'
-            },
-            {
-                type: 'dialog',
-                speaker: '天野晴',
-                text: '我一直都是独自奔跑...但是自从认识你之后，我发现...'
+                speaker: '樱井雪音',
+                text: '现在我好像明白了。喜欢也可以是把书递出去，然后相信对方会和你一起读下去。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '她的脸变得和夕阳一样红。'
-            },
-            {
-                type: 'dialog',
-                speaker: '天野晴',
-                text: '有一个人在终点等着我，感觉真的很好！'
+                text: '她伸出手。我没有握住她的指尖，而是把薄册放在我们掌心之间。'
             },
             {
                 type: 'dialog',
                 speaker: '',
-                text: '她抬起头，金色的眼眸在夕阳下闪闪发光。'
-            },
-            {
-                type: 'dialog',
-                speaker: '天野晴',
-                text: '所以...以后也请继续在终点等我，好吗？'
-            },
-            {
-                type: 'dialog',
-                speaker: '',
-                text: '我微笑着点头。在这个夕阳西下的公园里，一段新的旅程开始了...'
+                text: '那一刻，纸页轻轻发热。我的心跳、她的呼吸、远处小晴练跑的脚步声，都被写进同一行字里。'
             },
             {
                 type: 'ending',
-                title: 'Ending B：阳光与奔跑',
-                text: '与小晴相伴的日子，充满活力与欢笑。\n她教会我，人生就像一场马拉松，\n最重要的不是速度，而是身边的人。'
+                title: 'Ending B：共读者',
+                text: '薄册没有消失，而是变成了一张借书卡。\n借阅人一栏写着两个名字。\n从那以后，我和雪音每周都会在黄昏读一页。\n我们没有急着说喜欢，因为有些感情，会自己长成一本书。'
+            }
+        ],
+
+        haru_park_run: [
+            {
+                type: 'background',
+                image: 'assets/backgrounds/bg_park.png'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/haru_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '小晴拉着我穿过樱花树下的石板路。她跑得很快，却始终没有松开我的手。'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '看见前面那张长椅了吗？如果在夕阳完全落下前跑到那里，就可以听见昨天的声音。'
+            },
+            {
+                type: 'dialog',
+                speaker: '我',
+                text: '昨天会说什么？'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '通常是一些很没用的话。比如“别逞强”，比如“其实你可以哭”。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '她笑着说，眼角却被风吹得发亮。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '我们抵达长椅时，夕阳刚好落在她肩上。薄册自己翻开，里面夹着一张旧号码布。'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '那是我第一次输掉比赛的号码。也是第一次有人对我说，跑慢一点也没关系。'
+            },
+            {
+                type: 'dialog',
+                speaker: '我',
+                text: '那个人是谁？'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '小晴看着我，像看着一个她等了很久、却刚刚才认识的人。'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '也许是你。也许是我希望能遇见的你。'
+            },
+            {
+                type: 'ending',
+                title: 'Ending C：昨天终点线',
+                text: '我们坐在长椅上，听见昨天的风从耳边跑过。\n它说：“你终于等到了。”\n后来小晴还是跑得很快。\n只是每次经过终点，她都会回头，确认我还在那里。'
+            }
+        ],
+
+        haru_park_stay: [
+            {
+                type: 'background',
+                image: 'assets/backgrounds/bg_park.png'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/haru_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '我没有立刻跟她跑。小晴已经迈出去的脚步，在听见我的问题后停了下来。'
+            },
+            {
+                type: 'dialog',
+                speaker: '我',
+                text: '小晴，你有没有想过，不用一直跑也可以？'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '不跑的话，很多东西就会追上来。'
+            },
+            {
+                type: 'dialog',
+                speaker: '我',
+                text: '那我陪你一起被追上。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '她愣住了。樱花落在她头发上，她没有像平时那样立刻甩开。'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '你这个人，很奇怪。'
+            },
+            {
+                type: 'dialog',
+                speaker: '我',
+                text: '这不是你们一开始就告诉我的吗？今天本来就是奇怪的一天。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '小晴低下头，笑了一声。那不是平时灿烂的笑，而是终于不用假装没事的笑。'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '那你不准先走。至少等我把害怕的事情说完。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '我们在黄昏里坐了很久。薄册没有翻页，只是在她每次停顿时，替她把沉默保存下来。'
+            },
+            {
+                type: 'ending',
+                title: 'Ending D：停下来的风',
+                text: '那天以后，小晴偶尔会在跑步前来找我。\n她说：“今天我可能跑不快。”\n我说：“那我就慢慢等。”\n有些风不是为了抵达远方，而是为了终于能在某个人身边停下。'
+            }
+        ],
+
+        shared_park: [
+            {
+                type: 'background',
+                image: 'assets/backgrounds/bg_park.png'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/yukine_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '我把雪音带到樱花树下。她看着远处跑来的小晴，眼神像翻到最后一页的书。'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/haru_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '我没有迟到吧？'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/yukine_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '樱井雪音',
+                text: '没有。只是我等得有点久。'
+            },
+            {
+                type: 'character',
+                image: ''
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '薄册从我手中升起，停在三个人之间。书页哗啦啦地翻动，像一群急着回家的鸟。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '里面不是我的故事，也不只是她们的故事。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '那是许多曾经差一点错过的人，在某个黄昏终于被谁记住的瞬间。'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/haru_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '天野晴',
+                text: '如果明天大家都忘了怎么办？'
+            },
+            {
+                type: 'character',
+                image: 'assets/characters/yukine_v2.png'
+            },
+            {
+                type: 'dialog',
+                speaker: '樱井雪音',
+                text: '那就从后天开始，再认识一次。'
+            },
+            {
+                type: 'character',
+                image: ''
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '我忽然明白，难忘并不意味着永远不会遗忘。'
+            },
+            {
+                type: 'dialog',
+                speaker: '',
+                text: '难忘是即使世界替你擦掉证据，心里仍会留下一个温热的空位，等待某个人再次坐下。'
+            },
+            {
+                type: 'ending',
+                title: 'True Ending：第三张借书卡',
+                text: '第二天，图书馆的无名薄册消失了。\n取而代之的是三张借书卡：雪音、小晴，以及我。\n我们没有讨论昨天是否真实。\n因为当三个人同时想念同一个黄昏时，\n它就已经足够真实。'
             }
         ]
     },
 
-    // 起始章节
-    startChapter: 'chapter1_start'
+    startChapter: 'prologue'
 };
+

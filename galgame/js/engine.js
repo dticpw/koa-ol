@@ -9,6 +9,9 @@ class VisualNovelEngine {
         this.titleScreen = document.getElementById('title-screen');
         this.gameScreen = document.getElementById('game-screen');
         this.endingScreen = document.getElementById('ending-screen');
+        this.loadingScreen = document.getElementById('loading-screen');
+        this.loadingProgress = document.getElementById('loading-progress');
+        this.loadingText = document.getElementById('loading-text');
 
         this.background = document.getElementById('background');
         this.characterImg = document.getElementById('character');
@@ -17,6 +20,7 @@ class VisualNovelEngine {
         this.speakerName = document.getElementById('speaker-name');
         this.dialogText = document.getElementById('dialog-text');
         this.choicesContainer = document.getElementById('choices-container');
+        this.sceneLabel = document.getElementById('scene-label');
 
         this.endingTitle = document.getElementById('ending-title');
         this.endingText = document.getElementById('ending-text');
@@ -33,6 +37,7 @@ class VisualNovelEngine {
 
         // 绑定事件
         this.bindEvents();
+        this.preloadAssets();
     }
 
     /**
@@ -47,6 +52,14 @@ class VisualNovelEngine {
         // 重新开始按钮
         document.getElementById('restart-btn').addEventListener('click', () => {
             this.returnToTitle();
+        });
+
+        document.getElementById('home-btn').addEventListener('click', () => {
+            this.returnToTitle();
+        });
+
+        document.getElementById('skip-btn').addEventListener('click', () => {
+            this.handleDialogClick();
         });
 
         // 对话框点击
@@ -73,6 +86,54 @@ class VisualNovelEngine {
         this.gameScreen.classList.remove('active');
         this.endingScreen.classList.remove('active');
         screen.classList.add('active');
+    }
+
+    /**
+     * 预加载剧情中使用的图片，避免角色或背景首次出现时闪入。
+     */
+    preloadAssets() {
+        const assets = new Set();
+
+        Object.values(storyData.chapters).forEach((chapter) => {
+            chapter.forEach((node) => {
+                if ((node.type === 'background' || node.type === 'character') && node.image) {
+                    assets.add(node.image);
+                }
+            });
+        });
+
+        const assetList = Array.from(assets);
+
+        if (assetList.length === 0) {
+            this.finishLoading();
+            return;
+        }
+
+        let loaded = 0;
+        const update = () => {
+            loaded++;
+            const percent = Math.round((loaded / assetList.length) * 100);
+            this.loadingProgress.style.width = `${percent}%`;
+            this.loadingText.textContent = percent >= 100 ? '书页已经归位。' : `正在整理遗失的书页... ${percent}%`;
+            if (loaded >= assetList.length) {
+                window.setTimeout(() => this.finishLoading(), 260);
+            }
+        };
+
+        assetList.forEach((src) => {
+            const img = new window.Image();
+            img.onload = update;
+            img.onerror = update;
+            img.src = src;
+        });
+    }
+
+    /**
+     * 结束加载并显示标题。
+     */
+    finishLoading() {
+        this.loadingScreen.classList.remove('active');
+        this.showScreen(this.titleScreen);
     }
 
     /**
@@ -170,6 +231,7 @@ class VisualNovelEngine {
      */
     setBackground(imagePath) {
         this.background.style.opacity = '0';
+        this.sceneLabel.textContent = imagePath.includes('park') ? '黄昏公园' : '无名薄册';
 
         setTimeout(() => {
             this.background.style.backgroundImage = `url('${imagePath}')`;

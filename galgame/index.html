@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="一个轻量级视觉小说游戏 - 邂逅与心动的故事">
     <title>邂逅物语 | Galgame</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/style.css?v=20260607-vnui">
 </head>
 <body>
+    <!-- 加载界面 -->
+    <div id="loading-screen" class="loading-screen active">
+        <div class="loading-panel">
+            <div class="loading-mark">邂</div>
+            <div class="loading-title">邂逅物语</div>
+            <div class="loading-bar"><span id="loading-progress"></span></div>
+            <div id="loading-text" class="loading-text">正在整理遗失的书页...</div>
+        </div>
+    </div>
+
     <!-- 主菜单界面 -->
-    <div id="title-screen" class="screen active">
+    <div id="title-screen" class="screen">
         <div class="title-container">
             <div class="title-glow"></div>
             <h1 class="game-title">邂逅物语</h1>
@@ -23,6 +34,23 @@
     <div id="game-screen" class="screen">
         <!-- 背景层 -->
         <div id="background" class="background"></div>
+        <div class="scene-vignette"></div>
+        <div class="memory-grain"></div>
+
+        <!-- 顶部信息层 -->
+        <div class="vn-hud">
+            <div class="vn-brand">
+                <span class="vn-mark">邂</span>
+                <span>
+                    <strong>邂逅物语</strong>
+                    <small id="scene-label">无名薄册</small>
+                </span>
+            </div>
+            <div class="vn-actions">
+                <button id="skip-btn" class="hud-btn" type="button">快进</button>
+                <button id="home-btn" class="hud-btn" type="button">标题</button>
+            </div>
+        </div>
         
         <!-- 角色立绘层 -->
         <div id="character-container" class="character-container">
@@ -31,9 +59,11 @@
         
         <!-- 对话框层 -->
         <div id="dialog-box" class="dialog-box">
-            <div class="speaker-name" id="speaker-name"></div>
-            <div class="dialog-text" id="dialog-text"></div>
-            <div class="click-indicator">▼</div>
+            <div class="dialog-inner">
+                <div class="speaker-name" id="speaker-name"></div>
+                <div class="dialog-text" id="dialog-text"></div>
+                <div class="click-indicator">▼</div>
+            </div>
         </div>
         
         <!-- 选项层 -->
@@ -49,7 +79,7 @@
         </div>
     </div>
 
-    <script src="js/story.js"></script>
-    <script src="js/engine.js"></script>
+    <script src="js/story.js?v=20260607-memory-v2"></script>
+    <script src="js/engine.js?v=20260607-vnui"></script>
 </body>
 </html>
