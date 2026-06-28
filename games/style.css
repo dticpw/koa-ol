@@ -211,6 +211,11 @@ h1 {
   gap: 14px;
 }
 
+.room-actions {
+  display: flex;
+  gap: 10px;
+}
+
 #room-badge {
   display: inline-block;
   margin-bottom: 8px;
@@ -334,6 +339,159 @@ h1 {
   font-size: 13px;
 }
 
+.card-back {
+  background:
+    linear-gradient(135deg, transparent 0 42%, rgba(255, 253, 248, 0.22) 42% 58%, transparent 58%),
+    var(--red);
+  color: #fff7e7;
+}
+
+.texas-table {
+  display: grid;
+  gap: 14px;
+}
+
+.texas-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.texas-board > div {
+  min-height: 72px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 246, 223, 0.08);
+}
+
+.state-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font: 800 12px ui-sans-serif, system-ui, sans-serif;
+}
+
+.texas-board strong {
+  font-size: 22px;
+}
+
+.community-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px dashed rgba(242, 185, 75, 0.48);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.community-row > span {
+  color: var(--gold);
+  font: 900 15px ui-sans-serif, system-ui, sans-serif;
+}
+
+.texas-player-grid,
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.texas-player,
+.result-card {
+  display: grid;
+  gap: 10px;
+  min-height: 128px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 246, 223, 0.08);
+}
+
+.texas-player.is-current {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(242, 185, 75, 0.16);
+}
+
+.texas-player.is-self {
+  background: rgba(31, 122, 79, 0.32);
+}
+
+.texas-player.is-folded {
+  opacity: 0.58;
+}
+
+.texas-player-top,
+.texas-numbers {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.texas-player-top strong {
+  font: 900 18px ui-sans-serif, system-ui, sans-serif;
+}
+
+.texas-player-top span,
+.texas-numbers span,
+.result-card span {
+  color: var(--muted);
+  font: 800 12px ui-sans-serif, system-ui, sans-serif;
+}
+
+.texas-cards {
+  min-height: 44px;
+}
+
+.action-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, auto)) minmax(170px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(242, 185, 75, 0.48);
+  background: rgba(242, 185, 75, 0.12);
+}
+
+.action-strip button,
+.inline-action {
+  min-height: 44px;
+  border: 0;
+  background: var(--gold);
+  color: #17110a;
+  font: 900 14px ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.action-strip button:first-child {
+  background: var(--red);
+  color: #fff;
+}
+
+.action-strip label {
+  display: grid;
+  grid-template-columns: auto minmax(80px, 1fr);
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  font: 800 12px ui-sans-serif, system-ui, sans-serif;
+}
+
+.action-strip input {
+  min-height: 44px;
+  font-size: 15px;
+}
+
+.muted-action {
+  display: block;
+  color: var(--muted);
+  font: 900 15px ui-sans-serif, system-ui, sans-serif;
+}
+
+.result-card.winner {
+  border-color: var(--gold);
+  background: rgba(242, 185, 75, 0.16);
+}
+
 .game-switch {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -358,6 +516,12 @@ h1 {
   border-color: var(--gold);
   background: rgba(242, 185, 75, 0.18);
   box-shadow: inset 0 0 0 2px rgba(242, 185, 75, 0.2), 0 0 34px rgba(242, 185, 75, 0.16);
+}
+
+.game-tile.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  filter: grayscale(0.7);
 }
 
 .game-tile strong,
@@ -555,7 +719,14 @@ input:focus {
   }
 
   .player-list,
-  .state-grid {
+  .state-grid,
+  .texas-board,
+  .texas-player-grid,
+  .results-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .action-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -588,12 +759,26 @@ input:focus {
     flex-direction: column;
   }
 
+  .room-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
   .start-button {
     width: 100%;
   }
 
   .player-list,
-  .state-grid {
+  .state-grid,
+  .texas-board,
+  .texas-player-grid,
+  .results-grid,
+  .community-row,
+  .action-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .action-strip label {
     grid-template-columns: 1fr;
   }
 }

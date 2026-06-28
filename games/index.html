@@ -35,18 +35,18 @@
 
     <section class="play-card" aria-label="Create or join a room">
       <div class="game-switch" aria-label="Choose game">
-        <button class="game-tile is-selected" type="button" data-game-card="blackjack">
+        <button class="game-tile is-disabled" type="button" data-game-card="blackjack" aria-disabled="true">
           <span class="card-stack" aria-hidden="true">
             <i>A</i>
             <i>K</i>
           </span>
           <span>
             <strong>21 点</strong>
-            <small>Blackjack</small>
+            <small>稍后接入</small>
           </span>
         </button>
 
-        <button class="game-tile" type="button" data-game-card="texas">
+        <button class="game-tile is-selected" type="button" data-game-card="texas">
           <span class="card-stack" aria-hidden="true">
             <i>10</i>
             <i>J</i>
@@ -59,7 +59,7 @@
       </div>
 
       <form class="room-form" id="room-form">
-        <input id="game-type" name="gameType" type="hidden" value="blackjack">
+        <input id="game-type" name="gameType" type="hidden" value="texas">
 
         <label class="field">
           <span>你的昵称</span>
@@ -96,7 +96,10 @@
           <span id="room-badge">ROOM</span>
           <h2 id="room-title">等待进入房间</h2>
         </div>
-        <button class="button primary start-button" id="start-game" type="button" disabled>开始游戏</button>
+        <div class="room-actions">
+          <button class="button secondary start-button" id="leave-room" type="button">离开房间</button>
+          <button class="button primary start-button" id="start-game" type="button" disabled>开始游戏</button>
+        </div>
       </div>
 
       <div class="room-meta">
