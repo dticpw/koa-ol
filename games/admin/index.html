@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Koa-OL Games administrator console.">
+<title>Koa-OL Games Admin</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<div class="admin-shell">
+  <header class="admin-topbar">
+    <a class="brand" href="/games/">
+      <span class="brand-mark">K</span>
+      <span>
+        <strong>Koa-OL Admin</strong>
+        <small>Render poker backend</small>
+      </span>
+    </a>
+    <nav class="top-actions">
+      <a href="/games/">返回游戏页</a>
+      <button id="logout-button" type="button" hidden>退出登录</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="login-card" id="login-card">
+      <div>
+        <p class="eyebrow">管理员登录</p>
+        <h1>管理房间与在线牌局</h1>
+        <p>登录后可查看所有房间、踢出玩家、结束游戏、删除房间、广播消息和清理空房间。</p>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <label>
+          <span>管理员账号</span>
+          <input id="admin-username" name="username" autocomplete="username" value="admin" required>
+        </label>
+        <label>
+          <span>管理员密码</span>
+          <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="primary-button" type="submit">登录</button>
+        <p class="form-message" id="login-message" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="dashboard" id="dashboard" hidden>
+      <div class="dashboard-head">
+        <div>
+          <p class="eyebrow">控制台</p>
+          <h1>服务器状态</h1>
+        </div>
+        <button class="secondary-button" id="refresh-button" type="button">刷新</button>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Admin tabs">
+        <button class="tab is-active" type="button" data-tab="stats">统计</button>
+        <button class="tab" type="button" data-tab="rooms">房间管理</button>
+        <button class="tab" type="button" data-tab="broadcast">广播</button>
+      </div>
+
+      <section class="tab-panel" id="stats-panel">
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="admin-card">
+          <div class="section-head">
+            <h2>快捷操作</h2>
+            <button class="warning-button" id="cleanup-button" type="button">清理空房间</button>
+          </div>
+          <p class="muted">清理后会通知大厅刷新房间列表。</p>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="rooms-panel" hidden>
+        <div class="section-head">
+          <h2>所有房间</h2>
+          <span id="room-count">0 个房间</span>
+        </div>
+        <div class="rooms-list" id="rooms-list"></div>
+      </section>
+
+      <section class="tab-panel" id="broadcast-panel" hidden>
+        <div class="admin-card">
+          <h2>发送广播</h2>
+          <textarea id="broadcast-message" rows="5" placeholder="输入要发送给所有在线用户的消息"></textarea>
+          <div class="broadcast-actions">
+            <p class="muted" id="broadcast-hint">消息将发送给当前在线用户。</p>
+            <button class="primary-button" id="broadcast-button" type="button">发送广播</button>
+          </div>
+        </div>
+      </section>
+
+      <p class="status-line" id="status-line" aria-live="polite"></p>
+    </section>
+  </main>
+</div>
+
+<script src="./admin.js"></script>
+</body>
+</html>
