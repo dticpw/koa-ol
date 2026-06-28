@@ -33,7 +33,7 @@ const STORAGE_KEY = "koaOlGamesLobby";
 const PLAYER_ID_KEY = "koaOlRenderPokerPlayerId";
 const WS_RECONNECT_MS = 1600;
 const DEFAULT_SMALL_BLIND = 1;
-const DEFAULT_MAX_BET_SMALL_BLIND_MULTIPLIER = 20;
+const DEFAULT_MAX_BET_SMALL_BLIND_MULTIPLIER = 100;
 
 let currentRoom = null;
 let currentGameState = null;
@@ -47,6 +47,8 @@ let isManualDisconnect = false;
 let wsUserId = null;
 let personalSyncInFlight = false;
 let gameLogs = [];
+let selfHoleCardsByRoom = new Map();
+let personalSyncTimer = null;
 let hostSettings = {
   smallBlind: DEFAULT_SMALL_BLIND,
   maxHandBet: DEFAULT_SMALL_BLIND * DEFAULT_MAX_BET_SMALL_BLIND_MULTIPLIER,
@@ -246,10 +248,11 @@ async function startTexasGame(roomId) {
     });
     if (data.game_state) {
       addGameLog("房主已开始游戏。");
+      clearSelfHoleCards(roomId);
       renderGameState(data.game_state);
       showStatus("游戏中", phaseLabel(data.game_state.phase), "游戏已开始。");
     }
-    window.setTimeout(syncPersonalGameState, 400);
+    queuePersonalGameStateSync(200);
   } catch (error) {
     showError(error);
   } finally {
@@ -323,7 +326,7 @@ async function sendTexasAction(action, amount = 0) {
       },
     });
     addGameLog(`你选择了 ${actionLabel(action)}${amount ? ` ${amount}` : ""}。`);
-    window.setTimeout(syncPersonalGameState, 400);
+    queuePersonalGameStateSync(300);
   } catch (error) {
     showError(error);
   } finally {
@@ -341,9 +344,10 @@ async function resetTexasGame() {
       body: { user_id: getPlayerId() },
     });
     if (data.game_state) {
+      clearSelfHoleCards(currentRoom.room_id);
       renderGameState(data.game_state);
     }
-    window.setTimeout(syncPersonalGameState, 400);
+    queuePersonalGameStateSync(200);
   } catch (error) {
     showError(error);
   } finally {
@@ -378,6 +382,54 @@ async function syncPersonalGameState() {
   }
 }
 
+function queuePersonalGameStateSync(delay = 250) {
+  clearTimeout(personalSyncTimer);
+  personalSyncTimer = window.setTimeout(syncPersonalGameState, delay);
+}
+
+function mergeSelfHoleCards(state) {
+  const selfId = getPlayerId();
+  const self = state?.players?.[selfId];
+  if (!state || !self) return state;
+
+  const roomId = state.room_id || currentRoom?.room_id || "";
+  if (hasVisibleHoleCards(self.hole_cards)) {
+    selfHoleCardsByRoom.set(roomId, [...self.hole_cards]);
+    return state;
+  }
+
+  const cachedCards = selfHoleCardsByRoom.get(roomId);
+  if (self.has_cards && hasVisibleHoleCards(cachedCards)) {
+    return {
+      ...state,
+      players: {
+        ...state.players,
+        [selfId]: {
+          ...self,
+          hole_cards: [...cachedCards],
+        },
+      },
+    };
+  }
+
+  return state;
+}
+
+function clearSelfHoleCards(roomId) {
+  if (roomId) {
+    selfHoleCardsByRoom.delete(roomId);
+  } else {
+    selfHoleCardsByRoom.clear();
+  }
+}
+
+function hasVisibleHoleCards(cards) {
+  return Array.isArray(cards) && cards.length === 2 && cards.every((card) => {
+    const value = String(card || "");
+    return value && value !== "XX" && value !== "??";
+  });
+}
+
 async function leaveRoom() {
   if (!currentRoom) return;
 
@@ -405,9 +457,11 @@ async function leaveRoom() {
 function clearCurrentRoom() {
   currentRoom = null;
   currentGameState = null;
+  selfHoleCardsByRoom = new Map();
   resetGameLog();
   clearInterval(roomPollTimer);
   clearInterval(countdownTimer);
+  clearTimeout(personalSyncTimer);
   roomPollTimer = null;
   countdownTimer = null;
   roomCodeInput.value = "";
@@ -511,6 +565,7 @@ function handleWsMessage(message) {
     case "game_state_sync":
       if (message.game_state) {
         if (message.type === "game_started") addGameLog("牌局开始。");
+        if (message.type === "game_started") clearSelfHoleCards(message.game_state.room_id);
         renderGameState(message.game_state);
         showStatus("游戏中", phaseLabel(message.game_state.phase), "Render 后端正在同步牌局。");
       }
@@ -650,6 +705,7 @@ function renderPlayer(player, room, index) {
 }
 
 function renderGameState(state) {
+  state = mergeSelfHoleCards(state);
   currentGameState = state;
   gameState.hidden = false;
   gameStateTitle.textContent = "牌局进行中";
@@ -719,6 +775,9 @@ function renderGameState(state) {
   }
 
   startCountdown(state.time_remaining);
+  if (self?.has_cards && !hasVisibleHoleCards(self.hole_cards)) {
+    queuePersonalGameStateSync(150);
+  }
 }
 
 function renderWaitingRoom(room, isHost, canStart) {
