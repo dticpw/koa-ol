@@ -1029,3 +1029,42 @@ wss://poker-backend-2fs9.onrender.com
 - 验证两名玩家轮流行动时，`fold/check/call/bet/raise` 是否能稳定同步。
 - 验证超时、摊牌、结算、再来一局流程。
 - 如果 Render WebSocket 502 频率较高，优先检查 Render 服务是否处于免费休眠实例，必要时升级实例或迁移实时后端到更稳定的常驻服务。
+
+## 房间码加入问题排查记录
+
+现象：
+
+- 创建房间后得到的房间码类似：
+
+```text
+463feac7-5953-415c-96ce-9fdf2f7acd70
+```
+
+- 在无痕窗口手动填入该房间码加入时，页面提示：
+
+```text
+错误，操作失败，room not found
+```
+
+排查结论：
+
+- Render 后端实际能查到这个完整房间号，房间仍然存在。
+- 问题出在 `games/index.html` 中房间码输入框原本设置了 `maxlength="16"`。
+- Render 后端生成的房间号是 36 位 UUID，因此用户粘贴完整房间号时会被浏览器截断。
+- 前端最终提交给后端的是不完整房间号，所以后端返回 `Room not found`。
+
+修复：
+
+- 将房间码输入框长度放宽到 `maxlength="128"`。
+- 房间码输入框改为支持粘贴完整房间链接。
+- `games/app.js` 新增 `extractRoomCode()`：
+  - 如果输入的是完整 URL，会读取 `room=` 参数。
+  - 如果输入的是普通文本，会优先识别 UUID。
+  - 如果都不是，则按原文本作为房间号提交。
+
+验证结果：
+
+- 本地页面粘贴 `https://koa-ol.com/games/?room=463feac7-5953-415c-96ce-9fdf2f7acd70&game=texas`。
+- 点击“加入房间”后，前端成功提取完整 UUID。
+- Render 后端加入成功。
+- 页面显示 `2 / 8 玩家`。

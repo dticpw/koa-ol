@@ -61,7 +61,6 @@ if (urlRoom) {
 playerNameInput.addEventListener("input", persistState);
 
 roomCodeInput.addEventListener("input", () => {
-  roomCodeInput.value = roomCodeInput.value.trim();
   persistState();
 });
 
@@ -145,7 +144,7 @@ async function createRoom() {
 }
 
 async function joinRoom() {
-  const roomId = roomCodeInput.value.trim();
+  const roomId = extractRoomCode(roomCodeInput.value);
   if (!roomId) {
     showNeedCode();
     return;
@@ -842,4 +841,20 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function extractRoomCode(value) {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) return "";
+
+  try {
+    const url = new URL(trimmed);
+    const room = url.searchParams.get("room");
+    if (room) return room.trim();
+  } catch {
+    // Plain room IDs are expected; URLs are only a convenience.
+  }
+
+  const match = trimmed.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
+  return match ? match[0] : trimmed;
 }
