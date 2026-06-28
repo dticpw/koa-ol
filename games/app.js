@@ -39,6 +39,7 @@ let ws = null;
 let reconnectTimer = null;
 let pingTimer = null;
 let roomPollTimer = null;
+let countdownTimer = null;
 let wsReconnectAttempts = 0;
 let isManualDisconnect = false;
 let wsUserId = null;
@@ -314,7 +315,9 @@ function clearCurrentRoom() {
   currentGameState = null;
   resetGameLog();
   clearInterval(roomPollTimer);
+  clearInterval(countdownTimer);
   roomPollTimer = null;
+  countdownTimer = null;
   roomCodeInput.value = "";
   roomCard.hidden = true;
   setAppMode("lobby");
@@ -566,35 +569,37 @@ function renderGameState(state) {
   const players = Object.values(state.players || {});
   const isCreator = currentRoom?.creator_id === getPlayerId();
   const isMyTurn = state.current_player === getPlayerId();
+  const tablePlayers = arrangeTablePlayers(players, getPlayerId());
+  const currentPlayer = players.find((player) => player.user_id === state.current_player);
 
   gameStateBody.innerHTML = `
-    <div class="texas-table">
-      <div class="texas-board">
-        <div>
-          <span class="state-label">阶段</span>
-          <strong>${phaseLabel(state.phase)}</strong>
+    <div class="poker-table-stage">
+      <div class="poker-felt">
+        <div class="table-rail" aria-hidden="true"></div>
+        <div class="table-seats">
+          ${tablePlayers.others.map((player, index) => renderTableSeat(player, state, index + 1)).join("")}
+          ${renderEmptyTableSeats(tablePlayers.others.length)}
         </div>
-        <div>
-          <span class="state-label">底池</span>
-          <strong>${state.pot || 0}</strong>
-        </div>
-        <div>
-          <span class="state-label">当前下注</span>
-          <strong>${state.current_bet || 0}</strong>
-        </div>
-        <div>
-          <span class="state-label">倒计时</span>
-          <strong>${state.time_remaining ?? "-"}</strong>
-        </div>
-      </div>
 
-      <div class="community-row">
-        <span>公共牌</span>
-        <div>${renderCards(state.community_cards || [], 5)}</div>
-      </div>
+        <div class="table-center-area">
+          <div class="community-cards-new">
+            ${renderCards(state.community_cards || [], 5)}
+          </div>
+          <div class="table-info-right">
+            <div class="phase-info-card">
+              <div class="phase-title">${phaseLabel(state.phase)}</div>
+              <div class="pot-display">${state.pot || 0}</div>
+              <div class="current-bet-display">当前下注 ${state.current_bet || 0}</div>
+            </div>
+            <div class="current-action-card ${Number(state.time_remaining || 0) <= 10 ? "is-urgent" : ""}">
+              <span>当前行动</span>
+              <strong>${escapeHtml(currentPlayer?.username || "等待同步")}</strong>
+              <b data-countdown>${state.time_remaining ?? "-"} 秒</b>
+            </div>
+          </div>
+        </div>
 
-      <div class="texas-player-grid">
-        ${players.map((player) => renderTexasPlayer(player, state)).join("")}
+        ${self ? renderSelfSeat(self, state) : ""}
       </div>
 
       ${self ? renderSelfPanel(self, state, isMyTurn) : ""}
@@ -616,6 +621,8 @@ function renderGameState(state) {
   if (resetButton) {
     resetButton.addEventListener("click", resetTexasGame);
   }
+
+  startCountdown(state.time_remaining);
 }
 
 function renderWaitingRoom(room, isHost, canStart) {
@@ -667,24 +674,94 @@ function renderSeats(room) {
   }).join("");
 }
 
-function renderTexasPlayer(player, state) {
+function renderTableSeat(player, state, position) {
   const isCurrent = state.current_player === player.user_id;
   const isSelf = player.user_id === getPlayerId();
   const cardsVisible = isSelf || state.phase === "showdown" || state.phase === "finished";
+  const isDealer = getDealerPlayerId(state) === player.user_id;
   return `
-    <article class="texas-player ${isCurrent ? "is-current" : ""} ${isSelf ? "is-self" : ""} ${player.status === "folded" ? "is-folded" : ""}">
-      <div class="texas-player-top">
-        <strong>${escapeHtml(player.username)}</strong>
-        <span>${isSelf ? "你" : player.status}</span>
+    <article class="table-seat occupied position-${position} ${isCurrent ? "current-turn" : ""} ${player.status === "folded" ? "is-folded" : ""}">
+      ${isDealer ? `<div class="dealer-chip">D</div>` : ""}
+      <div class="seat-content">
+        <div class="seat-row-1">
+          <div class="player-info-compact">
+            <div class="player-name-compact">${escapeHtml(player.username)}</div>
+            <div class="chips-compact">${player.chips} 筹码</div>
+          </div>
+          <div class="hole-cards-inline">${renderCards(cardsVisible ? player.hole_cards : ["XX", "XX"], 2, true)}</div>
+        </div>
+        <div class="seat-row-2">
+          ${renderActionBubble(player)}
+          ${Number(player.current_bet || 0) > 0 ? `<div class="bet-display">下注 ${player.current_bet}</div>` : ""}
+        </div>
       </div>
-      <div class="texas-cards">${renderCards(cardsVisible ? player.hole_cards : ["XX", "XX"], 2)}</div>
-      <div class="texas-numbers">
-        <span>筹码 ${player.chips}</span>
-        <span>本轮 ${player.current_bet}</span>
-        <span>总注 ${player.total_bet}</span>
-      </div>
+      ${isCurrent ? `<div class="turn-indicator-border"></div>` : ""}
     </article>
   `;
+}
+
+function renderSelfSeat(player, state) {
+  const isCurrent = state.current_player === player.user_id;
+  const isDealer = getDealerPlayerId(state) === player.user_id;
+  return `
+    <article class="self-player-card ${isCurrent ? "current-turn" : ""}">
+      ${isDealer ? `<div class="dealer-chip">D</div>` : ""}
+      <div class="self-player-header">
+        <div class="self-player-name">${escapeHtml(player.username)} <span class="you-badge">你</span></div>
+        <div class="self-chips-display">${player.chips}</div>
+      </div>
+      <div class="self-hole-cards">${renderCards(player.hole_cards || [], 2)}</div>
+      <div class="self-bet-info">
+        <div><span>本轮</span><strong>${player.current_bet || 0}</strong></div>
+        <div><span>总注</span><strong>${player.total_bet || 0}</strong></div>
+        <div><span>状态</span><strong>${player.status || "active"}</strong></div>
+      </div>
+      ${isCurrent ? `<div class="turn-indicator-border"></div>` : ""}
+    </article>
+  `;
+}
+
+function arrangeTablePlayers(players, selfId) {
+  const list = players.filter((player) => player.user_id !== selfId);
+  return {
+    others: list.slice(0, 7),
+  };
+}
+
+function renderEmptyTableSeats(occupiedCount) {
+  const totalSeats = 7;
+  return Array.from({ length: Math.max(0, totalSeats - occupiedCount) }, (_, index) => {
+    const position = occupiedCount + index + 1;
+    return `
+      <article class="table-seat empty position-${position}">
+        <div class="empty-seat-indicator">
+          <span>座位 ${position}</span>
+          <strong>空座</strong>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+function renderActionBubble(player) {
+  const action = player.last_action || (player.status === "folded" ? "fold" : "");
+  if (!action) return "";
+
+  const className = action === "fold"
+    ? "action-fold"
+    : action === "raise" || action === "all_in"
+      ? "action-raise"
+      : action === "bet"
+        ? "action-bet"
+        : "action-normal";
+
+  return `<div class="action-display ${className}">${escapeHtml(actionLabel(action))}</div>`;
+}
+
+function getDealerPlayerId(state) {
+  const players = Object.values(state.players || {});
+  const dealerIndex = Number(state.dealer_position);
+  return players[dealerIndex]?.user_id || "";
 }
 
 function renderSelfPanel(self, state, isMyTurn) {
@@ -702,14 +779,22 @@ function renderSelfPanel(self, state, isMyTurn) {
   }
 
   return `
-    <div class="action-strip">
-      <button data-action="fold">弃牌</button>
-      ${canCheck ? `<button data-action="check">过牌</button>` : `<button data-action="call">跟注 ${callAmount}</button>`}
-      <label>
-        <span>${state.current_bet > 0 ? "加注到" : "下注"}</span>
-        <input id="bet-amount" type="number" min="${minBet}" max="${maxBet}" value="${minBet}">
-      </label>
-      <button data-action="${state.current_bet > 0 ? "raise" : "bet"}">${state.current_bet > 0 ? "加注" : "下注"}</button>
+    <div class="action-strip active-action">
+      <div class="action-info">
+        <strong>轮到你了</strong>
+        <span class="timer-badge ${Number(state.time_remaining || 0) <= 10 ? "urgent" : ""}" data-countdown>${state.time_remaining ?? "-"} 秒</span>
+        <span>底池 ${state.pot || 0}</span>
+        <span>下注限制 ${self.total_bet || 0}/${state.max_bet_per_hand || "-"}</span>
+      </div>
+      <div class="action-buttons">
+        <button class="action-btn fold-btn" data-action="fold">弃牌</button>
+        ${canCheck ? `<button class="action-btn check-btn" data-action="check">过牌</button>` : `<button class="action-btn call-btn" data-action="call">跟注 ${callAmount}</button>`}
+        <label class="bet-input-wrap">
+          <span>${state.current_bet > 0 ? "加注到" : "下注"}</span>
+          <input id="bet-amount" type="number" min="${minBet}" max="${maxBet}" value="${Math.min(minBet, maxBet || minBet)}">
+        </label>
+        <button class="action-btn ${state.current_bet > 0 ? "raise-btn" : "bet-btn"}" data-action="${state.current_bet > 0 ? "raise" : "bet"}">${state.current_bet > 0 ? "加注" : "下注"}</button>
+      </div>
     </div>
   `;
 }
@@ -729,13 +814,77 @@ function renderResults(state) {
   return `<div class="results-grid">${items}</div>`;
 }
 
-function renderCards(cards, placeholders = 0) {
+function startCountdown(seconds) {
+  clearInterval(countdownTimer);
+  let remaining = Number(seconds);
+  if (!Number.isFinite(remaining)) return;
+
+  updateCountdownDisplays(remaining);
+  countdownTimer = window.setInterval(() => {
+    remaining = Math.max(0, remaining - 1);
+    updateCountdownDisplays(remaining);
+    if (remaining <= 0) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+  }, 1000);
+}
+
+function updateCountdownDisplays(remaining) {
+  document.querySelectorAll("[data-countdown]").forEach((node) => {
+    node.textContent = `${remaining} 秒`;
+    node.classList.toggle("urgent", remaining <= 10);
+  });
+  const actionCard = document.querySelector(".current-action-card");
+  if (actionCard) {
+    actionCard.classList.toggle("is-urgent", remaining <= 10);
+  }
+}
+
+function renderCards(cards, placeholders = 0, small = false) {
   const list = [...cards];
   while (list.length < placeholders) list.push("");
   return list.map((card) => {
-    const value = card || "?";
-    return `<b class="mini-card ${card === "XX" || !card ? "card-back" : ""}">${escapeHtml(value)}</b>`;
+    const parsed = parseCard(card);
+    if (parsed.isBack) {
+      return `<b class="playing-card card-back ${small ? "small" : ""}" aria-label="隐藏牌"></b>`;
+    }
+    return `
+      <b class="playing-card ${parsed.color} ${small ? "small" : ""}" aria-label="${escapeHtml(parsed.rank + parsed.suit)}">
+        <span class="card-rank">${escapeHtml(parsed.rank)}</span>
+        <span class="card-suit">${escapeHtml(parsed.suit)}</span>
+      </b>
+    `;
   }).join("");
+}
+
+function parseCard(card) {
+  const value = String(card || "");
+  if (!value || value === "XX") {
+    return { rank: "", suit: "", color: "gray", isBack: true };
+  }
+
+  const rankText = value.slice(0, -1);
+  const suitText = value.slice(-1);
+  const ranks = {
+    T: "10",
+    J: "J",
+    Q: "Q",
+    K: "K",
+    A: "A",
+  };
+  const suits = {
+    S: { suit: "♠", color: "black" },
+    H: { suit: "♥", color: "red" },
+    D: { suit: "♦", color: "red" },
+    C: { suit: "♣", color: "black" },
+  };
+
+  return {
+    rank: ranks[rankText] || rankText,
+    ...(suits[suitText] || { suit: "?", color: "gray" }),
+    isBack: false,
+  };
 }
 
 function renderRoomLink(room) {
@@ -950,6 +1099,7 @@ function actionLabel(action) {
     call: "跟注",
     bet: "下注",
     raise: "加注",
+    all_in: "All In",
   };
   return labels[action] || action || "行动";
 }
