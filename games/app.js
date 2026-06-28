@@ -49,6 +49,7 @@ let personalSyncInFlight = false;
 let gameLogs = [];
 let selfHoleCardsByRoom = new Map();
 let personalSyncTimer = null;
+let pendingBetInputs = new Map();
 let hostSettings = {
   smallBlind: DEFAULT_SMALL_BLIND,
   maxHandBet: DEFAULT_SMALL_BLIND * DEFAULT_MAX_BET_SMALL_BLIND_MULTIPLIER,
@@ -326,6 +327,7 @@ async function sendTexasAction(action, amount = 0) {
       },
     });
     addGameLog(`你选择了 ${actionLabel(action)}${amount ? ` ${amount}` : ""}。`);
+    pendingBetInputs.clear();
     queuePersonalGameStateSync(300);
   } catch (error) {
     showError(error);
@@ -458,6 +460,7 @@ function clearCurrentRoom() {
   currentRoom = null;
   currentGameState = null;
   selfHoleCardsByRoom = new Map();
+  pendingBetInputs = new Map();
   resetGameLog();
   clearInterval(roomPollTimer);
   clearInterval(countdownTimer);
@@ -764,8 +767,21 @@ function renderGameState(state) {
     button.addEventListener("click", () => {
       const action = button.dataset.action;
       const amountInput = gameStateBody.querySelector("#bet-amount");
-      const amount = amountInput ? Number(amountInput.value || 0) : 0;
+      const amount = amountInput ? getActionAmountFromInput(action, amountInput) : 0;
       sendTexasAction(action, amount);
+    });
+  });
+
+  const betAmountInput = gameStateBody.querySelector("#bet-amount");
+  if (betAmountInput) {
+    betAmountInput.addEventListener("input", () => {
+      storePendingBetInput(betAmountInput);
+    });
+  }
+
+  gameStateBody.querySelectorAll("[data-bet-adjust]").forEach((button) => {
+    button.addEventListener("click", () => {
+      adjustBetInput(button.dataset.betAdjust);
     });
   });
 
@@ -984,8 +1000,7 @@ function getDealerPlayerId(state) {
 function renderSelfPanel(self, state, isMyTurn) {
   const callAmount = Math.max(0, (state.current_bet || 0) - (self.current_bet || 0));
   const canCheck = (state.current_bet || 0) === (self.current_bet || 0);
-  const minBet = state.current_bet > 0 ? (state.current_bet || 0) + (state.min_raise || state.big_blind || 2) : (state.big_blind || 2);
-  const maxBet = Math.max(0, Math.min(self.chips || 0, (state.max_bet_per_hand || 20) - (self.total_bet || 0)));
+  const betLimits = getBetLimits(self, state);
 
   if (!isMyTurn || state.phase === "finished" || state.phase === "showdown") {
     return `
@@ -994,6 +1009,12 @@ function renderSelfPanel(self, state, isMyTurn) {
       </div>
     `;
   }
+
+  const action = state.current_bet > 0 ? "raise" : "bet";
+  const inputLabel = action === "raise" ? "加注到" : "下注";
+  const submitLabel = action === "raise" ? "加注" : "下注";
+  const savedValue = getPendingBetInput(betLimits.contextKey);
+  const inputValue = clampInteger(savedValue ?? betLimits.defaultValue, betLimits.minValue, betLimits.maxValue);
 
   return `
     <div class="action-strip active-action">
@@ -1007,13 +1028,77 @@ function renderSelfPanel(self, state, isMyTurn) {
         <button class="action-btn fold-btn" data-action="fold">弃牌</button>
         ${canCheck ? `<button class="action-btn check-btn" data-action="check">过牌</button>` : `<button class="action-btn call-btn" data-action="call">跟注 ${callAmount}</button>`}
         <label class="bet-input-wrap">
-          <span>${state.current_bet > 0 ? "加注到" : "下注"}</span>
-          <input id="bet-amount" type="number" min="${minBet}" max="${maxBet}" value="${Math.min(minBet, maxBet || minBet)}">
+          <span>${inputLabel}</span>
+          <input id="bet-amount" type="number" min="${betLimits.minValue}" max="${betLimits.maxValue}" value="${inputValue}" data-bet-context="${escapeHtml(betLimits.contextKey)}" data-bet-mode="${action}" data-self-current-bet="${self.current_bet || 0}">
         </label>
-        <button class="action-btn ${state.current_bet > 0 ? "raise-btn" : "bet-btn"}" data-action="${state.current_bet > 0 ? "raise" : "bet"}">${state.current_bet > 0 ? "加注" : "下注"}</button>
+        <button class="action-btn ${action === "raise" ? "raise-btn" : "bet-btn"}" data-action="${action}">${submitLabel}</button>
+        <div class="quick-raise-buttons" aria-label="快捷加注">
+          <button type="button" data-bet-adjust="2">加注2</button>
+          <button type="button" data-bet-adjust="10">加注10</button>
+          <button type="button" data-bet-adjust="20">加注20</button>
+          <button type="button" data-bet-adjust="max">加满</button>
+        </div>
       </div>
     </div>
   `;
+}
+
+function getBetLimits(self, state) {
+  const mode = state.current_bet > 0 ? "raise" : "bet";
+  const maxAdditional = Math.max(0, Math.min(self.chips || 0, (state.max_bet_per_hand || 20) - (self.total_bet || 0)));
+  const minValue = mode === "raise"
+    ? Math.max((state.current_bet || 0) + (state.min_raise || state.big_blind || 2), (self.current_bet || 0) + 1)
+    : (state.big_blind || 2);
+  const maxValue = mode === "raise"
+    ? Math.max(minValue, (self.current_bet || 0) + maxAdditional)
+    : Math.max(minValue, maxAdditional);
+  return {
+    mode,
+    minValue,
+    maxValue,
+    defaultValue: minValue,
+    contextKey: [
+      state.room_id || currentRoom?.room_id || "",
+      state.phase || "",
+      state.current_player || "",
+      state.current_bet || 0,
+      state.min_raise || 0,
+      self.current_bet || 0,
+      self.total_bet || 0,
+      state.max_bet_per_hand || 0,
+    ].join("|"),
+  };
+}
+
+function getPendingBetInput(contextKey) {
+  return pendingBetInputs.get(contextKey);
+}
+
+function storePendingBetInput(input) {
+  const contextKey = input.dataset.betContext;
+  if (!contextKey) return;
+  const value = clampInteger(input.value, Number(input.min || 0), Number(input.max || input.value || 0));
+  pendingBetInputs.set(contextKey, value);
+}
+
+function adjustBetInput(delta) {
+  const input = gameStateBody.querySelector("#bet-amount");
+  if (!input) return;
+
+  const min = Number(input.min || 0);
+  const max = Number(input.max || min);
+  const current = clampInteger(input.value, min, max);
+  const next = delta === "max" ? max : current + Number(delta || 0);
+  input.value = clampInteger(next, min, max);
+  storePendingBetInput(input);
+}
+
+function getActionAmountFromInput(action, input) {
+  const target = clampInteger(input.value, Number(input.min || 0), Number(input.max || input.value || 0));
+  storePendingBetInput(input);
+  if (action !== "raise") return target;
+  const selfCurrentBet = Number(input.dataset.selfCurrentBet || 0);
+  return Math.max(0, target - selfCurrentBet);
 }
 
 function renderResults(state) {
