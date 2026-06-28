@@ -1216,7 +1216,6 @@ input:focus {
   font-family: Georgia, "Times New Roman", serif;
   font-style: normal;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22);
-  animation: cardDeal 0.35s ease;
 }
 
 .playing-card.small {
@@ -1267,17 +1266,6 @@ input:focus {
 .playing-card.small .card-suit {
   margin-top: 2px;
   font-size: 18px;
-}
-
-@keyframes cardDeal {
-  from {
-    opacity: 0;
-    transform: translateY(-18px) rotateY(70deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) rotateY(0);
-  }
 }
 
 .texas-player-grid,
