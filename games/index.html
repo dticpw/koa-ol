@@ -89,6 +89,28 @@
         </div>
       </div>
     </section>
+
+    <section class="room-card" id="room-card" hidden aria-label="Game room">
+      <div class="room-head">
+        <div>
+          <span id="room-badge">ROOM</span>
+          <h2 id="room-title">等待进入房间</h2>
+        </div>
+        <button class="button primary start-button" id="start-game" type="button" disabled>开始游戏</button>
+      </div>
+
+      <div class="room-meta">
+        <span id="player-count">0 / 8 玩家</span>
+        <span id="host-state">等待房主</span>
+      </div>
+
+      <div class="player-list" id="player-list" aria-label="Players"></div>
+
+      <div class="game-state" id="game-state" hidden>
+        <h3>第一手牌</h3>
+        <div id="game-state-body"></div>
+      </div>
+    </section>
   </main>
 </div>
 
