@@ -340,6 +340,37 @@ h1 {
   padding: 14px;
 }
 
+.thumb.games {
+  position: relative;
+  border-color: rgba(23, 23, 22, 0.7);
+  background:
+    radial-gradient(ellipse at center, rgba(255, 253, 248, 0.18) 0 28%, transparent 29%),
+    #255744;
+}
+
+.thumb.games::before,
+.thumb.games::after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 42px;
+  border: 1px solid var(--ink);
+  background: var(--paper-strong);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.18);
+}
+
+.thumb.games::before {
+  left: 28px;
+  top: 34px;
+  transform: rotate(-8deg);
+}
+
+.thumb.games::after {
+  right: 28px;
+  bottom: 34px;
+  transform: rotate(8deg);
+}
+
 .bar {
   width: 100%;
   background: var(--accent, var(--forest));
@@ -522,6 +553,7 @@ h1 {
       <a href="/chat/">Chat</a>
       <a href="/multi-agent/">Multi-Agent</a>
       <a href="/galgame/">Galgame</a>
+      <a href="/games/">Games</a>
       <a href="/stats/">Stats</a>
     </nav>
   </header>
@@ -576,6 +608,16 @@ h1 {
             <span class="project-label">Story</span>
             <h2>Galgame</h2>
             <p>文字冒险游戏入口，首页使用轻量预览，进入后再加载游戏素材。</p>
+          </span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="project-card" href="/games/" style="--accent: var(--amber);">
+          <span class="thumb games" aria-hidden="true"></span>
+          <span class="project-meta">
+            <span class="project-label">Lobby</span>
+            <h2>Games</h2>
+            <p>私人牌桌大厅，用于创建和加入 Blackjack 与 Texas Hold'em 房间。</p>
           </span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>
