@@ -21,9 +21,13 @@ const playerCount = document.querySelector("#player-count");
 const hostState = document.querySelector("#host-state");
 const playerList = document.querySelector("#player-list");
 const startGameButton = document.querySelector("#start-game");
+const copyRoomLinkButton = document.querySelector("#copy-room-link");
+const connectionStatus = document.querySelector("#connection-status");
 const leaveRoomButton = document.querySelector("#leave-room");
 const gameState = document.querySelector("#game-state");
+const gameStateTitle = document.querySelector("#game-state h3");
 const gameStateBody = document.querySelector("#game-state-body");
+const gameLogList = document.querySelector("#game-log-list");
 
 const STORAGE_KEY = "koaOlGamesLobby";
 const PLAYER_ID_KEY = "koaOlRenderPokerPlayerId";
@@ -39,6 +43,7 @@ let wsReconnectAttempts = 0;
 let isManualDisconnect = false;
 let wsUserId = null;
 let personalSyncInFlight = false;
+let gameLogs = [];
 
 const savedState = loadState();
 const urlRoom = getRoomFromUrl();
@@ -50,6 +55,8 @@ roomCodeInput.value = urlRoom || savedState.roomCode || "";
 gameTypeInput.value = "texas";
 
 syncSelectedGame();
+setAppMode("lobby");
+renderGameLog();
 connectWebSocket();
 
 if (urlRoom) {
@@ -92,21 +99,11 @@ leaveRoomButton.addEventListener("click", async () => {
 });
 
 copyLinkButton.addEventListener("click", async () => {
-  const link = roomLinkInput.value;
-  if (!link) return;
+  await copyRoomLink();
+});
 
-  try {
-    await navigator.clipboard.writeText(link);
-    roomStatus.textContent = "Copied";
-  } catch {
-    roomLinkInput.select();
-    document.execCommand("copy");
-    roomStatus.textContent = "Copied";
-  }
-
-  window.setTimeout(() => {
-    roomStatus.textContent = currentRoom ? "房间中" : "待开局";
-  }, 1400);
+copyRoomLinkButton.addEventListener("click", async () => {
+  await copyRoomLink();
 });
 
 window.addEventListener("beforeunload", () => {
@@ -132,7 +129,9 @@ async function createRoom() {
       },
     });
 
+    resetGameLog();
     enterRoom(data.room);
+    addGameLog("房间已创建，等待玩家加入。");
     updateUrl(data.room.room_id, "texas");
     showStatus("房间中", `${gameLabel(data.room.game_type)} · ${shortRoom(data.room.room_id)}`, "把链接发给朋友；玩家进入后会通过 WebSocket 同步。");
     window.setTimeout(() => sendWs({ type: "sync_room" }), 300);
@@ -163,7 +162,9 @@ async function joinRoom() {
       },
     });
 
+    resetGameLog();
     enterRoom(data.room);
+    addGameLog("你已加入房间。");
     if (data.game_state) {
       renderGameState(data.game_state);
     }
@@ -203,6 +204,7 @@ async function startTexasGame(roomId) {
       },
     });
     if (data.game_state) {
+      addGameLog("房主已开始游戏。");
       renderGameState(data.game_state);
       showStatus("游戏中", phaseLabel(data.game_state.phase), "游戏已开始。");
     }
@@ -227,6 +229,7 @@ async function sendTexasAction(action, amount = 0) {
         amount,
       },
     });
+    addGameLog(`你选择了 ${actionLabel(action)}${amount ? ` ${amount}` : ""}。`);
     window.setTimeout(syncPersonalGameState, 400);
   } catch (error) {
     showError(error);
@@ -309,11 +312,14 @@ async function leaveRoom() {
 function clearCurrentRoom() {
   currentRoom = null;
   currentGameState = null;
+  resetGameLog();
   clearInterval(roomPollTimer);
   roomPollTimer = null;
   roomCodeInput.value = "";
   roomCard.hidden = true;
+  setAppMode("lobby");
   gameState.hidden = true;
+  gameStateTitle.textContent = "第一手牌";
   gameStateBody.innerHTML = "";
   linkBox.hidden = true;
   persistState();
@@ -393,10 +399,14 @@ function handleWsMessage(message) {
     case "player_kicked":
       if (message.room) {
         enterRoom(message.room, { silent: true });
+        if (message.type === "player_joined") addGameLog("有玩家加入房间。");
+        if (message.type === "player_left") addGameLog("有玩家离开房间。");
+        if (message.type === "player_reconnected") addGameLog("有玩家重新连接。");
       } else if (message.type === "player_left") {
         showStatus("关闭", "房间已关闭", "所有玩家都已离开。");
         currentRoom = null;
         roomCard.hidden = true;
+        addGameLog("房间已关闭。");
       }
       return;
     case "lobby_update":
@@ -405,23 +415,29 @@ function handleWsMessage(message) {
     case "game_state_update":
     case "game_state_sync":
       if (message.game_state) {
+        if (message.type === "game_started") addGameLog("牌局开始。");
         renderGameState(message.game_state);
         showStatus("游戏中", phaseLabel(message.game_state.phase), "Render 后端正在同步牌局。");
       }
       return;
     case "player_action_result":
       showConnection(`${message.player_id === getPlayerId() ? "你" : "玩家"} ${message.action}`);
+      addGameLog(`${message.player_id === getPlayerId() ? "你" : "玩家"} ${actionLabel(message.action)}。`);
       return;
     case "player_timeout":
       showStatus("超时", message.player_id === getPlayerId() ? "你已超时弃牌" : "有玩家超时弃牌", message.message || "等待下一步同步。");
+      addGameLog(message.player_id === getPlayerId() ? "你超时弃牌。" : "有玩家超时弃牌。");
       return;
     case "player_disconnected":
       showConnection("有玩家断线");
+      addGameLog("有玩家断线，等待重连。");
       return;
     case "room_closed":
     case "kicked":
     case "game_ended_by_admin":
       showStatus("结束", message.message || "房间状态已改变", "请重新进入房间。");
+      roomCard.hidden = true;
+      setAppMode("lobby");
       return;
     case "admin_broadcast":
       showStatus("公告", "管理员消息", message.message || "");
@@ -439,7 +455,8 @@ function enterRoom(room, options = {}) {
   syncSelectedGame();
   renderRoom(room);
   renderRoomLink(room);
-  roomCard.hidden = false;
+  roomCard.hidden = Boolean(options.preview);
+  setAppMode(options.preview ? "lobby" : "room");
 
   if (!options.silent && !options.preview) {
     showStatus("房间中", `${gameLabel(room.game_type)} · ${shortRoom(room.room_id)}`, "把链接发给朋友；玩家进入后会通过 WebSocket 同步。");
@@ -506,6 +523,10 @@ function renderRoom(room) {
       </article>
     `);
   }
+
+  if (room.status !== "playing") {
+    renderWaitingRoom(room, isHost, canStart);
+  }
 }
 
 function renderPlayer(player, room, index) {
@@ -532,6 +553,9 @@ function renderPlayer(player, room, index) {
 function renderGameState(state) {
   currentGameState = state;
   gameState.hidden = false;
+  gameStateTitle.textContent = "牌局进行中";
+  roomCard.hidden = false;
+  setAppMode("room");
   roomBadge.textContent = "PLAYING";
   if (currentRoom) {
     currentRoom.status = "playing";
@@ -592,6 +616,55 @@ function renderGameState(state) {
   if (resetButton) {
     resetButton.addEventListener("click", resetTexasGame);
   }
+}
+
+function renderWaitingRoom(room, isHost, canStart) {
+  gameState.hidden = false;
+  gameStateTitle.textContent = "等待开局";
+  gameStateBody.innerHTML = `
+    <div class="waiting-room-panel">
+      <div>
+        <strong>${canStart ? "人数已满足，可以开始游戏" : "等待更多玩家加入"}</strong>
+        <p>${isHost ? "你是房主，2 到 8 人即可开始。" : "等待房主开始游戏。"}</p>
+      </div>
+      <div class="waiting-room-code">
+        <span>房间码</span>
+        <b>${escapeHtml(room.room_id)}</b>
+      </div>
+      <div class="seat-grid">
+        ${renderSeats(room)}
+      </div>
+    </div>
+  `;
+}
+
+function renderSeats(room) {
+  const players = room.players || [];
+  const seatCount = Math.max(room.max_players || 8, 8);
+  return Array.from({ length: seatCount }, (_, index) => {
+    const player = players[index];
+    if (!player) {
+      return `
+        <article class="seat-card is-empty">
+          <span>座位 ${index + 1}</span>
+          <strong>空位</strong>
+        </article>
+      `;
+    }
+
+    const tags = [
+      player.id === room.creator_id ? "房主" : "",
+      player.id === getPlayerId() ? "你" : "",
+    ].filter(Boolean);
+
+    return `
+      <article class="seat-card ${player.id === getPlayerId() ? "is-self" : ""}">
+        <b>${escapeHtml(playerInitial(player.name))}</b>
+        <span>座位 ${index + 1}${tags.length ? ` · ${tags.join(" · ")}` : ""}</span>
+        <strong>${escapeHtml(player.name)}</strong>
+      </article>
+    `;
+  }).join("");
 }
 
 function renderTexasPlayer(player, state) {
@@ -686,8 +759,67 @@ function showStatus(status, title, copy) {
 }
 
 function showConnection(text) {
+  connectionStatus.textContent = text;
+  connectionStatus.classList.toggle("is-online", text.includes("已连接"));
+  connectionStatus.classList.toggle("is-error", text.includes("错误") || text.includes("重连"));
   if (!currentRoom) return;
   statusCopy.textContent = text;
+}
+
+async function copyRoomLink() {
+  const link = roomLinkInput.value || (currentRoom ? buildRoomUrl(currentRoom.room_id, renderGameParam(currentRoom.game_type)) : "");
+  if (!link) return;
+
+  try {
+    await navigator.clipboard.writeText(link);
+    roomStatus.textContent = "Copied";
+    addGameLog("邀请链接已复制。");
+  } catch {
+    roomLinkInput.value = link;
+    roomLinkInput.select();
+    document.execCommand("copy");
+    roomStatus.textContent = "Copied";
+    addGameLog("邀请链接已复制。");
+  }
+
+  window.setTimeout(() => {
+    roomStatus.textContent = currentRoom ? "房间中" : "待开局";
+  }, 1400);
+}
+
+function addGameLog(message) {
+  const text = String(message || "").trim();
+  if (!text) return;
+  if (gameLogs[0]?.text === text) return;
+  gameLogs = [
+    {
+      id: `${Date.now()}-${Math.random()}`,
+      time: new Date(),
+      text,
+    },
+    ...gameLogs,
+  ].slice(0, 16);
+  renderGameLog();
+}
+
+function resetGameLog() {
+  gameLogs = [];
+  renderGameLog();
+}
+
+function renderGameLog() {
+  if (!gameLogList) return;
+  if (!gameLogs.length) {
+    gameLogList.innerHTML = `<p class="empty-log">等待房间事件。</p>`;
+    return;
+  }
+
+  gameLogList.innerHTML = gameLogs.map((item) => `
+    <article>
+      <time>${formatLogTime(item.time)}</time>
+      <span>${escapeHtml(item.text)}</span>
+    </article>
+  `).join("");
 }
 
 function setBusy(isBusy) {
@@ -811,10 +943,39 @@ function phaseLabel(phase) {
   return labels[phase] || phase || "未知阶段";
 }
 
+function actionLabel(action) {
+  const labels = {
+    fold: "弃牌",
+    check: "过牌",
+    call: "跟注",
+    bet: "下注",
+    raise: "加注",
+  };
+  return labels[action] || action || "行动";
+}
+
+function playerInitial(name) {
+  const text = String(name || "P").trim();
+  return text.slice(0, 1).toUpperCase();
+}
+
+function formatLogTime(date) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(date);
+}
+
 function syncSelectedGame() {
   gameCards.forEach((card) => {
     card.classList.toggle("is-selected", card.dataset.gameCard === "texas");
   });
+}
+
+function setAppMode(mode) {
+  document.body.classList.toggle("is-room-view", mode === "room");
 }
 
 function persistState() {

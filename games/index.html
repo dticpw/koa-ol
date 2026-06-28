@@ -22,18 +22,18 @@
   </header>
 
   <main class="game-lobby" aria-labelledby="lobby-title">
-    <section class="hero-copy">
-      <p class="round-label">Ready?</p>
-      <h1 id="lobby-title">开局</h1>
-      <p class="hero-line">选游戏，填昵称，发房间码。</p>
+    <section class="hero-copy lobby-view">
+      <p class="round-label">在线桌游大厅</p>
+      <h1 id="lobby-title">选择游戏</h1>
+      <p class="hero-line">输入昵称，创建房间，或者粘贴朋友发来的房间链接。</p>
       <div class="quick-rules" aria-label="Join steps">
-        <span>1 选局</span>
-        <span>2 复制链接</span>
-        <span>3 叫人上桌</span>
+        <span>1 选择游戏</span>
+        <span>2 创建或加入房间</span>
+        <span>3 等待玩家开始</span>
       </div>
     </section>
 
-    <section class="play-card" aria-label="Create or join a room">
+    <section class="play-card lobby-view" aria-label="Create or join a room">
       <div class="game-switch" aria-label="Choose game">
         <button class="game-tile is-disabled" type="button" data-game-card="blackjack" aria-disabled="true">
           <span class="card-stack" aria-hidden="true">
@@ -90,13 +90,15 @@
       </div>
     </section>
 
-    <section class="room-card" id="room-card" hidden aria-label="Game room">
+    <section class="room-card room-view" id="room-card" hidden aria-label="Game room">
       <div class="room-head">
         <div>
           <span id="room-badge">ROOM</span>
           <h2 id="room-title">等待进入房间</h2>
         </div>
         <div class="room-actions">
+          <span class="connection-pill" id="connection-status">连接中</span>
+          <button class="button secondary start-button" id="copy-room-link" type="button">复制邀请</button>
           <button class="button secondary start-button" id="leave-room" type="button">离开房间</button>
           <button class="button primary start-button" id="start-game" type="button" disabled>开始游戏</button>
         </div>
@@ -113,6 +115,11 @@
         <h3>第一手牌</h3>
         <div id="game-state-body"></div>
       </div>
+
+      <section class="game-log" id="game-log" aria-label="Game log">
+        <h3>游戏日志</h3>
+        <div id="game-log-list"></div>
+      </section>
     </section>
   </main>
 </div>
