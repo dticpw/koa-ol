@@ -998,8 +998,9 @@ function getDealerPlayerId(state) {
 }
 
 function renderSelfPanel(self, state, isMyTurn) {
-  const callAmount = Math.max(0, (state.current_bet || 0) - (self.current_bet || 0));
-  const canCheck = (state.current_bet || 0) === (self.current_bet || 0);
+  const tableCurrentBet = getTableCurrentBet(state);
+  const callAmount = Math.max(0, tableCurrentBet - (self.current_bet || 0));
+  const canCheck = tableCurrentBet === (self.current_bet || 0);
   const betLimits = getBetLimits(self, state);
 
   if (!isMyTurn || state.phase === "finished" || state.phase === "showdown") {
@@ -1010,7 +1011,7 @@ function renderSelfPanel(self, state, isMyTurn) {
     `;
   }
 
-  const action = state.current_bet > 0 ? "raise" : "bet";
+  const action = tableCurrentBet > 0 ? "raise" : "bet";
   const inputLabel = action === "raise" ? "加注到" : "下注";
   const submitLabel = action === "raise" ? "加注" : "下注";
   const savedValue = getPendingBetInput(betLimits.contextKey);
@@ -1044,10 +1045,11 @@ function renderSelfPanel(self, state, isMyTurn) {
 }
 
 function getBetLimits(self, state) {
-  const mode = state.current_bet > 0 ? "raise" : "bet";
+  const tableCurrentBet = getTableCurrentBet(state);
+  const mode = tableCurrentBet > 0 ? "raise" : "bet";
   const maxAdditional = Math.max(0, Math.min(self.chips || 0, (state.max_bet_per_hand || 20) - (self.total_bet || 0)));
   const minValue = mode === "raise"
-    ? Math.max((state.current_bet || 0) + (state.min_raise || state.big_blind || 2), (self.current_bet || 0) + 1)
+    ? Math.max(tableCurrentBet + (state.min_raise || state.big_blind || 2), tableCurrentBet + 1, (self.current_bet || 0) + 1)
     : (state.big_blind || 2);
   const maxValue = mode === "raise"
     ? Math.max(minValue, (self.current_bet || 0) + maxAdditional)
@@ -1061,13 +1063,18 @@ function getBetLimits(self, state) {
       state.room_id || currentRoom?.room_id || "",
       state.phase || "",
       state.current_player || "",
-      state.current_bet || 0,
+      tableCurrentBet,
       state.min_raise || 0,
       self.current_bet || 0,
       self.total_bet || 0,
       state.max_bet_per_hand || 0,
     ].join("|"),
   };
+}
+
+function getTableCurrentBet(state) {
+  const playerBets = Object.values(state.players || {}).map((player) => Number(player.current_bet || 0));
+  return Math.max(Number(state.current_bet || 0), 0, ...playerBets);
 }
 
 function getPendingBetInput(contextKey) {
