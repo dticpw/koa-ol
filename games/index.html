@@ -3,119 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Koa-OL Games lobby for private Texas Hold'em and Blackjack rooms.">
+<meta name="description" content="Koa-OL Games private room lobby.">
 <title>Koa-OL Games</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<div class="app-shell">
+<div class="page">
   <header class="topbar">
     <a class="brand" href="/" aria-label="Koa-OL homepage">
       <span class="brand-mark">K</span>
       <span>
         <strong>Koa-OL Games</strong>
-        <small>private table lobby</small>
+        <small>Private room</small>
       </span>
     </a>
-    <nav class="topnav" aria-label="Games navigation">
-      <a href="/">Home</a>
-      <a href="/chat/">Chat</a>
-      <a href="/galgame/">Galgame</a>
-    </nav>
+    <a class="home-link" href="/">返回首页</a>
   </header>
 
-  <main class="layout">
-    <section class="lobby-panel" aria-labelledby="lobby-title">
-      <div class="panel-heading">
-        <p class="eyebrow">Phase 1 Lobby</p>
-        <h1 id="lobby-title">Private card rooms</h1>
-        <p>创建一个临时房间链接，或输入朋友给你的房间码加入。当前阶段先完成大厅与入口流程，实时牌桌会在 Durable Object 阶段接入。</p>
+  <main class="game-lobby" aria-labelledby="lobby-title">
+    <section class="hero-copy">
+      <p class="round-label">Ready?</p>
+      <h1 id="lobby-title">开局</h1>
+      <p class="hero-line">选游戏，填昵称，发房间码。</p>
+      <div class="quick-rules" aria-label="Join steps">
+        <span>1 选局</span>
+        <span>2 复制链接</span>
+        <span>3 叫人上桌</span>
+      </div>
+    </section>
+
+    <section class="play-card" aria-label="Create or join a room">
+      <div class="game-switch" aria-label="Choose game">
+        <button class="game-tile is-selected" type="button" data-game-card="blackjack">
+          <span class="card-stack" aria-hidden="true">
+            <i>A</i>
+            <i>K</i>
+          </span>
+          <span>
+            <strong>21 点</strong>
+            <small>Blackjack</small>
+          </span>
+        </button>
+
+        <button class="game-tile" type="button" data-game-card="texas">
+          <span class="card-stack" aria-hidden="true">
+            <i>10</i>
+            <i>J</i>
+          </span>
+          <span>
+            <strong>德州扑克</strong>
+            <small>Texas Hold'em</small>
+          </span>
+        </button>
       </div>
 
       <form class="room-form" id="room-form">
-        <div class="field-grid">
-          <label class="field">
-            <span>昵称</span>
-            <input id="player-name" name="playerName" autocomplete="nickname" maxlength="24" placeholder="Guest" required>
-          </label>
+        <input id="game-type" name="gameType" type="hidden" value="blackjack">
 
-          <label class="field">
-            <span>游戏</span>
-            <select id="game-type" name="gameType">
-              <option value="blackjack">Blackjack</option>
-              <option value="texas">Texas Hold'em</option>
-            </select>
-          </label>
-        </div>
+        <label class="field">
+          <span>你的昵称</span>
+          <input id="player-name" name="playerName" autocomplete="nickname" maxlength="24" placeholder="例如 Koa" required>
+        </label>
 
         <label class="field">
           <span>房间码</span>
-          <input id="room-code" name="roomCode" autocomplete="off" maxlength="16" placeholder="留空则创建新房间">
+          <input id="room-code" name="roomCode" autocomplete="off" maxlength="16" placeholder="加入别人房间时填写">
         </label>
 
         <div class="actions">
-          <button class="button primary" type="submit" data-action="join">加入房间</button>
-          <button class="button secondary" type="button" id="create-room">创建房间</button>
+          <button class="button primary" type="button" id="create-room">开新房</button>
+          <button class="button secondary" type="submit" data-action="join">加入房间</button>
         </div>
       </form>
-    </section>
 
-    <aside class="status-panel" aria-labelledby="status-title">
-      <div class="status-card">
-        <div class="status-top">
-          <p class="eyebrow">Room Link</p>
-          <span class="status-pill" id="room-status">Ready</span>
+      <div class="room-result" aria-live="polite">
+        <div class="result-top">
+          <span id="room-status">待开局</span>
+          <strong id="status-title">准备好就点「开新房」</strong>
         </div>
-        <h2 id="status-title">等待创建或加入</h2>
-        <p id="status-copy">选择游戏并填写昵称后，可以生成房间链接。后续接入 WebSocket 时，这里会显示连接状态和房间人数。</p>
+        <p id="status-copy">如果朋友已经发你房间码，填入后直接加入。</p>
         <div class="link-box" id="link-box" hidden>
           <input id="room-link" readonly aria-label="Room link">
-          <button class="icon-button" type="button" id="copy-link" aria-label="复制房间链接" title="复制房间链接">⧉</button>
+          <button class="copy-button" type="button" id="copy-link" aria-label="复制房间链接" title="复制房间链接">复制</button>
         </div>
       </div>
-
-      <div class="table-preview" aria-label="Table preview">
-        <div class="felt">
-          <span class="seat seat-top">Host</span>
-          <span class="seat seat-right">Guest</span>
-          <span class="seat seat-bottom" id="preview-name">You</span>
-          <span class="seat seat-left">Open</span>
-          <div class="deck" aria-hidden="true">
-            <span></span>
-            <span></span>
-          </div>
-          <div class="pot">Room Lobby</div>
-        </div>
-      </div>
-    </aside>
+    </section>
   </main>
-
-  <section class="game-options" aria-label="Available games">
-    <article class="game-tile" data-game-card="blackjack">
-      <div class="tile-media blackjack" aria-hidden="true">
-        <span>A</span>
-        <span>K</span>
-      </div>
-      <div>
-        <p class="eyebrow">Fast Test</p>
-        <h2>Blackjack</h2>
-        <p>建议作为第一个实时房间测试对象，行动流更短，便于验证加入、广播、断线重连和结算。</p>
-      </div>
-    </article>
-
-    <article class="game-tile" data-game-card="texas">
-      <div class="tile-media texas" aria-hidden="true">
-        <span>10</span>
-        <span>J</span>
-      </div>
-      <div>
-        <p class="eyebrow">Next Engine</p>
-        <h2>Texas Hold'em</h2>
-        <p>适合第二阶段后推进，需要处理盲注、下注轮、全下、边池和摊牌牌型判定。</p>
-      </div>
-    </article>
-  </section>
 </div>
 
 <script src="./app.js"></script>

@@ -9,7 +9,6 @@ const statusCopy = document.querySelector("#status-copy");
 const linkBox = document.querySelector("#link-box");
 const roomLinkInput = document.querySelector("#room-link");
 const copyLinkButton = document.querySelector("#copy-link");
-const previewName = document.querySelector("#preview-name");
 const gameCards = document.querySelectorAll("[data-game-card]");
 
 const STORAGE_KEY = "koaOlGamesLobby";
@@ -19,11 +18,9 @@ playerNameInput.value = savedState.playerName || "";
 gameTypeInput.value = savedState.gameType || "blackjack";
 roomCodeInput.value = getRoomFromUrl() || savedState.roomCode || "";
 
-syncPreviewName();
 syncSelectedGame();
 
 playerNameInput.addEventListener("input", () => {
-  syncPreviewName();
   persistState();
 });
 
@@ -51,8 +48,7 @@ roomForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
   if (!roomCodeInput.value.trim()) {
-    roomCodeInput.value = createRoomCode();
-    handleRoomIntent("created");
+    showNeedCode();
     return;
   }
 
@@ -93,10 +89,17 @@ function handleRoomIntent(mode) {
   roomStatus.textContent = mode === "created" ? "Created" : "Joined";
   statusTitle.textContent = `${gameLabel(gameType)} · ${roomCode}`;
   statusCopy.textContent = mode === "created"
-    ? "房间链接已生成。现在可以复制给访客；后端接入后，这个入口会建立 WebSocket 并进入真实牌桌。"
-    : "已准备加入该房间。当前阶段先保留入口状态；后端接入后会从这里进入实时牌桌。";
+    ? "房间已就绪。复制链接发给朋友。"
+    : "已锁定房间。下一步会进入真实牌桌。";
 
   updateUrl(roomCode, gameType);
+}
+
+function showNeedCode() {
+  roomStatus.textContent = "Need Code";
+  statusTitle.textContent = "输入房间码才能加入";
+  statusCopy.textContent = "没有房间码就点「开新房」，系统会自动生成一个可分享的链接。";
+  linkBox.hidden = true;
 }
 
 function buildRoomUrl(roomCode, gameType) {
@@ -142,10 +145,6 @@ function getRoomFromUrl() {
     gameTypeInput.value = game;
   }
   return normalizeRoomCode(params.get("room") || "");
-}
-
-function syncPreviewName() {
-  previewName.textContent = normalizePlayerName(playerNameInput.value);
 }
 
 function syncSelectedGame() {
