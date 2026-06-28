@@ -487,6 +487,7 @@ input:focus {
 }
 
 .player-card {
+  position: relative;
   display: grid;
   gap: 8px;
   min-height: 82px;
@@ -516,6 +517,22 @@ input:focus {
 
 .player-card small {
   color: var(--accent-c);
+}
+
+.kick-button {
+  width: max-content;
+  min-height: 30px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #ffebee;
+  color: #d32f2f;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.kick-button:hover {
+  background: #f44336;
+  color: #fff;
 }
 
 .game-state {
@@ -632,6 +649,92 @@ input:focus {
 
 .seat-card.is-empty strong {
   color: #aaa;
+}
+
+.host-control-panel {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  padding: 18px;
+  border: 2px solid #e8e8ef;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.host-control-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.host-control-head strong,
+.host-control-head span {
+  display: block;
+}
+
+.host-control-head strong {
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.host-control-head span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.danger-lite {
+  background: #ffebee !important;
+  color: #d32f2f !important;
+}
+
+.danger-lite:hover {
+  background: #f44336 !important;
+  color: #fff !important;
+}
+
+.host-setting-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 180px)) minmax(220px, 1fr);
+  gap: 12px;
+  align-items: end;
+}
+
+.host-setting-grid label {
+  display: grid;
+  gap: 7px;
+}
+
+.host-setting-grid label span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.host-setting-grid input {
+  min-height: 44px;
+}
+
+.host-setting-hint {
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--soft);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.host-control-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .poker-table-stage {
@@ -1528,6 +1631,16 @@ input:focus {
 
   .seat-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .host-control-head,
+  .host-setting-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .host-control-head {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .link-box {

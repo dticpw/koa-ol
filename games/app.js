@@ -32,6 +32,8 @@ const gameLogList = document.querySelector("#game-log-list");
 const STORAGE_KEY = "koaOlGamesLobby";
 const PLAYER_ID_KEY = "koaOlRenderPokerPlayerId";
 const WS_RECONNECT_MS = 1600;
+const DEFAULT_SMALL_BLIND = 1;
+const DEFAULT_MAX_BET_SMALL_BLIND_MULTIPLIER = 20;
 
 let currentRoom = null;
 let currentGameState = null;
@@ -45,6 +47,11 @@ let isManualDisconnect = false;
 let wsUserId = null;
 let personalSyncInFlight = false;
 let gameLogs = [];
+let hostSettings = {
+  smallBlind: DEFAULT_SMALL_BLIND,
+  maxHandBet: DEFAULT_SMALL_BLIND * DEFAULT_MAX_BET_SMALL_BLIND_MULTIPLIER,
+  maxBetTouched: false,
+};
 
 const savedState = loadState();
 const urlRoom = getRoomFromUrl();
@@ -99,6 +106,37 @@ leaveRoomButton.addEventListener("click", async () => {
   await leaveRoom();
 });
 
+roomCard.addEventListener("click", async (event) => {
+  const kickButton = event.target.closest("[data-kick-player]");
+  if (kickButton) {
+    await kickPlayer(kickButton.dataset.kickPlayer);
+    return;
+  }
+
+  if (event.target.closest("[data-disband-room]")) {
+    await disbandRoom();
+  }
+});
+
+roomCard.addEventListener("input", (event) => {
+  if (event.target.matches("#small-blind-setting")) {
+    const smallBlind = clampInteger(event.target.value, 1, 100);
+    hostSettings.smallBlind = smallBlind;
+    if (!hostSettings.maxBetTouched) {
+      hostSettings.maxHandBet = smallBlind * DEFAULT_MAX_BET_SMALL_BLIND_MULTIPLIER;
+      const maxInput = document.querySelector("#max-hand-bet-setting");
+      if (maxInput) maxInput.value = hostSettings.maxHandBet;
+    }
+    updateHostSettingHint();
+  }
+
+  if (event.target.matches("#max-hand-bet-setting")) {
+    hostSettings.maxBetTouched = true;
+    hostSettings.maxHandBet = clampInteger(event.target.value, hostSettings.smallBlind * 2, 100000);
+    updateHostSettingHint();
+  }
+});
+
 copyLinkButton.addEventListener("click", async () => {
   await copyRoomLink();
 });
@@ -131,6 +169,7 @@ async function createRoom() {
     });
 
     resetGameLog();
+    resetHostSettings();
     enterRoom(data.room);
     addGameLog("房间已创建，等待玩家加入。");
     updateUrl(data.room.room_id, "texas");
@@ -195,12 +234,13 @@ async function previewRoom(roomId) {
 async function startTexasGame(roomId) {
   setBusy(true);
   try {
+    const settings = readHostSettings();
     const data = await requestJson(`${POKER_API_BASE}/api/game/texas-holdem/${encodeURIComponent(roomId)}/start`, {
       method: "POST",
       body: {
         user_id: getPlayerId(),
-        max_bet_multiplier: 10,
-        small_blind: 1,
+        max_bet_multiplier: settings.maxBetMultiplier,
+        small_blind: settings.smallBlind,
         initial_chips: 1000,
       },
     });
@@ -210,6 +250,58 @@ async function startTexasGame(roomId) {
       showStatus("游戏中", phaseLabel(data.game_state.phase), "游戏已开始。");
     }
     window.setTimeout(syncPersonalGameState, 400);
+  } catch (error) {
+    showError(error);
+  } finally {
+    setBusy(false);
+  }
+}
+
+async function kickPlayer(playerId) {
+  if (!currentRoom || currentRoom.status === "playing") return;
+  if (currentRoom.creator_id !== getPlayerId() || playerId === getPlayerId()) return;
+
+  const player = (currentRoom.players || []).find((item) => item.id === playerId);
+  const confirmed = window.confirm(`确定将 ${player?.name || "该玩家"} 移出房间？`);
+  if (!confirmed) return;
+
+  setBusy(true);
+  try {
+    await requestJson(`${POKER_API_BASE}/api/rooms/${encodeURIComponent(currentRoom.room_id)}/leave`, {
+      method: "POST",
+      body: { user_id: playerId },
+    });
+    addGameLog(`${player?.name || "玩家"} 已被房主移出房间。`);
+    await pollRoomDetails();
+  } catch (error) {
+    showError(error);
+  } finally {
+    setBusy(false);
+  }
+}
+
+async function disbandRoom() {
+  if (!currentRoom || currentRoom.creator_id !== getPlayerId()) return;
+
+  const confirmed = window.confirm("确定解散当前房间？所有未开局玩家都会被移出。");
+  if (!confirmed) return;
+
+  setBusy(true);
+  try {
+    const players = [...(currentRoom.players || [])];
+    for (const player of players.filter((item) => item.id !== getPlayerId())) {
+      await requestJson(`${POKER_API_BASE}/api/rooms/${encodeURIComponent(currentRoom.room_id)}/leave`, {
+        method: "POST",
+        body: { user_id: player.id },
+      });
+    }
+
+    await requestJson(`${POKER_API_BASE}/api/rooms/${encodeURIComponent(currentRoom.room_id)}/leave`, {
+      method: "POST",
+      body: { user_id: getPlayerId() },
+    });
+    clearCurrentRoom();
+    showStatus("已解散", "房间已解散", "可以重新开新房。");
   } catch (error) {
     showError(error);
   } finally {
@@ -529,6 +621,7 @@ function renderRoom(room) {
 
   if (room.status !== "playing") {
     renderWaitingRoom(room, isHost, canStart);
+    updateHostSettingHint();
   }
 }
 
@@ -549,6 +642,9 @@ function renderPlayer(player, room, index) {
         <span>${chips}</span>
       </div>
       <small>${tags.length ? tags.join(" · ") : "玩家"}</small>
+      ${room.status !== "playing" && room.creator_id === getPlayerId() && player.id !== getPlayerId()
+        ? `<button class="kick-button" type="button" data-kick-player="${escapeHtml(player.id)}">踢出</button>`
+        : ""}
     </article>
   `;
 }
@@ -641,7 +737,69 @@ function renderWaitingRoom(room, isHost, canStart) {
       <div class="seat-grid">
         ${renderSeats(room)}
       </div>
+      ${isHost ? renderHostControls(room, canStart) : ""}
     </div>
+  `;
+}
+
+function renderHostControls(room, canStart) {
+  return `
+    <section class="host-control-panel" aria-label="房主管理">
+      <div class="host-control-head">
+        <div>
+          <strong>房主管理</strong>
+          <span>开局前可调整盲注、下注上限、移除玩家或解散房间。</span>
+        </div>
+        <button class="button secondary danger-lite" type="button" data-disband-room="1">解散房间</button>
+      </div>
+      <div class="host-setting-grid">
+        <label>
+          <span>小盲注</span>
+          <input id="small-blind-setting" type="number" min="1" max="100" step="1" value="${hostSettings.smallBlind}">
+        </label>
+        <label>
+          <span>每手下注上限</span>
+          <input id="max-hand-bet-setting" type="number" min="${hostSettings.smallBlind * 2}" max="100000" step="1" value="${hostSettings.maxHandBet}">
+        </label>
+        <div class="host-setting-hint" id="host-setting-hint"></div>
+      </div>
+      <p>${canStart ? "人数已满足，设置确认后可以开始。" : `还差 ${Math.max(0, 2 - room.current_players)} 名玩家即可开始。`}</p>
+    </section>
+  `;
+}
+
+function readHostSettings() {
+  const smallBlindInput = document.querySelector("#small-blind-setting");
+  const maxHandBetInput = document.querySelector("#max-hand-bet-setting");
+  const smallBlind = clampInteger(smallBlindInput?.value ?? hostSettings.smallBlind, 1, 100);
+  const maxHandBet = clampInteger(maxHandBetInput?.value ?? hostSettings.maxHandBet, smallBlind * 2, 100000);
+  const bigBlind = smallBlind * 2;
+  hostSettings.smallBlind = smallBlind;
+  hostSettings.maxHandBet = maxHandBet;
+
+  return {
+    smallBlind,
+    maxHandBet,
+    maxBetMultiplier: Math.max(1, Math.ceil(maxHandBet / bigBlind)),
+  };
+}
+
+function resetHostSettings() {
+  hostSettings = {
+    smallBlind: DEFAULT_SMALL_BLIND,
+    maxHandBet: DEFAULT_SMALL_BLIND * DEFAULT_MAX_BET_SMALL_BLIND_MULTIPLIER,
+    maxBetTouched: false,
+  };
+}
+
+function updateHostSettingHint() {
+  const hint = document.querySelector("#host-setting-hint");
+  if (!hint) return;
+  const settings = readHostSettings();
+  const bigBlind = settings.smallBlind * 2;
+  hint.innerHTML = `
+    <span>大盲注：${bigBlind}</span>
+    <span>后端上限：大盲注 x ${settings.maxBetMultiplier}，实际上限约 ${bigBlind * settings.maxBetMultiplier}</span>
   `;
 }
 
@@ -1116,6 +1274,12 @@ function formatLogTime(date) {
     second: "2-digit",
     hour12: false,
   }).format(date);
+}
+
+function clampInteger(value, min, max) {
+  const number = Math.trunc(Number(value));
+  if (!Number.isFinite(number)) return min;
+  return Math.max(min, Math.min(max, number));
 }
 
 function syncSelectedGame() {
