@@ -371,6 +371,38 @@ h1 {
   transform: rotate(8deg);
 }
 
+.thumb.captcha {
+  align-content: center;
+  justify-items: center;
+  gap: 9px;
+  padding: 12px;
+  background:
+    repeating-linear-gradient(-12deg, rgba(53, 95, 138, 0.1) 0 7px, transparent 7px 15px),
+    #fffaf0;
+}
+
+.captcha-digits {
+  width: 82%;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--ink);
+  background: var(--paper-strong);
+  color: var(--blue);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.captcha-input {
+  width: 74%;
+  height: 18px;
+  border: 1px solid rgba(23, 23, 22, 0.75);
+  background: var(--paper-strong);
+  box-shadow: inset 30px 0 0 rgba(182, 109, 24, 0.2);
+}
+
 .bar {
   width: 100%;
   background: var(--accent, var(--forest));
@@ -618,6 +650,19 @@ h1 {
             <span class="project-label">Lobby</span>
             <h2>Games</h2>
             <p>私人牌桌大厅，用于创建和加入 Blackjack 与 Texas Hold'em 房间。</p>
+          </span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="project-card" href="/captcha-test/" style="--accent: var(--blue);">
+          <span class="thumb captcha" aria-hidden="true">
+            <span class="captcha-digits">1234</span>
+            <span class="captcha-input"></span>
+          </span>
+          <span class="project-meta">
+            <span class="project-label">Automation Test</span>
+            <h2>Captcha Test</h2>
+            <p>四位数字验证码测试页，用于微信内置浏览器中的点击、识别与提交流程。</p>
           </span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>

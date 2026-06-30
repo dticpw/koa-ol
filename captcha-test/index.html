@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Koa-OL captcha test page for WeChat RPA automation experiments.">
+<title>验证码测试页 | Koa-OL</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root {
+  --paper: #f7f4ef;
+  --panel: #fffdf8;
+  --ink: #171716;
+  --muted: #68635b;
+  --line: #d8d0c1;
+  --green: #255744;
+  --green-2: #16382b;
+  --amber: #b66d18;
+  --red: #a6423c;
+  --blue: #355f8a;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--ink);
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    linear-gradient(90deg, rgba(23, 23, 22, 0.045) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(rgba(23, 23, 22, 0.035) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--paper);
+}
+
+main {
+  width: min(560px, 100%);
+  border: 1px solid var(--ink);
+  background: var(--panel);
+  box-shadow: 9px 9px 0 rgba(37, 87, 68, 0.24);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: grid;
+  gap: 3px;
+}
+
+.brand strong {
+  font-size: 15px;
+  letter-spacing: 0.08em;
+}
+
+.brand span,
+.mode {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.mode {
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  background: #f0eadf;
+  white-space: nowrap;
+}
+
+.content {
+  display: grid;
+  gap: 22px;
+  padding: 28px 24px 24px;
+}
+
+h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.captcha-box {
+  display: grid;
+  gap: 12px;
+}
+
+.captcha-label {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.captcha-code {
+  min-height: 112px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  background:
+    repeating-linear-gradient(-12deg, rgba(53, 95, 138, 0.08) 0 8px, transparent 8px 16px),
+    #fffaf0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  user-select: all;
+}
+
+form {
+  display: grid;
+  gap: 14px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+input {
+  width: 100%;
+  height: 54px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  padding: 0 15px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  outline: none;
+}
+
+input:focus {
+  box-shadow: 0 0 0 3px rgba(182, 109, 24, 0.24);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+button,
+.link-button {
+  min-height: 48px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  padding: 0 16px;
+  color: #fffdf8;
+  background: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-grid;
+  place-items: center;
+}
+
+.link-button {
+  background: var(--panel);
+  color: var(--ink);
+}
+
+.result {
+  min-height: 42px;
+  display: grid;
+  align-items: center;
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  color: var(--muted);
+  background: #f3eee5;
+  font-size: 14px;
+}
+
+.result.ok {
+  border-color: rgba(37, 87, 68, 0.55);
+  color: var(--green-2);
+  background: #e8f1e7;
+}
+
+.result.bad {
+  border-color: rgba(166, 66, 60, 0.5);
+  color: var(--red);
+  background: #f6e7e5;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.meta code {
+  border: 1px solid var(--line);
+  padding: 3px 6px;
+  background: #f0eadf;
+  color: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+@media (max-width: 520px) {
+  body { padding: 16px; }
+  .header { align-items: flex-start; flex-direction: column; }
+  .content { padding: 22px 18px 18px; }
+  .captcha-code { font-size: 52px; min-height: 98px; }
+  .actions { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="header">
+    <div class="brand">
+      <strong>Koa-OL</strong>
+      <span>WeChat RPA test page</span>
+    </div>
+    <div class="mode" id="modeLabel">随机验证码</div>
+  </div>
+
+  <section class="content">
+    <h1>验证码测试</h1>
+
+    <div class="captcha-box" aria-live="polite">
+      <div class="captcha-label">Displayed Code</div>
+      <div class="captcha-code" id="captchaCode">0000</div>
+    </div>
+
+    <form id="captchaForm" autocomplete="off">
+      <label for="captchaInput">
+        输入验证码
+        <input
+          id="captchaInput"
+          name="captcha"
+          inputmode="numeric"
+          pattern="[0-9]{4}"
+          maxlength="4"
+          placeholder="四位数字"
+          aria-describedby="result"
+          required
+        >
+      </label>
+
+      <div class="actions">
+        <button type="submit" id="submitButton">提交</button>
+        <a class="link-button" href="/captcha-test/" id="refreshLink">换一个</a>
+      </div>
+    </form>
+
+    <div class="result" id="result">等待填写验证码。</div>
+
+    <div class="meta">
+      <span>固定测试：</span>
+      <code>/captcha-test/?code=1234</code>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const codeParam = params.get("code");
+  const fixedCode = /^\d{4}$/.test(codeParam || "") ? codeParam : null;
+  const code = fixedCode || String(Math.floor(Math.random() * 10000)).padStart(4, "0");
+
+  const codeEl = document.getElementById("captchaCode");
+  const inputEl = document.getElementById("captchaInput");
+  const resultEl = document.getElementById("result");
+  const modeEl = document.getElementById("modeLabel");
+  const formEl = document.getElementById("captchaForm");
+
+  codeEl.textContent = code;
+  modeEl.textContent = fixedCode ? "固定验证码" : "随机验证码";
+
+  inputEl.addEventListener("input", function () {
+    inputEl.value = inputEl.value.replace(/\D/g, "").slice(0, 4);
+  });
+
+  formEl.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const value = inputEl.value.trim();
+
+    resultEl.classList.remove("ok", "bad");
+    if (value === code) {
+      resultEl.textContent = "提交成功：验证码正确。";
+      resultEl.classList.add("ok");
+      document.title = "提交成功 | 验证码测试页";
+      return;
+    }
+
+    resultEl.textContent = "提交失败：验证码不正确。";
+    resultEl.classList.add("bad");
+    document.title = "提交失败 | 验证码测试页";
+  });
+
+  window.__captchaTest = { code };
+})();
+</script>
+</body>
+</html>
