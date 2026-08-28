@@ -195,8 +195,13 @@
             margin-bottom: 10px;
         }
     </style>
+    <link rel="stylesheet" href="/design-system.css">
 </head>
-<body>
+<body class="chat-page">
+    <nav class="site-nav" aria-label="站点导航">
+        <a class="site-brand" href="/"><span class="site-brand-mark">K</span><span class="site-brand-copy"><strong>Koa-OL</strong><small>Personal lab</small></span></a>
+        <div class="site-links"><a href="/">首页</a><a href="/chat/" aria-current="page">Chat</a><a href="/stats/">Stats</a><a href="/multi-agent/">Multi-Agent</a></div>
+    </nav>
 
     <div class="banner">⚙️ 调试模式：当前已关闭密码保护。正式使用前务必重新启用。</div>
 
@@ -711,5 +716,6 @@
         input.focus();
     </script>
 
+    <script src="/navigation.js"></script>
 </body>
 </html>
