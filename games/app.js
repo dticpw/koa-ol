@@ -60,6 +60,12 @@ const savedState = loadState();
 const urlRoom = getRoomFromUrl();
 const urlGame = getGameFromUrl();
 
+window.history.replaceState(
+  { view: urlRoom ? "room-link" : "lobby", roomId: urlRoom || null },
+  "",
+  window.location.href,
+);
+
 playerNameInput.value = savedState.playerName || "";
 gameTypeInput.value = urlGame || savedState.gameType || "texas";
 roomCodeInput.value = urlRoom || savedState.roomCode || "";
@@ -151,6 +157,16 @@ copyRoomLinkButton.addEventListener("click", async () => {
 window.addEventListener("beforeunload", () => {
   isManualDisconnect = true;
   if (ws) ws.close();
+});
+
+window.addEventListener("popstate", (event) => {
+  const roomId = getRoomFromUrl();
+  if (!roomId || event.state?.view === "lobby") {
+    showLobbyFromHistory();
+    return;
+  }
+
+  showRoomFromHistory(roomId);
 });
 
 async function createRoom() {
@@ -477,8 +493,37 @@ function clearCurrentRoom() {
   persistState();
   const url = new URL(window.location.href);
   url.search = "";
-  window.history.replaceState({}, "", url);
+  window.history.replaceState({ view: "lobby", roomId: null }, "", url);
   showStatus("待开局", "准备好就点「开新房」", "如果朋友已经发你房间码，填入后直接加入。");
+}
+
+function showLobbyFromHistory() {
+  clearInterval(roomPollTimer);
+  clearInterval(countdownTimer);
+  clearTimeout(personalSyncTimer);
+  roomPollTimer = null;
+  countdownTimer = null;
+  roomCard.hidden = true;
+  setAppMode("lobby");
+  showStatus("待开局", "已返回游戏选择", "可以继续创建新房，或使用浏览器前进按钮回到刚才的房间。");
+}
+
+function showRoomFromHistory(roomId) {
+  if (currentRoom?.room_id === roomId) {
+    roomCard.hidden = false;
+    setAppMode("room");
+    renderRoom(currentRoom);
+    renderRoomLink(currentRoom);
+    startRoomPolling();
+    if (currentRoom.status === "playing") {
+      queuePersonalGameStateSync(100);
+    }
+    return;
+  }
+
+  statusTitle.textContent = `准备加入 ${roomId}`;
+  statusCopy.textContent = "房间信息加载后，可填写昵称并重新加入。";
+  previewRoom(roomId);
 }
 
 function connectWebSocket(force = false) {
@@ -1341,7 +1386,7 @@ function updateUrl(roomCode, gameType) {
   const url = new URL(window.location.href);
   url.searchParams.set("room", roomCode);
   url.searchParams.set("game", gameType);
-  window.history.replaceState({}, "", url);
+  window.history.pushState({ view: "room", roomId: roomCode, gameType }, "", url);
 }
 
 function getPlayerId() {
