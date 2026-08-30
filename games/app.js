@@ -1480,7 +1480,9 @@ function clampInteger(value, min, max) {
 
 function syncSelectedGame() {
   gameCards.forEach((card) => {
-    card.classList.toggle("is-selected", card.dataset.gameCard === "texas");
+    const isSelected = card.dataset.gameCard === "texas";
+    card.classList.toggle("is-selected", isSelected);
+    card.setAttribute("aria-pressed", String(isSelected));
   });
 }
 

@@ -1761,3 +1761,14 @@ body.is-room-view { background:var(--night); }.room-card { position:relative;bor
 @media(max-width:560px){
   html,body{overflow-x:clip}.hero-copy{padding:32px 22px}.play-card{padding:16px}.play-card-head strong{font-size:21px}.game-tile{min-height:160px;box-shadow:4px 4px 0 var(--night)}.room-form{padding:16px}.room-card{border-radius:22px}.game-state,.player-list,.game-log{box-shadow:4px 4px 0 var(--night)}.poker-table-stage{padding:0}.action-strip{box-shadow:4px 4px 0 var(--night)}
 }
+
+/* Explicit game selection state */
+.game-tile{position:relative;overflow:hidden}
+.game-tile::before{position:absolute;z-index:3;top:14px;right:14px;padding:7px 11px;border:2px solid var(--night);border-radius:999px;background:#fff8e8;color:var(--night);font:900 10px/1 ui-monospace,monospace;letter-spacing:.08em;box-shadow:3px 3px 0 var(--night)}
+.game-tile.is-disabled::before{content:'即将开放';background:#d8d3c6;color:#716f68}
+.game-tile.is-selected::before{content:'✓ 当前游戏';background:var(--acid);color:var(--night)}
+.game-tile.is-selected{border-width:4px;box-shadow:0 0 0 6px rgba(215,229,90,.72),10px 10px 0 var(--night)}
+.game-tile.is-selected::after{content:'';position:absolute;left:0;right:0;bottom:0;height:10px;background:repeating-linear-gradient(90deg,var(--night) 0 18px,var(--acid) 18px 36px)}
+.game-tile[aria-pressed="true"] .card-stack{transform:translateY(-3px) rotate(-2deg)}
+.game-tile .card-stack{transition:transform .35s var(--spring)}
+@media(max-width:560px){.game-tile::before{top:9px;right:9px;padding:5px 8px;font-size:8px}.game-tile.is-selected{box-shadow:0 0 0 4px rgba(215,229,90,.72),5px 5px 0 var(--night)}}

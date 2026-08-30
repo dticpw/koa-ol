@@ -210,3 +210,21 @@ body::before {
   .chat-page > h1{margin-top:28px}.chat-page #messages{min-height:55vh;max-height:60vh}.chat-page .msg{max-width:94%}.chat-page #input-row{bottom:8px}
   .stats-page .cards{grid-template-columns:1fr 1fr}.stats-page .card{min-height:125px;padding:20px}.stats-page .card-value{font-size:30px}.stats-page .top-bar{padding:24px 20px;border-radius:26px}
 }
+
+/* Home layout refinement — full-width project atlas */
+@media(min-width:981px){
+  .home-page .hero{display:grid;grid-template-columns:1fr;gap:36px;padding-top:42px}
+  .home-page .hero-copy{position:static;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);grid-template-rows:auto auto 1fr;column-gap:68px;row-gap:18px;align-items:start;padding:34px 40px 40px;border:1px solid rgba(255,255,255,.8);border-radius:40px;background:rgba(251,250,246,.6);box-shadow:0 22px 70px rgba(28,46,39,.08)}
+  .home-page .eyebrow{grid-column:1;grid-row:1}
+  .home-page h1{grid-column:1;grid-row:2/4;max-width:none;font-size:clamp(88px,12vw,158px);line-height:.76}
+  .home-page .intro{grid-column:2;grid-row:1/3;align-self:end;max-width:520px;padding-top:24px;font-size:18px}
+  .home-page .quick-actions{grid-column:2;grid-row:3;align-self:start;margin-top:8px}
+  .home-page .project-board{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+  .home-page .project-card,.home-page .project-card.primary{grid-template-columns:1fr;grid-column:auto;min-height:300px;padding:16px}
+  .home-page .project-card.primary{grid-column:span 2;grid-template-columns:180px minmax(0,1fr) auto;min-height:230px;padding:18px}
+  .home-page .project-card:nth-child(4){grid-column:span 2;grid-template-columns:180px minmax(0,1fr) auto;min-height:230px}
+  .home-page .project-card:nth-child(3),.home-page .project-card:nth-child(5){transform:none}
+  .home-page .project-card:nth-child(3):hover,.home-page .project-card:nth-child(5):hover{transform:translateY(-5px) scale(1.006)}
+  .home-page .project-card:nth-child(4) .thumb{aspect-ratio:1.05}
+  .home-page .utility{margin-top:0}
+}
