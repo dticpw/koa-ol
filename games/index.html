@@ -18,12 +18,15 @@
         <small>Private room</small>
       </span>
     </a>
-    <a class="home-link" href="/">返回首页</a>
+    <nav class="games-nav" aria-label="Games navigation">
+      <a class="home-link" href="/">首页</a>
+      <a class="home-link" href="./admin/">管理</a>
+    </nav>
   </header>
 
   <main class="game-lobby" aria-labelledby="lobby-title">
     <section class="hero-copy lobby-view">
-      <p class="round-label">在线桌游大厅</p>
+      <p class="round-label">PRIVATE TABLE · 在线桌游大厅</p>
       <h1 id="lobby-title">选择游戏</h1>
       <p class="hero-line">输入昵称，创建房间，或者粘贴朋友发来的房间链接。</p>
       <div class="quick-rules" aria-label="Join steps">
@@ -34,6 +37,7 @@
     </section>
 
     <section class="play-card lobby-view" aria-label="Create or join a room">
+      <div class="play-card-head" aria-hidden="true"><span>TABLE 01</span><strong>选桌与入场</strong></div>
       <div class="game-switch" aria-label="Choose game">
         <button class="game-tile is-disabled" type="button" data-game-card="blackjack" aria-disabled="true">
           <span class="card-stack" aria-hidden="true">
