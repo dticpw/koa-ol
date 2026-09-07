@@ -1,712 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Koa-OL personal project index: AI Chat, Multi-Agent, Galgame and Stats.">
-<title>Koa-OL | Project Index</title>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/design-system.css">
-<style>
-/*
-Assumptions:
-- Keep this as a static homepage for Cloudflare Pages, with no build step.
-- Preserve all existing routes and external links.
-- Treat Koa-OL as a personal project index, not a generic landing page.
-- Use lightweight CSS previews on the homepage so project cards render immediately.
-*/
-:root {
-  --paper: #f7f4ef;
-  --paper-strong: #fffdf8;
-  --ink: #171716;
-  --muted: #65635f;
-  --line: #d8d0c1;
-  --forest: #255744;
-  --forest-2: #133629;
-  --amber: #b66d18;
-  --plum: #6f4aa0;
-  --blue: #355f8a;
-  --rose: #b74c55;
-  --shadow: 0 22px 70px rgba(35, 31, 24, 0.12);
-}
-
-* { box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--ink);
-  background:
-    linear-gradient(90deg, rgba(23, 23, 22, 0.045) 1px, transparent 1px) 0 0 / 36px 36px,
-    linear-gradient(rgba(23, 23, 22, 0.035) 1px, transparent 1px) 0 0 / 36px 36px,
-    var(--paper);
-}
-
-a { color: inherit; }
-
-.page {
-  width: min(1180px, calc(100% - 40px));
-  margin: 0 auto;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 76px;
-  gap: 20px;
-}
-
-.mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-}
-
-.mark-symbol {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 2px solid var(--ink);
-  background: var(--paper-strong);
-  color: var(--forest);
-  font-weight: 800;
-  line-height: 1;
-  box-shadow: 4px 4px 0 var(--amber);
-}
-
-.mark-text {
-  display: grid;
-  gap: 2px;
-}
-
-.mark-text strong {
-  font-size: 15px;
-  letter-spacing: 0.08em;
-}
-
-.mark-text span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px;
-  border: 1px solid var(--line);
-  background: rgba(255, 253, 248, 0.76);
-  backdrop-filter: blur(10px);
-}
-
-.nav a {
-  min-height: 36px;
-  padding: 8px 12px;
-  text-decoration: none;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.nav a:hover {
-  color: var(--ink);
-  background: #eee7dc;
-}
-
-.hero {
-  min-height: calc(100svh - 92px);
-  display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
-  gap: 42px;
-  align-items: center;
-  padding: 20px 0 64px;
-}
-
-.hero-copy {
-  display: grid;
-  gap: 28px;
-  align-content: center;
-}
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--forest);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.eyebrow::before {
-  content: "";
-  width: 42px;
-  height: 2px;
-  background: var(--amber);
-}
-
-h1 {
-  margin: 0;
-  max-width: 10ch;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(68px, 9vw, 132px);
-  font-weight: 700;
-  line-height: 0.86;
-  letter-spacing: 0;
-}
-
-.intro {
-  max-width: 540px;
-  margin: 0;
-  color: #4d4a45;
-  font-size: 18px;
-  line-height: 1.75;
-}
-
-.quick-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 46px;
-  padding: 0 18px;
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: #fffdf8;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 750;
-  box-shadow: 5px 5px 0 rgba(37, 87, 68, 0.28);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
-}
-
-.button:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0 rgba(37, 87, 68, 0.34);
-}
-
-.button.secondary {
-  background: var(--paper-strong);
-  color: var(--ink);
-  box-shadow: 5px 5px 0 rgba(182, 109, 24, 0.25);
-}
-
-.project-board {
-  display: grid;
-  gap: 14px;
-}
-
-.project-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 120px minmax(0, 1fr) auto;
-  gap: 18px;
-  align-items: center;
-  min-height: 138px;
-  padding: 16px;
-  border: 1px solid var(--ink);
-  background: var(--paper-strong);
-  color: var(--ink);
-  text-decoration: none;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.project-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 28px 76px rgba(35, 31, 24, 0.16);
-}
-
-.project-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 6px;
-  background: var(--accent, var(--forest));
-}
-
-.project-card.primary {
-  min-height: 172px;
-  background: #f1efe7;
-}
-
-.thumb {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  aspect-ratio: 1.08;
-  border: 1px solid var(--line);
-  background: #ede6da;
-  overflow: hidden;
-}
-
-.thumb.chat {
-  align-content: center;
-  gap: 9px;
-  padding: 12px;
-}
-
-.bubble {
-  width: 100%;
-  height: 16px;
-  background: var(--forest);
-}
-
-.bubble:nth-child(2) {
-  width: 78%;
-  justify-self: end;
-  background: var(--amber);
-}
-
-.bubble:nth-child(3) {
-  width: 58%;
-  background: var(--plum);
-}
-
-.thumb.agents {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 13px;
-}
-
-.node {
-  width: 100%;
-  aspect-ratio: 1;
-  border: 1px solid var(--ink);
-  background: var(--paper-strong);
-}
-
-.node:nth-child(1) { background: var(--forest); }
-.node:nth-child(2) { background: var(--amber); }
-.node:nth-child(3) { background: var(--plum); }
-.node:nth-child(4) { grid-column: 1 / 4; aspect-ratio: auto; height: 18px; background: var(--blue); }
-
-.thumb.gal {
-  position: relative;
-  align-content: end;
-  justify-items: center;
-  gap: 8px;
-  padding: 12px;
-  background:
-    linear-gradient(180deg, #efe2cf 0 42%, #d6a05c 42% 46%, #f6efe3 46% 100%);
-}
-
-.thumb.gal::before {
-  content: "";
-  position: absolute;
-  left: 15px;
-  top: 14px;
-  width: 32px;
-  height: 46px;
-  border: 1px solid rgba(23, 23, 22, 0.72);
-  background:
-    linear-gradient(90deg, #9c3f47 0 18%, transparent 18%),
-    linear-gradient(#fff8ed 0 0);
-  box-shadow: 41px 8px 0 -1px #fff8ed, 41px 8px 0 0 rgba(23, 23, 22, 0.72);
-}
-
-.thumb.gal::after {
-  content: "";
-  width: 76%;
-  height: 24px;
-  border: 1px solid rgba(23, 23, 22, 0.7);
-  background: #fffdf8;
-  box-shadow: inset 0 0 0 5px #fffdf8, inset 0 -6px 0 #c6b19a;
-}
-
-.dialog-line {
-  width: 58%;
-  height: 5px;
-  background: var(--rose);
-  z-index: 1;
-}
-
-.thumb.stats {
-  align-items: end;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-  padding: 14px;
-}
-
-.thumb.games {
-  position: relative;
-  border-color: rgba(23, 23, 22, 0.7);
-  background:
-    radial-gradient(ellipse at center, rgba(255, 253, 248, 0.18) 0 28%, transparent 29%),
-    #255744;
-}
-
-.thumb.games::before,
-.thumb.games::after {
-  content: "";
-  position: absolute;
-  width: 30px;
-  height: 42px;
-  border: 1px solid var(--ink);
-  background: var(--paper-strong);
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.18);
-}
-
-.thumb.games::before {
-  left: 28px;
-  top: 34px;
-  transform: rotate(-8deg);
-}
-
-.thumb.games::after {
-  right: 28px;
-  bottom: 34px;
-  transform: rotate(8deg);
-}
-
-.thumb.captcha {
-  align-content: center;
-  justify-items: center;
-  gap: 9px;
-  padding: 12px;
-  background:
-    repeating-linear-gradient(-12deg, rgba(53, 95, 138, 0.1) 0 7px, transparent 7px 15px),
-    #fffaf0;
-}
-
-.captcha-digits {
-  width: 82%;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--ink);
-  background: var(--paper-strong);
-  color: var(--blue);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
-.captcha-input {
-  width: 74%;
-  height: 18px;
-  border: 1px solid rgba(23, 23, 22, 0.75);
-  background: var(--paper-strong);
-  box-shadow: inset 30px 0 0 rgba(182, 109, 24, 0.2);
-}
-
-.bar {
-  width: 100%;
-  background: var(--accent, var(--forest));
-}
-
-.bar:nth-child(1) { height: 34%; }
-.bar:nth-child(2) { height: 62%; }
-.bar:nth-child(3) { height: 48%; }
-.bar:nth-child(4) { height: 78%; }
-.bar:nth-child(5) { height: 52%; }
-
-.project-meta {
-  display: grid;
-  gap: 8px;
-}
-
-.project-label {
-  color: var(--accent, var(--forest));
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.project-card h2 {
-  margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 28px;
-  line-height: 1;
-  letter-spacing: 0;
-}
-
-.project-card p {
-  max-width: 460px;
-  margin: 0;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.62;
-}
-
-.arrow {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--ink);
-  font-size: 20px;
-  line-height: 1;
-}
-
-.utility {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  padding: 0 0 72px;
-}
-
-.utility a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 78px;
-  padding: 18px 20px;
-  border: 1px solid var(--line);
-  background: rgba(255, 253, 248, 0.72);
-  color: var(--ink);
-  text-decoration: none;
-}
-
-.utility strong {
-  font-size: 16px;
-}
-
-.utility span {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 24px 0 38px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 12px;
-}
-
-@media (max-width: 940px) {
-  .hero {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    align-items: start;
-    padding-top: 34px;
-  }
-
-  h1 {
-    max-width: none;
-    font-size: clamp(58px, 16vw, 102px);
-  }
-}
-
-@media (max-width: 680px) {
-  .page {
-    width: min(100% - 28px, 1180px);
-  }
-
-  .topbar {
-    align-items: flex-start;
-    flex-direction: column;
-    padding: 18px 0 4px;
-  }
-
-  .nav {
-    width: 100%;
-    overflow-x: auto;
-    justify-content: flex-start;
-  }
-
-  .hero {
-    min-height: auto;
-    padding-bottom: 40px;
-  }
-
-  .intro {
-    font-size: 16px;
-  }
-
-  .quick-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .button {
-    width: 100%;
-  }
-
-  .project-card,
-  .project-card.primary {
-    grid-template-columns: 82px minmax(0, 1fr);
-    min-height: 132px;
-    gap: 12px;
-    padding: 12px 12px 12px 16px;
-  }
-
-  .project-card h2 {
-    font-size: 23px;
-  }
-
-  .project-card p {
-    font-size: 13px;
-  }
-
-  .arrow {
-    display: none;
-  }
-
-  .utility {
-    grid-template-columns: 1fr;
-    padding-bottom: 46px;
-  }
-
-  .footer {
-    flex-direction: column;
-  }
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eee9df">
+  <meta name="description" content="Koa-OL 的个人实验场。逛一座幻想乡里的微缩神社，探索 AI 对话、多智能体协作、文字冒险与小游戏。">
+  <meta property="og:title" content="Koa-OL · 给想象一个栖身之所">
+  <meta property="og:description" content="一座小小的神社，一些慢慢生长的想法。欢迎来到我的个人实验场。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://koa-ol.com/">
+  <meta property="og:image" content="https://koa-ol.com/assets/home/shrine-poster.webp">
+  <title>Koa-OL · 给想象一个栖身之所</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/home/home.css">
+  <link rel="preload" href="/assets/home/shrine-poster.webp" as="image" fetchpriority="high">
+  <script defer src="/assets/home/home.js"></script>
 </head>
-<body class="home-page">
-<nav class="site-nav" aria-label="站点导航">
-  <a class="site-brand" href="/"><span class="site-brand-mark">K</span><span class="site-brand-copy"><strong>Koa-OL</strong><small>Personal lab</small></span></a>
-  <div class="site-links"><a href="/" aria-current="page">首页</a><a href="/chat/">Chat</a><a href="/stats/">Stats</a><a href="/multi-agent/">Multi-Agent</a></div>
-</nav>
-<div class="page">
-  <header class="topbar">
-    <a class="mark" href="/" aria-label="Koa-OL homepage">
-      <span class="mark-symbol">K</span>
-      <span class="mark-text">
-        <strong>Koa-OL</strong>
-        <span>personal project index</span>
-      </span>
-    </a>
-    <nav class="nav" aria-label="Primary">
-      <a href="/chat/">Chat</a>
-      <a href="/multi-agent/">Multi-Agent</a>
-      <a href="/galgame/">Galgame</a>
-      <a href="/games/">Games</a>
-      <a href="/stats/">Stats</a>
-    </nav>
+<body>
+  <a class="skip-link" href="#projects">跳到项目列表</a>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 1-8 8H5l-3 3V11a9 9 0 0 1 18 0Z"/><path d="M7 9h8m-8 4h5"/></symbol>
+    <symbol id="i-agent" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="6" rx="1.5"/><rect x="2" y="16" width="7" height="6" rx="1.5"/><rect x="15" y="16" width="7" height="6" rx="1.5"/><path d="M12 8v4m-7 4v-4h14v4"/></symbol>
+    <symbol id="i-story" viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/><path d="m6 8 2 1m-2 3 2 1m8-4 2-1m-2 5 2-1"/></symbol>
+    <symbol id="i-game" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="5"/><path d="M5 12h6m-3-3v6m8-4h.01m3 3h.01"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 6-6 6 6 6m8-12 6 6-6 6m-3-15-2 18"/></symbol>
+    <symbol id="i-stats" viewBox="0 0 24 24"><path d="M4 3v18h18M9 16v-5m5 5V6m5 10V9"/></symbol>
+  </svg>
+  <header class="site-header wrap">
+    <a class="brand" href="/" aria-label="Koa-OL 首页"><span class="brand-mark" aria-hidden="true">K<span>·</span></span><span>Koa-OL<span class="brand-caption">A PERSONAL PLAYGROUND</span></span></a>
+    <nav aria-label="主导航"><a class="current" href="#home" aria-current="page">首页</a><a href="#projects">探索项目</a><a href="#about">关于这里</a></nav>
+    <a class="github-link" href="https://github.com/dticpw" target="_blank" rel="noopener noreferrer">GitHub <svg class="icon"><use href="#i-up"/></svg></a>
   </header>
-
   <main>
-    <section class="hero" aria-labelledby="site-title">
+    <section class="hero wrap" id="home" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <div class="eyebrow">Cloudflare Pages</div>
-        <h1 id="site-title">Koa-OL</h1>
-        <p class="intro">一个给个人实验项目使用的入口页。AI 对话、多 Agent 调度、文字冒险和访问统计都保留在首屏，打开后可以直接进入实际工具。</p>
-        <div class="quick-actions" aria-label="Featured actions">
-          <a class="button" href="/chat/">进入 AI Chat</a>
-          <a class="button secondary" href="/multi-agent/">查看 Multi-Agent</a>
+        <p class="eyebrow"><span class="small-sun" aria-hidden="true">✳</span> 代码之外，还有幻想。</p>
+        <h1 id="hero-title">给想象<br>一个<span class="title-final">栖身之所<span class="title-dot">。</span></span></h1>
+        <p class="hero-description">你好，欢迎来到我的小小实验场。<br>写一点代码，造一些有趣的东西，<br>也给天马行空的想法，留一块自由生长的地方。</p>
+        <div class="hero-actions"><a class="button primary" href="#projects">随处逛逛 <svg class="icon"><use href="#i-arrow"/></svg></a><a class="quiet-link" href="/shrine/">走进神社 <svg class="icon"><use href="#i-up"/></svg></a></div>
+        <div class="hero-footnote"><span class="tiny-rule"></span><span>一点好奇心，一些未完成的可能。</span></div>
+      </div>
+      <div class="shrine-exhibit">
+        <div class="exhibit-top"><span class="mono">SCENE 001 / GENSOKYO</span><span class="exhibit-seal" aria-label="博丽">博<br>麗</span></div>
+        <div class="scene-stage" id="scene-stage">
+          <img class="scene-poster" src="/assets/home/shrine-poster.webp" alt="朱红鸟居、粉色樱花与青灰屋瓦组成的博丽神社微缩庭院" width="1200" height="875" fetchpriority="high">
+          <iframe id="shrine-frame" data-src="/shrine/?embed=1" title="可拖动旋转的博丽神社三维场景" aria-describedby="scene-hint" loading="eager" referrerpolicy="same-origin"></iframe>
         </div>
-      </div>
-
-      <div class="project-board" aria-label="Project links">
-        <a class="project-card primary" href="/chat/" style="--accent: var(--forest);">
-          <span class="thumb chat" aria-hidden="true">
-            <span class="bubble"></span>
-            <span class="bubble"></span>
-            <span class="bubble"></span>
-          </span>
-          <span class="project-meta">
-            <span class="project-label">Conversation</span>
-            <h2>AI Chat</h2>
-            <p>支持 Claude 与 Qwen 的在线对话，含多轮上下文与文件上传。</p>
-          </span>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a class="project-card" href="/multi-agent/" style="--accent: var(--plum);">
-          <span class="thumb agents" aria-hidden="true">
-            <span class="node"></span>
-            <span class="node"></span>
-            <span class="node"></span>
-            <span class="node"></span>
-          </span>
-          <span class="project-meta">
-            <span class="project-label">Orchestration</span>
-            <h2>Multi-Agent</h2>
-            <p>Qwen Orchestrator 自主调度多 Agent 并行协作，并展示执行过程。</p>
-          </span>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a class="project-card" href="/galgame/" style="--accent: var(--rose);">
-          <span class="thumb gal" aria-hidden="true">
-            <span class="dialog-line"></span>
-          </span>
-          <span class="project-meta">
-            <span class="project-label">Story</span>
-            <h2>Galgame</h2>
-            <p>文字冒险游戏入口，首页使用轻量预览，进入后再加载游戏素材。</p>
-          </span>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a class="project-card" href="/games/" style="--accent: var(--amber);">
-          <span class="thumb games" aria-hidden="true"></span>
-          <span class="project-meta">
-            <span class="project-label">Lobby</span>
-            <h2>Games</h2>
-            <p>私人牌桌大厅，用于创建和加入 Blackjack 与 Texas Hold'em 房间。</p>
-          </span>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a class="project-card" href="/captcha-test/" style="--accent: var(--blue);">
-          <span class="thumb captcha" aria-hidden="true">
-            <span class="captcha-digits">1234</span>
-            <span class="captcha-input"></span>
-          </span>
-          <span class="project-meta">
-            <span class="project-label">Automation Test</span>
-            <h2>Captcha Test</h2>
-            <p>四位数字验证码测试页，用于微信内置浏览器中的点击、识别与提交流程。</p>
-          </span>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a class="project-card" href="/stats/" style="--accent: var(--blue);">
-          <span class="thumb stats" aria-hidden="true">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-          </span>
-          <span class="project-meta">
-            <span class="project-label">Admin</span>
-            <h2>Stats</h2>
-            <p>Chat 页面的访问数据统计与可视化。</p>
-          </span>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
+        <div class="exhibit-bottom"><div><h2>幻想乡的一隅</h2><p id="scene-hint">博丽神社 · 微缩庭院</p></div><a class="exhibit-open" href="/shrine/" aria-label="打开完整神社场景，自由旋转与缩放"><svg class="icon"><use href="#i-up"/></svg></a></div>
       </div>
     </section>
-
-    <section class="utility" aria-label="External links">
-      <a href="https://github.com/dticpw" target="_blank" rel="noopener">
-        <strong>GitHub</strong>
-        <span>个人开源项目与代码仓库</span>
-      </a>
-      <a href="https://dash.cloudflare.com" target="_blank" rel="noopener">
-        <strong>Cloudflare</strong>
-        <span>域名、Pages 与 Workers 管理后台</span>
-      </a>
+    <div class="interlude wrap" aria-hidden="true"><span>MADE OF CURIOSITY</span><span class="interlude-line"></span><span>慢慢探索 <span class="down-arrow">↓</span></span></div>
+    <section class="projects wrap" id="projects" aria-labelledby="projects-title">
+      <div class="section-heading"><div><p class="eyebrow section-kicker">THE COLLECTION <span>/ 01—06</span></p><h2 id="projects-title">想法，正在发生。</h2></div><p>从实用工具，到纯粹的玩心。<br>每一扇门后，都是一次小小的尝试。</p></div>
+      <div class="project-grid">
+        <a class="project-card chat-card" href="/chat/">
+          <div class="card-top"><span class="card-kind"><svg class="icon"><use href="#i-chat"/></svg> 对话与灵感</span><span class="card-number">01</span></div>
+          <div class="card-art chat-art" aria-hidden="true"><span class="chat-bubble first">如果有一个想法…</span><span class="chat-bubble second">一起让它发生。<b>✳</b></span><span class="chat-cursor">|</span></div>
+          <div class="card-title"><h3>AI Chat</h3><span class="card-arrow"><svg class="icon"><use href="#i-up"/></svg></span></div><p>和 AI 聊聊，理清思路、拆解问题。<br>支持多轮对话与文件上传。</p><span class="card-tag">CONVERSATION</span>
+        </a>
+        <a class="project-card agent-card" href="/multi-agent/">
+          <div class="card-top"><span class="card-kind"><svg class="icon"><use href="#i-agent"/></svg> 让想法协作</span><span class="card-number">02</span></div>
+          <div class="card-art agent-art" aria-hidden="true"><svg viewBox="0 0 300 144"><path d="M150 36v35M60 106V72h180v34"/><rect x="129" y="8" width="42" height="42" rx="12" class="agent-root"/><rect x="39" y="94" width="42" height="36" rx="9"/><rect x="129" y="94" width="42" height="36" rx="9"/><rect x="219" y="94" width="42" height="36" rx="9"/><path d="M150 72v22"/><circle cx="150" cy="29" r="5"/><path d="m54 112 4 4 8-8m78 0 6 8 6-8m78 4h12"/></svg></div>
+          <div class="card-title"><h3>Multi-Agent</h3><span class="card-arrow"><svg class="icon"><use href="#i-up"/></svg></span></div><p>把一个任务交给多个智能体。<br>观察分工、协作和想法汇合的过程。</p><span class="card-tag">ORCHESTRATION</span>
+        </a>
+        <a class="project-card story-card" href="/galgame/">
+          <div class="card-top"><span class="card-kind"><svg class="icon"><use href="#i-story"/></svg> 故事的另一页</span><span class="card-number">03</span></div>
+          <div class="card-art story-art" aria-hidden="true"><span class="story-orbit"></span><span class="book-page back"></span><span class="book-page front"><span>某个故事，<br>从你的选择开始。</span><i>つづく —</i></span><span class="story-star">✧</span></div>
+          <div class="card-title"><h3>Galgame</h3><span class="card-arrow"><svg class="icon"><use href="#i-up"/></svg></span></div><p>在文字与选择之间，走进另一段日常。<br>下一页，会遇见什么？</p><span class="card-tag">INTERACTIVE STORY</span>
+        </a>
+        <a class="project-card compact-card games-card" href="/games/"><div class="card-top"><span class="card-kind"><svg class="icon"><use href="#i-game"/></svg> 暂停一下</span><span class="card-number">04</span></div><div class="card-title"><h3>Games</h3><span class="card-arrow"><svg class="icon"><use href="#i-up"/></svg></span></div><p>开一张私人牌桌，和朋友玩一局。<br>Blackjack / Texas Hold'em</p><span class="card-tag">JUST FOR FUN</span></a>
+        <a class="project-card compact-card captcha-card" href="/captcha-test/"><div class="card-top"><span class="card-kind"><svg class="icon"><use href="#i-code"/></svg> 动手做实验</span><span class="card-number">05</span></div><div class="card-title"><h3>Captcha Test</h3><span class="card-arrow"><svg class="icon"><use href="#i-up"/></svg></span></div><p>验证码自动化的小型试验田。<br>测试点击、识别与提交的完整流程。</p><span class="card-tag">AUTOMATION</span></a>
+        <a class="project-card compact-card stats-card" href="/stats/"><div class="card-top"><span class="card-kind"><svg class="icon"><use href="#i-stats"/></svg> 留下的足迹</span><span class="card-number">06</span></div><div class="card-title"><h3>Stats</h3><span class="card-arrow"><svg class="icon"><use href="#i-up"/></svg></span></div><p>看看 AI Chat 的访问数据，<br>在数字里发现使用的痕迹。</p><span class="card-tag">ANALYTICS</span></a>
+      </div>
     </section>
+    <section class="about wrap" id="about" aria-labelledby="about-title"><div class="about-symbol" aria-hidden="true">✳</div><div class="about-copy"><p class="eyebrow section-kicker">A NOTE FROM THIS CORNER</p><h2 id="about-title">不一定有用，但一定有趣。</h2><p>这里收集我对 AI、交互和游戏的好奇。有些是日常会用到的工具，<br class="desktop-break">有些只是突然冒出的念头。边做边学，边玩边改，慢慢把它们变成现实。</p><a class="quiet-link" href="https://github.com/dticpw" target="_blank" rel="noopener noreferrer">去 GitHub 看看 <svg class="icon"><use href="#i-up"/></svg></a></div><div class="about-note"><span class="mono">EST. IN CURIOSITY</span><span class="note-flower">✿</span><span>持续生长中</span></div></section>
   </main>
-
-  <footer class="footer">
-    <span>koa-ol.com</span>
-    <span>Static project hub deployed on Cloudflare Pages</span>
-  </footer>
-</div>
-<script src="/navigation.js"></script>
+  <footer class="site-footer wrap"><a class="footer-brand" href="/">Koa-OL<span>一个属于好奇心的地方。</span></a><div class="footer-links"><a href="https://github.com/dticpw" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a><a href="https://dash.cloudflare.com" target="_blank" rel="noopener noreferrer">Cloudflare <span>↗</span></a><a href="#home">回到顶部 ↑</a></div><div class="footer-bottom"><span>© <span id="year">2026</span> Koa-OL</span><span>博丽神社为东方 Project 非官方同人场景</span><span>Built with care & a little imagination.</span></div></footer>
 </body>
 </html>
