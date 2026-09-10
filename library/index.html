@@ -4,7 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#292332"><meta name="description" content="muQ 大图书馆：按会话收藏行动、问题、决策与产出。">
   <title>muQ · 大图书馆</title><link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./library.css?v=901abe8857dc"><script defer src="./library.js?v=84a3640db867"></script>
+  <link rel="stylesheet" href="./library.css?v=4511daeb0b2d"><script defer src="./remember.js?v=ea90b24a80d2"></script><script defer src="./library.js?v=a2df0bd90288"></script>
 </head>
 <body>
   <a class="skip" href="#collection">跳到馆藏</a>
@@ -19,8 +19,8 @@
     </section>
   </main>
   <article id="reader" class="detail-page wrap" hidden><div class="reader-bar"><a class="reader-home" href="./">← 返回馆藏</a></div><div id="reader-content"></div></article>
-  <footer class="wrap footer"><div><a href="./">muQ <span>大图书馆</span></a><p>取名自帕秋莉的昵称，给知识和好奇心一处安静的居所。</p></div><div class="footer-links"><a href="/">回到个人主页 ↗</a><button id="lock" class="quiet" hidden>锁定图书馆</button></div></footer>
-  <dialog id="login" aria-labelledby="login-title"><form id="login-form"><button class="close" type="button" data-close="login" aria-label="关闭解锁窗口">×</button><p class="eyebrow">THE KEEPER'S KEY</p><h2 id="login-title">打开自己的那一页。</h2><p class="dialog-description">输入馆主口令，查看完整会话日记、<br>每一条原始提示词与过程产物。</p><label for="password">馆主口令</label><input id="password" type="password" required autocomplete="current-password"><button type="submit" class="primary">解锁图书馆 <span aria-hidden="true">↗</span></button><button id="local-unlock" class="secondary" type="button" hidden>使用本机密码本解锁</button><button id="local-copy" class="secondary" type="button" hidden>复制网站解锁口令</button><p id="login-error" role="alert"></p><p class="privacy-note">解锁在已打开的图书馆标签页间临时共享；全部关闭或闲置后需重新输入。</p></form></dialog>
+  <footer class="wrap footer"><div><a href="./">muQ <span>大图书馆</span></a><p>取名自帕秋莉的昵称，给知识和好奇心一处安静的居所。</p></div><div class="footer-links"><a href="/">回到个人主页 ↗</a><button id="lock" class="quiet" hidden>退出并忘记此设备</button></div></footer>
+  <dialog id="login" aria-labelledby="login-title"><form id="login-form"><button class="close" type="button" data-close="login" aria-label="关闭解锁窗口">×</button><p class="eyebrow">THE KEEPER'S KEY</p><h2 id="login-title">打开自己的那一页。</h2><p class="dialog-description">输入馆主口令，查看完整会话日记、<br>每一条原始提示词与过程产物。</p><label for="password">馆主口令</label><input id="password" type="password" required autocomplete="current-password"><label class="remember-choice"><input id="remember-device" type="checkbox" checked> 此浏览器记住 30 天</label><button type="submit" class="primary">解锁图书馆 <span aria-hidden="true">↗</span></button><button id="local-unlock" class="secondary" type="button" hidden>使用本机密码本解锁</button><button id="local-copy" class="secondary" type="button" hidden>复制网站解锁口令</button><p id="login-error" role="alert"></p><p class="privacy-note">仅在自己的设备上勾选。记住后关闭浏览器也无需重新输入；“退出并忘记此设备”会清除记忆。不勾选时闲置 30 分钟自动退出。</p></form></dialog>
 
 </body>
 </html>

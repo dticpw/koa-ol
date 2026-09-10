@@ -5,6 +5,7 @@ const state={public:[],entries:[],unlocked:false,kind:'journal',tag:'',expanded:
 const labels={summary:'这一章的概述',work:'做过的事',problems:'问题与现状',decisions:'处理与决策',outputs:'产出与证据',next:'下一页，从这里继续'};
 const statuses={active:'进行中',done:'已完成',archived:'已归档'};
 let idleTimer;
+let rememberedUntil=0;
 const params=new URLSearchParams(location.search);
 const entryId=params.get('id');
 const assetURLs=new Set();
@@ -79,17 +80,31 @@ function openEntry(id){
  const related=state.entries.filter(x=>e.kind==='project'?x.project===e.id:x.id===e.project);if(related.length){const section=create('section','reader-section');section.append(create('h2','',e.kind==='project'?'项目中的会话':'归属项目'));for(const other of related)section.append(link(other.title,href(other.id)));host.append(section);}
 }
 function showLogin(){$('#login-error').textContent='';$('#login').showModal();$('#password').focus();}
-function resetIdle(){clearTimeout(idleTimer);if(state.unlocked)idleTimer=setTimeout(lock,30*60*1000);}
-function lock(broadcast=true){state.epoch++;state.unlocked=false;state.payload=null;state.entries=state.public;clearAssets();coverObserver.disconnect();$('#password').value='';$('#reader-content').replaceChildren();$('#lock').hidden=true;$('#unlock-top').textContent='馆主入口 ⌑';$('#access-status').textContent='公开目录 · 正文待解锁';$('#access-status').classList.remove('unlocked');$('#search').placeholder='搜索标题与概述';state.tag='';setCounts();render();if(entryId)openEntry(entryId);message('已锁定，完整档案已清除。');clearTimeout(idleTimer);if(broadcast)channel?.postMessage({type:'lock'});}
-function accept(payload){if(payload.schema!==2)throw new Error('档案已更新，请刷新重试。');state.payload=payload;state.unlocked=true;state.entries=payload.entries;$('#password').value='';$('#login').close();$('#lock').hidden=false;$('#unlock-top').textContent='锁定图书馆';$('#access-status').textContent='馆主阅读 · 完整档案已解锁';$('#access-status').classList.add('unlocked');$('#search').placeholder='搜索正文与每条原始提示词';setCounts();render();resetIdle();message('已解锁完整馆藏。');if(entryId)openEntry(entryId);}
-async function unlock(password){
- const epoch=++state.epoch;const envelope=await json('./archive.enc.json');
+function resetIdle(){clearTimeout(idleTimer);if(!state.unlocked)return;const remaining=rememberedUntil?rememberedUntil-Date.now():30*60*1000;if(remaining<=0){lock();return;}idleTimer=setTimeout(()=>rememberedUntil>Date.now()?resetIdle():lock(),Math.min(remaining,2147483647));}
+function lock(broadcast=true){state.epoch++;rememberedUntil=0;deviceMemory.clear().catch(()=>message('页面已退出，但浏览器存储清除失败；请清除此网站的数据。'));state.unlocked=false;state.payload=null;state.entries=state.public;clearAssets();coverObserver.disconnect();$('#password').value='';$('#reader-content').replaceChildren();$('#lock').hidden=true;$('#unlock-top').textContent='馆主入口 ⌑';$('#access-status').textContent='公开目录 · 正文待解锁';$('#access-status').classList.remove('unlocked');$('#search').placeholder='搜索标题与概述';state.tag='';setCounts();render();if(entryId)openEntry(entryId);message('已锁定，完整档案已清除。');clearTimeout(idleTimer);if(broadcast)channel?.postMessage({type:'lock'});}
+function accept(payload,expires=0){rememberedUntil=expires;if(payload.schema!==2)throw new Error('档案已更新，请刷新重试。');state.payload=payload;state.unlocked=true;state.entries=payload.entries;$('#password').value='';$('#login').close();$('#lock').hidden=false;$('#unlock-top').textContent='退出并忘记此设备';$('#access-status').textContent='馆主阅读 · 完整档案已解锁';$('#access-status').classList.add('unlocked');$('#search').placeholder='搜索正文与每条原始提示词';setCounts();render();resetIdle();message(rememberedUntil?'此浏览器已记住，至 '+new Date(rememberedUntil).toLocaleDateString('zh-CN')+'。':'已临时解锁完整馆藏。');if(entryId)openEntry(entryId);}
+async function readArchive(material){
+ const envelope=await json('./archive.enc.json');
  if(envelope.schema!==1||envelope.iterations!==600000)throw new Error('不支持的档案格式');
- const encoder=new TextEncoder();const material=await crypto.subtle.importKey('raw',encoder.encode(password),'PBKDF2',false,['deriveKey']);
+ const encoder=new TextEncoder();
  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:bytes(envelope.salt),iterations:envelope.iterations,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['decrypt']);
- let payload;try{const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(envelope.nonce),additionalData:encoder.encode('muQ-v1')},key,bytes(envelope.ciphertext));payload=JSON.parse(new TextDecoder().decode(plain));}catch(e){throw new Error('口令不正确，或档案在传输中损坏。请检查后重试。');}
- if(epoch!==state.epoch)return;
- accept(payload);
+ try{const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(envelope.nonce),additionalData:encoder.encode('muQ-v1')},key,bytes(envelope.ciphertext));return JSON.parse(new TextDecoder().decode(plain));}catch(e){const error=new Error('口令不正确，或档案在传输中损坏。请检查后重试。');error.code='INVALID_KEY';throw error;}
+}
+async function unlock(password){
+ const epoch=++state.epoch;
+ const material=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveKey']);
+ const payload=await readArchive(material);if(epoch!==state.epoch)return;
+ let expires=0,storageFailed=false;
+ try{if($('#remember-device').checked){expires=Date.now()+30*24*60*60*1000;await deviceMemory.save({key:material,expires});}else await deviceMemory.clear();}catch(e){expires=0;storageFailed=true;}
+ if(epoch!==state.epoch){await deviceMemory.clear().catch(()=>{});return;}
+ accept(payload,expires);if(storageFailed)message('已临时解锁；浏览器不允许保存设备记忆，下次需重新输入。');
+}
+async function restoreDevice(){
+ const epoch=state.epoch;
+ let saved;try{saved=await deviceMemory.load();}catch(e){return;}
+ if(!saved||epoch!==state.epoch)return;
+ try{const payload=await readArchive(saved.key);if(epoch===state.epoch&&saved.expires>Date.now())accept(payload,saved.expires);}
+ catch(e){if(epoch===state.epoch){if(e.code==='INVALID_KEY'){await deviceMemory.clear().catch(()=>{});message('设备记忆无法打开当前档案，请重新输入馆主口令。');}else message('暂时无法读取馆藏，设备记忆已保留，请稍后刷新。');}}
 }
 $('#login-form').onsubmit=async e=>{e.preventDefault();const button=e.submitter;button.disabled=true;$('#login-error').textContent='正在打开馆藏…';try{await unlock($('#password').value);}catch(error){$('#login-error').textContent=error.message;}finally{button.disabled=false;$('#password').value='';}};
 $('#local-unlock').hidden=!isLocal;
@@ -101,8 +116,9 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.datas
 document.querySelectorAll('[data-kind]').forEach(b=>b.onclick=()=>{state.kind=b.dataset.kind;state.tag='';document.querySelectorAll('[data-kind]').forEach(t=>t.setAttribute('aria-pressed',String(t===b)));render();});
 $('#search').addEventListener('input',render);$('#status-filter').addEventListener('change',render);
 document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!$('dialog[open]')){e.preventDefault();$('#search').focus();}resetIdle();});document.addEventListener('pointerdown',resetIdle);
-async function init(){try{const catalogue=await json('./catalogue.json');state.public=catalogue.entries;state.entries=state.public;setCounts();$('#updated').textContent='更新于 '+catalogue.updated.slice(0,10);render();if(entryId){$('.skip').href='#reader';$('.skip').textContent='跳到正文';document.body.classList.add('reading');$('main').hidden=true;$('#reader').hidden=false;openEntry(entryId);}channel?.postMessage({type:'request',from:tabId});}catch(e){message(e.message);$('#entries').append(create('div','empty','暂时无法读取馆藏。请刷新页面重试。'));}}
-if(channel)channel.onmessage=event=>{const m=event.data;if(m.type==='request'&&state.unlocked)channel.postMessage({type:'grant',to:m.from,payload:state.payload});if(m.type==='grant'&&m.to===tabId&&!state.unlocked)accept(m.payload);if(m.type==='lock')lock(false);};
+async function init(){try{const catalogue=await json('./catalogue.json');state.public=catalogue.entries;state.entries=state.public;setCounts();$('#updated').textContent='更新于 '+catalogue.updated.slice(0,10);render();if(entryId){$('.skip').href='#reader';$('.skip').textContent='跳到正文';document.body.classList.add('reading');$('main').hidden=true;$('#reader').hidden=false;openEntry(entryId);}await restoreDevice();if(!state.unlocked)channel?.postMessage({type:'request',from:tabId});}catch(e){message(e.message);$('#entries').append(create('div','empty','暂时无法读取馆藏。请刷新页面重试。'));}}
+if(channel)channel.onmessage=event=>{const m=event.data;if(m.type==='request'&&state.unlocked&&(!rememberedUntil||rememberedUntil>Date.now()))channel.postMessage({type:'grant',to:m.from,payload:state.payload,expires:rememberedUntil});if(m.type==='grant'&&m.to===tabId&&!state.unlocked&&(!m.expires||m.expires>Date.now()))accept(m.payload,m.expires||0);if(m.type==='lock')lock(false);};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.unlocked&&rememberedUntil&&rememberedUntil<=Date.now())lock();});
 init();
 // ZIP "store" format: no duplicate ZIP payload is uploaded; assemble only on request.
 function makeZip(files){
