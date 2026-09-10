@@ -2,7 +2,7 @@
   "schema": 1,
   "name": "muQ · 大图书馆",
   "mode": "catalogue",
-  "updated": "2026-09-10T08:47:06.901342+00:00",
+  "updated": "2026-09-10T08:50:05.750540+00:00",
   "entries": [
     {
       "id": "codex-7bdfb3a609cc16f657b9c69a",
@@ -12,7 +12,7 @@
       "date": "2026-09-10",
       "updated": "2026-09-10T08:47:06.615867+00:00",
       "status": "active",
-      "cover": "covers/codex-7bdfb3a609cc16f657b9c69a.png",
+      "cover": "covers/codex-7bdfb3a609cc16f657b9c69a-c299ded828f5.png",
       "cover_kind": "screenshot",
       "prompt_count": 3
     }
