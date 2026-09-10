@@ -100,7 +100,7 @@ function openEntry(id){
  if((state.unlocked||e.public_content)&&params.get('file')){previewFile(e,params.get('file'),host);return;}
  host.append(create('h1','reader-title',e.title),create('p','reader-meta',`${e.kind==='journal'?'会话日记':'项目档案'} · ${e.date} · ${statuses[e.status]||'已收录'}`),tagNodes(e.tags));
  const intro=create('div','entry-intro');const overview=create('div','entry-overview');overview.append(create('p','eyebrow','这一篇 / OVERVIEW'),create('div','record-text',e.summary||'此篇内容等待补充。'));
- if(state.unlocked){overview.append(create('h2','','当前状态'),create('div','record-text',e.current_state||statuses[e.status]||'已收录'));if(e.next)overview.append(create('h3','','接下来'),create('div','record-text',e.next));}
+ if(state.unlocked||e.public_content){overview.append(create('h2','','当前状态'),create('div','record-text',e.current_state||statuses[e.status]||'已收录'));if(e.next)overview.append(create('h3','','接下来'),create('div','record-text',e.next));}
  const img=create('img','reader-cover');img.src=safeCover(e.cover||'');if(state.unlocked&&e.cover_asset)loadCover(img,e.cover_asset);img.alt='本篇档案概览';intro.append(overview,img);host.append(intro);
  if(!state.unlocked&&!e.public_content){const note=create('div','locked-note');note.append(create('p','','公开页面展示概览；完整过程、原始提示词和附件需馆主解锁。'));const b=create('button','primary','馆主解锁正文');b.onclick=showLogin;note.append(b);host.append(note);return;}
  const resources=resourceList(e);const sections=Object.entries(labels).filter(([field])=>!['summary','next'].includes(field)&&e[field]?.trim()).map(([field,title])=>({id:field,title,body:e[field]}));for(const [i,section] of (e.sections||[]).entries())if(section.body?.trim())sections.push({id:'topic-'+i,...section});
