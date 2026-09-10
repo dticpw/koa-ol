@@ -30,7 +30,7 @@ function render(){
   if(state.kind!=='all'&&e.kind!==state.kind)return false;
   if(state.tag&&!(e.tags||[]).includes(state.tag))return false;
   if($('#status-filter').value!=='all'&&e.status!==$('#status-filter').value)return false;
-  const text=state.unlocked?[e.title,...Object.keys(labels).map(k=>e[k]),e.prompts].join('\n'):[e.title,e.summary].join('\n');
+  const text=state.unlocked?[e.title,...Object.keys(labels).map(k=>e[k]),e.prompts,e.current_state,JSON.stringify(e.sections||[]),JSON.stringify(e.resources||[])].join('\n'):[e.title,e.summary].join('\n');
   return (text+' '+(e.tags||[]).join(' ')).toLocaleLowerCase().includes(query);
  }).sort((a,b)=>(b.date+b.updated).localeCompare(a.date+a.updated));
  if(!result.length){const box=create('div','empty');box.append(create('h3','',query?'这一页，还没有找到。':'馆藏正在慢慢生长。'),create('p','',query?'换一个关键词，或调整筛选条件。':state.unlocked?'用 muQ Skill 归档一次会话，它就会出现在这里。':'公开目录暂未收录内容，可由馆主解锁完整档案。'));host.append(box);return;}
@@ -65,17 +65,40 @@ async function previewFile(e,name,host){
  else view.append(create('p','','此格式暂不支持在线预览，请下载原文件后打开。'));
  }catch(error){if(epoch===state.epoch)view.textContent=error.message;}
 }
+function sizeLabel(n){return n>=1048576?(n/1048576).toFixed(1)+' MiB':(n/1024).toFixed(1)+' KiB';}
+function safeSource(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)&&!u.username&&!u.password?u.href:null;}catch(e){return null;}}
+function resourceList(e){
+ const resources=(e.resources||[]).map(r=>({...r}));
+ for(const f of e.files.filter(f=>f.name.startsWith('artifacts/')))if(!resources.some(r=>r.file===f.name))resources.push({kind:'file',file:f.name,title:f.name.slice(10)});
+ for(const f of e.omitted_files||[])if(!resources.some(r=>r.file===f.name))resources.push({kind:'file',file:f.name,title:f.name.slice(10)});
+ return resources.sort((a,b)=>Number(!!b.featured)-Number(!!a.featured));
+}
+function resourceCard(e,r){
+ const card=create('article','resource-card');const f=e.files.find(f=>f.name===r.file);const omitted=(e.omitted_files||[]).find(f=>f.name===r.file);
+ if(f?.thumbnail){const img=create('img','resource-thumbnail');img.alt=r.title+'的预览';img.loading='lazy';const epoch=state.epoch;asset(f.thumbnail).then(raw=>{if(epoch===state.epoch&&img.isConnected)img.src=blobURL(new Blob([raw],{type:'image/jpeg'}));}).catch(()=>img.remove());card.append(img);}
+ const kind=r.kind==='link'?'来源链接':r.kind==='note'?'文字结论':r.kind==='local'?'原文件索引 · 未备份':omitted?'本地已归档 · 未上传':'已入馆附件';card.append(create('small','resource-kind',kind),create('h3','',r.title));
+ if(r.description)card.append(create('p','',r.description));
+ if(f){card.append(create('small','reader-meta',sizeLabel(f.bytes)),link('打开文件 ↗',href(e.id,f.name)));}
+ else if(r.kind==='link'){const url=safeSource(r.url);if(url)card.append(link('查看来源 ↗',url));}
+ else if(r.kind==='local'||omitted){const info=omitted||r;card.append(create('p','reader-meta',info.reason||'原文件留在原位置'),create('code','resource-path',info.path));if(Number.isFinite(info.bytes))card.append(create('small','reader-meta',sizeLabel(info.bytes)));if(info.sha256){const d=create('details','fingerprint');d.append(create('summary','','文件校验值'),create('code','resource-path','SHA256 '+info.sha256));card.append(d);}card.append(create('p','reader-meta','网页无法直接打开本机路径。请在对应设备按此位置查找。'));}
+ else if(r.kind==='file')card.append(create('p','reader-meta','此文件未包含在当前网页档案中。'));
+ return card;
+}
 function openEntry(id){
  state.selected=id;const host=$('#reader-content');host.replaceChildren();const e=state.entries.find(x=>x.id===id);
  if(!e){host.append(create('h1','reader-title','这份档案需要馆主解锁'));const b=create('button','primary','解锁完整馆藏');b.onclick=showLogin;host.append(b);return;}
  document.title=e.title+' · muQ';
  if(state.unlocked&&params.get('file')){previewFile(e,params.get('file'),host);return;}
- const img=create('img','reader-cover');img.src=safeCover(e.cover||'');if(state.unlocked&&e.cover_asset)loadCover(img,e.cover_asset);img.alt='本篇档案概览';host.append(img,create('h1','reader-title',e.title),create('p','reader-meta',`${e.kind==='journal'?'会话日记':'项目档案'} · ${e.date} · ${statuses[e.status]||'已收录'}`),tagNodes(e.tags));
- if(!state.unlocked){host.append(create('div','record-text',e.summary));const note=create('div','locked-note');note.append(create('p','','公开页面展示概览；完整过程、原始提示词和附件需馆主解锁。'));const b=create('button','primary','馆主解锁正文');b.onclick=showLogin;note.append(b);host.append(note);return;}
- const actions=create('div','reader-actions');const bundle=create('button','','下载完整档案 ZIP');bundle.onclick=()=>busy(bundle,async()=>{const epoch=state.epoch;const files=[];for(const f of e.files)files.push({name:e.id+'/'+f.name,data:await asset(f)});if(epoch!==state.epoch)return;download(e.id+'.zip',makeZip(files),'application/zip');});actions.append(bundle);host.append(actions);
- const toc=create('nav','detail-toc');toc.setAttribute('aria-label','本篇目录');for(const [field,label]of Object.entries({...labels,attachments:'文件与产物',prompts:'用户原话'})){const a=create('a','',label);a.href='#section-'+field;toc.append(a);}host.append(toc);
- for(const [field,label]of Object.entries(labels)){const section=create('section','reader-section');section.id='section-'+field;section.append(create('h2','',label),create('div','record-text',e[field]||'尚未记录'));host.append(section);}
- const attachments=create('section','reader-section');attachments.id='section-attachments';attachments.append(create('h2','',`文件与产物 · ${e.files.length} 份`));const ul=create('ul','attachment-list');for(const f of e.files){const li=create('li');li.append(link(f.name+' ↗',href(e.id,f.name)),create('small','',(f.bytes/1024).toFixed(1)+' KB'));ul.append(li);}attachments.append(ul);host.append(attachments);
+ host.append(create('h1','reader-title',e.title),create('p','reader-meta',`${e.kind==='journal'?'会话日记':'项目档案'} · ${e.date} · ${statuses[e.status]||'已收录'}`),tagNodes(e.tags));
+ const intro=create('div','entry-intro');const overview=create('div','entry-overview');overview.append(create('p','eyebrow','这一篇 / OVERVIEW'),create('div','record-text',e.summary||'此篇内容等待补充。'));
+ if(state.unlocked){overview.append(create('h2','','当前状态'),create('div','record-text',e.current_state||statuses[e.status]||'已收录'));if(e.next)overview.append(create('h3','','接下来'),create('div','record-text',e.next));}
+ const img=create('img','reader-cover');img.src=safeCover(e.cover||'');if(state.unlocked&&e.cover_asset)loadCover(img,e.cover_asset);img.alt='本篇档案概览';intro.append(overview,img);host.append(intro);
+ if(!state.unlocked){const note=create('div','locked-note');note.append(create('p','','公开页面展示概览；完整过程、原始提示词和附件需馆主解锁。'));const b=create('button','primary','馆主解锁正文');b.onclick=showLogin;note.append(b);host.append(note);return;}
+ const resources=resourceList(e);const sections=Object.entries(labels).filter(([field])=>!['summary','next'].includes(field)&&e[field]?.trim()).map(([field,title])=>({id:field,title,body:e[field]}));for(const [i,section] of (e.sections||[]).entries())if(section.body?.trim())sections.push({id:'topic-'+i,...section});
+ const toc=create('nav','detail-toc');toc.setAttribute('aria-label','本篇目录');for(const section of [{id:'resources',title:'关键成果与来源'},...sections,{id:'attachments',title:'归档文件'},...(e.kind==='journal'?[{id:'prompts',title:'用户原话'}]:[])]){const a=create('a','',section.title);a.href='#section-'+section.id;toc.append(a);}host.append(toc);
+ const outcomes=create('section','reader-section');outcomes.id='section-resources';outcomes.append(create('h2','','关键成果与来源'));const grid=create('div','resource-grid');const featured=resources.some(r=>r.featured)?resources.filter(r=>r.featured):resources.slice(0,6);for(const r of featured)grid.append(resourceCard(e,r));outcomes.append(grid);const remaining=resources.filter(r=>!featured.includes(r));if(remaining.length){const more=create('details','more-resources');more.append(create('summary','',`其他成果与附件 · ${remaining.length}`));const otherGrid=create('div','resource-grid');more.addEventListener('toggle',()=>{if(more.open&&!otherGrid.childElementCount)for(const r of remaining)otherGrid.append(resourceCard(e,r));});more.append(otherGrid);outcomes.append(more);}if(!resources.length)outcomes.append(create('p','reader-meta','本篇以文字记录为主；结论见下文。'));host.append(outcomes);
+ for(const section of sections){const node=create('section','reader-section');node.id='section-'+section.id;node.append(create('h2','',section.title),create('div','record-text',section.body));host.append(node);}
+ const attachments=create('section','reader-section');attachments.id='section-attachments';attachments.append(create('h2','','归档文件'));const actions=create('div','reader-actions');const bundle=create('button','','下载网页档案 ZIP');bundle.onclick=()=>busy(bundle,async()=>{const epoch=state.epoch;const files=[];for(const f of e.files)files.push({name:e.id+'/'+f.name,data:await asset(f)});files.push({name:e.id+'/WEB-MANIFEST.json',data:new TextEncoder().encode(JSON.stringify({resources:e.resources||[],omitted_files:e.omitted_files||[],note:'仅包含已上传文件；外链和本地索引不是原文件备份。'},null,2))});if(epoch!==state.epoch)return;download(e.id+'.zip',makeZip(files),'application/zip');});actions.append(bundle);attachments.append(actions,create('p','reader-meta',`包含 ${e.files.length} 个已上传文件。外链、本地索引及未上传原件不包含在 ZIP 中；获取位置随清单保存。`));const details=create('details','archive-files');details.append(create('summary','',`查看文件清单 · ${e.files.length}`));const ul=create('ul','attachment-list');for(const f of e.files){const li=create('li');li.append(link(f.name+' ↗',href(e.id,f.name)),create('small','',sizeLabel(f.bytes)));ul.append(li);}details.append(ul);attachments.append(details);host.append(attachments);
  if(e.kind==='journal'){const section=create('section','reader-section');section.id='section-prompts';section.append(create('h2','',`用户原话 · ${promptCount(e)} 条`));for(const p of e.prompt_records||[]){const d=create('details','prompt');d.append(create('summary','',String(p.ordinal).padStart(2,'0')+' / '+(p.timestamp||'原始提示词')),create('pre','',p.text));section.append(d);}host.append(section);}
  const related=state.entries.filter(x=>e.kind==='project'?x.project===e.id:x.id===e.project);if(related.length){const section=create('section','reader-section');section.append(create('h2','',e.kind==='project'?'项目中的会话':'归属项目'));for(const other of related)section.append(link(other.title,href(other.id)));host.append(section);}
 }
