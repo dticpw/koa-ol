@@ -1,0 +1,7 @@
+/* muQ catalogue entrance, sharing the established homepage card system. */
+.library-card{background:#eee8ef;border-color:#d6cbd9}
+.library-card .card-kind,.library-card .card-tag{color:#6b5578}
+.library-card .card-title h3>span{font-family:var(--sans);font-size:16px;font-weight:400;margin-left:13px;letter-spacing:.02em}
+.library-card:hover{background:#e9e1ec;border-color:#bba6c6}
+@media(min-width:851px){.library-card{grid-column:1/-1;min-height:215px}.library-card>p{max-width:none}}
+@media(max-width:540px){.site-header nav{gap:12px}.site-header nav a{font-size:10px}.site-header .brand{font-size:18px}.library-card .card-title h3>span{font-size:14px}}
