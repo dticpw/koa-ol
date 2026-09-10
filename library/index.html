@@ -4,16 +4,16 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#292332"><meta name="description" content="muQ 大图书馆：按会话收藏行动、问题、决策与产出。">
   <title>muQ · 大图书馆</title><link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./library.css?v=525062524dd5"><script defer src="./remember.js?v=ea90b24a80d2"></script><script defer src="./library.js?v=cec547905ec5"></script>
+  <link rel="stylesheet" href="./library.css?v=dbe77cb2c5d1"><script defer src="./remember.js?v=ea90b24a80d2"></script><script defer src="./library.js?v=1c2b8483d1d9"></script>
 </head>
 <body>
   <a class="skip" href="#collection">跳到馆藏</a>
-  <header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="./"><span class="brand-mark">muQ<span class="brand-moon" aria-hidden="true">☾</span></span><span class="brand-caption">大图书馆<small>THE QUIET ARCHIVE</small></span></a><nav aria-label="主导航"><a href="/">个人主页 ↗</a><button class="quiet" id="unlock-top">馆主入口 <span aria-hidden="true">⌑</span></button></nav></div></header>
+  <header class="topbar"><div class="wrap topbar-inner"><a class="brand" href="./"><span class="brand-mark">muQ<span class="brand-moon" aria-hidden="true">☾</span></span><span class="brand-caption">大图书馆<small>THE QUIET ARCHIVE</small></span></a><nav aria-label="主导航"><a href="/">个人主页 ↗</a><button class="quiet" id="manage-top" hidden>馆藏管理</button><button class="quiet" id="unlock-top">馆主入口 <span aria-hidden="true">⌑</span></button></nav></div></header>
   <main>
     <section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><p class="eyebrow">A CONVERSATION, A CHAPTER.</p><h1>让每一次探索，<br>都有一页归处。</h1><p class="hero-description">这里收藏做过的事、尚未解开的疑问，<br>和那些终于变成现实的想法。</p><a class="hero-link" href="#collection">翻开馆藏 <span aria-hidden="true">↓</span></a></div><aside class="catalogue-note"><div class="note-top"><span class="note-seal">蔵</span><span>muQ COLLECTION<br>会话与项目档案</span></div><div class="collection-number"><b id="count">—</b><span>份馆藏<br><small id="count-description">正在读取目录</small></span></div><div class="note-rule"></div><p>一场会话，一篇日记。<br>原话按顺序留下，故事接着往下写。</p><div class="note-bottom"><span id="updated">等待更新</span><span aria-hidden="true">✦</span></div></aside></div></section>
     <section class="collection wrap" id="collection" aria-labelledby="collection-title">
-      <div class="collection-heading"><div><p class="eyebrow">THE COLLECTION / 馆藏目录</p><h2 id="collection-title">沿着留下的痕迹。</h2></div><span class="access-status" id="access-status">公开目录 · 正文待解锁</span></div>
-      <div class="catalogue-tools"><nav class="tabs" aria-label="馆藏类型"><button data-kind="all" aria-pressed="false">全部馆藏</button><button data-kind="journal" aria-pressed="true">会话日记</button><button data-kind="project" aria-pressed="false">项目档案</button></nav><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" aria-label="搜索馆藏" placeholder="搜索标题与概述"><kbd>/</kbd></label><label class="sr-only" for="status-filter">按状态筛选</label><select id="status-filter"><option value="all">全部状态</option><option value="active">进行中</option><option value="done">已完成</option><option value="archived">已归档</option></select></div>
+      <div class="collection-heading"><div><p class="eyebrow">THE COLLECTION / 馆藏目录</p><h2 id="collection-title">沿着留下的痕迹。</h2></div><span class="access-status" id="access-status">公开馆藏</span></div>
+      <div class="catalogue-tools"><nav class="tabs" aria-label="馆藏类型"><button data-kind="all" aria-pressed="true">全部馆藏</button><button data-kind="journal" aria-pressed="false">会话日记</button><button data-kind="project" aria-pressed="false">项目档案</button></nav><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" aria-label="搜索馆藏" placeholder="搜索标题与概述"><kbd>/</kbd></label><label class="sr-only" for="status-filter">按状态筛选</label><select id="status-filter"><option value="all">全部状态</option><option value="active">进行中</option><option value="done">已完成</option><option value="archived">已归档</option></select></div>
       <nav id="tags" class="tag-bar" aria-label="按标签筛选"></nav><p id="message" role="status" aria-live="polite"></p><div id="entries" aria-live="polite"></div>
       <div class="reading-note"><span aria-hidden="true">☾</span><p>有些收获是一个成果，<br>有些只是把问题问得更清楚。</p><small>每一页，都算数。</small></div>
     </section>
@@ -22,5 +22,13 @@
   <footer class="wrap footer"><div><a href="./">muQ <span>大图书馆</span></a><p>取名自帕秋莉的昵称，给知识和好奇心一处安静的居所。</p></div><div class="footer-links"><a href="/">回到个人主页 ↗</a><button id="lock" class="quiet" hidden>退出并忘记此设备</button></div></footer>
   <dialog id="login" aria-labelledby="login-title"><form id="login-form"><button class="close" type="button" data-close="login" aria-label="关闭解锁窗口">×</button><p class="eyebrow">THE KEEPER'S KEY</p><h2 id="login-title">打开自己的那一页。</h2><p class="dialog-description">输入馆主口令，查看完整会话日记、<br>每一条原始提示词与过程产物。</p><label for="password">馆主口令</label><input id="password" type="password" required autocomplete="current-password"><label class="remember-choice"><input id="remember-device" type="checkbox" checked> 此浏览器记住 30 天</label><button type="submit" class="primary">解锁图书馆 <span aria-hidden="true">↗</span></button><button id="local-unlock" class="secondary" type="button" hidden>使用本机密码本解锁</button><button id="local-copy" class="secondary" type="button" hidden>复制网站解锁口令</button><p id="login-error" role="alert"></p><p class="privacy-note">仅在自己的设备上勾选。记住后关闭浏览器也无需重新输入；“退出并忘记此设备”会清除记忆。不勾选时闲置 30 分钟自动退出。</p></form></dialog>
 
+  <dialog id="management" aria-labelledby="management-title">
+    <button class="close" type="button" data-close="management" aria-label="关闭馆藏管理">×</button>
+    <p class="eyebrow">THE KEEPER'S DESK</p><h2 id="management-title">馆藏管理</h2>
+    <p class="dialog-description">为每一份馆藏选择可见范围。保存更新本机，<br>同步到网站后，访客会看到新的设置。</p>
+    <p id="management-message" role="status" aria-live="polite"></p>
+    <div id="management-entries"></div>
+    <div class="management-actions"><button id="management-build" class="secondary" type="button">重新构建本机</button><button id="management-publish" class="primary" type="button">同步到网站 ↗</button></div>
+  </dialog>
 </body>
 </html>

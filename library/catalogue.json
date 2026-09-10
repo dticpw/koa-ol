@@ -2,7 +2,7 @@
   "schema": 1,
   "name": "muQ · 大图书馆",
   "mode": "catalogue",
-  "updated": "2026-09-10T13:41:59.710000+00:00",
+  "updated": "2026-09-10T14:28:07.303322+00:00",
   "entries": [
     {
       "id": "codex-7bdfb3a609cc16f657b9c69a",
@@ -21,6 +21,80 @@
         "Skill",
         "前端"
       ]
+    },
+    {
+      "id": "ai-daily-2026-09",
+      "kind": "project",
+      "title": "AI 日报 · 2026-09",
+      "summary": "2026-09 AI 日报月刊，共 1 份报告。按报告生成日期归月，跨月搜索结果保留在当次报告内。",
+      "date": "2026-09-01",
+      "updated": "2026-09-10T14:25:27.784728+00:00",
+      "status": "active",
+      "cover": "covers/ai-daily-2026-09-f489550da273.png",
+      "cover_kind": "overview",
+      "prompt_count": 0,
+      "tags": [],
+      "work": "2026-09-04｜2026-09-03 至 2026-09-04｜6 条｜ai-daily-2026-09-04-7a95d30437fee497.html",
+      "problems": "",
+      "decisions": "月刊是专题项目档案，不合并会话日记或伪造用户提示词。",
+      "outputs": "报告全文和来源见附件；历次附件保留，不覆盖。",
+      "next": "",
+      "current_state": "",
+      "public_content": true,
+      "sections": [],
+      "files": [
+        {
+          "name": "artifacts/ai-daily-2026-09-04-7a95d30437fee497.html",
+          "url": "public-files/ai-daily-2026-09/7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2.bin",
+          "bytes": 8850,
+          "sha256": "7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2"
+        }
+      ],
+      "resources": [],
+      "omitted_files": []
+    },
+    {
+      "id": "ai-daily-2026-08",
+      "kind": "project",
+      "title": "AI 日报 · 2026-08",
+      "summary": "2026-08 AI 日报月刊，共 3 份报告。按报告生成日期归月，跨月搜索结果保留在当次报告内。",
+      "date": "2026-08-01",
+      "updated": "2026-09-10T14:25:27.780450+00:00",
+      "status": "active",
+      "cover": "covers/ai-daily-2026-08-72a8984fd410.png",
+      "cover_kind": "overview",
+      "prompt_count": 0,
+      "tags": [],
+      "work": "2026-08-27｜2026-08-21 至 2026-08-27｜9 条｜ai-daily-2026-08-27-3fd8ba332460d577.html\n2026-08-27｜2026-08-21 至 2026-08-27｜8 条｜ai-daily-2026-08-27-fa0ef066d66a04f0.html\n2026-08-31｜2026-08-25 至 2026-08-31｜8 条｜ai-daily-2026-08-31-707345bff06ba5d0.html",
+      "problems": "",
+      "decisions": "月刊是专题项目档案，不合并会话日记或伪造用户提示词。",
+      "outputs": "报告全文和来源见附件；历次附件保留，不覆盖。",
+      "next": "",
+      "current_state": "",
+      "public_content": true,
+      "sections": [],
+      "files": [
+        {
+          "name": "artifacts/ai-daily-2026-08-27-3fd8ba332460d577.html",
+          "url": "public-files/ai-daily-2026-08/3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9.bin",
+          "bytes": 11792,
+          "sha256": "3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9"
+        },
+        {
+          "name": "artifacts/ai-daily-2026-08-27-fa0ef066d66a04f0.html",
+          "url": "public-files/ai-daily-2026-08/fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a.bin",
+          "bytes": 9024,
+          "sha256": "fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a"
+        },
+        {
+          "name": "artifacts/ai-daily-2026-08-31-707345bff06ba5d0.html",
+          "url": "public-files/ai-daily-2026-08/707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e.bin",
+          "bytes": 11605,
+          "sha256": "707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e"
+        }
+      ],
+      "resources": [],
+      "omitted_files": []
     }
   ]
 }

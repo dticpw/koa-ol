@@ -1,7 +1,7 @@
 'use strict';
 const $=s=>document.querySelector(s);
 const create=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
-const state={public:[],entries:[],unlocked:false,kind:'journal',tag:'',expanded:false,payload:null,selected:null,epoch:0};
+const state={public:[],entries:[],unlocked:false,kind:'all',tag:'',expanded:false,payload:null,selected:null,epoch:0};
 const labels={summary:'这一章的概述',work:'做过的事',problems:'问题与现状',decisions:'处理与决策',outputs:'产出与证据',next:'下一页，从这里继续'};
 const statuses={active:'进行中',done:'已完成',archived:'已归档'};
 let idleTimer;
@@ -39,7 +39,16 @@ function render(){
 }
 function download(name,data,type){const blob=new Blob([data],{type});const url=URL.createObjectURL(blob);const a=create('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);}
 async function asset(descriptor){
- const epoch=state.epoch;if(!state.unlocked)throw new Error('请先解锁图书馆。');
+ const epoch=state.epoch;
+ if(descriptor.url){
+  if(!/^public-files\/[a-z0-9_-]+\/[a-f0-9]{64}\.bin$/.test(descriptor.url))throw new Error('公开附件路径无效');
+  const response=await fetch('./'+descriptor.url);if(!response.ok)throw new Error('公开附件暂时无法读取');
+  const raw=new Uint8Array(await response.arrayBuffer());
+  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',raw)),b=>b.toString(16).padStart(2,'0')).join('');
+  if(raw.length!==descriptor.bytes||digest!==descriptor.sha256)throw new Error('附件校验失败');
+  return raw;
+ }
+ if(!state.unlocked)throw new Error('请先解锁图书馆。');
  const key=await crypto.subtle.importKey('raw',bytes(state.payload.asset_key),'AES-GCM',false,['decrypt']);
  const chunks=[];for(const part of descriptor.parts){if(!/^assets\/[a-f0-9]{64}\.bin$/.test(part))throw new Error('附件路径无效');const r=await fetch('./'+part);if(!r.ok)throw new Error('附件暂时无法读取，请重试。');const raw=new Uint8Array(await r.arrayBuffer());chunks.push(new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:raw.slice(0,12),additionalData:new TextEncoder().encode('muQ-asset-v2')},key,raw.slice(12))));}
  const result=new Uint8Array(chunks.reduce((n,c)=>n+c.length,0));let at=0;for(const c of chunks){result.set(c,at);at+=c.length;}
@@ -53,7 +62,7 @@ async function busy(button,action){const text=button.textContent;button.disabled
 function fileDownload(e,f){return async()=>{const raw=await asset(f);download(f.name.split('/').pop(),raw,'application/octet-stream');};}
 async function previewFile(e,name,host){
  const f=e.files.find(x=>x.name===name);if(!f){host.append(create('p','','此附件不在当前档案中。'));return;}
- host.append(link('← 返回这篇档案',href(e.id)),create('h2','file-title',f.name));const b=create('button','primary','下载原文件');b.onclick=()=>busy(b,fileDownload(e,f));host.append(b,create('p','reader-meta',(f.bytes/1024).toFixed(1)+' KB · 原文件按需解密'));
+ host.append(link('← 返回这篇档案',href(e.id)),create('h2','file-title',f.name));const b=create('button','primary','下载原文件');b.onclick=()=>busy(b,fileDownload(e,f));host.append(b,create('p','reader-meta',(f.bytes/1024).toFixed(1)+' KB · '+(state.unlocked?'原文件按需解密':'公开原文件')));
  const view=create('section','file-view');host.append(view);view.textContent='正在读取附件…';const epoch=state.epoch;
  const ext=name.split('.').pop().toLowerCase();if(!['png','jpg','jpeg','webp','gif','pdf','html','htm','md','txt','json','csv','log','py','js','ts','css','yaml','yml','toml','xml','svg','sh'].includes(ext)){view.textContent='此格式暂不支持在线预览，请下载原文件后打开。';return;}
  try{const raw=await asset(f);if(epoch!==state.epoch)return;view.replaceChildren();
@@ -88,24 +97,24 @@ function openEntry(id){
  state.selected=id;const host=$('#reader-content');host.replaceChildren();const e=state.entries.find(x=>x.id===id);
  if(!e){host.append(create('h1','reader-title','这份档案需要馆主解锁'));const b=create('button','primary','解锁完整馆藏');b.onclick=showLogin;host.append(b);return;}
  document.title=e.title+' · muQ';
- if(state.unlocked&&params.get('file')){previewFile(e,params.get('file'),host);return;}
+ if((state.unlocked||e.public_content)&&params.get('file')){previewFile(e,params.get('file'),host);return;}
  host.append(create('h1','reader-title',e.title),create('p','reader-meta',`${e.kind==='journal'?'会话日记':'项目档案'} · ${e.date} · ${statuses[e.status]||'已收录'}`),tagNodes(e.tags));
  const intro=create('div','entry-intro');const overview=create('div','entry-overview');overview.append(create('p','eyebrow','这一篇 / OVERVIEW'),create('div','record-text',e.summary||'此篇内容等待补充。'));
  if(state.unlocked){overview.append(create('h2','','当前状态'),create('div','record-text',e.current_state||statuses[e.status]||'已收录'));if(e.next)overview.append(create('h3','','接下来'),create('div','record-text',e.next));}
  const img=create('img','reader-cover');img.src=safeCover(e.cover||'');if(state.unlocked&&e.cover_asset)loadCover(img,e.cover_asset);img.alt='本篇档案概览';intro.append(overview,img);host.append(intro);
- if(!state.unlocked){const note=create('div','locked-note');note.append(create('p','','公开页面展示概览；完整过程、原始提示词和附件需馆主解锁。'));const b=create('button','primary','馆主解锁正文');b.onclick=showLogin;note.append(b);host.append(note);return;}
+ if(!state.unlocked&&!e.public_content){const note=create('div','locked-note');note.append(create('p','','公开页面展示概览；完整过程、原始提示词和附件需馆主解锁。'));const b=create('button','primary','馆主解锁正文');b.onclick=showLogin;note.append(b);host.append(note);return;}
  const resources=resourceList(e);const sections=Object.entries(labels).filter(([field])=>!['summary','next'].includes(field)&&e[field]?.trim()).map(([field,title])=>({id:field,title,body:e[field]}));for(const [i,section] of (e.sections||[]).entries())if(section.body?.trim())sections.push({id:'topic-'+i,...section});
- const toc=create('nav','detail-toc');toc.setAttribute('aria-label','本篇目录');for(const section of [{id:'resources',title:'关键成果与来源'},...sections,{id:'attachments',title:'归档文件'},...(e.kind==='journal'?[{id:'prompts',title:'用户原话'}]:[])]){const a=create('a','',section.title);a.href='#section-'+section.id;toc.append(a);}host.append(toc);
+ const toc=create('nav','detail-toc');toc.setAttribute('aria-label','本篇目录');for(const section of [{id:'resources',title:'关键成果与来源'},...sections,{id:'attachments',title:'归档文件'},...(state.unlocked&&e.kind==='journal'?[{id:'prompts',title:'用户原话'}]:[])]){const a=create('a','',section.title);a.href='#section-'+section.id;toc.append(a);}host.append(toc);
  const outcomes=create('section','reader-section');outcomes.id='section-resources';outcomes.append(create('h2','','关键成果与来源'));const grid=create('div','resource-grid');const featured=resources.some(r=>r.featured)?resources.filter(r=>r.featured):resources.slice(0,6);for(const r of featured)grid.append(resourceCard(e,r));outcomes.append(grid);const remaining=resources.filter(r=>!featured.includes(r));if(remaining.length){const more=create('details','more-resources');more.append(create('summary','',`其他成果与附件 · ${remaining.length}`));const otherGrid=create('div','resource-grid');more.addEventListener('toggle',()=>{if(more.open&&!otherGrid.childElementCount)for(const r of remaining)otherGrid.append(resourceCard(e,r));});more.append(otherGrid);outcomes.append(more);}if(!resources.length)outcomes.append(create('p','reader-meta','本篇以文字记录为主；结论见下文。'));host.append(outcomes);
  for(const section of sections){const node=create('section','reader-section');node.id='section-'+section.id;node.append(create('h2','',section.title),create('div','record-text',section.body));host.append(node);}
  const attachments=create('section','reader-section');attachments.id='section-attachments';attachments.append(create('h2','','归档文件'));const actions=create('div','reader-actions');const bundle=create('button','','下载网页档案 ZIP');bundle.onclick=()=>busy(bundle,async()=>{const epoch=state.epoch;const files=[];for(const f of e.files)files.push({name:e.id+'/'+f.name,data:await asset(f)});files.push({name:e.id+'/WEB-MANIFEST.json',data:new TextEncoder().encode(JSON.stringify({resources:e.resources||[],omitted_files:e.omitted_files||[],note:'仅包含已上传文件；外链和本地索引不是原文件备份。'},null,2))});if(epoch!==state.epoch)return;download(e.id+'.zip',makeZip(files),'application/zip');});actions.append(bundle);attachments.append(actions,create('p','reader-meta',`包含 ${e.files.length} 个已上传文件。外链、本地索引及未上传原件不包含在 ZIP 中；获取位置随清单保存。`));const details=create('details','archive-files');details.append(create('summary','',`查看文件清单 · ${e.files.length}`));const ul=create('ul','attachment-list');for(const f of e.files){const li=create('li');li.append(link(f.name+' ↗',href(e.id,f.name)),create('small','',sizeLabel(f.bytes)));ul.append(li);}details.append(ul);attachments.append(details);host.append(attachments);
- if(e.kind==='journal'){const section=create('section','reader-section');section.id='section-prompts';section.append(create('h2','',`用户原话 · ${promptCount(e)} 条`));for(const p of e.prompt_records||[]){const d=create('details','prompt');d.append(create('summary','',String(p.ordinal).padStart(2,'0')+' / '+(p.timestamp||'原始提示词')),create('pre','',p.text));section.append(d);}host.append(section);}
+ if(state.unlocked&&e.kind==='journal'){const section=create('section','reader-section');section.id='section-prompts';section.append(create('h2','',`用户原话 · ${promptCount(e)} 条`));for(const p of e.prompt_records||[]){const d=create('details','prompt');d.append(create('summary','',String(p.ordinal).padStart(2,'0')+' / '+(p.timestamp||'原始提示词')),create('pre','',p.text));section.append(d);}host.append(section);}
  const related=state.entries.filter(x=>e.kind==='project'?x.project===e.id:x.id===e.project);if(related.length){const section=create('section','reader-section');section.append(create('h2','',e.kind==='project'?'项目中的会话':'归属项目'));for(const other of related)section.append(link(other.title,href(other.id)));host.append(section);}
 }
 function showLogin(){$('#login-error').textContent='';$('#login').showModal();$('#password').focus();}
 function resetIdle(){clearTimeout(idleTimer);if(!state.unlocked)return;const remaining=rememberedUntil?rememberedUntil-Date.now():30*60*1000;if(remaining<=0){lock();return;}idleTimer=setTimeout(()=>rememberedUntil>Date.now()?resetIdle():lock(),Math.min(remaining,2147483647));}
-function lock(broadcast=true){state.epoch++;rememberedUntil=0;deviceMemory.clear().catch(()=>message('页面已退出，但浏览器存储清除失败；请清除此网站的数据。'));state.unlocked=false;state.payload=null;state.entries=state.public;clearAssets();coverObserver.disconnect();$('#password').value='';$('#reader-content').replaceChildren();$('#lock').hidden=true;$('#unlock-top').textContent='馆主入口 ⌑';$('#access-status').textContent='公开目录 · 正文待解锁';$('#access-status').classList.remove('unlocked');$('#search').placeholder='搜索标题与概述';state.tag='';setCounts();render();if(entryId)openEntry(entryId);message('已锁定，完整档案已清除。');clearTimeout(idleTimer);if(broadcast)channel?.postMessage({type:'lock'});}
-function accept(payload,expires=0){rememberedUntil=expires;if(payload.schema!==2)throw new Error('档案已更新，请刷新重试。');state.payload=payload;state.unlocked=true;state.entries=payload.entries;$('#password').value='';$('#login').close();$('#lock').hidden=false;$('#unlock-top').textContent='退出并忘记此设备';$('#access-status').textContent='馆主阅读 · 完整档案已解锁';$('#access-status').classList.add('unlocked');$('#search').placeholder='搜索正文与每条原始提示词';setCounts();render();resetIdle();message(rememberedUntil?'此浏览器已记住，至 '+new Date(rememberedUntil).toLocaleDateString('zh-CN')+'。':'已临时解锁完整馆藏。');if(entryId)openEntry(entryId);}
+function lock(broadcast=true){endManagement();state.epoch++;rememberedUntil=0;deviceMemory.clear().catch(()=>message('页面已退出，但浏览器存储清除失败；请清除此网站的数据。'));state.unlocked=false;$('#manage-top').hidden=true;state.payload=null;state.entries=state.public;clearAssets();coverObserver.disconnect();$('#password').value='';$('#reader-content').replaceChildren();$('#lock').hidden=true;$('#unlock-top').textContent='馆主入口 ⌑';$('#access-status').textContent='公开馆藏';$('#access-status').classList.remove('unlocked');$('#search').placeholder='搜索标题与概述';state.tag='';setCounts();render();if(entryId)openEntry(entryId);message('已锁定，完整档案已清除。');clearTimeout(idleTimer);if(broadcast)channel?.postMessage({type:'lock'});}
+function accept(payload,expires=0){rememberedUntil=expires;if(payload.schema!==2)throw new Error('档案已更新，请刷新重试。');state.payload=payload;state.unlocked=true;$('#manage-top').hidden=false;state.entries=payload.entries;$('#password').value='';$('#login').close();$('#lock').hidden=false;$('#unlock-top').textContent='退出并忘记此设备';$('#access-status').textContent='馆主阅读 · 完整档案已解锁';$('#access-status').classList.add('unlocked');$('#search').placeholder='搜索正文与每条原始提示词';setCounts();render();resetIdle();message(rememberedUntil?'此浏览器已记住，至 '+new Date(rememberedUntil).toLocaleDateString('zh-CN')+'。':'已临时解锁完整馆藏。');if(entryId)openEntry(entryId);if(params.get('manage')==='1'&&!$('#management').open)openManagement();}
 async function readArchive(material){
  const envelope=await json('./archive.enc.json');
  if(envelope.schema!==1||envelope.iterations!==600000)throw new Error('不支持的档案格式');
@@ -139,7 +148,7 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$('#'+b.datas
 document.querySelectorAll('[data-kind]').forEach(b=>b.onclick=()=>{state.kind=b.dataset.kind;state.tag='';document.querySelectorAll('[data-kind]').forEach(t=>t.setAttribute('aria-pressed',String(t===b)));render();});
 $('#search').addEventListener('input',render);$('#status-filter').addEventListener('change',render);
 document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!$('dialog[open]')){e.preventDefault();$('#search').focus();}resetIdle();});document.addEventListener('pointerdown',resetIdle);
-async function init(){try{const catalogue=await json('./catalogue.json');state.public=catalogue.entries;state.entries=state.public;setCounts();$('#updated').textContent='更新于 '+catalogue.updated.slice(0,10);render();if(entryId){$('.skip').href='#reader';$('.skip').textContent='跳到正文';document.body.classList.add('reading');$('main').hidden=true;$('#reader').hidden=false;openEntry(entryId);}await restoreDevice();if(!state.unlocked)channel?.postMessage({type:'request',from:tabId});}catch(e){message(e.message);$('#entries').append(create('div','empty','暂时无法读取馆藏。请刷新页面重试。'));}}
+async function init(){try{const catalogue=await json('./catalogue.json');state.public=catalogue.entries;state.entries=state.public;setCounts();$('#updated').textContent='更新于 '+catalogue.updated.slice(0,10);render();if(entryId){$('.skip').href='#reader';$('.skip').textContent='跳到正文';document.body.classList.add('reading');$('main').hidden=true;$('#reader').hidden=false;openEntry(entryId);}await restoreDevice();if(params.get('manage')==='1'&&!state.unlocked)showLogin();if(!state.unlocked)channel?.postMessage({type:'request',from:tabId});}catch(e){message(e.message);$('#entries').append(create('div','empty','暂时无法读取馆藏。请刷新页面重试。'));}}
 if(channel)channel.onmessage=event=>{const m=event.data;if(m.type==='request'&&state.unlocked&&(!rememberedUntil||rememberedUntil>Date.now()))channel.postMessage({type:'grant',to:m.from,payload:state.payload,expires:rememberedUntil});if(m.type==='grant'&&m.to===tabId&&!state.unlocked&&(!m.expires||m.expires>Date.now()))accept(m.payload,m.expires||0);if(m.type==='lock')lock(false);};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.unlocked&&rememberedUntil&&rememberedUntil<=Date.now())lock();});
 init();
@@ -151,4 +160,68 @@ function makeZip(files){
  for(const f of files){const name=encoder.encode(f.name),checksum=crc(f.data);if(f.data.length>0xffffffff)throw new Error('附件超出 ZIP 支持范围');const h=new Uint8Array(30+name.length),v=new DataView(h.buffer);v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint32(14,checksum,true);v.setUint32(18,f.data.length,true);v.setUint32(22,f.data.length,true);v.setUint16(26,name.length,true);h.set(name,30);records.push(h,f.data);
  const c=new Uint8Array(46+name.length),d=new DataView(c.buffer);d.setUint32(0,0x02014b50,true);d.setUint16(4,20,true);d.setUint16(6,20,true);d.setUint16(8,0x800,true);d.setUint32(16,checksum,true);d.setUint32(20,f.data.length,true);d.setUint32(24,f.data.length,true);d.setUint16(28,name.length,true);d.setUint32(42,offset,true);c.set(name,46);central.push(c);offset+=h.length+f.data.length;size+=c.length;}
  if(files.length>65535||offset+size>0xffffffff)throw new Error('档案太大，请逐个下载附件。');const end=new Uint8Array(22),v=new DataView(end.buffer);v.setUint32(0,0x06054b50,true);v.setUint16(8,files.length,true);v.setUint16(10,files.length,true);v.setUint32(12,size,true);v.setUint32(16,offset,true);return new Blob([...records,...central,end],{type:'application/zip'});
+}
+
+// Management sessions exist only on the local owner service, never on the public site.
+let managementToken='';
+async function manageAPI(path,data){
+ const headers={'X-MuQ-Local':'1'};if(managementToken)headers.Authorization='Bearer '+managementToken;
+ if(data!==undefined)headers['Content-Type']='application/json';
+ const r=await fetch('/api/manage/'+path,{method:data===undefined?'GET':'POST',headers,body:data===undefined?undefined:JSON.stringify(data)});
+ const result=await r.json();if(!r.ok)throw new Error(result.error||'管理操作失败');return result;
+}
+function endManagement(){
+ if(managementToken&&isLocal)manageAPI('logout',{}).catch(()=>{});
+ managementToken='';$('#management')?.close();$('#management-entries')?.replaceChildren();
+}
+async function refreshPublic(){
+ const catalogue=await json('./catalogue.json');state.public=catalogue.entries;
+ if(!state.unlocked){state.entries=state.public;setCounts();render();if(entryId)openEntry(entryId);}
+ $('#updated').textContent='更新于 '+catalogue.updated.slice(0,10);
+}
+async function renderManagement(){
+ const epoch=state.epoch;const result=await manageAPI('entries');if(epoch!==state.epoch||!state.unlocked)return;
+ const host=$('#management-entries');host.replaceChildren();
+ for(const e of result.entries){
+  const form=create('form','management-entry');const heading=create('div','management-heading');
+  heading.append(create('h3','',e.title),create('span','visibility-badge',e.public?(e.public_content?'公开':'公开概览'):'仅馆主可见'));form.append(heading);
+  const scope=create('fieldset','visibility-options');scope.append(create('legend','','可见范围'));
+  for(const [value,text] of [['private','仅馆主可见'],['public','公开']]){const label=create('label');const input=create('input');input.type='radio';input.name='visibility';input.value=value;input.checked=value===(e.public?'public':'private');label.append(input,document.createTextNode(text));scope.append(label);}
+  const fields=create('div','public-fields');const title=create('input');title.type='text';title.maxLength=200;title.value=e.public_title||e.title;title.id='public-title-'+e.id;
+  const titleLabel=create('label','','公开标题');titleLabel.htmlFor=title.id;
+  const summary=create('textarea');summary.rows=3;summary.maxLength=5000;summary.value=e.public_summary||e.summary||'';summary.id='public-summary-'+e.id;
+  const summaryLabel=create('label','','公开概述');summaryLabel.htmlFor=summary.id;
+  fields.append(titleLabel,title,summaryLabel,summary,create('p','reader-meta','公开标题、概述、正文及可上传附件。原始提示词和本机文件索引仍仅馆主可见。'));
+  const updateFields=()=>{const visible=form.elements.visibility.value==='public';fields.hidden=!visible;title.required=summary.required=visible;};
+  scope.onchange=updateFields;
+  const save=create('button','secondary','保存可见范围');save.type='submit';
+  const notice=create('p','management-result');notice.setAttribute('role','status');
+  form.append(scope,fields,save,notice);host.append(form);updateFields();
+  form.onsubmit=async event=>{event.preventDefault();save.disabled=true;notice.textContent='正在保存…';$('#management-message').textContent='正在保存…';
+   try{const result=await manageAPI('visibility',{id:e.id,revision:e.revision,public:form.elements.visibility.value==='public',title:title.value,summary:summary.value});
+    await refreshPublic();
+    if(epoch!==state.epoch||!state.unlocked)return;
+    await renderManagement();
+    $('#management-message').textContent=result.status==='saved_build_failed'?result.error:'已保存并更新本机。点击“同步到网站”发布这些设置。';
+   }catch(error){if(epoch===state.epoch)notice.textContent=error.message;}finally{save.disabled=false;}
+  };
+ }
+}
+async function openManagement(){
+ const modal=$('#management');$('#management-message').textContent='';$('#management-entries').replaceChildren();modal.showModal();
+ $('#management-build').hidden=$('#management-publish').hidden=!isLocal;
+ if(!isLocal){const p=create('p','dialog-description','馆藏的原始档案保存在你的电脑上。请打开本机管理，保存后同步到网站。');const a=link('打开本机馆藏管理 ↗','http://127.0.0.1:6767/library/'+(entryId?'entry.html?id='+encodeURIComponent(entryId)+'&':'?')+'manage=1');$('#management-entries').append(p,a);return;}
+ const epoch=state.epoch;$('#management-message').textContent='正在验证本机馆主身份…';
+ try{
+  const r=await fetch('/api/local-key',{headers:{'X-MuQ-Local':'1'}});if(!r.ok)throw new Error('请启动更新后的本机图书馆服务');
+  const local=await r.json();const session=await manageAPI('session',{password:local.password});local.password='';
+  if(epoch!==state.epoch||!state.unlocked)return;managementToken=session.token;
+  await renderManagement();$('#management-message').textContent='设置保存在本机，所有条目都可以单独管理。';
+ }catch(error){if(epoch===state.epoch)$('#management-message').textContent=error.message;}
+}
+$('#manage-top').onclick=openManagement;
+for(const [id,path,done] of [['management-build','build','本地图书馆已更新。'],['management-publish','publish','已推送网站更新，正在等待部署。']]){
+ $('#'+id).onclick=async()=>{const button=$('#'+id);button.disabled=true;$('#management-message').textContent=path==='publish'?'正在同步网站，请稍候…':'正在构建…';
+  try{await manageAPI(path,{});await refreshPublic();$('#management-message').textContent=done;}catch(error){$('#management-message').textContent=error.message;}finally{button.disabled=false;}
+ };
 }
