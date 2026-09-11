@@ -18,7 +18,7 @@ export async function onRequestPost(context) {
     return json({ error: 'Invalid JSON' }, 400);
   }
 
-  const { messages, model: requestedProvider } = body;
+  const { messages, model: requestedProvider } = body || {};
 
   if (!Array.isArray(messages) || messages.length === 0) {
     await logChat(env, { ip, country, userAgent, stage: 'parse', error: 'messages must be non-empty array' });
@@ -27,42 +27,32 @@ export async function onRequestPost(context) {
 
   const historyLen = messages.length;
 
-  // --- 2. 路由到对应模型 ---
-  const provider = requestedProvider === 'claude' ? 'claude' : 'qwen';
-  const maxTokens = parseInt(env.ANTHROPIC_MAX_TOKENS || '1024', 10);
-
-  let apiUrl, model, upstreamHeaders, payload;
-
-  if (provider === 'claude') {
-    const baseUrl = (env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/+$/, '');
-    apiUrl = `${baseUrl}/v1/messages`;
-    model = env.ANTHROPIC_MODEL || 'claude-opus-4-6';
-    upstreamHeaders = {
-      'Content-Type': 'application/json',
-      'x-api-key': env.ANTHROPIC_API_KEY ?? '',
-      'anthropic-version': '2023-06-01',
-    };
-    if (env.ANTHROPIC_BETA) upstreamHeaders['anthropic-beta'] = env.ANTHROPIC_BETA;
-    payload = {
-      model,
-      max_tokens: maxTokens,
-      messages: messages.map(m => ({ role: m.role, content: m.content })),
-    };
-  } else {
-    // Qwen — OpenAI-compatible API
-    const baseUrl = (env.QWEN_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1').replace(/\/+$/, '');
-    apiUrl = `${baseUrl}/chat/completions`;
-    model = env.QWEN_MODEL || 'qwen-plus';
-    upstreamHeaders = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${env.QWEN_API_KEY ?? ''}`,
-    };
-    payload = {
-      model,
-      max_tokens: maxTokens,
-      messages: messages.map(m => ({ role: m.role, content: m.content })),
-    };
+  // 网页入口只允许这三个服务商；GPT 复用外部代理的上游凭据。
+  const provider = requestedProvider || 'qwen';
+  if (!['gpt', 'deepseek', 'qwen'].includes(provider)) {
+    return json({ error: 'Unsupported model selection' }, 400);
   }
+  const config = provider === 'gpt'
+    ? { base: env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1', key: env.UPSTREAM_API_KEY, model: 'gpt-5.6-sol' }
+    : provider === 'deepseek'
+      ? { base: 'https://api.deepseek.com', key: env.DEEPSEEK_API_KEY, model: 'deepseek-chat' }
+      : { base: env.QWEN_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1', key: env.QWEN_API_KEY, model: env.QWEN_MODEL || 'qwen-plus' };
+  const model = config.model;
+  if (!config.key) {
+    await logChat(env, { ip, country, userAgent, model, stage: 'config', error: 'Provider API key not configured' });
+    return json({ error: '所选模型尚未配置密钥', stage: 'config' }, 503);
+  }
+  let converted;
+  try {
+    converted = messages.map(m => convertMessage(m, provider));
+  } catch (err) {
+    return json({ error: err.message, stage: 'parse' }, 400);
+  }
+  const apiUrl = `${config.base.replace(/\/+$/, '')}/${provider === 'gpt' ? 'responses' : 'chat/completions'}`;
+  const upstreamHeaders = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${config.key}` };
+  const payload = provider === 'gpt'
+    ? { model, input: converted, stream: false, store: false, max_output_tokens: 4096 }
+    : { model, messages: converted, stream: false, max_tokens: 1024 };
 
   // --- 3. 调上游 ---
   let apiResponse;
@@ -124,10 +114,20 @@ export async function onRequestPost(context) {
     }, 502);
   }
 
-  // Claude: data.content[0].text; Qwen (OpenAI-compat): data.choices[0].message.content
-  const replyText = data.content?.[0]?.text ?? data.choices?.[0]?.message?.content ?? '';
+  const replyText = provider === 'gpt'
+    ? (data.output || []).filter(item => item.type === 'message')
+      .flatMap(item => item.content || []).filter(block => block.type === 'output_text')
+      .map(block => block.text).join('\n')
+    : data.choices?.[0]?.message?.content || '';
+  if (!replyText) {
+    await logChat(env, { ip, country, userAgent, model: data.model || model,
+      input_tokens: data.usage?.input_tokens ?? data.usage?.prompt_tokens ?? 0,
+      output_tokens: data.usage?.output_tokens ?? data.usage?.completion_tokens ?? 0,
+      elapsed_ms: elapsed, history_len: historyLen, stage: 'parse', error: 'Upstream returned no text' });
+    return json({ error: '模型未返回文字，请重试', stage: 'parse' }, 502);
+  }
   const usage = data.usage || {};
-  // Qwen uses prompt_tokens/completion_tokens; Claude uses input_tokens/output_tokens
+  // Chat Completions 与 Responses 的用量字段统一写入现有 chat_logs。
   const inputTokens = usage.input_tokens ?? usage.prompt_tokens ?? 0;
   const outputTokens = usage.output_tokens ?? usage.completion_tokens ?? 0;
 
@@ -146,6 +146,30 @@ export async function onRequestPost(context) {
     reply: replyText,
     _debug: { elapsed_ms: elapsed, model: data.model, requested_model: model },
   });
+}
+
+// 前端保留现有附件结构，在服务端转换为各 API 接受的格式。
+function convertMessage(message, provider) {
+  if (!message || !['user', 'assistant'].includes(message.role)) throw new Error('Invalid message role');
+  const { role, content } = message;
+  if (typeof content === 'string') return { role, content };
+  if (!Array.isArray(content) || !content.length) throw new Error('Invalid message content');
+  if (provider !== 'gpt') {
+    if (content.some(block => block?.type !== 'text' || typeof block.text !== 'string')) {
+      throw new Error('当前 Qwen / DeepSeek 模型仅支持文字和文本文件；图片或 PDF 请切换到 GPT，或新建纯文本对话。');
+    }
+    return { role, content: content.map(block => block.text).join('\n\n') };
+  }
+  return { role, content: content.map(block => {
+    if (block?.type === 'text' && typeof block.text === 'string') {
+      return { type: role === 'assistant' ? 'output_text' : 'input_text', text: block.text };
+    }
+    if (role !== 'user' || block?.source?.type !== 'base64' || !block.source.data) throw new Error('Invalid attachment');
+    const data = `data:${block.source.media_type};base64,${block.source.data}`;
+    if (block.type === 'image') return { type: 'input_image', image_url: data };
+    if (block.type === 'document') return { type: 'input_file', filename: 'attachment.pdf', file_data: data };
+    throw new Error('Unsupported attachment');
+  }) };
 }
 
 // --- D1 写日志 ---

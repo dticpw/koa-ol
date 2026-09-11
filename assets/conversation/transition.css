@@ -1,0 +1,30 @@
+/* Native same-origin page transitions: no interception or artificial navigation delay. */
+@view-transition{navigation:auto}
+
+.chat-title-dot,.studio-symbol{view-transition-name:conversation-symbol}
+
+::view-transition-group(conversation-symbol){animation-duration:.55s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+
+::view-transition-old(root){animation:studio-out .18s ease both}
+
+::view-transition-new(root){animation:studio-in .36s ease both}
+
+::view-transition-old(conversation-symbol),::view-transition-new(conversation-symbol){height:100%;object-fit:contain}
+
+@keyframes studio-out{to{opacity:0}
+}
+
+@keyframes studio-in{from{opacity:0}
+}
+
+/* Keep a small entrance when native transitions aren't available. Content is never hidden by JS. */
+html[data-native-transitions="false"] .studio-main{animation:studio-fallback .4s cubic-bezier(.2,.7,.2,1) both}
+
+@keyframes studio-fallback{from{opacity:.55;transform:translateY(8px)}
+}
+
+@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}
+::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+.studio-main{animation:none!important}
+}
+

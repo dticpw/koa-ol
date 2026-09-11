@@ -83,7 +83,18 @@ export async function onRequestGet(context) {
        ORDER BY day DESC`
     ).bind(Date.now() - 30 * 24 * 3600 * 1000).all();
 
+    // 累计模型用量来自同一张日志表；保留旧模型历史，不推算未记录数据。
+    const perModel = await env.DB.prepare(
+      `SELECT model, COUNT(*) AS requests,
+              COALESCE(SUM(input_tokens), 0) AS input_tokens,
+              COALESCE(SUM(output_tokens), 0) AS output_tokens
+       FROM chat_logs
+       GROUP BY model
+       ORDER BY SUM(input_tokens) + SUM(output_tokens) DESC`
+    ).all();
+
     return json({
+      per_model: perModel.results,
       overall,
       per_ip: perIp.results,
       by_country: byCountry.results,

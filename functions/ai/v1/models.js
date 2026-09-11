@@ -7,7 +7,7 @@ export async function onRequestGet(context) {
   const authError = authorizeClient(request, env);
   if (authError) return authError;
 
-  const models = parseModels(env.AVAILABLE_MODELS || env.DEFAULT_MODEL || "gpt-5.5");
+  const models = ["gpt-5.6-sol"];
 
   return new Response(
     JSON.stringify({

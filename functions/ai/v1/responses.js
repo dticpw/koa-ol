@@ -12,7 +12,7 @@ export async function onRequestPost(context) {
   if (!env.UPSTREAM_API_KEY) {
     scheduleLog(context, logProxyUsage(env, {
       ...clientInfo,
-      model: env.DEFAULT_MODEL || null,
+      model: "gpt-5.6-sol",
       elapsed_ms: Date.now() - requestStart,
       stage: "config",
       error: "UPSTREAM_API_KEY is not configured",
@@ -26,7 +26,7 @@ export async function onRequestPost(context) {
   } catch {
     scheduleLog(context, logProxyUsage(env, {
       ...clientInfo,
-      model: env.DEFAULT_MODEL || null,
+      model: "gpt-5.6-sol",
       elapsed_ms: Date.now() - requestStart,
       stage: "parse",
       error: "Invalid JSON",
@@ -37,7 +37,7 @@ export async function onRequestPost(context) {
   if (!body || typeof body !== "object" || Array.isArray(body)) {
     scheduleLog(context, logProxyUsage(env, {
       ...clientInfo,
-      model: env.DEFAULT_MODEL || null,
+      model: "gpt-5.6-sol",
       elapsed_ms: Date.now() - requestStart,
       stage: "parse",
       error: "Request body must be a JSON object",
@@ -45,9 +45,10 @@ export async function onRequestPost(context) {
     return jsonError("Request body must be a JSON object", 400);
   }
 
-  if (!body.model && env.DEFAULT_MODEL) {
-    body.model = env.DEFAULT_MODEL;
+  if (body.model !== undefined && body.model !== 'gpt-5.6-sol') {
+    return jsonError('Only gpt-5.6-sol is available on this endpoint', 400);
   }
+  body.model = 'gpt-5.6-sol';
 
   const upstreamBase = normalizeBaseUrl(env.UPSTREAM_BASE_URL || "https://api.openai.com/v1");
   const upstreamUrl = `${upstreamBase}/responses`;
@@ -62,7 +63,7 @@ export async function onRequestPost(context) {
   } catch (err) {
     scheduleLog(context, logProxyUsage(env, {
       ...clientInfo,
-      model: body.model || env.DEFAULT_MODEL || null,
+      model: body.model || "gpt-5.6-sol",
       elapsed_ms: Date.now() - requestStart,
       history_len: estimateHistoryLen(body),
       stage: "network",
@@ -73,7 +74,7 @@ export async function onRequestPost(context) {
 
   scheduleLog(context, logUpstreamResult(env, {
     ...clientInfo,
-    requested_model: body.model || env.DEFAULT_MODEL || null,
+    requested_model: body.model || "gpt-5.6-sol",
     elapsed_ms: Date.now() - requestStart,
     history_len: estimateHistoryLen(body),
   }, upstreamResponse.clone()));
