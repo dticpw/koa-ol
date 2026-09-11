@@ -1,0 +1,24 @@
+# 全局指令候选独立审查
+
+审查员：`/root/review_skill_routing`，独立子 Agent。
+
+结论：**通过**。本结论批准 manifest.json 中四份候选文本；生效前需完成其配套的参考文件迁移，落盘后继续独立复核。
+
+依据：已读取本会话用户的单一入口、双模式方案及明确执行指令，request.md、manifest.json、四份原文与候选涉及的完整章节、全部 diff，并以全文差异核对确认无隐藏改动。已加载 global-instruction-review Skill。
+
+检查结论：
+
+- 范围为四处参考路径迁移和 Linux Codex 一处已过时的双 Skill 路由替换，属于完成用户已授权合并所需修正。
+- 无权限、凭据、派工许可、发布授权或系统行为范围扩张；用户指定优先保留。
+- Windows/Linux 路径换算说明保持不变；各客户端原有 UI 默认规则及 Artifact 差异保留，未强行统一。
+- 四份实时生效原文均与 manifest 的原文哈希一致；候选均 LF，无全文重排。增量分别为 +67、-5、-5、-5 bytes。
+- 无重复的新流程，双模式具体行为留给共享 Skill，合理控制全局文档体积。
+
+落盘前配套条件：当前检查时 `open-design-ui/references/koa-ol.md` 尚不存在，主 Agent 须先完成参考迁移，避免写入悬空入口。此事已单独通知。文件系统可读不等于客户端刷新，Windows Junction 运行态不在本审查的实测范围。
+
+批准候选 SHA-256：
+
+- candidate-0.md：`c2b4d9a8797f68cf3c2fb9e266f73f52479874ee794cdfbe04fc7993d834f930`；31081 bytes，LF。
+- candidate-1.md：`1ac1c8c7b257ff689d4fcdc73d41a903b8199a50d17e47f43b53e4044c311a7c`；28841 bytes，LF。
+- candidate-2.md：`59501177af493f56be4c177f772449215147208d507931a47281c95ef8f6548c`；19993 bytes，LF。
+- candidate-3.md：`c09ac0e3cbfcdc26c8132bef9009c59924176274cf99f4a8ab9174fa2bd499dd`；18654 bytes，LF。

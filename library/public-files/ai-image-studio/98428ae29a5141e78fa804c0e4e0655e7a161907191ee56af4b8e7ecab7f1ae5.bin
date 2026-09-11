@@ -1,0 +1,324 @@
+{
+  "checked_on": "2026-09-11",
+  "resources": [
+    {
+      "name": "skills",
+      "repo": "https://github.com/black-forest-labs/skills",
+      "kind": "Skill",
+      "title": "官方 FLUX 提示与 API 指南",
+      "use": "优先阅读 flux-image-best-practices；它整理的是提示结构和模型限制，不是某种画风滤镜。",
+      "boundary": "适合 FLUX。实际生成需要对应 API 或另配本地流程；仓库 MIT 不等于所有模型权重都可免费商用。",
+      "link": "https://github.com/black-forest-labs/skills/blob/master/skills/flux-image-best-practices/SKILL.md",
+      "stars": 115,
+      "pushed": "2026-09-09",
+      "license": "MIT",
+      "skill_paths": [
+        "skills/bfl-api/SKILL.md",
+        "skills/flux-3-archival-formats/SKILL.md",
+        "skills/flux-3-audio-dialogue/SKILL.md",
+        "skills/flux-3-cinematic-inserts/SKILL.md",
+        "skills/flux-3-generate/SKILL.md",
+        "skills/flux-3-keyframes-continuation/SKILL.md",
+        "skills/flux-3-product-ads/SKILL.md",
+        "skills/flux-3-prompt-doctor/SKILL.md",
+        "skills/flux-3-video/SKILL.md",
+        "skills/flux-image-best-practices/SKILL.md"
+      ]
+    },
+    {
+      "name": "ai-image-prompts-skill",
+      "repo": "https://github.com/YouMind-OpenLab/ai-image-prompts-skill",
+      "kind": "Skill",
+      "title": "跨模型提示词检索",
+      "use": "按用途检索分类数据，返回带样例的提示词。适合找构图、商业插画与漫画分镜灵感。",
+      "boundary": "仓库宣称适配多模型，并不等于相同提示词能复现相同风格；它主要检索与改写，不自带生成模型。",
+      "link": "https://github.com/YouMind-OpenLab/ai-image-prompts-skill/blob/main/SKILL.md",
+      "stars": 1019,
+      "pushed": "2026-09-11",
+      "license": "MIT",
+      "skill_paths": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "name": "comfyui-agent-skill",
+      "repo": "https://github.com/MieMieeeee/comfyui-agent-skill",
+      "kind": "Skill",
+      "title": "把已注册的 ComfyUI 工作流交给 Agent",
+      "use": "本地执行型 Skill：通过 CLI 调用注册工作流，输出结构化结果。",
+      "boundary": "要求已有本地或可信自托管 ComfyUI 与模型；不提供后端，不是单纯写提示词的工具。",
+      "link": "https://github.com/MieMieeeee/comfyui-agent-skill",
+      "stars": 113,
+      "pushed": "2026-08-02",
+      "license": "Apache-2.0",
+      "skill_paths": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "name": "runcomfy-agent-skills",
+      "repo": "https://github.com/prime-skills/runcomfy-agent-skills",
+      "kind": "Skill",
+      "title": "云端多模型路由候选",
+      "use": "提供 ai-image-generation 等 Skill，由 RunComfy CLI 调用服务。原链接已跳转到 prime-skills。",
+      "boundary": "生成依赖 RunComfy 账户与云端费用；只审阅文档，未审计全部代码，也未实测效果。",
+      "link": "https://github.com/prime-skills/runcomfy-agent-skills/blob/main/ai-image-generation/SKILL.md",
+      "stars": 43,
+      "pushed": "2026-05-15",
+      "license": "MIT",
+      "skill_paths": [
+        "ace-step/SKILL.md",
+        "ai-avatar-video/SKILL.md",
+        "ai-image-generation/SKILL.md",
+        "ai-music/SKILL.md",
+        "ai-video-generation/SKILL.md",
+        "codex-pet/SKILL.md",
+        "controlnet-pose/SKILL.md",
+        "elevenlabs-music-generation/SKILL.md",
+        "face-swap/SKILL.md",
+        "flux-2-klein/SKILL.md",
+        "flux-kontext/SKILL.md",
+        "gpt-image-2/SKILL.md",
+        "gpt-image-edit/SKILL.md",
+        "happyhorse-1-0/SKILL.md",
+        "image-edit/SKILL.md",
+        "image-inpainting/SKILL.md",
+        "image-outpainting/SKILL.md",
+        "image-to-video/SKILL.md",
+        "kling-3-0/SKILL.md",
+        "lipsync/SKILL.md",
+        "nano-banana-2/SKILL.md",
+        "nano-banana-edit/SKILL.md",
+        "relight/SKILL.md",
+        "runcomfy-cli/SKILL.md",
+        "seedance-v2/SKILL.md",
+        "video-edit/SKILL.md",
+        "video-extend/SKILL.md",
+        "video-inpainting/SKILL.md",
+        "video-outpainting/SKILL.md",
+        "wan-2-7/SKILL.md"
+      ]
+    },
+    {
+      "name": "awesome-nano-banana-pro-prompts",
+      "repo": "https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts",
+      "kind": "提示词库",
+      "title": "带预览的 Gemini 提示词图库",
+      "use": "适合先看画面，再拆解主体、镜头、风格、留白与约束。图库规模是作者自述，页面样例不是本次复现。",
+      "boundary": "以 Gemini 图像生态为主；图片来源与授权逐项看，GitHub API 未给出明确 SPDX 许可证标识。",
+      "link": "https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts",
+      "stars": 13406,
+      "pushed": "2026-09-11",
+      "license": "NOASSERTION",
+      "skill_paths": []
+    },
+    {
+      "name": "Fooocus",
+      "repo": "https://github.com/lllyasviel/Fooocus",
+      "kind": "风格预设",
+      "title": "成熟 SDXL 项目的可读风格词表",
+      "use": "重点参考 sdxl_styles 下的 JSON：可直接看到某种风格如何拼接正、负面提示。",
+      "boundary": "项目已进入仅修 bug 的有限 LTS，不是追新模型首选。预设词有冲突和过度修饰，需拆开用。",
+      "link": "https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json",
+      "stars": 52984,
+      "pushed": "2025-12-01",
+      "license": "GPL-3.0",
+      "skill_paths": []
+    },
+    {
+      "name": "stable-diffusion-prompt-templates",
+      "repo": "https://github.com/Dalabad/stable-diffusion-prompt-templates",
+      "kind": "提示词库",
+      "title": "较早期的风格对照词表",
+      "use": "可用来学习 comic、line art、digital painting 等术语的组织方式。",
+      "boundary": "最后推送较早；含 artist 名和 8k 等旧式词，不推荐整段照搬到现代模型。",
+      "link": "https://github.com/Dalabad/stable-diffusion-prompt-templates",
+      "stars": 697,
+      "pushed": "2024-08-21",
+      "license": "MIT",
+      "skill_paths": []
+    },
+    {
+      "name": "workflow_templates",
+      "repo": "https://github.com/Comfy-Org/workflow_templates",
+      "kind": "工作流",
+      "title": "ComfyUI 官方模板",
+      "use": "需要可重复流程、图像编辑、模型加载时，优先从官方模板开始。",
+      "boundary": "不同模板所需节点、权重和显存不同；部分模板使用云 API，并非全部纯本地。仓库中的维护 Skill 不等于生图 Skill。",
+      "link": "https://github.com/Comfy-Org/workflow_templates",
+      "stars": 892,
+      "pushed": "2026-09-11",
+      "license": "MIT",
+      "skill_paths": [
+        ".claude/skills/editing-site-content/SKILL.md",
+        ".claude/skills/importing-subgraphs/SKILL.md",
+        ".claude/skills/managing-bundles/SKILL.md",
+        ".claude/skills/managing-mcp-index/SKILL.md",
+        ".claude/skills/managing-releases/SKILL.md",
+        ".claude/skills/managing-templates/SKILL.md",
+        ".claude/skills/managing-thumbnails/SKILL.md",
+        ".claude/skills/managing-translations/SKILL.md",
+        ".claude/skills/managing-use-case-pages/SKILL.md",
+        ".claude/skills/regenerating-ai-content/SKILL.md"
+      ]
+    },
+    {
+      "name": "example_workflows",
+      "repo": "https://github.com/Comfy-Org/example_workflows",
+      "kind": "工作流",
+      "title": "官方教程配套工作流",
+      "use": "适合从教程进入具体示例，核对输入图、节点与依赖。",
+      "boundary": "不是提示词大全，不应假定任意 JSON 都可直接在当前机器执行。",
+      "link": "https://github.com/Comfy-Org/example_workflows",
+      "stars": 25,
+      "pushed": "2026-08-21",
+      "license": "未声明",
+      "skill_paths": []
+    }
+  ],
+  "styles": [
+    {
+      "name": "漫画线稿",
+      "tag": "墨线 / 结构 / 黑白",
+      "desc": "靠线宽、轮廓与黑白面积塑造形体。先决定是清爽线稿，还是有排线和网点的漫画成稿；它们不是同一种密度。",
+      "features": [
+        "有轻重的墨线，外轮廓较强、内部结构线克制",
+        "脸与手线条完整，局部排线表达体积",
+        "背景留白，大块纯黑只放在构图需要的位置"
+      ],
+      "prompt": "A red-haired librarian holding a closed book, three-quarter view, waist-up. Black-and-white manga ink drawing on clean white paper. Confident tapered contour lines with varied line weight, precise facial features and hands, sparse cross-hatching only in the deepest shadows, a few deliberate solid-black shapes. Clear readable silhouette, restrained interior detail, spacious uncluttered background.",
+      "negative": "photograph, 3d render, full color, soft airbrush shading, dense background, text, watermark",
+      "pitfall": "不要直接复制 Fooocus 的 sai-line art：它的负面词包含 anime，会与“漫画角色”目标打架。line art 与 anime 不是天然互斥。",
+      "citation": "S6"
+    },
+    {
+      "name": "厚涂",
+      "tag": "体块 / 笔触 / 边缘",
+      "desc": "中文“厚涂”常指以色块塑造体积的数字绘画，不一定要模拟凸起的油彩。只有明确想要堆积颜料时，再加 impasto / palette-knife。",
+      "features": [
+        "用大色块而非黑色轮廓线塑造体积",
+        "硬边集中在焦点，软边与消失边用于转折",
+        "笔触方向跟随形体，避免整张均匀铺纹理"
+      ],
+      "prompt": "A red-haired librarian holding a closed book, three-quarter view, waist-up. Painterly digital illustration built from broad opaque color masses. Visible purposeful brush strokes following the form, sculpted light and shadow, a restrained plum, warm ivory and muted vermilion palette. Sharp accents around the eyes and book, softer and lost edges in the hair and clothing. Matte surfaces, simplified background, one broad side light.",
+      "negative": "3d render, glossy plastic, airbrushed skin, uniform sharp outlines, excessive microdetail, text, watermark",
+      "pitfall": "painterly 是绘画性；impasto 才偏厚重颜料肌理。随意加入 oil painting、photo、cel shading 容易互相拉扯。",
+      "citation": "S6 / S7 / S10"
+    },
+    {
+      "name": "半厚涂",
+      "tag": "保留线感 / 局部塑形",
+      "desc": "半厚涂没有统一的模型参数。更稳妥的说法是：保留哪些线条、哪些区域用绘画性塑形，以及阴影分几层。",
+      "features": [
+        "面部和轮廓有干净线条，内部线减弱",
+        "两到三层主要明暗，再以少量柔和过渡连接",
+        "头发与衣料有局部笔触，皮肤不过度磨皮"
+      ],
+      "prompt": "A red-haired librarian holding a closed book, three-quarter view, waist-up. Semi-painterly anime illustration. Retain delicate clean linework around the eyes, face and silhouette, with understated interior lines. Model the hair and fabric using two or three broad value groups and subtle painterly transitions. Soft matte skin, selective brush texture, crisp focal details and restrained highlights. Muted plum and warm ivory colors, plain warm paper background.",
+      "negative": "photograph, 3d render, heavy impasto, oily highlights, excessive airbrush, uniform hard outlines, text, watermark",
+      "pitfall": "单写 semi-realistic 会把脸推向写实，未必得到半厚涂；要描述“线稿与色块如何分工”。",
+      "citation": "S6 / S10 / S11"
+    },
+    {
+      "name": "清新简约",
+      "tag": "少色 / 留白 / 清晰形状",
+      "desc": "清新不等于曝光拉满，简约也不是删掉所有层次。限制调色板、形状数量和视觉重心，通常比“minimalist masterpiece”更可控。",
+      "features": [
+        "三到四色：鼠尾草绿、奶油色、浅珊瑚等",
+        "扁平或轻水粉色块，少量纸感",
+        "主次形状清楚，保留大面积呼吸空间"
+      ],
+      "prompt": "A small reading corner with a librarian and one potted plant. Fresh minimalist editorial illustration. Simple rounded shapes, a limited palette of sage green, warm cream and soft coral, flat matte gouache-like color blocks with very subtle paper texture. Gentle daylight expressed with one simple shadow shape, abundant negative space, a slightly off-center balanced composition, calm everyday mood.",
+      "negative": "3d render, neon colors, dramatic rim light, glossy reflections, clutter, dense texture, text, watermark",
+      "pitfall": "flat、gouache、paper cut 可以择一主导；把 3D、油画厚肌理和扁平矢量同时堆上去，容易丢失清爽感。",
+      "citation": "S10 / S11"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "BFL 官方 Agent Skills",
+      "url": "https://github.com/black-forest-labs/skills",
+      "evidence": "GitHub API、README 与图像 Skill 正文已核对；使用 master 分支。"
+    },
+    {
+      "id": "S2",
+      "title": "YouMind 提示词检索 Skill",
+      "url": "https://github.com/YouMind-OpenLab/ai-image-prompts-skill",
+      "evidence": "已确认根目录 SKILL.md 与分类检索工作方式；跨模型效果为作者主张，未复现。"
+    },
+    {
+      "id": "S3",
+      "title": "ComfyUI Agent Skill",
+      "url": "https://github.com/MieMieeeee/comfyui-agent-skill",
+      "evidence": "已读 SKILL.md，明确需要已有服务，仅执行注册工作流。"
+    },
+    {
+      "id": "S4",
+      "title": "RunComfy Skills",
+      "url": "https://github.com/prime-skills/runcomfy-agent-skills",
+      "evidence": "GitHub 跳转与 ai-image-generation/SKILL.md 已核对；生成走服务 API。"
+    },
+    {
+      "id": "S5",
+      "title": "YouMind 图像提示词图库",
+      "url": "https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts",
+      "evidence": "仓库、README、关注数与许可元数据已核对。"
+    },
+    {
+      "id": "S6",
+      "title": "Fooocus 风格 JSON",
+      "url": "https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json",
+      "evidence": "实际读取 line art、comic book、digital art 等正负面模板；README 明确有限 LTS。"
+    },
+    {
+      "id": "S7",
+      "title": "Stable Diffusion Prompt Templates",
+      "url": "https://github.com/Dalabad/stable-diffusion-prompt-templates",
+      "evidence": "读取旧式风格词表，作为术语材料而非即用最佳配方。"
+    },
+    {
+      "id": "S8",
+      "title": "ComfyUI 官方模板",
+      "url": "https://github.com/Comfy-Org/workflow_templates",
+      "evidence": "GitHub 仓库和目录已核对；模板类型与模型依赖各异。"
+    },
+    {
+      "id": "S9",
+      "title": "ComfyUI 示例工作流",
+      "url": "https://github.com/Comfy-Org/example_workflows",
+      "evidence": "官方组织仓库，示例 JSON 属工作流而非通用 Skill。"
+    },
+    {
+      "id": "S10",
+      "title": "FLUX.2 Prompting Guide",
+      "url": "https://docs.bfl.ai/guides/prompting_guide_flux2",
+      "evidence": "直接读取官方网页：主体+动作+风格+语境，重要项前置；不支持负面提示词。"
+    },
+    {
+      "id": "S11",
+      "title": "Gemini 图像生成指南",
+      "url": "https://ai.google.dev/gemini-api/docs/image-generation",
+      "evidence": "直接读取官方网页：具体描述、编辑迭代、正向表达预期场景；不把 SD 参数当通用参数。"
+    },
+    {
+      "id": "S12",
+      "title": "Midjourney Style Reference",
+      "url": "https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference",
+      "evidence": "浏览器实际读取：匹配颜色、媒介、纹理、灯光，不是复制人物身份；支持 --sref 与 --sw。"
+    },
+    {
+      "id": "S13",
+      "title": "Midjourney Raw",
+      "url": "https://docs.midjourney.com/hc/en-us/articles/32634113811853-Raw-Mode",
+      "evidence": "浏览器实际读取：减少自动美化与默认创作倾向；不是保证无 AI 痕迹。"
+    },
+    {
+      "id": "S14",
+      "title": "Midjourney Stylize",
+      "url": "https://docs.midjourney.com/hc/en-us/articles/32196176868109-Stylize",
+      "evidence": "浏览器实际读取：默认 100，文档给出 0–1000；低值更贴近提示，高值赋予更多艺术自由。"
+    }
+  ],
+  "scope": "文档与代码库核验；未安装第三方 Skill，未做新模型出图基准。提示词是本次整理的试验起点。"
+}

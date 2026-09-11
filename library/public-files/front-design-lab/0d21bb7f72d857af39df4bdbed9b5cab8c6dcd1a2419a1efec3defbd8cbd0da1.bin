@@ -1,0 +1,25 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>artifacts/merge-20260911-review-before.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>全局指令候选独立审查</h1>
+<p>审查员：<code>/root/review_skill_routing</code>，独立子 Agent。</p>
+<p>结论：<strong>通过</strong>。本结论批准 manifest.json 中四份候选文本；生效前需完成其配套的参考文件迁移，落盘后继续独立复核。</p>
+<p>依据：已读取本会话用户的单一入口、双模式方案及明确执行指令，request.md、manifest.json、四份原文与候选涉及的完整章节、全部 diff，并以全文差异核对确认无隐藏改动。已加载 global-instruction-review Skill。</p>
+<p>检查结论：</p>
+<ul>
+<li>范围为四处参考路径迁移和 Linux Codex 一处已过时的双 Skill 路由替换，属于完成用户已授权合并所需修正。</li>
+<li>无权限、凭据、派工许可、发布授权或系统行为范围扩张；用户指定优先保留。</li>
+<li>Windows/Linux 路径换算说明保持不变；各客户端原有 UI 默认规则及 Artifact 差异保留，未强行统一。</li>
+<li>四份实时生效原文均与 manifest 的原文哈希一致；候选均 LF，无全文重排。增量分别为 +67、-5、-5、-5 bytes。</li>
+<li>无重复的新流程，双模式具体行为留给共享 Skill，合理控制全局文档体积。</li>
+</ul>
+<p>落盘前配套条件：当前检查时 <code>open-design-ui/references/koa-ol.md</code> 尚不存在，主 Agent 须先完成参考迁移，避免写入悬空入口。此事已单独通知。文件系统可读不等于客户端刷新，Windows Junction 运行态不在本审查的实测范围。</p>
+<p>批准候选 SHA-256：</p>
+<ul>
+<li>candidate-0.md：<code>c2b4d9a8797f68cf3c2fb9e266f73f52479874ee794cdfbe04fc7993d834f930</code>；31081 bytes，LF。</li>
+<li>candidate-1.md：<code>1ac1c8c7b257ff689d4fcdc73d41a903b8199a50d17e47f43b53e4044c311a7c</code>；28841 bytes，LF。</li>
+<li>candidate-2.md：<code>59501177af493f56be4c177f772449215147208d507931a47281c95ef8f6548c</code>；19993 bytes，LF。</li>
+<li>candidate-3.md：<code>c09ac0e3cbfcdc26c8132bef9009c59924176274cf99f4a8ab9174fa2bd499dd</code>；18654 bytes，LF。</li>
+</ul></main></html>

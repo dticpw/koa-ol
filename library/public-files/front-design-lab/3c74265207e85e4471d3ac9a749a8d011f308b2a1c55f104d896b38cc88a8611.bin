@@ -1,0 +1,13 @@
+# 全局指令落盘独立复核
+
+审查员：`/root/review_skill_routing`。
+
+结论：**通过**。
+
+- 重新读取四份实际生效文件，均与 review-before.md 批准候选逐字节一致，SHA-256 全部相符，均为 LF；未发现批准后新增变更。
+- `open-design-ui/references/koa-ol.md` 已存在，落盘前配套条件满足。
+- 共享源码中 `frontend-design-lab` 目录已撤下；产物目录备份含 SKILL.md、agents/openai.yaml 和五份参考，共七个文件，覆盖 Git 所有六个原跟踪路径及新增 shared-atmosphere.md。
+- 已读 persona-after.txt：结构检查 21/21 节通过；已读 facts-after.txt：列出的事实探针通过，Skill 数量为 14。
+- 以上不表示四份刻意不同的行为指令逐字一致，也不表示 Linux 已验证 Windows Junction Target 或所有客户端刷新。
+
+备份完整性边界：原 Skill 已在此次复核前撤下，未提供撤下前逐文件哈希清单；能够独立确认七个备份文件可读及原跟踪路径覆盖，不能伪称完成撤下前后逐字节比对。

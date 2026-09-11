@@ -1,0 +1,123 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>artifacts/research.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>AI 生图：风格、Skill 与提示词专题</h1>
+<p>核对日期：2026-09-11</p>
+<p>文档与代码库核验；未安装第三方 Skill，未做新模型出图基准。提示词是本次整理的试验起点。</p>
+<h2>搜索结论</h2>
+<p>Skill、提示词库、LoRA 与节点工作流分别解决编排、语言参考、模型适配和执行问题。优先使用官方能力说明与可核对的仓库，不以关注数代替质量。</p>
+<h2>官方 FLUX 提示与 API 指南</h2>
+<p>https://github.com/black-forest-labs/skills</p>
+<p>优先阅读 flux-image-best-practices；它整理的是提示结构和模型限制，不是某种画风滤镜。</p>
+<p>适合 FLUX。实际生成需要对应 API 或另配本地流程；仓库 MIT 不等于所有模型权重都可免费商用。</p>
+<h2>跨模型提示词检索</h2>
+<p>https://github.com/YouMind-OpenLab/ai-image-prompts-skill</p>
+<p>按用途检索分类数据，返回带样例的提示词。适合找构图、商业插画与漫画分镜灵感。</p>
+<p>仓库宣称适配多模型，并不等于相同提示词能复现相同风格；它主要检索与改写，不自带生成模型。</p>
+<h2>把已注册的 ComfyUI 工作流交给 Agent</h2>
+<p>https://github.com/MieMieeeee/comfyui-agent-skill</p>
+<p>本地执行型 Skill：通过 CLI 调用注册工作流，输出结构化结果。</p>
+<p>要求已有本地或可信自托管 ComfyUI 与模型；不提供后端，不是单纯写提示词的工具。</p>
+<h2>云端多模型路由候选</h2>
+<p>https://github.com/prime-skills/runcomfy-agent-skills</p>
+<p>提供 ai-image-generation 等 Skill，由 RunComfy CLI 调用服务。原链接已跳转到 prime-skills。</p>
+<p>生成依赖 RunComfy 账户与云端费用；只审阅文档，未审计全部代码，也未实测效果。</p>
+<h2>带预览的 Gemini 提示词图库</h2>
+<p>https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts</p>
+<p>适合先看画面，再拆解主体、镜头、风格、留白与约束。图库规模是作者自述，页面样例不是本次复现。</p>
+<p>以 Gemini 图像生态为主；图片来源与授权逐项看，GitHub API 未给出明确 SPDX 许可证标识。</p>
+<h2>成熟 SDXL 项目的可读风格词表</h2>
+<p>https://github.com/lllyasviel/Fooocus</p>
+<p>重点参考 sdxl_styles 下的 JSON：可直接看到某种风格如何拼接正、负面提示。</p>
+<p>项目已进入仅修 bug 的有限 LTS，不是追新模型首选。预设词有冲突和过度修饰，需拆开用。</p>
+<h2>较早期的风格对照词表</h2>
+<p>https://github.com/Dalabad/stable-diffusion-prompt-templates</p>
+<p>可用来学习 comic、line art、digital painting 等术语的组织方式。</p>
+<p>最后推送较早；含 artist 名和 8k 等旧式词，不推荐整段照搬到现代模型。</p>
+<h2>ComfyUI 官方模板</h2>
+<p>https://github.com/Comfy-Org/workflow_templates</p>
+<p>需要可重复流程、图像编辑、模型加载时，优先从官方模板开始。</p>
+<p>不同模板所需节点、权重和显存不同；部分模板使用云 API，并非全部纯本地。仓库中的维护 Skill 不等于生图 Skill。</p>
+<h2>官方教程配套工作流</h2>
+<p>https://github.com/Comfy-Org/example_workflows</p>
+<p>适合从教程进入具体示例，核对输入图、节点与依赖。</p>
+<p>不是提示词大全，不应假定任意 JSON 都可直接在当前机器执行。</p>
+<h2>漫画线稿</h2>
+<p>靠线宽、轮廓与黑白面积塑造形体。先决定是清爽线稿，还是有排线和网点的漫画成稿；它们不是同一种密度。</p>
+<pre><code class="language-text">
+A red-haired librarian holding a closed book, three-quarter view, waist-up. Black-and-white manga ink drawing on clean white paper. Confident tapered contour lines with varied line weight, precise facial features and hands, sparse cross-hatching only in the deepest shadows, a few deliberate solid-black shapes. Clear readable silhouette, restrained interior detail, spacious uncluttered background.
+
+</code></pre>
+<p>负面提示仅供兼容 SDXL 工作流：photograph, 3d render, full color, soft airbrush shading, dense background, text, watermark</p>
+<p>不要直接复制 Fooocus 的 sai-line art：它的负面词包含 anime，会与“漫画角色”目标打架。line art 与 anime 不是天然互斥。</p>
+<h2>厚涂</h2>
+<p>中文“厚涂”常指以色块塑造体积的数字绘画，不一定要模拟凸起的油彩。只有明确想要堆积颜料时，再加 impasto / palette-knife。</p>
+<pre><code class="language-text">
+A red-haired librarian holding a closed book, three-quarter view, waist-up. Painterly digital illustration built from broad opaque color masses. Visible purposeful brush strokes following the form, sculpted light and shadow, a restrained plum, warm ivory and muted vermilion palette. Sharp accents around the eyes and book, softer and lost edges in the hair and clothing. Matte surfaces, simplified background, one broad side light.
+
+</code></pre>
+<p>负面提示仅供兼容 SDXL 工作流：3d render, glossy plastic, airbrushed skin, uniform sharp outlines, excessive microdetail, text, watermark</p>
+<p>painterly 是绘画性；impasto 才偏厚重颜料肌理。随意加入 oil painting、photo、cel shading 容易互相拉扯。</p>
+<h2>半厚涂</h2>
+<p>半厚涂没有统一的模型参数。更稳妥的说法是：保留哪些线条、哪些区域用绘画性塑形，以及阴影分几层。</p>
+<pre><code class="language-text">
+A red-haired librarian holding a closed book, three-quarter view, waist-up. Semi-painterly anime illustration. Retain delicate clean linework around the eyes, face and silhouette, with understated interior lines. Model the hair and fabric using two or three broad value groups and subtle painterly transitions. Soft matte skin, selective brush texture, crisp focal details and restrained highlights. Muted plum and warm ivory colors, plain warm paper background.
+
+</code></pre>
+<p>负面提示仅供兼容 SDXL 工作流：photograph, 3d render, heavy impasto, oily highlights, excessive airbrush, uniform hard outlines, text, watermark</p>
+<p>单写 semi-realistic 会把脸推向写实，未必得到半厚涂；要描述“线稿与色块如何分工”。</p>
+<h2>清新简约</h2>
+<p>清新不等于曝光拉满，简约也不是删掉所有层次。限制调色板、形状数量和视觉重心，通常比“minimalist masterpiece”更可控。</p>
+<pre><code class="language-text">
+A small reading corner with a librarian and one potted plant. Fresh minimalist editorial illustration. Simple rounded shapes, a limited palette of sage green, warm cream and soft coral, flat matte gouache-like color blocks with very subtle paper texture. Gentle daylight expressed with one simple shadow shape, abundant negative space, a slightly off-center balanced composition, calm everyday mood.
+
+</code></pre>
+<p>负面提示仅供兼容 SDXL 工作流：3d render, neon colors, dramatic rim light, glossy reflections, clutter, dense texture, text, watermark</p>
+<p>flat、gouache、paper cut 可以择一主导；把 3D、油画厚肌理和扁平矢量同时堆上去，容易丢失清爽感。</p>
+<h2>来源</h2>
+<ul>
+<li>
+<p>[S1] BFL 官方 Agent Skills：https://github.com/black-forest-labs/skills — GitHub API、README 与图像 Skill 正文已核对；使用 master 分支。</p>
+</li>
+<li>
+<p>[S2] YouMind 提示词检索 Skill：https://github.com/YouMind-OpenLab/ai-image-prompts-skill — 已确认根目录 SKILL.md 与分类检索工作方式；跨模型效果为作者主张，未复现。</p>
+</li>
+<li>
+<p>[S3] ComfyUI Agent Skill：https://github.com/MieMieeeee/comfyui-agent-skill — 已读 SKILL.md，明确需要已有服务，仅执行注册工作流。</p>
+</li>
+<li>
+<p>[S4] RunComfy Skills：https://github.com/prime-skills/runcomfy-agent-skills — GitHub 跳转与 ai-image-generation/SKILL.md 已核对；生成走服务 API。</p>
+</li>
+<li>
+<p>[S5] YouMind 图像提示词图库：https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts — 仓库、README、关注数与许可元数据已核对。</p>
+</li>
+<li>
+<p>[S6] Fooocus 风格 JSON：https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json — 实际读取 line art、comic book、digital art 等正负面模板；README 明确有限 LTS。</p>
+</li>
+<li>
+<p>[S7] Stable Diffusion Prompt Templates：https://github.com/Dalabad/stable-diffusion-prompt-templates — 读取旧式风格词表，作为术语材料而非即用最佳配方。</p>
+</li>
+<li>
+<p>[S8] ComfyUI 官方模板：https://github.com/Comfy-Org/workflow_templates — GitHub 仓库和目录已核对；模板类型与模型依赖各异。</p>
+</li>
+<li>
+<p>[S9] ComfyUI 示例工作流：https://github.com/Comfy-Org/example_workflows — 官方组织仓库，示例 JSON 属工作流而非通用 Skill。</p>
+</li>
+<li>
+<p>[S10] FLUX.2 Prompting Guide：https://docs.bfl.ai/guides/prompting_guide_flux2 — 直接读取官方网页：主体+动作+风格+语境，重要项前置；不支持负面提示词。</p>
+</li>
+<li>
+<p>[S11] Gemini 图像生成指南：https://ai.google.dev/gemini-api/docs/image-generation — 直接读取官方网页：具体描述、编辑迭代、正向表达预期场景；不把 SD 参数当通用参数。</p>
+</li>
+<li>
+<p>[S12] Midjourney Style Reference：https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference — 浏览器实际读取：匹配颜色、媒介、纹理、灯光，不是复制人物身份；支持 --sref 与 --sw。</p>
+</li>
+<li>
+<p>[S13] Midjourney Raw：https://docs.midjourney.com/hc/en-us/articles/32634113811853-Raw-Mode — 浏览器实际读取：减少自动美化与默认创作倾向；不是保证无 AI 痕迹。</p>
+</li>
+<li>
+<p>[S14] Midjourney Stylize：https://docs.midjourney.com/hc/en-us/articles/32196176868109-Stylize — 浏览器实际读取：默认 100，文档给出 0–1000；低值更贴近提示，高值赋予更多艺术自由。</p>
+</li>
+</ul></main></html>

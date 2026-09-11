@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>artifacts/merge-20260911-review-after.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>全局指令落盘独立复核</h1>
+<p>审查员：<code>/root/review_skill_routing</code>。</p>
+<p>结论：<strong>通过</strong>。</p>
+<ul>
+<li>重新读取四份实际生效文件，均与 review-before.md 批准候选逐字节一致，SHA-256 全部相符，均为 LF；未发现批准后新增变更。</li>
+<li><code>open-design-ui/references/koa-ol.md</code> 已存在，落盘前配套条件满足。</li>
+<li>共享源码中 <code>frontend-design-lab</code> 目录已撤下；产物目录备份含 SKILL.md、agents/openai.yaml 和五份参考，共七个文件，覆盖 Git 所有六个原跟踪路径及新增 shared-atmosphere.md。</li>
+<li>已读 persona-after.txt：结构检查 21/21 节通过；已读 facts-after.txt：列出的事实探针通过，Skill 数量为 14。</li>
+<li>以上不表示四份刻意不同的行为指令逐字一致，也不表示 Linux 已验证 Windows Junction Target 或所有客户端刷新。</li>
+</ul>
+<p>备份完整性边界：原 Skill 已在此次复核前撤下，未提供撤下前逐文件哈希清单；能够独立确认七个备份文件可读及原跟踪路径覆盖，不能伪称完成撤下前后逐字节比对。</p></main></html>
