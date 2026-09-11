@@ -60,6 +60,13 @@ export async function onRequestPost(context) {
     payload.tool_choice = 'auto';
   }
 
+  if (body.stream === true) {
+    payload.stream = true;
+    if (provider !== 'gpt') payload.stream_options = { include_usage: true };
+    return streamChat(context, { apiUrl, upstreamHeaders, payload, provider, model, searchRequested,
+      fields: { ip, country, userAgent, history_len: historyLen } });
+  }
+
   // --- 3. 调上游 ---
   let apiResponse;
   const requestStart = Date.now();
@@ -154,6 +161,130 @@ export async function onRequestPost(context) {
     citations: provider === 'gpt' ? extractCitations(data.output || []) : [],
     _debug: { elapsed_ms: elapsed, model: data.model, requested_model: model },
   });
+}
+
+// A small public event protocol keeps upstream reasoning and credentials out of the browser.
+function streamChat(context, config) {
+  const { env } = context;
+  const { apiUrl, upstreamHeaders, payload, provider, model, searchRequested, fields } = config;
+  const abort = new AbortController();
+  const encoder = new TextEncoder();
+  const started = Date.now();
+  let cancelled = false, controller, logged = false, reader;
+  let usage = {}, actualModel = model, reply = '', finalData = null, terminal = false;
+  let searchCalls = 0;
+  const items = new Map();
+  function emit(type, data) {
+    if (!cancelled) controller.enqueue(encoder.encode(`event: ${type}\ndata: ${JSON.stringify(data)}\n\n`));
+  }
+  async function log(stage, error = null) {
+    if (logged) return;
+    logged = true;
+    await logChat(env, { ...fields, model: actualModel,
+      input_tokens: usage.input_tokens ?? usage.prompt_tokens ?? 0,
+      output_tokens: usage.output_tokens ?? usage.completion_tokens ?? 0,
+      elapsed_ms: Date.now() - started, stage, error });
+  }
+  function consume(raw) {
+    if (raw === '[DONE]') { if (provider !== 'gpt') terminal = true; return; }
+    const event = JSON.parse(raw);
+    if (event.error || event.type === 'error' || event.type === 'response.failed') throw new Error('上游生成失败，请重试');
+    if (provider === 'gpt') {
+      if (event.type === 'response.output_text.delta') {
+        reply += event.delta || '';
+        emit('delta', { text: event.delta || '' });
+      } else if (event.type === 'response.web_search_call.searching') {
+        emit('status', { phase: 'searching', label: '正在联网搜索' });
+      } else if (event.type === 'response.web_search_call.in_progress') {
+        emit('status', { phase: 'searching', label: '正在调用联网工具' });
+      } else if (event.type === 'response.output_item.added' && event.item?.type === 'web_search_call') {
+        emit('status', { phase: 'searching', label: '正在调用联网工具' });
+      } else if (event.type === 'response.output_item.done') {
+        items.set(event.output_index ?? event.item?.id, event.item);
+        if (event.item?.type === 'web_search_call') {
+          if (event.item.status === 'completed') searchCalls++;
+          const action = event.item.action?.type;
+          emit('status', { phase: 'searched', label: action === 'open_page' ? '已读取网页，正在继续整理' : action === 'find_in_page' ? '已检索网页内容，正在继续整理' : '检索完成，正在整理回答' });
+        }
+      } else if (event.type === 'response.completed' || event.type === 'response.incomplete') {
+        finalData = event.response || {};
+        usage = finalData.usage || {};
+        actualModel = finalData.model || model;
+        terminal = true;
+        if (event.type === 'response.incomplete') throw new Error('回复未完成，可能达到输出上限，可重试');
+      }
+    } else {
+      actualModel = event.model || actualModel;
+      if (event.usage) usage = event.usage;
+      const choice = event.choices?.[0];
+      if (choice?.delta?.content) {
+        reply += choice.delta.content;
+        emit('delta', { text: choice.delta.content });
+      }
+      if (choice?.finish_reason && choice.finish_reason !== 'stop') throw new Error('回复未完成，可重试');
+    }
+  }
+  async function run() {
+    try {
+      emit('status', { phase: 'waiting', label: '已连接，等待模型响应' });
+      const upstream = await fetch(apiUrl, { method: 'POST', headers: upstreamHeaders, body: JSON.stringify(payload), signal: abort.signal });
+      if (!upstream.ok) { await upstream.body?.cancel(); throw new Error(`上游返回 HTTP ${upstream.status}`); }
+      if (!(upstream.headers.get('content-type') || '').includes('text/event-stream')) {
+        // Some compatible services ignore stream=true; preserve their final response.
+        const data = await upstream.json();
+        finalData = data;
+        actualModel = data.model || model;
+        usage = data.usage || {};
+        reply = provider === 'gpt' ? (data.output || []).filter(x => x.type === 'message').flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\n') : data.choices?.[0]?.message?.content || '';
+        if (data.error || data.status === 'failed' || data.status === 'incomplete') throw new Error('上游未完成回复');
+        emit('delta', { text: reply });
+        terminal = true;
+      } else {
+        reader = upstream.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        while (!terminal && !cancelled) {
+          const { value, done } = await reader.read();
+          buffer += decoder.decode(value, { stream: !done });
+          // Normalize only complete event boundaries, including CRLF split across chunks.
+          let match;
+          while ((match = /\r?\n\r?\n/.exec(buffer))) {
+            const frame = buffer.slice(0, match.index);
+            buffer = buffer.slice(match.index + match[0].length);
+            const raw = frame.split(/\r?\n/).filter(line => line.startsWith('data:')).map(line => line.slice(5).trimStart()).join('\n');
+            if (raw) consume(raw);
+            if (terminal) break;
+          }
+          if (done) break;
+        }
+      }
+      if (cancelled) return;
+      if (!terminal) throw new Error('连接中断，回复尚未完成，请重试');
+      const output = finalData?.output || [...items.values()].filter(Boolean);
+      if (provider === 'gpt' && output.length) {
+        const completeText = output.filter(x => x.type === 'message').flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\n');
+        if (completeText) reply = completeText;
+        searchCalls = output.filter(x => x.type === 'web_search_call' && x.status === 'completed').length;
+      }
+      if (!reply) throw new Error('模型没有返回文字，请重试');
+      await log('success');
+      emit('done', { reply, citations: provider === 'gpt' ? extractCitations(output) : [],
+        web_search: { requested: searchRequested, calls: searchCalls },
+        _debug: { elapsed_ms: Date.now() - started, model: actualModel, requested_model: model } });
+    } catch (error) {
+      await log(cancelled ? 'cancelled' : 'stream_error', cancelled ? 'Client cancelled; final usage may be unavailable' : String(error.message));
+      if (!cancelled) emit('error', { error: error.message || '连接中断，请重试' });
+    } finally {
+      if (reader) { try { await reader.cancel(); } catch {} }
+      abort.abort();
+      if (!cancelled) controller.close();
+    }
+  }
+  const body = new ReadableStream({
+    start(c) { controller = c; const task = run(); if (context.waitUntil) context.waitUntil(task); },
+    cancel() { cancelled = true; abort.abort(); const task = log('cancelled', 'Client cancelled; final usage may be unavailable'); if (context.waitUntil) context.waitUntil(task); return task; }
+  });
+  return new Response(body, { headers: { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-transform', 'X-Accel-Buffering': 'no' } });
 }
 
 // Citation offsets refer to each output_text block; reply joins those blocks with newlines.

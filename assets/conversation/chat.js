@@ -381,20 +381,80 @@
         }
 
         // ================= 渲染历史 =================
-        titleEl.onclick = () => {
+        let conversationId = crypto.randomUUID();
+        let archiveQueue = Promise.resolve();
+        let archiveReady = Promise.resolve();
+        let activeRequest = null;
+        let lastRetry = null;
+        const retryBtn = document.getElementById('retry-btn');
+        const historyBtn = document.getElementById('history-btn');
+        const historyDialog = document.getElementById('history-dialog');
+        const archiveNotice = document.getElementById('archive-notice');
+        function archiveError() {
+            archiveNotice.textContent = '历史记录未能保存，当前对话仍可继续。请检查浏览器存储空间或隐私设置。';
+            historyBtn.textContent = '历史 · 未保存';
+        }
+        function saveConversation() {
+            if (!history.length) return archiveQueue;
+            const value = structuredClone({ id: conversationId, updated: Date.now(), history,
+                model: modelSelect.value, search: searchToggle.getAttribute('aria-pressed') === 'true',
+                draft: input.value, draftAttachments: pendingAttachments,
+                retry: lastRetry ? { index: lastRetry.index, provider: lastRetry.provider, search: lastRetry.search } : null });
+            archiveQueue = archiveQueue.then(() => ChatArchive.save(value)).catch(archiveError);
+            return archiveQueue;
+        }
+        titleEl.onclick = async () => {
+            await archiveReady;
             if (sending || attachmentLoading) return;
-            if (!history.length || confirm('清空当前对话？')) {
-                history = [];
-                pendingAttachments = [];
-                input.value = '';
-                input.style.height = '';
-                statusEl.textContent = '';
-                renderAttachments();
-                input.focus();
-                debugPanel.style.display = 'none';
-                render();
-            }
+            await saveConversation();
+            conversationId = crypto.randomUUID();
+            history = [];
+            pendingAttachments = [];
+            lastRetry = null;
+            retryBtn.hidden = true;
+            input.value = '';
+            input.style.height = '';
+            statusEl.textContent = '';
+            renderAttachments();
+            debugPanel.style.display = 'none';
+            render();
+            input.focus();
         };
+        document.getElementById('history-close').onclick = () => historyDialog.close();
+        historyBtn.onclick = async () => {
+            await archiveReady;
+            if (sending || attachmentLoading) return;
+            await saveConversation();
+            historyDialog.showModal();
+            await renderArchive();
+        };
+        async function renderArchive() {
+            const list = document.getElementById('history-list');
+            list.textContent = '';
+            try {
+                const records = (await ChatArchive.list()).sort((a,b) => b.updated-a.updated);
+                if (!records.length) list.textContent = '还没有保存的对话。';
+                for (const record of records) {
+                    const row = document.createElement('div'); row.className = 'history-row';
+                    const open = document.createElement('button'); open.className = 'history-open';
+                    const first = record.history.find(m => m.role === 'user')?.content;
+                    const title = typeof first === 'string' ? first : first?.filter(b => b.type === 'text').map(b => b.text).join(' ') || '附件对话';
+                    const name = document.createElement('strong'); name.textContent = title.slice(0,70);
+                    const date = document.createElement('span'); date.textContent = new Date(record.updated).toLocaleString() + (record.id === conversationId ? ' · 当前对话' : '');
+                    open.append(name,date);
+                    open.onclick = () => { conversationId = record.id; history = record.history;
+                        modelSelect.value = record.model || 'gpt'; searchToggle.setAttribute('aria-pressed',String(record.search !== false)); updateModelHint();
+                        pendingAttachments = record.draftAttachments || []; input.value = record.draft || '';
+                        lastRetry = record.retry ? {...record.retry,content:history[record.retry.index]?.content} : null; retryBtn.hidden = !lastRetry;
+                        statusEl.textContent = '已恢复本机对话'; renderAttachments(); render(); historyDialog.close(); input.focus(); };
+                    const remove = document.createElement('button'); remove.className = 'history-delete'; remove.textContent = '删除';
+                    remove.setAttribute('aria-label', '删除对话：'+title.slice(0,70));
+                    remove.onclick = async () => { if (!confirm('删除这条本机对话及附件？')) return;
+                        try { await ChatArchive.remove(record.id); if (record.id === conversationId) { history=[];conversationId=crypto.randomUUID();lastRetry=null;retryBtn.hidden=true;render(); } await renderArchive(); } catch { archiveError(); } };
+                    row.append(open,remove);list.append(row);
+                }
+            } catch { archiveError(); }
+        }
 
         function renderMessageContent(content, container) {
             // content 可能是 string 或 array of blocks
@@ -441,6 +501,11 @@
                 div.appendChild(role);
                 if (m.role === 'assistant') renderTextWithCodeBlocks(m.content, div, m.citations);
                 else renderMessageContent(m.content, div);
+                if (m.elapsed_ms !== undefined) {
+                    const timing = document.createElement('div'); timing.className = 'reply-timing';
+                    timing.textContent = `${m.incomplete ? '未完成 · ' : ''}用时 ${(m.elapsed_ms / 1000).toFixed(1)} 秒${m.first_token_ms !== undefined ? ' · 首字 ' + (m.first_token_ms / 1000).toFixed(1) + ' 秒' : ''}`;
+                    div.append(timing);
+                }
                 if (m.searchRequested) {
                     const note = document.createElement('div');
                     note.className = 'search-note';
@@ -453,106 +518,110 @@
         }
 
         // ================= 发送 =================
-        async function send() {
+        async function send(retry = false) {
+            await archiveReady;
             if (sending || attachmentLoading) return;
-            const selectedProvider = modelSelect.value;
+            const selectedProvider = retry && lastRetry ? lastRetry.provider : modelSelect.value;
             const selectedLabel = modelLabels[selectedProvider];
-            const searchRequested = selectedProvider === 'gpt' && searchToggle.getAttribute('aria-pressed') === 'true';
+            const searchRequested = retry && lastRetry ? lastRetry.search : selectedProvider === 'gpt' && searchToggle.getAttribute('aria-pressed') === 'true';
             const text = input.value.trim();
-            if (!text && pendingAttachments.length === 0) return;
-
-            const sentAttachments = [...pendingAttachments];
-            const userContent = buildUserContent(text, pendingAttachments);
-            if (selectedProvider !== 'gpt' && [...history, { content: userContent }].some(m =>
+            if (!retry && !text && pendingAttachments.length === 0) return;
+            const userContent = retry && lastRetry ? lastRetry.content : buildUserContent(text, pendingAttachments);
+            const base = retry && lastRetry ? history.slice(0,lastRetry.index) : history;
+            if (selectedProvider !== 'gpt' && [...base, { content: userContent }].some(m =>
                 Array.isArray(m.content) && m.content.some(block => block.type !== 'text'))) {
-                statusEl.textContent = '当前对话含图片或 PDF，请切换到 GPT，或点击“新对话”后开始纯文本对话。';
-                statusEl.className = 'status error';
-                return;
+                statusEl.textContent = '当前对话含图片或 PDF，请切换到 GPT，或新建纯文本对话。';
+                statusEl.className = 'status error'; return;
             }
+            history = base;
+            const index = history.length;
+            history.push({role:'user',content:userContent});
+            lastRetry = { index, content:userContent, provider:selectedProvider, search:searchRequested };
+            if (!retry) { input.value='';input.style.height='';pendingAttachments=[];renderAttachments(); }
             sending = true;
-            modelSelect.disabled = true;
-            history.push({ role: 'user', content: userContent });
-
-            input.value = '';
-            input.style.height = '';
-            pendingAttachments = [];
-            renderAttachments();
-            debugPanel.style.display = 'none';
+            activeRequest = new AbortController();
+            const request = activeRequest;
+            modelSelect.disabled = true; attachBtn.disabled = true; searchToggle.disabled = true; historyBtn.disabled = true;
+            retryBtn.hidden = true;
+            sendBtn.disabled = false; sendBtn.classList.add('is-stopping');
+            sendBtn.setAttribute('aria-label','停止回复');sendBtn.title='停止回复';
+            debugPanel.style.display='none'; statusEl.className='status';
             render();
-            sendBtn.disabled = true;
-            attachBtn.disabled = true;
-            const thinking = document.createElement('div');
-            thinking.id = 'thinking'; thinking.className = 'thinking-row';
-            thinking.innerHTML = '<span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>';
-            thinking.append(document.createTextNode(`${selectedLabel} 正在回复${searchRequested ? ' · 可按需联网' : ''}`));
-            messagesEl.append(thinking);
-            document.querySelector('.message-viewport').scrollTop = document.querySelector('.message-viewport').scrollHeight;
-            statusEl.textContent = `${selectedLabel} 思考中...`;
-            statusEl.className = 'status';
-
-            let res, rawText;
+            const viewport=document.querySelector('.message-viewport');
+            const thinking=document.createElement('div');thinking.className='thinking-row';thinking.id='thinking';
+            const phase=document.createElement('span');phase.setAttribute('role','status');
+            const clock=document.createElement('span');clock.className='waiting-clock';
+            thinking.append(phase,clock);messagesEl.append(thinking);viewport.scrollTop=viewport.scrollHeight;
+            let label='正在连接', firstToken, reply='', done=false, finalData, streamError;
+            const started=performance.now();
+            const tick=()=>{phase.textContent=label;clock.textContent=`已等待 ${((performance.now()-started)/1000).toFixed(1)} 秒`;};
+            tick();const timer=setInterval(tick,100);
+            let bubble, textNode;
+            function delta(text) {
+                if (!text) return;
+                const follow=viewport.scrollHeight-viewport.scrollTop-viewport.clientHeight<100;
+                if (firstToken === undefined) firstToken=performance.now()-started;
+                label='正在生成回答';tick();
+                if (!bubble) { bubble=document.createElement('div');bubble.className='msg assistant streaming';
+                    const role=document.createElement('div');role.className='role';role.textContent=selectedLabel;
+                    const content=document.createElement('div');content.className='text-segment';textNode=document.createTextNode('');content.append(textNode);
+                    bubble.append(role,content);messagesEl.insertBefore(bubble,thinking); }
+                reply+=text;textNode.appendData(text);
+                if(follow) viewport.scrollTop=viewport.scrollHeight;
+            }
             try {
-                res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: history.map(({role, content}) => ({role, content})), model: selectedProvider, web_search: searchRequested }),
-                });
-                rawText = await res.text();
-            } catch (e) {
-                statusEl.textContent = '❌ 请求未发出：' + e.message;
-                statusEl.className = 'status error';
-                debugContent.textContent = String(e);
-                debugPanel.style.display = 'block';
-                history.pop();
-                input.value = input.value ? text + '\n\n' + input.value : text;
-                pendingAttachments = [...sentAttachments, ...pendingAttachments];
-                renderAttachments();
-                document.getElementById('thinking')?.remove();
-                render();
-                sendBtn.disabled = false;
-                sending = false;
-                modelSelect.disabled = false;
-                attachBtn.disabled = false;
-                return;
-            }
-
-            let data = null;
-            try { data = JSON.parse(rawText); } catch { /* 不是 JSON */ }
-
-            if (!res.ok || typeof data?.reply !== 'string') {
-                statusEl.textContent = !res.ok ? `❌ HTTP ${res.status} ${res.statusText}` : '❌ 服务返回了无法读取的回复';
-                statusEl.className = 'status error';
-                debugContent.textContent = data
-                    ? JSON.stringify(data, null, 2)
-                    : rawText.slice(0, 2000) + (rawText.length > 2000 ? '\n...(截断)' : '');
-                debugPanel.style.display = 'block';
-                history.pop();
-                input.value = input.value ? text + '\n\n' + input.value : text;
-                pendingAttachments = [...sentAttachments, ...pendingAttachments];
-                renderAttachments();
-                document.getElementById('thinking')?.remove();
-                render();
-                sendBtn.disabled = false;
-                sending = false;
-                modelSelect.disabled = false;
-                attachBtn.disabled = false;
+                const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},signal:request.signal,
+                    body:JSON.stringify({messages:history.filter(m=>!m.incomplete).map(({role,content})=>({role,content})),model:selectedProvider,web_search:searchRequested,stream:true})});
+                if(!res.ok) throw new Error(`HTTP ${res.status}，请重试`);
+                if((res.headers.get('content-type')||'').includes('text/event-stream')) {
+                    const reader=res.body.getReader();const decoder=new TextDecoder();let buffer='';
+                    try {
+                        while(!done) {
+                            const chunk=await reader.read();buffer+=decoder.decode(chunk.value,{stream:!chunk.done});
+                            let boundary;
+                            while((boundary=/\r?\n\r?\n/.exec(buffer))) {
+                                const frame=buffer.slice(0,boundary.index);buffer=buffer.slice(boundary.index+boundary[0].length);
+                                const lines=frame.split(/\r?\n/);const type=lines.find(x=>x.startsWith('event:'))?.slice(6).trim();
+                                const raw=lines.filter(x=>x.startsWith('data:')).map(x=>x.slice(5).trimStart()).join('\n');
+                                if(!raw) continue;const data=JSON.parse(raw);
+                                if(type==='status') {label=data.label;tick();}
+                                if(type==='delta') delta(data.text);
+                                if(type==='error') throw new Error(data.error||'回复中断');
+                                if(type==='done') {finalData=data;done=true;break;}
+                            }
+                            if(chunk.done) break;
+                        }
+                    } finally { await reader.cancel().catch(()=>{}); }
+                    if(!done) throw new Error('连接中断，回复未完成');
+                } else { finalData=await res.json();if(typeof finalData.reply!=='string') throw new Error('回复格式错误');delta(finalData.reply);done=true; }
+                if(request.signal.aborted) throw new DOMException('Stopped','AbortError');
+                history.push({role:'assistant',content:finalData.reply,modelLabel:selectedLabel,citations:finalData.citations||[],
+                    searchRequested:finalData.web_search?.requested,searchCalls:finalData.web_search?.calls||0,
+                    elapsed_ms:performance.now()-started,first_token_ms:firstToken});
+                statusEl.textContent=`回复完成 · ${((performance.now()-started)/1000).toFixed(1)} 秒`;
+                lastRetry=null;
+            } catch(error) {
+                streamError=error;
+                if(reply) history.push({role:'assistant',content:reply,modelLabel:selectedLabel,incomplete:true,
+                    elapsed_ms:performance.now()-started,first_token_ms:firstToken});
+                statusEl.textContent=request.signal.aborted ? `已停止 · ${((performance.now()-started)/1000).toFixed(1)} 秒` : error.message;
+                statusEl.className=request.signal.aborted?'status':'status error';
+            } finally {
+                clearInterval(timer);activeRequest=null;sendBtn.disabled=true;
+                const follow=viewport.scrollHeight-viewport.scrollTop-viewport.clientHeight<100;const oldTop=viewport.scrollTop;
+                render();if(!follow) viewport.scrollTop=oldTop;
+                await saveConversation();
+                sending=false;
+                modelSelect.disabled=false;attachBtn.disabled=false;historyBtn.disabled=false;updateModelHint();
+                sendBtn.classList.remove('is-stopping');sendBtn.setAttribute('aria-label','发送消息');sendBtn.title='发送消息';sendBtn.disabled=false;
+                retryBtn.hidden=!streamError;
                 input.focus();
-                return;
             }
-
-            history.push({ role: 'assistant', content: data.reply || '(空回复)', modelLabel: selectedLabel, citations: data.citations || [], searchRequested: data.web_search?.requested, searchCalls: data.web_search?.calls || 0 });
-            render();
-            statusEl.textContent = data._debug
-                ? `${data._debug.model || selectedLabel} · ${(data._debug.elapsed_ms / 1000).toFixed(1)} 秒`
-                : '回复完成';
-            sendBtn.disabled = false;
-            sending = false;
-            modelSelect.disabled = false;
-            attachBtn.disabled = false;
-            input.focus();
         }
+        retryBtn.onclick=()=>send(true);
+        window.addEventListener('beforeunload',event=>{if(sending){event.preventDefault();event.returnValue='';}});
 
-        sendBtn.onclick = send;
+        sendBtn.onclick = () => { if (sending) activeRequest?.abort(); else send(); };
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
@@ -571,3 +640,16 @@
         };
         modelSelect.addEventListener('change', updateModelHint);
         updateModelHint();
+
+        archiveReady = (async () => {
+            try {
+                const records = (await ChatArchive.list()).sort((a,b)=>b.updated-a.updated);
+                if (records.length) {
+                    const record=records[0];conversationId=record.id;history=record.history;
+                    modelSelect.value=record.model||'gpt';searchToggle.setAttribute('aria-pressed',String(record.search!==false));
+                    pendingAttachments=record.draftAttachments||[];input.value=record.draft||'';
+                    lastRetry=record.retry?{...record.retry,content:history[record.retry.index]?.content}:null;retryBtn.hidden=!lastRetry;
+                    updateModelHint();renderAttachments();render();
+                }
+            } catch { archiveError(); }
+        })();
