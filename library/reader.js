@@ -1,6 +1,13 @@
 'use strict';
 /* The sandbox has an opaque origin: never add allow-same-origin. */
-async function renderHTML(entry,name,source,host,interactive=false){
+// Only size messages from a currently mounted, dedicated frame are accepted.
+window.addEventListener('message',event=>{
+ if(event.data?.type!=='muq-front-height'||!Number.isFinite(event.data.height))return;
+ for(const frame of document.querySelectorAll('iframe.entry-front-frame'))if(event.source===frame.contentWindow){
+  frame.style.height=Math.min(200000,Math.max(200,Math.ceil(event.data.height)))+'px';break;
+ }
+});
+async function renderHTML(entry,name,source,host,interactive=false,frontpage=false){
  const epoch=state.epoch;const doc=new DOMParser().parseFromString(source,'text/html');const missing=new Set();const cache=new Map();const references=[];
  const resolve=(value,base=name)=>{try{const root=new URL(base,'https://bundle.invalid/');const u=new URL(value,root);if(u.origin!=='https://bundle.invalid'||u.search)return null;return decodeURIComponent(u.pathname.slice(1));}catch{return null;}};
  const mime=n=>({css:'text/css',js:'text/javascript',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',gif:'image/gif',svg:'image/svg+xml',woff2:'font/woff2'})[n.split('.').pop().toLowerCase()]||'application/octet-stream';
@@ -15,9 +22,16 @@ async function renderHTML(entry,name,source,host,interactive=false){
  for(const n of doc.querySelectorAll('[src],[poster]')){for(const a of ['src','poster'])if(n.hasAttribute(a)){const u=await local(n.getAttribute(a));if(u)n.setAttribute(a,u);else n.removeAttribute(a);}}
  for(const n of doc.querySelectorAll('[href]')){const value=n.getAttribute('href');if(value.startsWith('#'))continue;const source=safeSource(value);const path=resolve(value);if(source)references.push({title:n.textContent.trim()||source,url:source});else if(entry.files.some(f=>f.name===path))references.push({title:n.textContent.trim()||path,url:href(entry.id,path)});n.removeAttribute('href');}
  if(epoch!==state.epoch)return;
- host.replaceChildren();const controls=create('div','reader-actions');const toggle=create('button','',interactive?'切回静态阅读':'启用隔离交互');toggle.onclick=()=>busy(toggle,()=>renderHTML(entry,name,source,host,!interactive));controls.append(toggle);host.append(controls,create('p','reader-meta',interactive?'隔离交互已启用：无法读取馆主页面；fetch、表单与外部子资源受限。需要联网的作品请单独托管。':'静态阅读：脚本不执行；可切换隔离交互查看报告自身的图表与按钮。'));
- if(references.length){const d=create('details','more-resources');d.append(create('summary','',`文内链接 · ${references.length}`));for(const r of references)d.append(link(r.title+' ↗',r.url));host.append(d);}
+ host.replaceChildren();const controls=create('div','reader-actions');const toggle=create('button','',interactive?'切回静态阅读':'启用隔离交互');toggle.onclick=()=>busy(toggle,()=>renderHTML(entry,name,source,host,!interactive,frontpage));controls.append(toggle);host.append(controls,create('p','reader-meta',frontpage?(interactive?'现在可以筛选场景与复制提示词。':'正文已展开；需要筛选或复制提示词时，可启用交互。'):interactive?'隔离交互已启用：无法读取馆主页面；fetch、表单与外部子资源受限。需要联网的作品请单独托管。':'静态阅读：脚本不执行；可切换隔离交互查看报告自身的图表与按钮。'));
+ if(references.length){const d=create(frontpage?'nav':'details',frontpage?'front-links':'more-resources');if(frontpage)d.setAttribute('aria-label','项目入口');else d.append(create('summary','',`文内链接 · ${references.length}`));for(const r of references)d.append(link(r.title+' ↗',r.url));host.append(d);}
  if(missing.size)host.append(create('p','reader-meta','部分配套资源未入馆或为外部资源，未加载：'+[...missing].slice(0,6).join('、')));
- const frame=create('iframe','file-frame');frame.title=name+(interactive?' · 隔离交互':' · 阅读');frame.setAttribute('sandbox',interactive?'allow-scripts':'');frame.referrerPolicy='no-referrer';const policy="default-src 'none'; script-src "+(interactive?"'unsafe-inline' blob:":"'none'")+"; style-src 'unsafe-inline'; img-src data: blob:; font-src data: blob:; media-src blob:; connect-src 'none'; form-action 'none'; base-uri 'none'";
+ const frame=create('iframe',frontpage?'file-frame entry-front-frame':'file-frame');frame.title=name+(interactive?' · 隔离交互':' · 阅读');frame.setAttribute('sandbox',(interactive||frontpage)?'allow-scripts':'');frame.referrerPolicy='no-referrer';const nonce=crypto.randomUUID();const policy="default-src 'none'; script-src "+(interactive?"'unsafe-inline' blob:":frontpage?"'nonce-"+nonce+"'":"'none'")+"; style-src 'unsafe-inline'; img-src data: blob:; font-src data: blob:; media-src blob:; connect-src 'none'; form-action 'none'; base-uri 'none'";
+ if(frontpage){
+  // Original scripts remain disabled in static mode. This nonce authorizes only
+  // our size reporter, without same-origin access or network access.
+  const reporter=doc.createElement('script');reporter.setAttribute('nonce',nonce);
+  reporter.textContent="(()=>{const report=()=>parent.postMessage({type:'muq-front-height',height:document.body.getBoundingClientRect().height+32},'*');new ResizeObserver(report).observe(document.body);addEventListener('load',report);report();})();";
+  doc.body.append(reporter);
+ }
  const meta=doc.createElement('meta');meta.httpEquiv='Content-Security-Policy';meta.content=policy;doc.head.prepend(meta);frame.srcdoc='<!doctype html>'+doc.documentElement.outerHTML;host.append(frame);
 }

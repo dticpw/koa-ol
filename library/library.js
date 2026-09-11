@@ -94,14 +94,21 @@ function resourceCard(e,r){
  return card;
 }
 function openEntry(id){
- state.selected=id;const host=$('#reader-content');host.replaceChildren();const e=state.entries.find(x=>x.id===id);
+ state.selected=id;const host=$('#reader-content');host.classList.remove('has-frontpage');host.replaceChildren();const e=state.entries.find(x=>x.id===id);
  if(!e){host.append(create('h1','reader-title','这份档案需要馆主解锁'));const b=create('button','primary','解锁完整馆藏');b.onclick=showLogin;host.append(b);return;}
  document.title=e.title+' · muQ';
  if((state.unlocked||e.public_content)&&params.get('file')){previewFile(e,params.get('file'),host);return;}
  host.append(create('h1','reader-title',e.title),create('p','reader-meta',`${e.kind==='journal'?'会话日记':'项目档案'} · ${e.date} · ${statuses[e.status]||'已收录'}`),tagNodes(e.tags));
+ const frontResource=(state.unlocked||e.public_content)&&(e.resources||[]).find(r=>r.presentation==='frontpage'&&r.kind==='file'&&/\.html?$/i.test(r.file)&&e.files.some(f=>f.name===r.file));
+ if(frontResource){
+  host.classList.add('has-frontpage');
+  const frontHost=create('section','entry-front');frontHost.setAttribute('aria-label',frontResource.title);frontHost.append(create('p','reader-meta','正在载入项目门面…'));host.append(frontHost);
+  const epoch=state.epoch;const file=e.files.find(f=>f.name===frontResource.file);
+  asset(file).then(raw=>{if(epoch===state.epoch&&frontHost.isConnected)return renderHTML(e,file.name,new TextDecoder().decode(raw),frontHost,false,true);}).catch(()=>{if(frontHost.isConnected){frontHost.replaceChildren(create('p','reader-meta','门面暂未载入，请刷新重试。'));frontHost.append(link('单独打开门面 ↗',href(e.id,file.name)));}});
+ }
  const intro=create('div','entry-intro');const overview=create('div','entry-overview');overview.append(create('p','eyebrow','这一篇 / OVERVIEW'),create('div','record-text',e.summary||'此篇内容等待补充。'));
  if(state.unlocked||e.public_content){overview.append(create('h2','','当前状态'),create('div','record-text',e.current_state||statuses[e.status]||'已收录'));if(e.next)overview.append(create('h3','','接下来'),create('div','record-text',e.next));}
- const img=create('img','reader-cover');img.src=safeCover(e.cover||'');if(state.unlocked&&e.cover_asset)loadCover(img,e.cover_asset);img.alt='本篇档案概览';intro.append(overview,img);host.append(intro);
+ const img=create('img','reader-cover');img.src=safeCover(e.cover||'');if(state.unlocked&&e.cover_asset)loadCover(img,e.cover_asset);img.alt='本篇档案概览';intro.append(overview,img);if(!frontResource)host.append(intro);
  if(!state.unlocked&&!e.public_content){const note=create('div','locked-note');note.append(create('p','','公开页面展示概览；完整过程、原始提示词和附件需馆主解锁。'));const b=create('button','primary','馆主解锁正文');b.onclick=showLogin;note.append(b);host.append(note);return;}
  const resources=resourceList(e);const sections=Object.entries(labels).filter(([field])=>!['summary','next'].includes(field)&&e[field]?.trim()).map(([field,title])=>({id:field,title:e.collection==='ai-daily'?({work:'报告索引',outputs:'阅读说明'}[field]||title):title,body:e[field]}));for(const [i,section] of (e.sections||[]).entries())if(section.body?.trim())sections.push({id:'topic-'+i,...section});
  const mainReport=resources.find(r=>r.kind==='file'&&/\.html?$/i.test(r.file)&&e.files.some(f=>f.name===r.file));if(mainReport){const lead=link('开始阅读 · '+mainReport.title+' ↗',href(e.id,mainReport.file));lead.classList.add('entry-primary');overview.append(lead);}
