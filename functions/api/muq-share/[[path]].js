@@ -1,10 +1,12 @@
 /* No persistent binding or library password. Server gates entry-scoped snapshots. */
+const REVOKED_SHARES = new Set(["467f2da52d2a0ae83a0980c797c9f5d3"]);
 const enc=new TextEncoder();
 const headers={'Cache-Control':'no-store, private','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
 const fail=(status)=>new Response('分享不存在、已过期或已撤销。',{status,headers});
 export async function onRequest({request,env}){
  const url=new URL(request.url);const parts=url.pathname.slice('/api/muq-share/'.length).split('/');const id=parts.shift();
  if(!/^[a-f0-9]{32}$/.test(id||''))return fail(404);
+ if(REVOKED_SHARES.has(id))return fail(410);
  if(!['GET','POST'].includes(request.method))return fail(405);
  const source=await env.ASSETS.fetch(new URL('/library/shared-assets/'+id+'/manifest.json',url));if(!source.ok)return fail(404);
  let m;try{m=await source.json();}catch{return fail(404);}
