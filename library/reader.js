@@ -2,6 +2,7 @@
 /* The sandbox has an opaque origin: never add allow-same-origin. */
 // Only size messages from a currently mounted, dedicated frame are accepted.
 window.addEventListener('message',event=>{
+ if(event.data?.type==='muq-front-anchor'&&Number.isFinite(event.data.offset)){for(const frame of document.querySelectorAll('iframe.entry-front-frame'))if(event.source===frame.contentWindow){window.scrollTo({top:window.scrollY+frame.getBoundingClientRect().top+event.data.offset-24,behavior:'auto'});break;}return;}
  if(event.data?.type!=='muq-front-height'||!Number.isFinite(event.data.height))return;
  for(const frame of document.querySelectorAll('iframe.entry-front-frame'))if(event.source===frame.contentWindow){
   frame.style.height=Math.min(200000,Math.max(200,Math.ceil(event.data.height)))+'px';break;
@@ -30,7 +31,7 @@ async function renderHTML(entry,name,source,host,interactive=false,frontpage=fal
   // Original scripts remain disabled in static mode. This nonce authorizes only
   // our size reporter, without same-origin access or network access.
   const reporter=doc.createElement('script');reporter.setAttribute('nonce',nonce);
-  reporter.textContent="(()=>{const report=()=>parent.postMessage({type:'muq-front-height',height:document.body.getBoundingClientRect().height+32},'*');new ResizeObserver(report).observe(document.body);addEventListener('load',report);report();})();";
+  reporter.textContent="(()=>{const report=()=>parent.postMessage({type:'muq-front-height',height:document.body.getBoundingClientRect().height+32},'*');new ResizeObserver(report).observe(document.body);addEventListener('load',report);report();document.addEventListener('click',e=>{const a=e.target.closest('a[href^=\"#\"]');if(!a)return;const target=document.getElementById(a.getAttribute('href').slice(1));if(!target)return;e.preventDefault();document.querySelectorAll('nav a[aria-current]').forEach(n=>n.removeAttribute('aria-current'));a.setAttribute('aria-current','location');parent.postMessage({type:'muq-front-anchor',offset:target.getBoundingClientRect().top+scrollY},'*');});})();";
   doc.body.append(reporter);
  }
  const meta=doc.createElement('meta');meta.httpEquiv='Content-Security-Policy';meta.content=policy;doc.head.prepend(meta);frame.srcdoc='<!doctype html>'+doc.documentElement.outerHTML;host.append(frame);
