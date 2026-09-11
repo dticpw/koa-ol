@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
   const historyLen = messages.length;
 
   // 网页入口只允许这三个服务商；GPT 复用外部代理的上游凭据。
-  const provider = requestedProvider || 'qwen';
+  const provider = requestedProvider || 'gpt';
   if (!['gpt', 'deepseek', 'qwen'].includes(provider)) {
     return json({ error: 'Unsupported model selection' }, 400);
   }
