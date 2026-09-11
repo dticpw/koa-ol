@@ -12,16 +12,16 @@
   <meta property="og:image" content="https://koa-ol.com/assets/home/shrine-poster.webp">
   <title>Koa-OL · 给想象一个栖身之所</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/assets/home/home.css?v=20260911-2">
+  <link rel="stylesheet" href="/assets/home/home.css?v=20260911-chapters">
   <link rel="preload" href="/assets/home/shrine-poster.webp" as="image" fetchpriority="high">
   <script defer src="/assets/home/home.js"></script>
-  <link rel="stylesheet" href="/assets/home/experience.css?v=20260911-2">
-  <script defer src="/assets/home/experience.js?v=20260911-2"></script>
-  <link rel="stylesheet" href="/assets/home/library.css?v=20260911-2">
-  <script defer src="/assets/home/library.js?v=20260911-2"></script>
+  <link rel="stylesheet" href="/assets/home/experience.css?v=20260911-chapters">
+  <script defer src="/assets/home/experience.js?v=20260911-chapters"></script>
+  <link rel="stylesheet" href="/assets/home/library.css?v=20260911-chapters">
+  <script defer src="/assets/home/library.js?v=20260911-chapters"></script>
 </head>
 <body>
-  <a class="skip-link" href="#muq-library">跳到图书馆</a>
+  <a class="skip-link" href="#chat-block">跳到项目</a>
   <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12"/></symbol>
@@ -32,61 +32,80 @@
   </svg>
   <header class="site-header wrap">
     <a class="brand" href="/" aria-label="Koa-OL 首页"><span class="brand-mark" aria-hidden="true">K<span>·</span></span><span>Koa-OL<span class="brand-caption">A PERSONAL PLAYGROUND</span></span></a>
-    <nav aria-label="主导航"><a class="current" href="#home" aria-current="page">首页</a><a href="#muq-library">muQ 图书馆</a><a href="#projects">探索项目</a><a href="#about">关于这里</a></nav>
+    <nav aria-label="主导航"><a href="#home" aria-current="location">首页</a><a href="#chat-block">AI Chat</a><a href="#muq-library">muQ</a><a href="#games-block">Games</a></nav>
     <a class="github-link" href="https://github.com/dticpw" target="_blank" rel="noopener noreferrer">GitHub <svg class="icon"><use href="#i-up"/></svg></a>
   </header>
   <main>
-    <section class="hero wrap" id="home" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="small-sun" aria-hidden="true">✳</span> 代码之外，还有幻想。</p>
-        <h1 id="hero-title">给想象<br>一个<span class="title-final">栖身之所<span class="title-dot">。</span></span></h1>
-        <p class="hero-description">你好，欢迎来到我的小小实验场。<br>写一点代码，造一些有趣的东西，<br>也给天马行空的想法，留一块自由生长的地方。</p>
-        <div class="hero-actions"><a class="button primary" href="#muq-library">逛逛图书馆 <svg class="icon"><use href="#i-arrow"/></svg></a><a class="quiet-link" href="/shrine/">走进神社 <svg class="icon"><use href="#i-up"/></svg></a></div>
-        <div class="hero-footnote"><span class="tiny-rule"></span><span>一点好奇心，一些未完成的可能。</span></div>
-      </div>
-      <div class="shrine-exhibit"><span class="orbit-label" aria-hidden="true"></span>
-        <div class="exhibit-top"><span class="mono">SCENE 001 / GENSOKYO</span><span class="exhibit-seal" aria-label="博丽">博<br>麗</span></div>
+    <section class="chapter chapter-home" id="home" data-chapter="home" aria-labelledby="hero-title">
+      <div class="hero wrap chapter-inner">
+        <div class="hero-copy chapter-copy">
+          <p class="eyebrow"><span class="small-sun" aria-hidden="true">✳</span> KOA-OL / PERSONAL SPACE</p>
+          <h1 id="hero-title">给想象<br>一个<span class="title-final">栖身之所<span class="title-dot">。</span></span></h1>
+          <div class="hero-actions"><a class="button primary" href="/chat/">AI Chat <svg class="icon"><use href="#i-up"/></svg></a><a class="quiet-link" href="/library/">muQ 大图书馆 <svg class="icon"><use href="#i-up"/></svg></a></div>
+        </div>
+      <div class="shrine-exhibit">
+        <div class="exhibit-top"><span class="mono">GENSOKYO / 01</span><span class="exhibit-seal" aria-label="博丽">博<br>麗</span></div>
         <div class="scene-stage" id="scene-stage">
           <img class="scene-poster" src="/assets/home/shrine-poster.webp" alt="朱红鸟居、粉色樱花与青灰屋瓦组成的博丽神社微缩庭院" width="1200" height="875" fetchpriority="high">
           <iframe id="shrine-frame" data-src="/shrine/?embed=1" title="可拖动旋转的博丽神社三维场景" aria-describedby="scene-hint" loading="eager" referrerpolicy="same-origin"></iframe>
         </div>
         <div class="exhibit-bottom"><div><h2>幻想乡的一隅</h2><p id="scene-hint">博丽神社 · 微缩庭院</p></div><a class="exhibit-open" href="/shrine/" aria-label="打开完整神社场景，自由旋转与缩放"><svg class="icon"><use href="#i-up"/></svg></a></div>
       </div>
+      </div>
     </section>
-    <section class="library-section wrap" id="muq-library" aria-labelledby="muq-title">
-      <div class="section-label"><span>01 / THE LIBRARY</span><span>给探索一页归处</span></div>
-      <div class="library-card">
-        <div class="library-copy">
-          <p class="eyebrow">muQ · 大图书馆</p>
-          <h2 id="muq-title">把探索，<br>收藏成页。</h2>
-          <p class="library-description">一场会话，一篇日记。<br>在这里翻阅想法的来路，<br>也为下一次好奇，留下一点线索。</p>
-          <a class="button primary" href="/library/">进入 muQ 图书馆 <svg class="icon"><use href="#i-arrow"/></svg></a>
-          <p class="library-index">会话日记 <span>·</span> 原始提示词 <span>·</span> 项目产物</p>
+    <section class="chapter chapter-chat" id="chat-block" data-chapter="chat" aria-labelledby="chat-title">
+      <div class="wrap chapter-inner chat-layout">
+        <div class="chapter-copy">
+          <p class="chapter-kicker">01 / CONVERSATION</p>
+          <h2 id="chat-title">AI Chat<span class="chat-title-dot" aria-hidden="true">✳</span></h2>
+          <p class="feature-line">多轮对话 <span>／</span> 文件上传</p>
+          <a class="button chat-launch" href="/chat/">开始对话 <svg class="icon"><use href="#i-up"/></svg></a>
+        </div>
+        <div class="chat-composition">
+          <div class="conversation-art" aria-hidden="true">
+            <div class="message-bubble bubble-outline"><span></span><span></span><span></span></div>
+            <div class="message-bubble bubble-solid"><span class="reply-mark">✳</span><div class="reply-lines"><i></i><i></i><i></i></div></div>
+            <span class="chat-orbit orbit-one"></span><span class="chat-orbit orbit-two"></span>
+          </div>
+          <a class="stats-tile" href="/stats/"><span class="stats-symbol" aria-hidden="true">↗</span><span><strong>Stats</strong><small>AI Chat 访问统计</small></span><svg class="icon"><use href="#i-up"/></svg></a>
+        </div>
+      </div>
+    </section>
+    <section class="chapter chapter-library" id="muq-library" data-chapter="library" aria-labelledby="muq-title">
+      <div class="wrap chapter-inner library-card">
+        <div class="library-copy chapter-copy">
+          <p class="chapter-kicker">02 / THE LIBRARY</p>
+          <h2 id="muq-title">muQ<span>大图书馆</span></h2>
+          <p class="feature-line">会话日记 <span>／</span> 原始提示词 <span>／</span> 项目产物</p>
+          <a class="button primary" href="/library/">进入图书馆 <svg class="icon"><use href="#i-up"/></svg></a>
         </div>
         <div class="library-exhibit">
-          <div class="library-scene-label"><span class="mono">SCENE 002 / SCARLET LIBRARY</span><span class="library-seal" aria-hidden="true">蔵</span></div>
+          <div class="library-scene-label"><span class="mono">SCARLET LIBRARY / 02</span><span class="library-seal" aria-hidden="true">蔵</span></div>
           <div class="library-stage" id="library-stage"><img src="/assets/home/library-poster.webp" width="1100" height="800" loading="lazy" alt="深木色书架围绕紫色地毯，月牙拱窗前摆放着摊开的魔法书" class="library-poster"><iframe id="library-frame" data-src="/library-scene/?embed=1" title="可旋转的红魔馆图书馆微缩模型" aria-describedby="library-hint" loading="lazy" referrerpolicy="same-origin"></iframe></div>
           <div class="library-caption"><p id="library-hint">红魔馆的藏书室 · 拖动旋转</p><a class="quiet-link" href="/library-scene/" aria-label="打开完整红魔馆图书馆模型，可旋转与缩放">放大欣赏 <svg class="icon"><use href="#i-up"/></svg></a></div>
         </div>
       </div>
     </section>
-    <section class="projects wrap" id="projects" aria-labelledby="projects-title">
-      <div class="section-heading"><div><p class="eyebrow section-kicker">02 / THE PLAYGROUND</p><h2 id="projects-title">也留一点时间，玩。</h2></div><p>聊聊一个新想法，或和朋友开一局。<br>实用与玩心，都有自己的位置。</p></div>
-      <div class="project-grid">
-        <a class="project-card chat-card" href="/chat/">
-          <div class="card-top"><span class="card-kind"><svg class="icon"><use href="#i-chat"/></svg> 对话与灵感</span><span class="card-number">02</span></div>
-          <div class="card-art chat-art" aria-hidden="true"><span class="chat-bubble first">如果有一个想法…</span><span class="chat-bubble second">一起让它发生。<b>✳</b></span><span class="chat-cursor">|</span></div>
-          <div class="card-title"><h3>AI Chat</h3><span class="card-arrow"><svg class="icon"><use href="#i-up"/></svg></span></div><p>和 AI 聊聊，理清思路、拆解问题。<br>支持多轮对话与文件上传。</p><span class="card-tag">CONVERSATION</span>
-        </a>
-
-        <a class="project-card games-card" href="/games/"><div class="card-top"><span class="card-kind"><svg class="icon"><use href="#i-game"/></svg> 暂停一下</span><span class="card-number">03</span></div><div class="card-art games-art" aria-hidden="true"><span class="playing-card card-back">K<span>♣</span></span><span class="playing-card card-front">A<span>♠</span></span><span class="table-note">YOUR NEXT HAND</span></div><div class="card-title"><h3>Games</h3><span class="card-arrow"><svg class="icon"><use href="#i-up"/></svg></span></div><p>开一张私人牌桌，和朋友玩一局。<br>Blackjack / Texas Hold'em</p><span class="card-tag">JUST FOR FUN</span></a>
-
-
+    <section class="chapter chapter-games" id="games-block" data-chapter="games" aria-labelledby="games-title">
+      <div class="games-decor" aria-hidden="true"><span class="color-orb"></span><span class="color-ring"></span><span class="color-spark">✳</span><span class="confetti confetti-one"></span><span class="confetti confetti-two"></span></div>
+      <div class="wrap chapter-inner games-layout">
+        <div class="chapter-copy games-copy">
+          <p class="chapter-kicker">03 / PLAY</p>
+          <h2 id="games-title">Games<span aria-hidden="true">!</span></h2>
+          <p class="feature-line">Blackjack <span>／</span> Texas Hold’em</p>
+          <a class="button games-launch" href="/games/">进入牌桌 <svg class="icon"><use href="#i-up"/></svg></a>
+        </div>
+        <div class="deck-scene" aria-hidden="true">
+          <div class="deck-shadow"></div>
+          <div class="card-flight flight-one"><div class="floating-card"><div class="poker-card poker-club"><span class="card-corner">K<small>♣</small></span><span class="suit-large">♣</span><span class="card-corner corner-bottom">K<small>♣</small></span></div></div></div>
+          <div class="card-flight flight-two"><div class="floating-card"><div class="poker-card poker-heart"><span class="card-corner">Q<small>♥</small></span><span class="suit-large">♥</span><span class="card-corner corner-bottom">Q<small>♥</small></span></div></div></div>
+          <div class="card-flight flight-three"><div class="floating-card"><div class="poker-card poker-spade"><span class="card-corner">A<small>♠</small></span><span class="suit-large">♠</span><span class="card-corner corner-bottom">A<small>♠</small></span></div></div></div>
+          <span class="poker-chip chip-pink"></span><span class="poker-chip chip-blue"></span><span class="deck-star">✦</span>
+        </div>
       </div>
+      <button class="motion-toggle" type="button" aria-pressed="false" aria-label="暂停持续动效"><span aria-hidden="true">Ⅱ</span><span class="motion-label">暂停动效</span></button>
     </section>
-    <aside class="stats-strip wrap" aria-label="访问统计"><div><span class="mono">03 / THE FOOTPRINTS</span><p>来过的痕迹，也值得看看。</p></div><a class="quiet-link" href="/stats/">Stats · 查看 AI Chat 访问统计 <svg class="icon"><use href="#i-up"/></svg></a></aside>
-    <section class="about wrap" id="about" aria-labelledby="about-title"><div class="about-symbol" aria-hidden="true">✳</div><div class="about-copy"><p class="eyebrow section-kicker">A NOTE FROM THIS CORNER</p><h2 id="about-title">不一定有用，但一定有趣。</h2><p>这里收集我对 AI、交互和游戏的好奇。有些是日常会用到的工具，<br class="desktop-break">有些只是突然冒出的念头。边做边学，边玩边改，慢慢把它们变成现实。</p><a class="quiet-link" href="https://github.com/dticpw" target="_blank" rel="noopener noreferrer">去 GitHub 看看 <svg class="icon"><use href="#i-up"/></svg></a></div><div class="about-note"><span class="mono">EST. IN CURIOSITY</span><span class="note-flower">✿</span><span>持续生长中</span></div></section>
   </main>
-  <footer class="site-footer wrap"><a class="footer-brand" href="/">Koa-OL<span>一个属于好奇心的地方。</span></a><div class="footer-links"><a href="https://github.com/dticpw" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a><a href="https://dash.cloudflare.com" target="_blank" rel="noopener noreferrer">Cloudflare <span>↗</span></a><a href="#home">回到顶部 ↑</a></div><div class="footer-bottom"><span>© <span id="year">2026</span> Koa-OL</span><span>神社与藏书室为东方 Project 非官方同人场景</span><span>Built with care & a little imagination.</span></div></footer>
+  <footer class="site-footer wrap" id="footer"><a class="footer-brand" href="/">Koa-OL</a><div class="footer-links"><a href="https://github.com/dticpw" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="/library/">muQ ↗</a><a href="#home">↑ 顶部</a></div><div class="footer-bottom"><span>© <span id="year">2026</span> Koa-OL</span><span>神社与藏书室为东方 Project 非官方同人场景</span></div></footer>
 </body>
 </html>

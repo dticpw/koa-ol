@@ -54,3 +54,6 @@ a.card{color:inherit;text-decoration:none;display:block}
 .entry-front{margin:36px 0 72px;min-width:0}.entry-front-frame{display:block;width:100%;height:800px;min-height:0;border:0;border-radius:12px;overflow:hidden}.entry-front>.reader-meta{font-size:13px;line-height:1.8}.detail-page .entry-intro .reader-cover{width:100%;height:auto;max-height:none;object-fit:contain}.entry-front+.detail-toc{margin-top:48px}@media(max-width:600px){.entry-front{margin:24px -8px 48px}.entry-front-frame{border-radius:0}}
 
 .has-frontpage>.reader-title{font-size:clamp(25px,3vw,36px);line-height:1.5;margin-bottom:12px}.has-frontpage>.entry-front{margin-top:28px}.front-links{display:flex;flex-wrap:wrap;gap:12px 24px;margin:18px 0}.front-links a{font-size:14px}.entry-front>.reader-meta{margin:12px 0}.has-frontpage>.detail-toc{padding-top:28px;border-top:1px solid var(--line)}
+
+/* Read the report before its extracted external reference list. */
+.entry-front{display:flex;flex-direction:column}.entry-front>.entry-front-frame{order:1;flex:none}.entry-front>.front-links{order:2}
