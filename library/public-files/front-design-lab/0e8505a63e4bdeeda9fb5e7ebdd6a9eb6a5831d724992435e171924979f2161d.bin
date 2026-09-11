@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>artifacts/merge-20260911-review-before.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>merge-20260911-review-before.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
 :root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
 /* Namespaced report components, v1. Safe to embed in a standalone report. */
 .muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}

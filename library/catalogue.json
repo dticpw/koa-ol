@@ -2,7 +2,7 @@
   "schema": 1,
   "name": "muQ · 大图书馆",
   "mode": "catalogue",
-  "updated": "2026-09-11T16:26:37.668120+00:00",
+  "updated": "2026-09-11T17:46:40.449764+00:00",
   "entries": [
     {
       "id": "ai-image-studio",
@@ -23,7 +23,6 @@
       "outputs": "",
       "next": "按具体创作需求继续使用；只有用户明确反馈才积累风格偏好。清新简约仍是待实测方法，不安排额外付费生成。",
       "current_state": "资料研究、个人 Skill 创建与首轮实测已完成。新 imgen-art-director 已生成帕秋莉 fumo 写实、漫画线稿、厚涂三版；用户认可本次结果与 Skill。长期主题继续积累，尚未做严格受控风格对照或官方直连验证。",
-      "public_content": true,
       "sections": [
         {
           "title": "搜索结论",
@@ -60,103 +59,6 @@
         {
           "title": "帕秋莉 fumo · 漫画线稿与厚涂",
           "body": "新 Skill 两种绘画风格实测：漫画版用密集排线组织黑白层次，厚涂版用可见笔触、暖光与紫色块面塑造体积。两图均已实际检查；为独立生成，局部造型有变化。用户随后表示“这个skill不错”，认可本轮体验；未指定最偏爱的画风。"
-        }
-      ],
-      "files": [
-        {
-          "name": "artifacts/ai-image-studio-archive-20260911-v1.html",
-          "url": "public-files/ai-image-studio/0856d022f419b9deb0faf08c5962ad4536a4dcf61dc9b16ba7f78958230d1279.bin",
-          "bytes": 1391511,
-          "sha256": "0856d022f419b9deb0faf08c5962ad4536a4dcf61dc9b16ba7f78958230d1279"
-        },
-        {
-          "name": "artifacts/ai-image-studio-reading-20260912-v2.html",
-          "url": "public-files/ai-image-studio/d6c64ee423a9724c6f961761973c06059bb3e63d6ce2dfd2e05117b53864cce7.bin",
-          "bytes": 984969,
-          "sha256": "d6c64ee423a9724c6f961761973c06059bb3e63d6ce2dfd2e05117b53864cce7"
-        },
-        {
-          "name": "artifacts/ai-image-styles-20260911.html",
-          "url": "public-files/ai-image-studio/ae623bbad4909277edd00e8ad55f013c48998c3f61c83cd11ad4004ae4273437.bin",
-          "bytes": 38426,
-          "sha256": "ae623bbad4909277edd00e8ad55f013c48998c3f61c83cd11ad4004ae4273437"
-        },
-        {
-          "name": "artifacts/image-generation-research.html",
-          "url": "public-files/ai-image-studio/a0862949f795e19c13275892fd3b6100d8904316bed09b72c92a1844ac8a7470.bin",
-          "bytes": 483162,
-          "sha256": "a0862949f795e19c13275892fd3b6100d8904316bed09b72c92a1844ac8a7470"
-        },
-        {
-          "name": "artifacts/imgen-art-director-20260911.zip",
-          "url": "public-files/ai-image-studio/7a71e44742e95ee710c4219296e03fb9d0ca4e739df45d2bb85bfde9204d4ce9.bin",
-          "bytes": 10579,
-          "sha256": "7a71e44742e95ee710c4219296e03fb9d0ca4e739df45d2bb85bfde9204d4ce9"
-        },
-        {
-          "name": "artifacts/patchouli-fumo-ink-original-v1.png",
-          "url": "public-files/ai-image-studio/4bb1c82e61dcfc040886c1328f5f80e567eb570778d66e82bf49386c08df814e.bin",
-          "bytes": 3423860,
-          "sha256": "4bb1c82e61dcfc040886c1328f5f80e567eb570778d66e82bf49386c08df814e"
-        },
-        {
-          "name": "artifacts/patchouli-fumo-ink-prompt-v1.txt",
-          "url": "public-files/ai-image-studio/df3b83a4ccf1d8a56eef069a6d067a248ce9b58e2ad7a7467f19f0adba46208c.bin",
-          "bytes": 1345,
-          "sha256": "df3b83a4ccf1d8a56eef069a6d067a248ce9b58e2ad7a7467f19f0adba46208c"
-        },
-        {
-          "name": "artifacts/patchouli-fumo-original-v1.png",
-          "url": "public-files/ai-image-studio/5d32eab7cd2a7453f32ed9ee64aab518f56b56ced5a87a268dfb2e1924c8269a.bin",
-          "bytes": 2212015,
-          "sha256": "5d32eab7cd2a7453f32ed9ee64aab518f56b56ced5a87a268dfb2e1924c8269a"
-        },
-        {
-          "name": "artifacts/patchouli-fumo-painterly-original-v1.png",
-          "url": "public-files/ai-image-studio/0e25d8653e7e7f9e1cd39db9e51ac2af3b0813fcdde6ff57fa4770590635b966.bin",
-          "bytes": 2370526,
-          "sha256": "0e25d8653e7e7f9e1cd39db9e51ac2af3b0813fcdde6ff57fa4770590635b966"
-        },
-        {
-          "name": "artifacts/patchouli-fumo-painterly-prompt-v1.txt",
-          "url": "public-files/ai-image-studio/723e6760433d895ad3c12c736e8bd9ba1e2f11dba86e55dae55438c2409171b4.bin",
-          "bytes": 1566,
-          "sha256": "723e6760433d895ad3c12c736e8bd9ba1e2f11dba86e55dae55438c2409171b4"
-        },
-        {
-          "name": "artifacts/patchouli-fumo-prompt-v1.txt",
-          "url": "public-files/ai-image-studio/fd62c7d71bbe7d68925e820a8db357a7f91c3eb16077e4b3c1c0d21ef66c92ca.bin",
-          "bytes": 2237,
-          "sha256": "fd62c7d71bbe7d68925e820a8db357a7f91c3eb16077e4b3c1c0d21ef66c92ca"
-        },
-        {
-          "name": "artifacts/patchouli-original-v1.png",
-          "url": "public-files/ai-image-studio/4a6f334ca3f6e5fc7da3222a2a1b81e1d4018206d9578eb06ed03b6263525e73.bin",
-          "bytes": 2293065,
-          "sha256": "4a6f334ca3f6e5fc7da3222a2a1b81e1d4018206d9578eb06ed03b6263525e73"
-        },
-        {
-          "name": "artifacts/patchouli-prompt-v1.txt",
-          "url": "public-files/ai-image-studio/59cfc9893e083bfd5ffd13ce725089e2c1ad4f8c56c9901a76ee10a6737875be.bin",
-          "bytes": 2174,
-          "sha256": "59cfc9893e083bfd5ffd13ce725089e2c1ad4f8c56c9901a76ee10a6737875be"
-        },
-        {
-          "name": "artifacts/research.json",
-          "url": "public-files/ai-image-studio/98428ae29a5141e78fa804c0e4e0655e7a161907191ee56af4b8e7ecab7f1ae5.bin",
-          "bytes": 16598,
-          "sha256": "98428ae29a5141e78fa804c0e4e0655e7a161907191ee56af4b8e7ecab7f1ae5"
-        },
-        {
-          "name": "artifacts/research.md",
-          "url": "public-files/ai-image-studio/9f048006ec58760bd009135f041e5d337298fa93fcfec26916a84b4c7c5d9459.bin",
-          "bytes": 9387,
-          "sha256": "9f048006ec58760bd009135f041e5d337298fa93fcfec26916a84b4c7c5d9459",
-          "reading": {
-            "url": "public-files/ai-image-studio/d6bd293ec7d8ce575d171bdcf3104a04d04f241951ec9f6c4c4857c1ae2498c8.bin",
-            "bytes": 12106,
-            "sha256": "d6bd293ec7d8ce575d171bdcf3104a04d04f241951ec9f6c4c4857c1ae2498c8"
-          }
         }
       ],
       "resources": [
@@ -308,54 +210,67 @@
           "description": "两种绘画风格对照样图。"
         }
       ],
-      "omitted_files": [],
-      "search_index": [
-        {
-          "file": "artifacts/ai-image-studio-archive-20260911-v1.html",
-          "text": "AI 生图 · 研究、Skill 与实测 muQ · AI 生图 / 2026-09-11 阶段归档 从提示词研究 到自己的生图 Skill 持续整理 AI 生图的搜索结论、可读写提示词、Agent Skill 与工作流仓库，以及真实素材实践。当前覆盖漫画线稿、厚涂、半厚涂、清新简约与减少常见 AI 视觉套路。 首轮实践已完成 · 长期维护 资料研究、个人 Skill 创建与首轮实测已完成。新 imgen-art-director 已生成帕秋莉 fumo 写实、漫画线稿、厚涂三版；用户认可本次结果与 Skill。长期主题继续积累，尚未做严格受控风格对照或官方直连验证。 本页目录 01 · 从资料研究到个人工具 02 · 帕秋莉 fumo · 三种风格 03 · Skill 的作用与使用边界 04 · 实测记录与用户反馈 05 · 文件、仓库与历史 01 从资料研究到个人工具 本主题保存 AI 生图调研、提示词、可用 Skill 与实际图像。研究覆盖漫画线稿、厚涂、半厚涂、清新简约，以及具体视觉问题的诊断。 最终选择自建 imgen-art-director：以当前意图为先，仅按需读取风格参考；不强制默认画风，不把“去 AI 味”变成万能负面词。旧 imgen-studio 保留作参考，已从发现入口移除。 02 帕秋莉 fumo · 三种风格 三张均为 AI 生成的二创毛绒玩偶形象，非实物照片或官方商品复刻。写实版之后，用户要求漫画线稿与厚涂各一版。两种绘画版独立生成，未输入同一母图，因此局部造型变化不能当作严格风格 A/B 测试。 写实摄影 窗边柔光、绒毛与刺绣细节。 漫画线稿 黑白墨线与细密排线，保留玩偶布料结构。 数字厚涂 暖光、紫色块面与沿体积展开的笔触。 03 Skill 的作用与使用边界 它负责理解用途、核对角色锚点、组织提示、选择相关风格方法、检查实图和保留可复用成果。它不为图像模型增加新能力，参考规范也不能凌驾于当前画面需求。 漫画线稿关注线重、排线和黑白层次；数字厚涂用色块、体积与边缘塑形，不必模拟堆起的油彩；半厚涂关注线条和色块分工；简约风关注信息密度与留白。 减少 AI 味要针对实际缺陷：塑料高光、过度细节、模板灯光、身份漂移或均匀假纹理。合适的高光与丰富细节仍可保留，不能把个人审美写成通用禁令。 04 实测记录与用户反馈 新 Skill 的三张 fumo 均经过实际看图。写实版绒毛、刺绣与接触阴影清楚；线稿版排线比预设更密，属于漫画成稿；厚涂版色块与笔触明显，暖光和紫色阴影塑造体积。 写实版约34秒，线稿版约32秒，厚涂版约39秒。经既有授权的第三方 model-library 与内置 CLI 请求 gpt-image-2、high、1024×1024；三张实际输出均为1254×1254 RGB。请求参数不能证明第三方后端身份。 用户对写实样图反馈“很好”，看完两种绘画版后表示“这个skill不错”。这是本轮结果与使用体验的认可，不代表已确定最喜欢的画风，也不代表多任务稳定性已经验证。 此前另有帕秋莉半厚涂人物立绘，来自旧 Skill，原图与提示词保留作历史样例。清新简约目前只有研究方法，没有本轮出图证据。 05 文件、仓库与历史 文件 AI 生图专题 · 搜索结论与风格配方 ↗ 此前 GPT/OpenAI 生图研究 ↗ 可维护研究数据 ↗ 研究文字版 ↗ 帕秋莉 · 半厚涂原图 ↗ 帕秋莉 · 最终提示词 ↗ 个人生图 Skill 源码快照 ↗ 帕秋莉 fumo 原图 ↗ 帕秋莉 fumo 提示词 ↗ 帕秋莉 fumo · 漫画线稿原图 ↗ 帕秋莉 fumo · 漫画线稿提示词 ↗ 帕秋莉 fumo · 厚涂原图 ↗ 帕秋莉 fumo · 厚涂提示词 ↗ 网页与仓库 个人 Skill 源码仓库（私有） ↗ 官方 FLUX 提示与 API 指南 ↗ 跨模型提示词检索 ↗ 把已注册的 ComfyUI 工作流交给 Agent ↗ 云端多模型路由候选 ↗ 带预览的 Gemini 提示词图库 ↗ 成熟 SDXL 项目的可读风格词表 ↗ 较早期的风格对照词表 ↗ ComfyUI 官方模板 ↗ 官方教程配套工作流 ↗ 历史来源 daily · 来源会话（2026-09-10 起） ↗ 旧研究报告保留当时结论；当前进展以上文为准。原始用户消息按真实会话独立保存。 个人生图主题 · 原图、提示词与研究报告持续积累"
-        },
-        {
-          "file": "artifacts/ai-image-studio-reading-20260912-v2.html",
-          "text": "AI 生图 · 风格、Skill 与实践 muQ / 持续维护的主题 AI 生图 · 风格、Skill 与实践 持续整理 AI 生图的搜索结论、可读写提示词、Agent Skill 与工作流仓库，以及真实素材实践。当前覆盖漫画线稿、厚涂、半厚涂、清新简约与减少常见 AI 视觉套路。 当前状态与操作入口 资料研究、个人 Skill 创建与首轮实测已完成。新 imgen-art-director 已生成帕秋莉 fumo 写实、漫画线稿、厚涂三版；用户认可本次结果与 Skill。长期主题继续积累，尚未做严格受控风格对照或官方直连验证。 2026-09-12 按新版 muq-journal 重新整理。实测与用户反馈来自2026-09-11；本轮只整理归档，不新增生成或重跑联网研究。 个人生图 Skill 源码 本页目录 从资料研究到个人工具 搜索结论与资源选择 帕秋莉 fumo · 三种风格 早期样例 · 半厚涂人物立绘 Skill 的作用与使用边界 实测记录与用户反馈 如何继续使用与积累 网页 文件 历史与来源 01 从资料研究到个人工具 本主题保存 AI 生图调研、提示词、可用 Skill 与实际图像。研究覆盖漫画线稿、厚涂、半厚涂、清新简约，以及具体视觉问题的诊断。 最终选择自建 imgen-art-director：以当前意图为先，仅按需读取风格参考；不强制默认画风，不把“去 AI 味”变成万能负面词。旧 imgen-studio 保留作参考，已从发现入口移除。 02 搜索结论与资源选择 研究区分 Agent Skill、提示词库、风格预设、LoRA 与节点工作流；不同类型不能仅凭同名画风互相替代。检索与直接核对共整理14个来源和9项资源，完整证据与风格配方保留在两份历史报告中。 BFL 官方 Skill 整理 FLUX 提示与模型限制；YouMind 提供带样例的提示检索；ComfyUI 工作流适合节点与模型组合；RunComfy 是依赖账户与云端费用的候选。只审阅的仓库没有被当成本机已验证工具。 Fooocus 已进入有限 LTS，其 JSON 适合拆解词语，不作为追新模型平台。风格参数必须按体系适配：FLUX、Midjourney、SD 与 GPT Image 的提示语法和支持能力不混用。 03 帕秋莉 fumo · 三种风格 三张均为 AI 生成的二创毛绒玩偶形象，非实物照片或官方商品复刻。写实版之后，用户要求漫画线稿与厚涂各一版。两种绘画版独立生成，未输入同一母图，因此局部造型变化不能当作严格风格 A/B 测试。 写实摄影风格：窗边柔光、绒毛、刺绣与接触阴影。 打开原图 漫画线稿：变化线重、细密排线与布料结构。 打开原图 数字厚涂：暖光、紫色块面与沿体积展开的笔触。 打开原图 04 早期样例 · 半厚涂人物立绘 这张帕秋莉人物立绘来自旧 imgen-studio 的通道实测，先于个人 Skill 创建。保留它用于追溯工作流，不把它算作新 Skill 的验证结果。紫发、新月帽饰、魔导书与长袍可辨识；原图完整保留。 帕秋莉半厚涂人物立绘 · 旧 Skill 的历史样例 打开原图 05 Skill 的作用与使用边界 它负责理解用途、核对角色锚点、组织提示、选择相关风格方法、检查实图和保留可复用成果。它不为图像模型增加新能力，参考规范也不能凌驾于当前画面需求。 漫画线稿关注线重、排线和黑白层次；数字厚涂用色块、体积与边缘塑形，不必模拟堆起的油彩；半厚涂关注线条和色块分工；简约风关注信息密度与留白。 减少 AI 味要针对实际缺陷：塑料高光、过度细节、模板灯光、身份漂移或均匀假纹理。合适的高光与丰富细节仍可保留，不能把个人审美写成通用禁令。 06 实测记录与用户反馈 新 Skill 的三张 fumo 均经过实际看图。写实版绒毛、刺绣与接触阴影清楚；线稿版排线比预设更密，属于漫画成稿；厚涂版色块与笔触明显，暖光和紫色阴影塑造体积。 写实版约34秒，线稿版约32秒，厚涂版约39秒。经既有授权的第三方 model-library 与内置 CLI 请求 gpt-image-2、high、1024×1024；三张实际输出均为1254×1254 RGB。请求参数不能证明第三方后端身份。 用户对写实样图反馈“很好”，看完两种绘画版后表示“这个skill不错”。这是本轮结果与使用体验的认可，不代表已确定最喜欢的画风，也不代表多任务稳定性已经验证。 此前另有帕秋莉半厚涂人物立绘，来自旧 Skill，原图与提示词保留作历史样例。清新简约目前只有研究方法，没有本轮出图证据。 07 如何继续使用与积累 直接说明主体、用途与想要的视觉效果即可，例如“用新生图 Skill 画帕秋莉的清新简约立绘”。有参考图时注明它用于身份、风格、构图还是需要修改的原图。 要准确比较风格，后续应指定同一母图与保留项；本轮独立生成会带来蝴蝶结、服装和构图变化。当前没有必要为归档额外生图。 有效源码在共享 agentflow 仓库的 skills/imgen-art-director；馆内 ZIP 是2026-09-11历史快照。用户认可本轮体验，但未指定最偏爱的画风；清新简约仍待按实际任务验证。 08 网页 个人 Skill 源码仓库（私有） 官方 FLUX 提示与 API 指南 跨模型提示词检索 把已注册的 ComfyUI 工作流交给 Agent 云端多模型路由候选 带预览的 Gemini 提示词图库 成熟 SDXL 项目的可读风格词表 较早期的风格对照词表 ComfyUI 官方模板 官方教程配套工作流 09 文件 上一版生图主题归档（历史） AI 生图专题 · 搜索结论与风格配方 此前 GPT/OpenAI 生图研究 可维护研究数据 研究文字版 帕秋莉 · 半厚涂原图 帕秋莉 · 最终提示词 个人生图 Skill 源码快照 帕秋莉 fumo 原图 帕秋莉 fumo 提示词 帕秋莉 fumo · 漫画线稿原图 帕秋莉 fumo · 漫画线稿提示词 帕秋莉 fumo · 厚涂原图 帕秋莉 fumo · 厚涂提示词 10 历史与来源 daily · 日常维护与 AI 日报工作流 来源原话在图书馆馆主视角默认展开；本 HTML 阅读副本不复制原始提示词。"
-        },
-        {
-          "file": "artifacts/ai-image-styles-20260911.html",
-          "text": "AI 生图 · 风格、Skill 与提示词专题 跳到正文 imGen / muQ 搜索结论 Skill 与仓库 四类风格 减少 AI 味 实践记录 来源 AI IMAGE STUDIO / 2026.09.11 找到画风， 也找到可重复的方法。 AI 生图专题：从 GPT 扩展到 FLUX、Midjourney、Gemini 与 SDXL / ComfyUI，收录搜索结论、Skill、风格提示词和实践记录。 这一版收录什么？ 9 项分类资源，附仓库、维护与使用边界。 漫画线稿、厚涂、半厚涂、清新简约 4 组配方。 把“去 AI 味”拆成可检查的视觉选择。 14 处直接核对的来源与已知限制。 本次完成文档与仓库调研，未安装第三方 Skill，也未进行新模型出图评测。提示词是试验起点。 01 / 搜索结论 先分清你需要的是哪一层。 类型 解决什么 本次优先入口 Agent Skill 指导 Agent 查提示词、组织调用或执行已有流程；本身不是模型，也不保证画风。 BFL 官方、YouMind 检索；需要执行时再评估 ComfyUI / RunComfy。 提示词库 / 风格预设 提供语言、构图和配色参考；要拆解媒介、线条、明暗与背景，而非整段堆砌。 YouMind 图库、Fooocus 风格 JSON。 LoRA / 风格参考 提供额外视觉约束。LoRA 是模型适配权重，必须匹配底模；风格参考图不等于人物身份锁定。 Midjourney Style Reference；SDXL/其他底模按各模型卡和 LoRA 说明选择。 节点工作流 组织加载、采样、图像条件、编辑与导出。结构控制比只改 prompt 更适合固定线稿与姿势。 ComfyUI 官方模板与示例。 针对你目前的用法 先用提示词库与风格参考探索审美，再维护自己的母版与风格配方。需要批量、固定构图或线稿控制时才加入 ComfyUI。第三方执行 Skill 先审阅再安装，本次只收录链接。 “比较出名”用官方身份与 GitHub 关注规模辅助判断，不当作效果排名。检索中的一个 Midjourney 图库仅 1 星，未列入主推荐；官方 BFL Skill 规模较小但来源明确。 02 / Skill 与仓库链接 先看用途，再看安装入口。 关注数与最近推送来自 2026-09-11 的 GitHub API 快照。推送时间不等于核心代码更新，仓库许可也不自动覆盖模型、示例图和第三方服务。 全部 Agent Skill 提示词库 风格预设 工作流 9 项资源 Skill 官方 FLUX 提示与 API 指南 ↗ 优先阅读 flux-image-best-practices；它整理的是提示结构和模型限制，不是某种画风滤镜。 适合 FLUX。实际生成需要对应 API 或另配本地流程；仓库 MIT 不等于所有模型权重都可免费商用。 ★ 115 · 核对日快照 最近推送 2026-09-09 许可 MIT black-forest-labs/skills Skill 跨模型提示词检索 ↗ 按用途检索分类数据，返回带样例的提示词。适合找构图、商业插画与漫画分镜灵感。 仓库宣称适配多模型，并不等于相同提示词能复现相同风格；它主要检索与改写，不自带生成模型。 ★ 1,019 · 核对日快照 最近推送 2026-09-11 许可 MIT YouMind-OpenLab/ai-image-prompts-skill Skill 把已注册的 ComfyUI 工作流交给 Agent ↗ 本地执行型 Skill：通过 CLI 调用注册工作流，输出结构化结果。 要求已有本地或可信自托管 ComfyUI 与模型；不提供后端，不是单纯写提示词的工具。 ★ 113 · 核对日快照 最近推送 2026-08-02 许可 Apache-2.0 MieMieeeee/comfyui-agent-skill Skill 云端多模型路由候选 ↗ 提供 ai-image-generation 等 Skill，由 RunComfy CLI 调用服务。原链接已跳转到 prime-skills。 生成依赖 RunComfy 账户与云端费用；只审阅文档，未审计全部代码，也未实测效果。 ★ 43 · 核对日快照 最近推送 2026-05-15 许可 MIT prime-skills/runcomfy-agent-skills 提示词库 带预览的 Gemini 提示词图库 ↗ 适合先看画面，再拆解主体、镜头、风格、留白与约束。图库规模是作者自述，页面样例不是本次复现。 以 Gemini 图像生态为主；图片来源与授权逐项看，GitHub API 未给出明确 SPDX 许可证标识。 ★ 13,406 · 核对日快照 最近推送 2026-09-11 许可 NOASSERTION YouMind-OpenLab/awesome-nano-banana-pro-prompts 风格预设 成熟 SDXL 项目的可读风格词表 ↗ 重点参考 sdxl_styles 下的 JSON：可直接看到某种风格如何拼接正、负面提示。 项目已进入仅修 bug 的有限 LTS，不是追新模型首选。预设词有冲突和过度修饰，需拆开用。 ★ 52,984 · 核对日快照 最近推送 2025-12-01 许可 GPL-3.0 lllyasviel/Fooocus 提示词库 较早期的风格对照词表 ↗ 可用来学习 comic、line art、digital painting 等术语的组织方式。 最后推送较早；含 artist 名和 8k 等旧式词，不推荐整段照搬到现代模型。 ★ 697 · 核对日快照 最近推送 2024-08-21 许可 MIT Dalabad/stable-diffusion-prompt-templates 工作流 ComfyUI 官方模板 ↗ 需要可重复流程、图像编辑、模型加载时，优先从官方模板开始。 不同模板所需节点、权重和显存不同；部分模板使用云 API，并非全部纯本地。仓库中的维护 Skill 不等于生图 Skill。 ★ 892 · 核对日快照 最近推送 2026-09-11 许可 MIT Comfy-Org/workflow_templates 工作流 官方教程配套工作流 ↗ 适合从教程进入具体示例，核对输入图、节点与依赖。 不是提示词大全，不应假定任意 JSON 都可直接在当前机器执行。 ★ 25 · 核对日快照 最近推送 2026-08-21 许可 未声明 Comfy-Org/example_workflows 03 / 风格提示词 用可见特征描述风格。 四组范例均不依赖画师姓名。它们不是从某一图库照搬的“神词”，而是结合已核对指南整理的可修改配方。先固定主体，比较不同媒介和边缘处理。 可选：替换主体与动作 提示词用途 FLUX / Gemini：自然语言 Midjourney：风格控制起点 SDXL：正负面分别使用 更新四组配方 当前为静态阅读：四组完整范例仍可阅读和手动复制；交互版可使用筛选与改写。 墨线 / 结构 / 黑白 01 · 漫画线稿 复制正向提示词 靠线宽、轮廓与黑白面积塑造形体。先决定是清爽线稿，还是有排线和网点的漫画成稿；它们不是同一种密度。 有轻重的墨线，外轮廓较强、内部结构线克制 脸与手线条完整，局部排线表达体积 背景留白，大块纯黑只放在构图需要的位置 不要直接复制 Fooocus 的 sai-line art：它的负面词包含 anime，会与“漫画角色”目标打架。line art 与 anime 不是天然互斥。 依据：S6；下方范例为本次编写，未出图验证。 自然语言范例 · 可按顶部选项改写 A red-haired librarian holding a closed book, three-quarter view, waist-up. Black-and-white manga ink drawing on clean white paper. Confident tapered contour lines with varied line weight, precise facial features and hands, sparse cross-hatching only in the deepest shadows, a few deliberate solid-black shapes. Clear readable silhouette, restrained interior detail, spacious uncluttered background. 仅供支持负面词的 SDXL 工作流尝试 photograph, 3d render, full color, soft airbrush shading, dense background, text, watermark 体块 / 笔触 / 边缘 02 · 厚涂 复制正向提示词 中文“厚涂”常指以色块塑造体积的数字绘画，不一定要模拟凸起的油彩。只有明确想要堆积颜料时，再加 impasto / palette-knife。 用大色块而非黑色轮廓线塑造体积 硬边集中在焦点，软边与消失边用于转折 笔触方向跟随形体，避免整张均匀铺纹理 painterly 是绘画性；impasto 才偏厚重颜料肌理。随意加入 oil painting、photo、cel shading 容易互相拉扯。 依据：S6 / S7 / S10；下方范例为本次编写，未出图验证。 自然语言范例 · 可按顶部选项改写 A red-haired librarian holding a closed book, three-quarter view, waist-up. Painterly digital illustration built from broad opaque color masses. Visible purposeful brush strokes following the form, sculpted light and shadow, a restrained plum, warm ivory and muted vermilion palette. Sharp accents around the eyes and book, softer and lost edges in the hair and clothing. Matte surfaces, simplified background, one broad side light. 仅供支持负面词的 SDXL 工作流尝试 3d render, glossy plastic, airbrushed skin, uniform sharp outlines, excessive microdetail, text, watermark 保留线感 / 局部塑形 03 · 半厚涂 复制正向提示词 半厚涂没有统一的模型参数。更稳妥的说法是：保留哪些线条、哪些区域用绘画性塑形，以及阴影分几层。 面部和轮廓有干净线条，内部线减弱 两到三层主要明暗，再以少量柔和过渡连接 头发与衣料有局部笔触，皮肤不过度磨皮 单写 semi-realistic 会把脸推向写实，未必得到半厚涂；要描述“线稿与色块如何分工”。 依据：S6 / S10 / S11；下方范例为本次编写，未出图验证。 自然语言范例 · 可按顶部选项改写 A red-haired librarian holding a closed book, three-quarter view, waist-up. Semi-painterly anime illustration. Retain delicate clean linework around the eyes, face and silhouette, with understated interior lines. Model the hair and fabric using two or three broad value groups and subtle painterly transitions. Soft matte skin, selective brush texture, crisp focal details and restrained highlights. Muted plum and warm ivory colors, plain warm paper background. 仅供支持负面词的 SDXL 工作流尝试 photograph, 3d render, heavy impasto, oily highlights, excessive airbrush, uniform hard outlines, text, watermark 少色 / 留白 / 清晰形状 04 · 清新简约 复制正向提示词 清新不等于曝光拉满，简约也不是删掉所有层次。限制调色板、形状数量和视觉重心，通常比“minimalist masterpiece”更可控。 三到四色：鼠尾草绿、奶油色、浅珊瑚等 扁平或轻水粉色块，少量纸感 主次形状清楚，保留大面积呼吸空间 flat、gouache、paper cut 可以择一主导；把 3D、油画厚肌理和扁平矢量同时堆上去，容易丢失清爽感。 依据：S10 / S11；下方范例为本次编写，未出图验证。 自然语言范例 · 可按顶部选项改写 A small reading corner with a librarian and one potted plant. Fresh minimalist editorial illustration. Simple rounded shapes, a limited palette of sage green, warm cream and soft coral, flat matte gouache-like color blocks with very subtle paper texture. Gentle daylight expressed with one simple shadow shape, abundant negative space, a slightly off-center balanced composition, calm everyday mood. 仅供支持负面词的 SDXL 工作流尝试 3d render, neon colors, dramatic rim light, glossy reflections, clutter, dense texture, text, watermark 参数不要跨体系搬运。 FLUX.2： 官方明确不支持负面提示词。用“matte surface / clear silhouette”描述目标，而非追加 SD 的负面串。[S10] Gemini： 说明用途、参考图关系和具体改动；官方建议正向描述目标场景。不要把 SD 的权重括号当作通用语法。[S11] Midjourney： 可先用 Raw 与较低 Stylize 做对照，再用 --sref 加风格参考；Style Reference 主要传递媒介、色彩、纹理与光照，不复制角色身份。适用版本以官方页为准。[S12–S14] SDXL / Illustrious 等衍生模型： 标签、负面词、LoRA 和权重取决于具体模型卡与工作流。共享架构不代表推荐词、触发词、采样设置完全相同；不能混用其他架构的 LoRA。 04 / 减少常见 AI 视觉套路 “AI 味”不是一个单独的开关。 这里说的是审美上的默认套路，不是让图片规避检测或伪称人工创作。以下为依据提示指南整理的视觉判断；没有通用负面词能保证解决所有问题。 塑料与磨皮 把“perfect skin / glossy / ultra smooth”换成符合媒介的表面：哑光色块、局部纸纹、受控高光。别用强噪点掩盖结构错误；笔触应跟随形体。 哪里都很精细 只让脸、手和关键道具成为焦点，背景降低细节密度，边缘有硬、软、消失的区分。删除与目标无关的 8k、masterpiece、hyper-detailed 等堆叠，比较实际变化。 默认大片灯光 不是每张画都需要轮廓光、体积光、金色逆光和散景。指定一个明确光源与有限反差；线稿风格用排线与黑白形状表达光，不强行塞摄影镜头词。 模板化构图 先明确画幅、视线方向、主体占比和留白，再选择一个小幅不对称。不是故意画歪，而是让姿态、裁切和重心服务画面的意思。 统一脸与漂移 角色母版、风格参考、姿势参考分别标明用途。变体回到母版生成；如果线稿或构图必须固定，考虑结构条件工作流。新增瑕疵不能代替身份一致性。 伪随机手作感 刻意保留有限笔触、色块边缘与纸张质感，比随处添加划痕、畸形和颗粒更有方向。想要厚涂就检查体块，想要清爽就控制形状与调色板。 建议的小型 A/B 测试 固定模型版本、主体、比例与参考图；支持种子时固定种子，但不把它当跨模型一致性保证。A 用当前提示，B 只改一个风格因素。比较线条、体块、材质、构图和身份；记录参数与失败样例。选定方向后再提高质量，不用单张“抽中”证明方法有效。 05 / 实践记录与后续 把结论变成可积累的素材。 01 · 历史研究 09-10 GPT/OpenAI 生图调研已完成修订；相关 HTML 同条目保存，作为此前的基础资料。 02 · 馆员抠图 09-11 发现发丝封闭缝隙残留浅底。已清理 18 处并补修细缝，验证了深浅底检查的必要性。 03 · 本轮扩展 跨体系仓库与官方指南核对完成；形成四类风格配方。没有新增生成图片，不能称为风格实测图库。 04 · 待实测 下一轮可以用同一主体做四种画风小样，再比较原始提示、风格参考和局部编辑，记录真实效果与成本。 专题长期按“搜索结论 / Skill 与仓库 / 风格提示词 / 实践记录”追加；原始文件保留，新版本另存。普通专题目前按馆主可见入库。 06 / 来源与证据边界 能回到原文，才方便继续研究。 以下关键页面或仓库正文已直接读取。Midjourney 文档的普通 HTTP 抓取返回 403，改用现有浏览器成功核对。未运行仓库代码，未验证服务账户权限或出图质量。 [S1] BFL 官方 Agent Skills ↗ GitHub API、README 与图像 Skill 正文已核对；使用 master 分支。 [S2] YouMind 提示词检索 Skill ↗ 已确认根目录 SKILL.md 与分类检索工作方式；跨模型效果为作者主张，未复现。 [S3] ComfyUI Agent Skill ↗ 已读 SKILL.md，明确需要已有服务，仅执行注册工作流。 [S4] RunComfy Skills ↗ GitHub 跳转与 ai-image-generation/SKILL.md 已核对；生成走服务 API。 [S5] YouMind 图像提示词图库 ↗ 仓库、README、关注数与许可元数据已核对。 [S6] Fooocus 风格 JSON ↗ 实际读取 line art、comic book、digital art 等正负面模板；README 明确有限 LTS。 [S7] Stable Diffusion Prompt Templates ↗ 读取旧式风格词表，作为术语材料而非即用最佳配方。 [S8] ComfyUI 官方模板 ↗ GitHub 仓库和目录已核对；模板类型与模型依赖各异。 [S9] ComfyUI 示例工作流 ↗ 官方组织仓库，示例 JSON 属工作流而非通用 Skill。 [S10] FLUX.2 Prompting Guide ↗ 直接读取官方网页：主体+动作+风格+语境，重要项前置；不支持负面提示词。 [S11] Gemini 图像生成指南 ↗ 直接读取官方网页：具体描述、编辑迭代、正向表达预期场景；不把 SD 参数当通用参数。 [S12] Midjourney Style Reference ↗ 浏览器实际读取：匹配颜色、媒介、纹理、灯光，不是复制人物身份；支持 --sref 与 --sw。 [S13] Midjourney Raw ↗ 浏览器实际读取：减少自动美化与默认创作倾向；不是保证无 AI 痕迹。 [S14] Midjourney Stylize ↗ 浏览器实际读取：默认 100，文档给出 0–1000；低值更贴近提示，高值赋予更多艺术自由。 AI 生图 · muQ 专题 / 核对日期 2026-09-11 · HTML 内嵌样式，无外部字体、图片或脚本依赖。范例是研究起点，非效果保证。"
-        },
-        {
-          "file": "artifacts/image-generation-research.html",
-          "text": "生图技巧调研 · 从角色母版到网页素材 跳到报告正文 imGen 工作流 提示词 抠图对照 来源 打印 RESEARCH NOTES / 2026.09.10 → 09.11 从角色母版， 到真正可用的素材。 生图技巧与工具调研。先固定身份，再逐项编辑；把角色、背景和网页文字分层，最后在真实页面上验收。 资料调研已交付修订版 昨天做到哪一步了？ 搜索记录覆盖 6 个来源。 原稿通过结构检查，未获完整语义验收。 修订版改正角色“双角”、配色及接口能力边界。 第三方工具的真实出图对比尚未进行。 资料核对：09-10；HTML 整理与本地案例补充：09-11。本页没有把历史检索写成今天重新联网验证。 01 / 方法 最值得采用的，是一套编辑顺序。 固定角色身份比不断添加形容词更有用。参考图能提供约束，但并不保证每次生成完全一致；以下流程仍需人工检查。 01 保留同一母版 每张衍生图重新附上母版，明确哪些特征不可改变，避免用连续变体逐代传递误差。 02 把修改范围说清 写明主体、用途、构图、风格、保持项和修改项。一次只改一个方面，方便判断效果。 03 先构图，后精修 先探索姿势和留白，确定方向后再提高质量、修手部与纹理。质量参数按实际接口支持选择。 04 到页面上验收 深浅底检查透明边缘，手机上检查裁切和文字；角色不能遮挡按钮，重要文字交给 HTML。 本项目角色锚点： 深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本；无角、无尾。页面色值：深紫 #292332、暖白 #f5f1eb、梅紫 #665173、浅金 #dfcba2。色值提示不构成像素级保证。 02 / 选择 按工作方式选择工具。 工具或通道 适合什么 本次证据边界 ChatGPT 图像编辑 少量素材、自然语言试姿势和表情；上传同一张参考图，说明改变与保留项。 昨天调研核对了文档；套餐、额度和工作区权限需要实际确认。 GPT Image API 保存参数、组织批量任务；单次生成/编辑用 Image API，需要对话上下文时考虑 Responses。 官方 API、内置 CLI 与第三方代理不能混同；模型名与透明参数以所选接口为准。 Adobe Firefly / Photoshop 需要图层、局部编辑和设计交付的工作流。 已有官方集成文档记录；本项目没有完成真实出图对比。 Clipdrop Remove Background 透明边缘不合格时的背景移除候选工具。 属于通用后处理，不是 OpenAI 集成；未实测其发丝效果优于本地处理。 已跑通的历史生成路径是 gpt-image-2 暖白底输出；不能由官方文档中的新型号推断本机代理已支持。下方来源保留昨天的核对记录，调用前仍应复核接口能力。 03 / 可直接使用 三套角色与网页素材提示词。 复制后上传参考图，并替换方括号变量。第二套允许同时描述表情和手臂动作；若出现身份漂移，拆成两轮修改。 模板 01 透明角色主素材 复制提示词 先上传母版；透明参数需当前接口实际支持，文字要求不能代替 Alpha。 展开完整提示词 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 模板 02 角色表情与动作变体 复制提示词 每张变体都回到同一母版，重复保持项，减少逐代漂移。 展开完整提示词 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 模板 03 图书馆首屏构图 复制提示词 人物放右侧，左侧留文字空间；标题与按钮由网页渲染。 展开完整提示词 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 04 / 本地实证 · 今日补充 透明背景，不能只看外轮廓。 这两张来自同一张馆员图。初次处理只去掉了与外缘相通的背景，头发围住的空隙仍然发白；修正版清除了 18 处封闭残留并补修细缝。这是本地后处理对照，不是第三方工具评测。 深紫 暖白 黑色 白色 修复前 · 封闭缝隙仍有底色 修复后 · 保留白衬衫与面部 PNG / WebP 文件并不必然透明，必须检查 Alpha。 把棋盘格画进图片，仍是一张不透明图片。 深底容易暴露白边；浅底容易暴露暗边。 先检查发丝、翼缘、手部与衣袖，再缩小到实际显示尺寸。 05 / 证据 来源记录与未完成项。 以下为昨天 sources.json 的核对记录，保留日期和原文摘要。社区模板是单帖经验，不能当作“角色锁定”的证明；第三方效果、账号权限与成本对比尚未实测。 Image generation | OpenAI API OpenAI 官方页面已实际获取。页面说明 Image API 提供 generations/edits，Responses API 支持多轮编辑与图像上下文；当前新工作流列出 gpt-image-2.5-sunburst 与 gpt-image-2.5-flare，并提醒组织可能需要验证。页面的限制段明确说明跨多次生成的角色或品牌元素仍可能不一致。 原调研核对：2026-09-10T22:43:01+08:00 GPT Image Generation Models Prompting Guide — Prompting Fundamentals OpenAI 官方页面已实际获取。建议按场景→主体→细节→约束组织提示；编辑时明确 change only X 与 preserve 清单；透明背景需 background=transparent 且输出 PNG/WebP，JPEG 不支持；多图输入应按编号说明关系，并建议小步迭代。 原调研核对：2026-09-10T22:43:01+08:00 Image generation | ChatGPT Docs ChatGPT 官方文档已实际获取。支持在 ChatGPT 中上传参考图来生成或编辑；编辑应具体说明改变项和保持项，一次做小范围调整；ChatGPT Web 的图像可用性与限额取决于套餐和工作区。页面同时注明 Codex 内置生成使用 gpt-image-2，说明不同界面不能简单等同于 API 的最新模型。 原调研核对：2026-09-10T22:43:01+08:00 Use non-Adobe generative AI models in Adobe products Adobe 官方页面已直接获取并核对。页面列出 OpenAI 的 GPT image generation model、GPT Image 1.5、GPT Image 2、GPT Image 2.5 Flare 和 GPT Image 2.5 Sunburst；列明其在 Firefly 的 Text to image、Prompt to Edit Image、Boards、Graph 或 Style generator 等入口，并提示合作模型的国家/地区可用性可能不同。 原调研核对：2026-09-10T22:43:01+08:00 Remove Background | Clipdrop APIs Clipdrop/Jasper 官方 API 页面已直接获取。Remove Background 端点接收 PNG、JPG 或 WebP（页面列出 25MP、30MB 上限），成功响应可按 Accept 返回 PNG/WebP/JPEG，默认 PNG。页面不声称与 OpenAI 集成，因此报告仅把它归为通用后处理。 原调研核对：2026-09-10T22:43:01+08:00 Stable Single-Character Anime Prompt Template (Avoids Multi-Panel Issues) 已直接获取论坛 JSON。原帖创建于 2026-04-27，自述用于 ChatGPT Image 2.0 的单角色动漫模板，强调固定描述结构，以及 single character / no reference sheet / no multiple panels。页面当时显示 2 帖、0 回复、2 赞、876 浏览；属于社区单帖经验，不是 OpenAI 官方能力证明或量化测试。 原调研核对：2026-09-10T22:43:01+08:00 展开昨天完整修订报告（原文） # 当前 GPT/OpenAI 生图工具与角色提示词调研 核对日期：2026-09-10（UTC+8） 中控修订版：修正原报告把小恶魔写成长角角色的错误，匹配页面实际配色，并补充透明输入与代理能力边界。原始 MA3 产物未改动。小恶魔身份锚点：深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本，无角无尾。 实际执行边界：官方文档描述的透明 preview、新模型和参数，不代表本机随附 CLI 或第三方代理已支持；本次已实测成功的路径是 gpt-image-2 暖白背景输出。应先核对所选接口和 CLI 的当前能力，不能仅凭文档替换已验证流程。页面另用梅紫 #665173、浅金 #dfcba2。 ## 结论先行 对于已有“小恶魔馆员”立绘、目标是深紫与暖白个人图书馆网页素材的场景，最稳妥的路线不是重新“抽卡”，而是把现有立绘当作唯一的角色母版，持续做参考图编辑： 1. **少量手工素材：优先 ChatGPT 图像编辑。** 上传母版，用自然语言逐次只改一个变量；它最适合试造型、表情、姿势和构图。 2. **批量、透明背景或需要参数可复现：优先 GPT Image API。** 单次生成/编辑用 Image API；需要保留对话上下文、多轮迭代时用 Responses API。当前官方 Image API 指南列出的新工作流模型是 `gpt-image-2.5-sunburst`（偏编辑精度/高要求质量）和 `gpt-image-2.5-flare`（偏速度/日常生成）。必须以账号中实际可用模型为准，不从产品名推定权限。 3. **设计师式精修：Adobe Firefly/Photoshop 是已核实的第三方集成。** Adobe 官方页面明确列出 GPT Image 2、GPT Image 2.5 Flare 和 Sunburst；可在 Firefly 的 Text to image、Prompt to Edit Image、Boards 等流程中使用，区域可用性可能不同。 4. **透明抠图兜底：Clipdrop 只作后处理。** 它有独立的 Remove Background API，能接收 PNG/JPG/WebP 并返回 PNG/WebP/JPEG；这不是 OpenAI 集成。GPT Image 已能原生输出透明背景时，应先用原生透明，边缘不合格再后处理。 ## 能力与证据边界 | 类别 | 已核实能力 | 对本项目的意义 | 边界 | |---|---|---|---| | ChatGPT / Codex 图像生成 | 官方文档支持上传参考图生成或编辑；建议明确“改什么、什么保持不变”，一次做小范围修改 | 无需写代码，适合围绕现有馆员立绘迭代表情、姿势和构图 | ChatGPT Web 的可用性和额度取决于套餐与工作区；Codex 内置页面标明其内置图像生成使用 `gpt-image-2`，不可把 API 新模型名自动套到所有界面 | | GPT Image API | Image API 支持生成与编辑；Responses API 增加多轮编辑与上下文；可配置尺寸、质量、格式等 | 可批量生成表情包、空状态图、透明角色切图，并保存参数与提示词 | 组织可能需要验证；模型访问、延迟、成本须以账户和实测为准 | | 透明背景 | OpenAI 提示指南明确：`gpt-image-2` 的透明背景为 preview，需 `background=\"transparent\"` 且输出 PNG/WebP，JPEG 无 Alpha | 馆员立绘可直接叠在深紫网页背景上 | “生成一张棋盘格背景”不等于真的透明；交付前必须检查 Alpha 通道和浅色/深色底边缘 | | 角色一致性 | 官方建议明确不变量、用参考图、每轮重复 preserve 清单并小步迭代；API 指南也承认跨多次生成的角色/品牌元素仍可能漂移 | 应维护一个母版和固定角色描述，不要每次从纯文本重生 | 不存在官方保证的“角色锁定”；脸、翼、瞳色、服装纹样、比例仍需人工验收 | | Adobe Firefly | Adobe 官方列出 OpenAI GPT Image 合作模型及可用功能 | 适合生成后继续布局、局部编辑和设计交付 | 属第三方产品；模型、地区、积分和商用条款要按 Adobe 当前界面确认 | | Clipdrop | 官方 Remove Background API 可移除背景，默认可返回 PNG，并支持 WebP/JPEG Accept | 原生透明边缘失败时作为批量兜底 | 只是通用后处理，会误伤发丝、翼尖、半透明阴影；不增强角色一致性 | ## 推荐工作流 ### A. 先建立“角色母版包” - 保留现有原图不动，选一张正面或 3/4 视角、五官和服装清楚的图作为 `master`。 - 写一段不随场景变化的角色锚点：头侧小型蝙蝠翼与背部蝙蝠翼的形状与颜色、瞳色、发型、耳朵、服装剪影、书本/钥匙等标志物、身材比例、线条和上色风格。 - 颜色用语与色值并用，例如“深紫 `#292332`、暖白 `#f5f1eb`”；色值是目标提示，不是像素级保证。 - 每张衍生图都重新附上同一母版。不要把第 8 张衍生图继续当第 9 张的唯一参考，以减少逐代误差；这是基于编辑漂移限制给出的工程建议，并非官方保证。 ### B. 先低成本探索，再高质量定稿 - 用较低质量或 ChatGPT 中的小步修改探索姿势和留白。 - 确认构图后再用 medium/high 做身份敏感的角色图和细小纹理；OpenAI 官方提示指南也建议对身份敏感编辑、小字和高分辨率输出比较 medium/high。 - 一轮只修改一项，例如先改姿势，再改表情，最后处理灯光；每轮重复“保持”清单。 ### C. 网页交付前验收 - 在深紫、暖白、黑、白四种底色上检查 Alpha 边缘，尤其是翼尖、头发、衣袖、书页和投影。 - 检查同一角色的：头侧翼与背翼数量/朝向、眼睛颜色、发型分缝、衣领、配饰、手指、身高比例。 - 图片内不要生成重要正文。若必须有字，提示词中精确引用短文本，最后仍逐字校对；生产级排版应回到 HTML/CSS 或设计工具。 - 导出语义明确的文件名，并保留母版、提示词、模型、质量、尺寸和生成日期，方便回归。 ## 三套可复用提示词 下面的方括号是待替换变量。ChatGPT 中直接上传参考图；API 中把它作为输入图像。若使用支持透明参数的 API，除提示词外还要真正设置 `background=\"transparent\"` 与 `output_format=\"png\"` 或 `\"webp\"`。 ### 1. 透明角色主素材：从现有立绘提取网页可用全身角色 适用：侧边悬浮馆员、首页迎宾角色、空状态插画。 ```text 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 ``` ### 2. 一致性表情/动作变体：只改一个变量 适用：加载、无结果、欢迎、错误、解锁等状态。每次只替换 `[目标状态]` 与动作，不重写角色锚点。 ```text 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 ``` 推荐生成顺序：`中性母版 → 欢迎 → 思考 → 空结果 → 轻微警告`。每次都从中性母版编辑，而不是从上一张变体继续编辑。 ### 3. 深紫暖白图书馆 Hero：角色与网页留白协同 适用：首页宽屏 Hero 背景。建议把角色与背景分层生成；若直接合成，则把文字留白写清楚，真正标题仍由 HTML/CSS 渲染。 ```text 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 ``` 若首轮背景很好但角色漂移，下一轮不要整张重画；改为分别生成“透明角色层”和“无人物背景层”，在网页中用 CSS 定位叠放。这比反复要求模型同时修角色和复杂场景更容易验收。 ## 第三方与社区技巧：如何采用 ### 已核实第三方工具 - **Adobe Firefly/Photoshop：推荐给需要图层、局部精修和设计交付的人。** 官方集成证据充分；但需在实际 Adobe 账户中确认区域和功能入口。 - **Clipdrop Remove Background：仅作为抠图兜底。** 官方文档只证明背景移除端点与格式，不证明它对“小恶魔翼尖/发丝”一定优于 GPT 原生透明；应拿 5–10 张本项目图片做盲测再决定是否批量用。 ### 社区技巧（可试，但不是官方保证） OpenAI Community 有一篇 2026-04-27 的单角色动漫模板帖，核心做法是固定“头发 → 眼睛 → 性格/表情 → 体型 → 服装 → 姿势 → 构图”的描述顺序，并显式写 `single character, no reference sheet, no multiple panels`。该帖只有 2 个帖子、2 个赞，属于单个用户的小样本经验。它与 OpenAI 官方“结构固定、约束明确”的建议方向一致，因此可作为提示词组织法测试，但不能据此声称角色一致性已被解决。 ### 未验证项 - 搜索中出现的“完美角色锁定”“所有帧完全一致”“透明边缘百分百干净”等说法，没有官方保证或量化基准，不采纳。 - 未对第三方工具做真实图片生成/抠图测试；本报告验证的是文档与公开页面，而不是本项目图片上的效果。 - 未验证用户账户是否已获得某个模型、Adobe 区域功能或对应额度；使用前以实际产品界面/API model list 为准。 ## 来源 1. OpenAI Docs — Image generation API guide：<https://developers.openai.com/api/docs/guides/image-generation> 2. OpenAI Docs — GPT Image Generation Models Prompting Guide：<https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide> 3. ChatGPT Docs — Image generation：<https://learn.chatgpt.com/docs/image-generation> 4. Adobe Help — Use non-Adobe generative AI models in Adobe products：<https://helpx.adobe.com/creative-cloud/apps/generative-ai/non-adobe-models-in-adobe-products.html> 5. Clipdrop APIs — Remove Background：<https://clipdrop.co/apis/docs/remove-background> 6. OpenAI Community — Stable Single-Character Anime Prompt Template：<https://community.openai.com/t/stable-single-character-anime-prompt-template-avoids-multi-panel-issues/1379868> 完整核对证据见 `sources.json`。 imGen · 单文件 HTML，图片内嵌，无外部字体或脚本依赖。来源：research-reviewed.md、sources.json、review.json；本页未产生新的生图调用。"
-        },
-        {
-          "file": "artifacts/patchouli-fumo-ink-prompt-v1.txt",
-          "text": "Create one illustration of a Patchouli Knowledge (Touhou Project) fumo-style stuffed plush doll, seated on a simple wooden tabletop. Oversized broad round head, tiny stuffed body, short arms and two stubby legs forward. Deadpan half-lidded embroidered eyes and tiny stitched mouth, fabric bangs and long side locks, frilled crescent-moon cap, bows at cap sides and side locks, ruffled striped dress. Keep unmistakable plush-toy proportions and cloth construction, not a human character. Full doll entirely inside a square frame with breathing room, nearly frontal view. Soft light from the left; simple quiet background. No words, signature, watermark, other dolls, people or extra props. Medium: finished black-and-white manga ink drawing on white paper. Confident tapered pen strokes and varied line weight, heavier outer silhouette and delicate interior stitching and folds. Model the stuffed volume with sparse directional cross-hatching and a few controlled black shadow shapes. White paper remains dominant; light screentone only in selected shadows. Draw fibers with a few intentional marks, not photorealistic texture. Express the purple costume through distinct ink values rather than color. Face and crescent clearly readable. Background suggested with a few economical lines. No color, soft airbrush shading or photographic rendering."
-        },
-        {
-          "file": "artifacts/patchouli-fumo-painterly-prompt-v1.txt",
-          "text": "Create one illustration of a Patchouli Knowledge (Touhou Project) fumo-style stuffed plush doll, seated on a simple wooden tabletop. Oversized broad round head, tiny stuffed body, short arms and two stubby legs forward. Deadpan half-lidded embroidered eyes and tiny stitched mouth, fabric bangs and long side locks, frilled crescent-moon cap, bows at cap sides and side locks, ruffled striped dress. Keep unmistakable plush-toy proportions and cloth construction, not a human character. Full doll entirely inside a square frame with breathing room, nearly frontal view. Soft light from the left; simple quiet background. No words, signature, watermark, other dolls, people or extra props. Medium: expressive digital painterly illustration (Chinese hou-tu / 厚涂). Build the doll in broad opaque painted color masses, with clearly visible directional brush strokes wrapping around stuffed forms. Lavender and violet cloth hair and dress, cream face, yellow felt crescent, muted red and blue bows. Separate large light and shadow groups; warm soft daylight and cooler violet shadows. Selective hard edges around embroidered eyes and crescent, soft and lost edges where fabric blends into shadow. Suggest plush nap with selective broken brushwork, not uniform texture overlay. Painterly restrained wooden tabletop and quiet warm-gray background. Rich sculptural volume and purposeful simplified planes; avoid cel-shaded anime rendering, smooth plastic CGI, and photorealistic fur. This is digital thick painting, not exaggerated raised impasto or palette-knife paint."
-        },
-        {
-          "file": "artifacts/patchouli-fumo-prompt-v1.txt",
-          "text": "A highly believable real-world photograph of a single Patchouli Knowledge (Touhou Project) fumo-style collectible plush doll, sitting on a light oak tabletop. Faithfully recognizable as a fumo plush, with an oversized broad rounded head, a tiny soft stuffed body, short stubby arms, and two little legs extending forward in the iconic seated pose. About 20 cm tall. It is a physical fabric toy, not a human, not an anime drawing, not a vinyl figure. Patchouli's character details translated into sewn plush construction: lavender-purple fabric hair with blunt layered felt bangs and long broad fabric side locks; large purple embroidered anime eyes, a tiny simple stitched mouth and a calm slightly deadpan fumo expression. The face is smooth pale cream short-pile plush fabric, with flat embroidered features rather than glass eyes or modeled human anatomy. A soft pale lavender frilled mob cap carries a small yellow crescent moon made of felt and contrasting muted red and blue fabric bows. A simplified pale lavender long dress has subtly darker lavender vertical panels, a small gathered hem, and short stuffed arms. Preserve the chunky, endearing fumo proportions and simple sewn shapes rather than elaborate realistic human clothing. No book or extra accessories. Photograph: three-quarter frontal view from approximately the plush's eye level, the entire doll including cap and feet comfortably inside a square frame, occupying about 70 percent of the image height. Soft daylight enters from a window to camera left. Realistic subtle shadows under the cap, at the arms and where the seated doll compresses against the table. Show fine short fabric pile, tiny loose fibers, restrained stitching, layered seams, slight stuffing asymmetry and believable cloth folds. The felt moon remains a matte fabric applique, not shiny metal. A natural 50mm-lens product-photo look, moderate depth of field: both eyes and most of the toy remain clearly focused while the distant neutral room background softly falls out of focus. Natural white balance, gentle contrast, tactile material detail, no dramatic cinematic grading, no glowing outlines, no CGI plastic sheen. No text, logos, watermark, packaging, hands, people or additional dolls."
-        },
-        {
-          "file": "artifacts/patchouli-prompt-v1.txt",
-          "text": "Create a polished character illustration of Patchouli Knowledge (パチュリー・ノーレッジ / 帕秋莉·诺蕾姬) from Touhou Project. A recognizable, faithful fan-art interpretation of her classic design, not a redesigned original character. Identity: very long straight lavender-purple hair with neat bangs, purple eyes, a pale complexion, a quiet thoughtful expression. Wear her soft pale pink-lavender frilled mob cap with a small golden crescent-moon ornament and contrasting red/pink and blue ribbons. Matching ribbon ties adorn the long hair beside her face. Her modest ankle-length layered lavender robe has loose sleeves, gentle ruffles and subtle darker purple vertical stripes on the inner dress. No pointed witch hat, no horns, no bat wings, no tail. Pose and framing: a single full-body character in a relaxed three-quarter standing pose, looking slightly toward the viewer while holding one open antique grimoire comfortably with both hands around waist height. Natural hands and coherent book geometry. Keep the cap, hair ends, dress hem and shoes fully within the canvas with generous breathing room. The character occupies approximately 80 percent of the image height. No panels, no alternate views. Art direction: semi-painterly Japanese fantasy illustration. Delicate intentional linework around the face and silhouette, broad matte painted color masses in the clothing, restrained brushwork, two or three coherent value groups. Carefully chosen sharp edges near the eyes and book, softer edges in the lower folds and hair ends. Soft diffuse light from the upper left, restrained ivory highlights, rich but muted lavender and plum shadows. Expressive eyes without a glassy doll appearance; avoid plastic skin, glossy 3D rendering, over-smoothed airbrush gradients and uniform microscopic detail. Background: a simple warm ivory paper-colored field with a very faint soft grounding shadow beneath her feet. Keep the focus on the character; no library set, elaborate magic circles, floating props or ornamental border. This is an opaque illustration, not a transparency request. No text, logo, signature or watermark. Portrait 2:3 composition."
-        },
-        {
-          "file": "artifacts/research.json",
-          "text": "{ \"checked_on\": \"2026-09-11\", \"resources\": [ { \"name\": \"skills\", \"repo\": \"https://github.com/black-forest-labs/skills\", \"kind\": \"Skill\", \"title\": \"官方 FLUX 提示与 API 指南\", \"use\": \"优先阅读 flux-image-best-practices；它整理的是提示结构和模型限制，不是某种画风滤镜。\", \"boundary\": \"适合 FLUX。实际生成需要对应 API 或另配本地流程；仓库 MIT 不等于所有模型权重都可免费商用。\", \"link\": \"https://github.com/black-forest-labs/skills/blob/master/skills/flux-image-best-practices/SKILL.md\", \"stars\": 115, \"pushed\": \"2026-09-09\", \"license\": \"MIT\", \"skill_paths\": [ \"skills/bfl-api/SKILL.md\", \"skills/flux-3-archival-formats/SKILL.md\", \"skills/flux-3-audio-dialogue/SKILL.md\", \"skills/flux-3-cinematic-inserts/SKILL.md\", \"skills/flux-3-generate/SKILL.md\", \"skills/flux-3-keyframes-continuation/SKILL.md\", \"skills/flux-3-product-ads/SKILL.md\", \"skills/flux-3-prompt-doctor/SKILL.md\", \"skills/flux-3-video/SKILL.md\", \"skills/flux-image-best-practices/SKILL.md\" ] }, { \"name\": \"ai-image-prompts-skill\", \"repo\": \"https://github.com/YouMind-OpenLab/ai-image-prompts-skill\", \"kind\": \"Skill\", \"title\": \"跨模型提示词检索\", \"use\": \"按用途检索分类数据，返回带样例的提示词。适合找构图、商业插画与漫画分镜灵感。\", \"boundary\": \"仓库宣称适配多模型，并不等于相同提示词能复现相同风格；它主要检索与改写，不自带生成模型。\", \"link\": \"https://github.com/YouMind-OpenLab/ai-image-prompts-skill/blob/main/SKILL.md\", \"stars\": 1019, \"pushed\": \"2026-09-11\", \"license\": \"MIT\", \"skill_paths\": [ \"SKILL.md\" ] }, { \"name\": \"comfyui-agent-skill\", \"repo\": \"https://github.com/MieMieeeee/comfyui-agent-skill\", \"kind\": \"Skill\", \"title\": \"把已注册的 ComfyUI 工作流交给 Agent\", \"use\": \"本地执行型 Skill：通过 CLI 调用注册工作流，输出结构化结果。\", \"boundary\": \"要求已有本地或可信自托管 ComfyUI 与模型；不提供后端，不是单纯写提示词的工具。\", \"link\": \"https://github.com/MieMieeeee/comfyui-agent-skill\", \"stars\": 113, \"pushed\": \"2026-08-02\", \"license\": \"Apache-2.0\", \"skill_paths\": [ \"SKILL.md\" ] }, { \"name\": \"runcomfy-agent-skills\", \"repo\": \"https://github.com/prime-skills/runcomfy-agent-skills\", \"kind\": \"Skill\", \"title\": \"云端多模型路由候选\", \"use\": \"提供 ai-image-generation 等 Skill，由 RunComfy CLI 调用服务。原链接已跳转到 prime-skills。\", \"boundary\": \"生成依赖 RunComfy 账户与云端费用；只审阅文档，未审计全部代码，也未实测效果。\", \"link\": \"https://github.com/prime-skills/runcomfy-agent-skills/blob/main/ai-image-generation/SKILL.md\", \"stars\": 43, \"pushed\": \"2026-05-15\", \"license\": \"MIT\", \"skill_paths\": [ \"ace-step/SKILL.md\", \"ai-avatar-video/SKILL.md\", \"ai-image-generation/SKILL.md\", \"ai-music/SKILL.md\", \"ai-video-generation/SKILL.md\", \"codex-pet/SKILL.md\", \"controlnet-pose/SKILL.md\", \"elevenlabs-music-generation/SKILL.md\", \"face-swap/SKILL.md\", \"flux-2-klein/SKILL.md\", \"flux-kontext/SKILL.md\", \"gpt-image-2/SKILL.md\", \"gpt-image-edit/SKILL.md\", \"happyhorse-1-0/SKILL.md\", \"image-edit/SKILL.md\", \"image-inpainting/SKILL.md\", \"image-outpainting/SKILL.md\", \"image-to-video/SKILL.md\", \"kling-3-0/SKILL.md\", \"lipsync/SKILL.md\", \"nano-banana-2/SKILL.md\", \"nano-banana-edit/SKILL.md\", \"relight/SKILL.md\", \"runcomfy-cli/SKILL.md\", \"seedance-v2/SKILL.md\", \"video-edit/SKILL.md\", \"video-extend/SKILL.md\", \"video-inpainting/SKILL.md\", \"video-outpainting/SKILL.md\", \"wan-2-7/SKILL.md\" ] }, { \"name\": \"awesome-nano-banana-pro-prompts\", \"repo\": \"https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts\", \"kind\": \"提示词库\", \"title\": \"带预览的 Gemini 提示词图库\", \"use\": \"适合先看画面，再拆解主体、镜头、风格、留白与约束。图库规模是作者自述，页面样例不是本次复现。\", \"boundary\": \"以 Gemini 图像生态为主；图片来源与授权逐项看，GitHub API 未给出明确 SPDX 许可证标识。\", \"link\": \"https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts\", \"stars\": 13406, \"pushed\": \"2026-09-11\", \"license\": \"NOASSERTION\", \"skill_paths\": [] }, { \"name\": \"Fooocus\", \"repo\": \"https://github.com/lllyasviel/Fooocus\", \"kind\": \"风格预设\", \"title\": \"成熟 SDXL 项目的可读风格词表\", \"use\": \"重点参考 sdxl_styles 下的 JSON：可直接看到某种风格如何拼接正、负面提示。\", \"boundary\": \"项目已进入仅修 bug 的有限 LTS，不是追新模型首选。预设词有冲突和过度修饰，需拆开用。\", \"link\": \"https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json\", \"stars\": 52984, \"pushed\": \"2025-12-01\", \"license\": \"GPL-3.0\", \"skill_paths\": [] }, { \"name\": \"stable-diffusion-prompt-templates\", \"repo\": \"https://github.com/Dalabad/stable-diffusion-prompt-templates\", \"kind\": \"提示词库\", \"title\": \"较早期的风格对照词表\", \"use\": \"可用来学习 comic、line art、digital painting 等术语的组织方式。\", \"boundary\": \"最后推送较早；含 artist 名和 8k 等旧式词，不推荐整段照搬到现代模型。\", \"link\": \"https://github.com/Dalabad/stable-diffusion-prompt-templates\", \"stars\": 697, \"pushed\": \"2024-08-21\", \"license\": \"MIT\", \"skill_paths\": [] }, { \"name\": \"workflow_templates\", \"repo\": \"https://github.com/Comfy-Org/workflow_templates\", \"kind\": \"工作流\", \"title\": \"ComfyUI 官方模板\", \"use\": \"需要可重复流程、图像编辑、模型加载时，优先从官方模板开始。\", \"boundary\": \"不同模板所需节点、权重和显存不同；部分模板使用云 API，并非全部纯本地。仓库中的维护 Skill 不等于生图 Skill。\", \"link\": \"https://github.com/Comfy-Org/workflow_templates\", \"stars\": 892, \"pushed\": \"2026-09-11\", \"license\": \"MIT\", \"skill_paths\": [ \".claude/skills/editing-site-content/SKILL.md\", \".claude/skills/importing-subgraphs/SKILL.md\", \".claude/skills/managing-bundles/SKILL.md\", \".claude/skills/managing-mcp-index/SKILL.md\", \".claude/skills/managing-releases/SKILL.md\", \".claude/skills/managing-templates/SKILL.md\", \".claude/skills/managing-thumbnails/SKILL.md\", \".claude/skills/managing-translations/SKILL.md\", \".claude/skills/managing-use-case-pages/SKILL.md\", \".claude/skills/regenerating-ai-content/SKILL.md\" ] }, { \"name\": \"example_workflows\", \"repo\": \"https://github.com/Comfy-Org/example_workflows\", \"kind\": \"工作流\", \"title\": \"官方教程配套工作流\", \"use\": \"适合从教程进入具体示例，核对输入图、节点与依赖。\", \"boundary\": \"不是提示词大全，不应假定任意 JSON 都可直接在当前机器执行。\", \"link\": \"https://github.com/Comfy-Org/example_workflows\", \"stars\": 25, \"pushed\": \"2026-08-21\", \"license\": \"未声明\", \"skill_paths\": [] } ], \"styles\": [ { \"name\": \"漫画线稿\", \"tag\": \"墨线 / 结构 / 黑白\", \"desc\": \"靠线宽、轮廓与黑白面积塑造形体。先决定是清爽线稿，还是有排线和网点的漫画成稿；它们不是同一种密度。\", \"features\": [ \"有轻重的墨线，外轮廓较强、内部结构线克制\", \"脸与手线条完整，局部排线表达体积\", \"背景留白，大块纯黑只放在构图需要的位置\" ], \"prompt\": \"A red-haired librarian holding a closed book, three-quarter view, waist-up. Black-and-white manga ink drawing on clean white paper. Confident tapered contour lines with varied line weight, precise facial features and hands, sparse cross-hatching only in the deepest shadows, a few deliberate solid-black shapes. Clear readable silhouette, restrained interior detail, spacious uncluttered background.\", \"negative\": \"photograph, 3d render, full color, soft airbrush shading, dense background, text, watermark\", \"pitfall\": \"不要直接复制 Fooocus 的 sai-line art：它的负面词包含 anime，会与“漫画角色”目标打架。line art 与 anime 不是天然互斥。\", \"citation\": \"S6\" }, { \"name\": \"厚涂\", \"tag\": \"体块 / 笔触 / 边缘\", \"desc\": \"中文“厚涂”常指以色块塑造体积的数字绘画，不一定要模拟凸起的油彩。只有明确想要堆积颜料时，再加 impasto / palette-knife。\", \"features\": [ \"用大色块而非黑色轮廓线塑造体积\", \"硬边集中在焦点，软边与消失边用于转折\", \"笔触方向跟随形体，避免整张均匀铺纹理\" ], \"prompt\": \"A red-haired librarian holding a closed book, three-quarter view, waist-up. Painterly digital illustration built from broad opaque color masses. Visible purposeful brush strokes following the form, sculpted light and shadow, a restrained plum, warm ivory and muted vermilion palette. Sharp accents around the eyes and book, softer and lost edges in the hair and clothing. Matte surfaces, simplified background, one broad side light.\", \"negative\": \"3d render, glossy plastic, airbrushed skin, uniform sharp outlines, excessive microdetail, text, watermark\", \"pitfall\": \"painterly 是绘画性；impasto 才偏厚重颜料肌理。随意加入 oil painting、photo、cel shading 容易互相拉扯。\", \"citation\": \"S6 / S7 / S10\" }, { \"name\": \"半厚涂\", \"tag\": \"保留线感 / 局部塑形\", \"desc\": \"半厚涂没有统一的模型参数。更稳妥的说法是：保留哪些线条、哪些区域用绘画性塑形，以及阴影分几层。\", \"features\": [ \"面部和轮廓有干净线条，内部线减弱\", \"两到三层主要明暗，再以少量柔和过渡连接\", \"头发与衣料有局部笔触，皮肤不过度磨皮\" ], \"prompt\": \"A red-haired librarian holding a closed book, three-quarter view, waist-up. Semi-painterly anime illustration. Retain delicate clean linework around the eyes, face and silhouette, with understated interior lines. Model the hair and fabric using two or three broad value groups and subtle painterly transitions. Soft matte skin, selective brush texture, crisp focal details and restrained highlights. Muted plum and warm ivory colors, plain warm paper background.\", \"negative\": \"photograph, 3d render, heavy impasto, oily highlights, excessive airbrush, uniform hard outlines, text, watermark\", \"pitfall\": \"单写 semi-realistic 会把脸推向写实，未必得到半厚涂；要描述“线稿与色块如何分工”。\", \"citation\": \"S6 / S10 / S11\" }, { \"name\": \"清新简约\", \"tag\": \"少色 / 留白 / 清晰形状\", \"desc\": \"清新不等于曝光拉满，简约也不是删掉所有层次。限制调色板、形状数量和视觉重心，通常比“minimalist masterpiece”更可控。\", \"features\": [ \"三到四色：鼠尾草绿、奶油色、浅珊瑚等\", \"扁平或轻水粉色块，少量纸感\", \"主次形状清楚，保留大面积呼吸空间\" ], \"prompt\": \"A small reading corner with a librarian and one potted plant. Fresh minimalist editorial illustration. Simple rounded shapes, a limited palette of sage green, warm cream and soft coral, flat matte gouache-like color blocks with very subtle paper texture. Gentle daylight expressed with one simple shadow shape, abundant negative space, a slightly off-center balanced composition, calm everyday mood.\", \"negative\": \"3d render, neon colors, dramatic rim light, glossy reflections, clutter, dense texture, text, watermark\", \"pitfall\": \"flat、gouache、paper cut 可以择一主导；把 3D、油画厚肌理和扁平矢量同时堆上去，容易丢失清爽感。\", \"citation\": \"S10 / S11\" } ], \"sources\": [ { \"id\": \"S1\", \"title\": \"BFL 官方 Agent Skills\", \"url\": \"https://github.com/black-forest-labs/skills\", \"evidence\": \"GitHub API、README 与图像 Skill 正文已核对；使用 master 分支。\" }, { \"id\": \"S2\", \"title\": \"YouMind 提示词检索 Skill\", \"url\": \"https://github.com/YouMind-OpenLab/ai-image-prompts-skill\", \"evidence\": \"已确认根目录 SKILL.md 与分类检索工作方式；跨模型效果为作者主张，未复现。\" }, { \"id\": \"S3\", \"title\": \"ComfyUI Agent Skill\", \"url\": \"https://github.com/MieMieeeee/comfyui-agent-skill\", \"evidence\": \"已读 SKILL.md，明确需要已有服务，仅执行注册工作流。\" }, { \"id\": \"S4\", \"title\": \"RunComfy Skills\", \"url\": \"https://github.com/prime-skills/runcomfy-agent-skills\", \"evidence\": \"GitHub 跳转与 ai-image-generation/SKILL.md 已核对；生成走服务 API。\" }, { \"id\": \"S5\", \"title\": \"YouMind 图像提示词图库\", \"url\": \"https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts\", \"evidence\": \"仓库、README、关注数与许可元数据已核对。\" }, { \"id\": \"S6\", \"title\": \"Fooocus 风格 JSON\", \"url\": \"https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json\", \"evidence\": \"实际读取 line art、comic book、digital art 等正负面模板；README 明确有限 LTS。\" }, { \"id\": \"S7\", \"title\": \"Stable Diffusion Prompt Templates\", \"url\": \"https://github.com/Dalabad/stable-diffusion-prompt-templates\", \"evidence\": \"读取旧式风格词表，作为术语材料而非即用最佳配方。\" }, { \"id\": \"S8\", \"title\": \"ComfyUI 官方模板\", \"url\": \"https://github.com/Comfy-Org/workflow_templates\", \"evidence\": \"GitHub 仓库和目录已核对；模板类型与模型依赖各异。\" }, { \"id\": \"S9\", \"title\": \"ComfyUI 示例工作流\", \"url\": \"https://github.com/Comfy-Org/example_workflows\", \"evidence\": \"官方组织仓库，示例 JSON 属工作流而非通用 Skill。\" }, { \"id\": \"S10\", \"title\": \"FLUX.2 Prompting Guide\", \"url\": \"https://docs.bfl.ai/guides/prompting_guide_flux2\", \"evidence\": \"直接读取官方网页：主体+动作+风格+语境，重要项前置；不支持负面提示词。\" }, { \"id\": \"S11\", \"title\": \"Gemini 图像生成指南\", \"url\": \"https://ai.google.dev/gemini-api/docs/image-generation\", \"evidence\": \"直接读取官方网页：具体描述、编辑迭代、正向表达预期场景；不把 SD 参数当通用参数。\" }, { \"id\": \"S12\", \"title\": \"Midjourney Style Reference\", \"url\": \"https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference\", \"evidence\": \"浏览器实际读取：匹配颜色、媒介、纹理、灯光，不是复制人物身份；支持 --sref 与 --sw。\" }, { \"id\": \"S13\", \"title\": \"Midjourney Raw\", \"url\": \"https://docs.midjourney.com/hc/en-us/articles/32634113811853-Raw-Mode\", \"evidence\": \"浏览器实际读取：减少自动美化与默认创作倾向；不是保证无 AI 痕迹。\" }, { \"id\": \"S14\", \"title\": \"Midjourney Stylize\", \"url\": \"https://docs.midjourney.com/hc/en-us/articles/32196176868109-Stylize\", \"evidence\": \"浏览器实际读取：默认 100，文档给出 0–1000；低值更贴近提示，高值赋予更多艺术自由。\" } ], \"scope\": \"文档与代码库核验；未安装第三方 Skill，未做新模型出图基准。提示词是本次整理的试验起点。\" }"
-        },
-        {
-          "file": "artifacts/research.md",
-          "text": "# AI 生图：风格、Skill 与提示词专题 核对日期：2026-09-11 文档与代码库核验；未安装第三方 Skill，未做新模型出图基准。提示词是本次整理的试验起点。 ## 搜索结论 Skill、提示词库、LoRA 与节点工作流分别解决编排、语言参考、模型适配和执行问题。优先使用官方能力说明与可核对的仓库，不以关注数代替质量。 ## 官方 FLUX 提示与 API 指南 https://github.com/black-forest-labs/skills 优先阅读 flux-image-best-practices；它整理的是提示结构和模型限制，不是某种画风滤镜。 适合 FLUX。实际生成需要对应 API 或另配本地流程；仓库 MIT 不等于所有模型权重都可免费商用。 ## 跨模型提示词检索 https://github.com/YouMind-OpenLab/ai-image-prompts-skill 按用途检索分类数据，返回带样例的提示词。适合找构图、商业插画与漫画分镜灵感。 仓库宣称适配多模型，并不等于相同提示词能复现相同风格；它主要检索与改写，不自带生成模型。 ## 把已注册的 ComfyUI 工作流交给 Agent https://github.com/MieMieeeee/comfyui-agent-skill 本地执行型 Skill：通过 CLI 调用注册工作流，输出结构化结果。 要求已有本地或可信自托管 ComfyUI 与模型；不提供后端，不是单纯写提示词的工具。 ## 云端多模型路由候选 https://github.com/prime-skills/runcomfy-agent-skills 提供 ai-image-generation 等 Skill，由 RunComfy CLI 调用服务。原链接已跳转到 prime-skills。 生成依赖 RunComfy 账户与云端费用；只审阅文档，未审计全部代码，也未实测效果。 ## 带预览的 Gemini 提示词图库 https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts 适合先看画面，再拆解主体、镜头、风格、留白与约束。图库规模是作者自述，页面样例不是本次复现。 以 Gemini 图像生态为主；图片来源与授权逐项看，GitHub API 未给出明确 SPDX 许可证标识。 ## 成熟 SDXL 项目的可读风格词表 https://github.com/lllyasviel/Fooocus 重点参考 sdxl_styles 下的 JSON：可直接看到某种风格如何拼接正、负面提示。 项目已进入仅修 bug 的有限 LTS，不是追新模型首选。预设词有冲突和过度修饰，需拆开用。 ## 较早期的风格对照词表 https://github.com/Dalabad/stable-diffusion-prompt-templates 可用来学习 comic、line art、digital painting 等术语的组织方式。 最后推送较早；含 artist 名和 8k 等旧式词，不推荐整段照搬到现代模型。 ## ComfyUI 官方模板 https://github.com/Comfy-Org/workflow_templates 需要可重复流程、图像编辑、模型加载时，优先从官方模板开始。 不同模板所需节点、权重和显存不同；部分模板使用云 API，并非全部纯本地。仓库中的维护 Skill 不等于生图 Skill。 ## 官方教程配套工作流 https://github.com/Comfy-Org/example_workflows 适合从教程进入具体示例，核对输入图、节点与依赖。 不是提示词大全，不应假定任意 JSON 都可直接在当前机器执行。 ## 漫画线稿 靠线宽、轮廓与黑白面积塑造形体。先决定是清爽线稿，还是有排线和网点的漫画成稿；它们不是同一种密度。 ```text A red-haired librarian holding a closed book, three-quarter view, waist-up. Black-and-white manga ink drawing on clean white paper. Confident tapered contour lines with varied line weight, precise facial features and hands, sparse cross-hatching only in the deepest shadows, a few deliberate solid-black shapes. Clear readable silhouette, restrained interior detail, spacious uncluttered background. ``` 负面提示仅供兼容 SDXL 工作流：photograph, 3d render, full color, soft airbrush shading, dense background, text, watermark 不要直接复制 Fooocus 的 sai-line art：它的负面词包含 anime，会与“漫画角色”目标打架。line art 与 anime 不是天然互斥。 ## 厚涂 中文“厚涂”常指以色块塑造体积的数字绘画，不一定要模拟凸起的油彩。只有明确想要堆积颜料时，再加 impasto / palette-knife。 ```text A red-haired librarian holding a closed book, three-quarter view, waist-up. Painterly digital illustration built from broad opaque color masses. Visible purposeful brush strokes following the form, sculpted light and shadow, a restrained plum, warm ivory and muted vermilion palette. Sharp accents around the eyes and book, softer and lost edges in the hair and clothing. Matte surfaces, simplified background, one broad side light. ``` 负面提示仅供兼容 SDXL 工作流：3d render, glossy plastic, airbrushed skin, uniform sharp outlines, excessive microdetail, text, watermark painterly 是绘画性；impasto 才偏厚重颜料肌理。随意加入 oil painting、photo、cel shading 容易互相拉扯。 ## 半厚涂 半厚涂没有统一的模型参数。更稳妥的说法是：保留哪些线条、哪些区域用绘画性塑形，以及阴影分几层。 ```text A red-haired librarian holding a closed book, three-quarter view, waist-up. Semi-painterly anime illustration. Retain delicate clean linework around the eyes, face and silhouette, with understated interior lines. Model the hair and fabric using two or three broad value groups and subtle painterly transitions. Soft matte skin, selective brush texture, crisp focal details and restrained highlights. Muted plum and warm ivory colors, plain warm paper background. ``` 负面提示仅供兼容 SDXL 工作流：photograph, 3d render, heavy impasto, oily highlights, excessive airbrush, uniform hard outlines, text, watermark 单写 semi-realistic 会把脸推向写实，未必得到半厚涂；要描述“线稿与色块如何分工”。 ## 清新简约 清新不等于曝光拉满，简约也不是删掉所有层次。限制调色板、形状数量和视觉重心，通常比“minimalist masterpiece”更可控。 ```text A small reading corner with a librarian and one potted plant. Fresh minimalist editorial illustration. Simple rounded shapes, a limited palette of sage green, warm cream and soft coral, flat matte gouache-like color blocks with very subtle paper texture. Gentle daylight expressed with one simple shadow shape, abundant negative space, a slightly off-center balanced composition, calm everyday mood. ``` 负面提示仅供兼容 SDXL 工作流：3d render, neon colors, dramatic rim light, glossy reflections, clutter, dense texture, text, watermark flat、gouache、paper cut 可以择一主导；把 3D、油画厚肌理和扁平矢量同时堆上去，容易丢失清爽感。 ## 来源 - [S1] BFL 官方 Agent Skills：https://github.com/black-forest-labs/skills — GitHub API、README 与图像 Skill 正文已核对；使用 master 分支。 - [S2] YouMind 提示词检索 Skill：https://github.com/YouMind-OpenLab/ai-image-prompts-skill — 已确认根目录 SKILL.md 与分类检索工作方式；跨模型效果为作者主张，未复现。 - [S3] ComfyUI Agent Skill：https://github.com/MieMieeeee/comfyui-agent-skill — 已读 SKILL.md，明确需要已有服务，仅执行注册工作流。 - [S4] RunComfy Skills：https://github.com/prime-skills/runcomfy-agent-skills — GitHub 跳转与 ai-image-generation/SKILL.md 已核对；生成走服务 API。 - [S5] YouMind 图像提示词图库：https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts — 仓库、README、关注数与许可元数据已核对。 - [S6] Fooocus 风格 JSON：https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json — 实际读取 line art、comic book、digital art 等正负面模板；README 明确有限 LTS。 - [S7] Stable Diffusion Prompt Templates：https://github.com/Dalabad/stable-diffusion-prompt-templates — 读取旧式风格词表，作为术语材料而非即用最佳配方。 - [S8] ComfyUI 官方模板：https://github.com/Comfy-Org/workflow_templates — GitHub 仓库和目录已核对；模板类型与模型依赖各异。 - [S9] ComfyUI 示例工作流：https://github.com/Comfy-Org/example_workflows — 官方组织仓库，示例 JSON 属工作流而非通用 Skill。 - [S10] FLUX.2 Prompting Guide：https://docs.bfl.ai/guides/prompting_guide_flux2 — 直接读取官方网页：主体+动作+风格+语境，重要项前置；不支持负面提示词。 - [S11] Gemini 图像生成指南：https://ai.google.dev/gemini-api/docs/image-generation — 直接读取官方网页：具体描述、编辑迭代、正向表达预期场景；不把 SD 参数当通用参数。 - [S12] Midjourney Style Reference：https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference — 浏览器实际读取：匹配颜色、媒介、纹理、灯光，不是复制人物身份；支持 --sref 与 --sw。 - [S13] Midjourney Raw：https://docs.midjourney.com/hc/en-us/articles/32634113811853-Raw-Mode — 浏览器实际读取：减少自动美化与默认创作倾向；不是保证无 AI 痕迹。 - [S14] Midjourney Stylize：https://docs.midjourney.com/hc/en-us/articles/32196176868109-Stylize — 浏览器实际读取：默认 100，文档给出 0–1000；低值更贴近提示，高值赋予更多艺术自由。"
-        }
-      ],
       "topic": {
         "schema": 1,
         "layout": "reading-v2",
         "state": "资料研究、个人 Skill 创建与首轮实测已完成。新 imgen-art-director 已生成帕秋莉 fumo 写实、漫画线稿、厚涂三版；用户认可本次结果与 Skill。长期主题继续积累，尚未做严格受控风格对照或官方直连验证。",
         "checked": "2026-09-12 按新版 muq-journal 重新整理。实测与用户反馈来自2026-09-11；本轮只整理归档，不新增生成或重跑联网研究。",
+        "actions": [
+          {
+            "title": "个人生图 Skill 源码",
+            "url": "https://github.com/dticpw/agentflow/tree/main/skills/imgen-art-director"
+          }
+        ],
+        "webpages": [
+          {
+            "title": "个人 Skill 源码仓库（私有）",
+            "url": "https://github.com/dticpw/agentflow"
+          },
+          {
+            "title": "官方 FLUX 提示与 API 指南",
+            "url": "https://github.com/black-forest-labs/skills/blob/master/skills/flux-image-best-practices/SKILL.md"
+          },
+          {
+            "title": "跨模型提示词检索",
+            "url": "https://github.com/YouMind-OpenLab/ai-image-prompts-skill/blob/main/SKILL.md"
+          },
+          {
+            "title": "把已注册的 ComfyUI 工作流交给 Agent",
+            "url": "https://github.com/MieMieeeee/comfyui-agent-skill"
+          },
+          {
+            "title": "云端多模型路由候选",
+            "url": "https://github.com/prime-skills/runcomfy-agent-skills/blob/main/ai-image-generation/SKILL.md"
+          },
+          {
+            "title": "带预览的 Gemini 提示词图库",
+            "url": "https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts"
+          },
+          {
+            "title": "成熟 SDXL 项目的可读风格词表",
+            "url": "https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json"
+          },
+          {
+            "title": "较早期的风格对照词表",
+            "url": "https://github.com/Dalabad/stable-diffusion-prompt-templates"
+          },
+          {
+            "title": "ComfyUI 官方模板",
+            "url": "https://github.com/Comfy-Org/workflow_templates"
+          },
+          {
+            "title": "官方教程配套工作流",
+            "url": "https://github.com/Comfy-Org/example_workflows"
+          }
+        ],
+        "sources": [
+          {
+            "id": "codex-4d581ad1e98ee8f22621fa93",
+            "title": "daily · 日常维护与 AI 日报工作流",
+            "date": "2026-09-10",
+            "primary": false
+          }
+        ],
         "sections": [
           {
             "id": "direction",
@@ -363,8 +278,7 @@
             "paragraphs": [
               "本主题保存 AI 生图调研、提示词、可用 Skill 与实际图像。研究覆盖漫画线稿、厚涂、半厚涂、清新简约，以及具体视觉问题的诊断。",
               "最终选择自建 imgen-art-director：以当前意图为先，仅按需读取风格参考；不强制默认画风，不把“去 AI 味”变成万能负面词。旧 imgen-studio 保留作参考，已从发现入口移除。"
-            ],
-            "images": []
+            ]
           },
           {
             "id": "research",
@@ -373,8 +287,7 @@
               "研究区分 Agent Skill、提示词库、风格预设、LoRA 与节点工作流；不同类型不能仅凭同名画风互相替代。检索与直接核对共整理14个来源和9项资源，完整证据与风格配方保留在两份历史报告中。",
               "BFL 官方 Skill 整理 FLUX 提示与模型限制；YouMind 提供带样例的提示检索；ComfyUI 工作流适合节点与模型组合；RunComfy 是依赖账户与云端费用的候选。只审阅的仓库没有被当成本机已验证工具。",
               "Fooocus 已进入有限 LTS，其 JSON 适合拆解词语，不作为追新模型平台。风格参数必须按体系适配：FLUX、Midjourney、SD 与 GPT Image 的提示语法和支持能力不混用。"
-            ],
-            "images": []
+            ]
           },
           {
             "id": "samples",
@@ -429,8 +342,7 @@
               "它负责理解用途、核对角色锚点、组织提示、选择相关风格方法、检查实图和保留可复用成果。它不为图像模型增加新能力，参考规范也不能凌驾于当前画面需求。",
               "漫画线稿关注线重、排线和黑白层次；数字厚涂用色块、体积与边缘塑形，不必模拟堆起的油彩；半厚涂关注线条和色块分工；简约风关注信息密度与留白。",
               "减少 AI 味要针对实际缺陷：塑料高光、过度细节、模板灯光、身份漂移或均匀假纹理。合适的高光与丰富细节仍可保留，不能把个人审美写成通用禁令。"
-            ],
-            "images": []
+            ]
           },
           {
             "id": "evidence",
@@ -440,8 +352,7 @@
               "写实版约34秒，线稿版约32秒，厚涂版约39秒。经既有授权的第三方 model-library 与内置 CLI 请求 gpt-image-2、high、1024×1024；三张实际输出均为1254×1254 RGB。请求参数不能证明第三方后端身份。",
               "用户对写实样图反馈“很好”，看完两种绘画版后表示“这个skill不错”。这是本轮结果与使用体验的认可，不代表已确定最喜欢的画风，也不代表多任务稳定性已经验证。",
               "此前另有帕秋莉半厚涂人物立绘，来自旧 Skill，原图与提示词保留作历史样例。清新简约目前只有研究方法，没有本轮出图证据。"
-            ],
-            "images": []
+            ]
           },
           {
             "id": "usage",
@@ -450,68 +361,171 @@
               "直接说明主体、用途与想要的视觉效果即可，例如“用新生图 Skill 画帕秋莉的清新简约立绘”。有参考图时注明它用于身份、风格、构图还是需要修改的原图。",
               "要准确比较风格，后续应指定同一母图与保留项；本轮独立生成会带来蝴蝶结、服装和构图变化。当前没有必要为归档额外生图。",
               "有效源码在共享 agentflow 仓库的 skills/imgen-art-director；馆内 ZIP 是2026-09-11历史快照。用户认可本轮体验，但未指定最偏爱的画风；清新简约仍待按实际任务验证。"
-            ],
-            "images": []
-          }
-        ],
-        "actions": [
-          {
-            "title": "个人生图 Skill 源码",
-            "url": "https://github.com/dticpw/agentflow/tree/main/skills/imgen-art-director"
-          }
-        ],
-        "webpages": [
-          {
-            "title": "个人 Skill 源码仓库（私有）",
-            "url": "https://github.com/dticpw/agentflow"
-          },
-          {
-            "title": "官方 FLUX 提示与 API 指南",
-            "url": "https://github.com/black-forest-labs/skills/blob/master/skills/flux-image-best-practices/SKILL.md"
-          },
-          {
-            "title": "跨模型提示词检索",
-            "url": "https://github.com/YouMind-OpenLab/ai-image-prompts-skill/blob/main/SKILL.md"
-          },
-          {
-            "title": "把已注册的 ComfyUI 工作流交给 Agent",
-            "url": "https://github.com/MieMieeeee/comfyui-agent-skill"
-          },
-          {
-            "title": "云端多模型路由候选",
-            "url": "https://github.com/prime-skills/runcomfy-agent-skills/blob/main/ai-image-generation/SKILL.md"
-          },
-          {
-            "title": "带预览的 Gemini 提示词图库",
-            "url": "https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts"
-          },
-          {
-            "title": "成熟 SDXL 项目的可读风格词表",
-            "url": "https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json"
-          },
-          {
-            "title": "较早期的风格对照词表",
-            "url": "https://github.com/Dalabad/stable-diffusion-prompt-templates"
-          },
-          {
-            "title": "ComfyUI 官方模板",
-            "url": "https://github.com/Comfy-Org/workflow_templates"
-          },
-          {
-            "title": "官方教程配套工作流",
-            "url": "https://github.com/Comfy-Org/example_workflows"
-          }
-        ],
-        "sources": [
-          {
-            "id": "codex-4d581ad1e98ee8f22621fa93",
-            "title": "daily · 日常维护与 AI 日报工作流",
-            "date": "2026-09-10",
-            "revision": "bf2bd1416af541ff97a0756788f70069",
-            "primary": false
+            ]
           }
         ]
-      }
+      },
+      "public_content": true,
+      "files": [
+        {
+          "name": "artifacts/ai-image-studio-archive-20260911-v1.html",
+          "url": "public-files/ai-image-studio/0856d022f419b9deb0faf08c5962ad4536a4dcf61dc9b16ba7f78958230d1279.bin",
+          "bytes": 1391511,
+          "sha256": "0856d022f419b9deb0faf08c5962ad4536a4dcf61dc9b16ba7f78958230d1279"
+        },
+        {
+          "name": "artifacts/ai-image-studio-reading-20260912-v2.html",
+          "url": "public-files/ai-image-studio/d6c64ee423a9724c6f961761973c06059bb3e63d6ce2dfd2e05117b53864cce7.bin",
+          "bytes": 984969,
+          "sha256": "d6c64ee423a9724c6f961761973c06059bb3e63d6ce2dfd2e05117b53864cce7"
+        },
+        {
+          "name": "artifacts/ai-image-styles-20260911.html",
+          "url": "public-files/ai-image-studio/ae623bbad4909277edd00e8ad55f013c48998c3f61c83cd11ad4004ae4273437.bin",
+          "bytes": 38426,
+          "sha256": "ae623bbad4909277edd00e8ad55f013c48998c3f61c83cd11ad4004ae4273437"
+        },
+        {
+          "name": "artifacts/image-generation-research.html",
+          "url": "public-files/ai-image-studio/a0862949f795e19c13275892fd3b6100d8904316bed09b72c92a1844ac8a7470.bin",
+          "bytes": 483162,
+          "sha256": "a0862949f795e19c13275892fd3b6100d8904316bed09b72c92a1844ac8a7470"
+        },
+        {
+          "name": "artifacts/imgen-art-director-20260911.zip",
+          "url": "public-files/ai-image-studio/7a71e44742e95ee710c4219296e03fb9d0ca4e739df45d2bb85bfde9204d4ce9.bin",
+          "bytes": 10579,
+          "sha256": "7a71e44742e95ee710c4219296e03fb9d0ca4e739df45d2bb85bfde9204d4ce9"
+        },
+        {
+          "name": "artifacts/patchouli-fumo-ink-original-v1.png",
+          "url": "public-files/ai-image-studio/4bb1c82e61dcfc040886c1328f5f80e567eb570778d66e82bf49386c08df814e.bin",
+          "bytes": 3423860,
+          "sha256": "4bb1c82e61dcfc040886c1328f5f80e567eb570778d66e82bf49386c08df814e",
+          "thumbnail": {
+            "url": "public-files/ai-image-studio/065fb32f23148ac0e225dfdfbb7519a1e18109c9d80e0f39d6316193eab0aa87.bin",
+            "bytes": 21639,
+            "sha256": "065fb32f23148ac0e225dfdfbb7519a1e18109c9d80e0f39d6316193eab0aa87"
+          }
+        },
+        {
+          "name": "artifacts/patchouli-fumo-ink-prompt-v1.txt",
+          "url": "public-files/ai-image-studio/df3b83a4ccf1d8a56eef069a6d067a248ce9b58e2ad7a7467f19f0adba46208c.bin",
+          "bytes": 1345,
+          "sha256": "df3b83a4ccf1d8a56eef069a6d067a248ce9b58e2ad7a7467f19f0adba46208c"
+        },
+        {
+          "name": "artifacts/patchouli-fumo-original-v1.png",
+          "url": "public-files/ai-image-studio/5d32eab7cd2a7453f32ed9ee64aab518f56b56ced5a87a268dfb2e1924c8269a.bin",
+          "bytes": 2212015,
+          "sha256": "5d32eab7cd2a7453f32ed9ee64aab518f56b56ced5a87a268dfb2e1924c8269a",
+          "thumbnail": {
+            "url": "public-files/ai-image-studio/42d3593f3f3f128650258969a285c0853a3af16dac7a8bfc1aec294b8b9d4950.bin",
+            "bytes": 15165,
+            "sha256": "42d3593f3f3f128650258969a285c0853a3af16dac7a8bfc1aec294b8b9d4950"
+          }
+        },
+        {
+          "name": "artifacts/patchouli-fumo-painterly-original-v1.png",
+          "url": "public-files/ai-image-studio/0e25d8653e7e7f9e1cd39db9e51ac2af3b0813fcdde6ff57fa4770590635b966.bin",
+          "bytes": 2370526,
+          "sha256": "0e25d8653e7e7f9e1cd39db9e51ac2af3b0813fcdde6ff57fa4770590635b966",
+          "thumbnail": {
+            "url": "public-files/ai-image-studio/e31221687f62b96a3456b4aea9a46512b52f8291d7e7072609c3223431217dd7.bin",
+            "bytes": 14821,
+            "sha256": "e31221687f62b96a3456b4aea9a46512b52f8291d7e7072609c3223431217dd7"
+          }
+        },
+        {
+          "name": "artifacts/patchouli-fumo-painterly-prompt-v1.txt",
+          "url": "public-files/ai-image-studio/723e6760433d895ad3c12c736e8bd9ba1e2f11dba86e55dae55438c2409171b4.bin",
+          "bytes": 1566,
+          "sha256": "723e6760433d895ad3c12c736e8bd9ba1e2f11dba86e55dae55438c2409171b4"
+        },
+        {
+          "name": "artifacts/patchouli-fumo-prompt-v1.txt",
+          "url": "public-files/ai-image-studio/fd62c7d71bbe7d68925e820a8db357a7f91c3eb16077e4b3c1c0d21ef66c92ca.bin",
+          "bytes": 2237,
+          "sha256": "fd62c7d71bbe7d68925e820a8db357a7f91c3eb16077e4b3c1c0d21ef66c92ca"
+        },
+        {
+          "name": "artifacts/patchouli-original-v1.png",
+          "url": "public-files/ai-image-studio/4a6f334ca3f6e5fc7da3222a2a1b81e1d4018206d9578eb06ed03b6263525e73.bin",
+          "bytes": 2293065,
+          "sha256": "4a6f334ca3f6e5fc7da3222a2a1b81e1d4018206d9578eb06ed03b6263525e73",
+          "thumbnail": {
+            "url": "public-files/ai-image-studio/c77f6966bb0eace6a9a6dfac5904ed295ded3e29f9fda88ca49ffc1fbe27e56d.bin",
+            "bytes": 9510,
+            "sha256": "c77f6966bb0eace6a9a6dfac5904ed295ded3e29f9fda88ca49ffc1fbe27e56d"
+          }
+        },
+        {
+          "name": "artifacts/patchouli-prompt-v1.txt",
+          "url": "public-files/ai-image-studio/59cfc9893e083bfd5ffd13ce725089e2c1ad4f8c56c9901a76ee10a6737875be.bin",
+          "bytes": 2174,
+          "sha256": "59cfc9893e083bfd5ffd13ce725089e2c1ad4f8c56c9901a76ee10a6737875be"
+        },
+        {
+          "name": "artifacts/research.json",
+          "url": "public-files/ai-image-studio/98428ae29a5141e78fa804c0e4e0655e7a161907191ee56af4b8e7ecab7f1ae5.bin",
+          "bytes": 16598,
+          "sha256": "98428ae29a5141e78fa804c0e4e0655e7a161907191ee56af4b8e7ecab7f1ae5"
+        },
+        {
+          "name": "artifacts/research.md",
+          "url": "public-files/ai-image-studio/9f048006ec58760bd009135f041e5d337298fa93fcfec26916a84b4c7c5d9459.bin",
+          "bytes": 9387,
+          "sha256": "9f048006ec58760bd009135f041e5d337298fa93fcfec26916a84b4c7c5d9459",
+          "reading": {
+            "url": "public-files/ai-image-studio/b8617cb8a1910a0e681c964a5ddec1fdb78b7741a1fed9b616b3572e0fedcfbf.bin",
+            "bytes": 12096,
+            "sha256": "b8617cb8a1910a0e681c964a5ddec1fdb78b7741a1fed9b616b3572e0fedcfbf"
+          }
+        }
+      ],
+      "omitted_files": [],
+      "search_index": [
+        {
+          "file": "artifacts/ai-image-studio-archive-20260911-v1.html",
+          "text": "AI 生图 · 研究、Skill 与实测 muQ · AI 生图 / 2026-09-11 阶段归档 从提示词研究 到自己的生图 Skill 持续整理 AI 生图的搜索结论、可读写提示词、Agent Skill 与工作流仓库，以及真实素材实践。当前覆盖漫画线稿、厚涂、半厚涂、清新简约与减少常见 AI 视觉套路。 首轮实践已完成 · 长期维护 资料研究、个人 Skill 创建与首轮实测已完成。新 imgen-art-director 已生成帕秋莉 fumo 写实、漫画线稿、厚涂三版；用户认可本次结果与 Skill。长期主题继续积累，尚未做严格受控风格对照或官方直连验证。 本页目录 01 · 从资料研究到个人工具 02 · 帕秋莉 fumo · 三种风格 03 · Skill 的作用与使用边界 04 · 实测记录与用户反馈 05 · 文件、仓库与历史 01 从资料研究到个人工具 本主题保存 AI 生图调研、提示词、可用 Skill 与实际图像。研究覆盖漫画线稿、厚涂、半厚涂、清新简约，以及具体视觉问题的诊断。 最终选择自建 imgen-art-director：以当前意图为先，仅按需读取风格参考；不强制默认画风，不把“去 AI 味”变成万能负面词。旧 imgen-studio 保留作参考，已从发现入口移除。 02 帕秋莉 fumo · 三种风格 三张均为 AI 生成的二创毛绒玩偶形象，非实物照片或官方商品复刻。写实版之后，用户要求漫画线稿与厚涂各一版。两种绘画版独立生成，未输入同一母图，因此局部造型变化不能当作严格风格 A/B 测试。 写实摄影 窗边柔光、绒毛与刺绣细节。 漫画线稿 黑白墨线与细密排线，保留玩偶布料结构。 数字厚涂 暖光、紫色块面与沿体积展开的笔触。 03 Skill 的作用与使用边界 它负责理解用途、核对角色锚点、组织提示、选择相关风格方法、检查实图和保留可复用成果。它不为图像模型增加新能力，参考规范也不能凌驾于当前画面需求。 漫画线稿关注线重、排线和黑白层次；数字厚涂用色块、体积与边缘塑形，不必模拟堆起的油彩；半厚涂关注线条和色块分工；简约风关注信息密度与留白。 减少 AI 味要针对实际缺陷：塑料高光、过度细节、模板灯光、身份漂移或均匀假纹理。合适的高光与丰富细节仍可保留，不能把个人审美写成通用禁令。 04 实测记录与用户反馈 新 Skill 的三张 fumo 均经过实际看图。写实版绒毛、刺绣与接触阴影清楚；线稿版排线比预设更密，属于漫画成稿；厚涂版色块与笔触明显，暖光和紫色阴影塑造体积。 写实版约34秒，线稿版约32秒，厚涂版约39秒。经既有授权的第三方 model-library 与内置 CLI 请求 gpt-image-2、high、1024×1024；三张实际输出均为1254×1254 RGB。请求参数不能证明第三方后端身份。 用户对写实样图反馈“很好”，看完两种绘画版后表示“这个skill不错”。这是本轮结果与使用体验的认可，不代表已确定最喜欢的画风，也不代表多任务稳定性已经验证。 此前另有帕秋莉半厚涂人物立绘，来自旧 Skill，原图与提示词保留作历史样例。清新简约目前只有研究方法，没有本轮出图证据。 05 文件、仓库与历史 文件 AI 生图专题 · 搜索结论与风格配方 ↗ 此前 GPT/OpenAI 生图研究 ↗ 可维护研究数据 ↗ 研究文字版 ↗ 帕秋莉 · 半厚涂原图 ↗ 帕秋莉 · 最终提示词 ↗ 个人生图 Skill 源码快照 ↗ 帕秋莉 fumo 原图 ↗ 帕秋莉 fumo 提示词 ↗ 帕秋莉 fumo · 漫画线稿原图 ↗ 帕秋莉 fumo · 漫画线稿提示词 ↗ 帕秋莉 fumo · 厚涂原图 ↗ 帕秋莉 fumo · 厚涂提示词 ↗ 网页与仓库 个人 Skill 源码仓库（私有） ↗ 官方 FLUX 提示与 API 指南 ↗ 跨模型提示词检索 ↗ 把已注册的 ComfyUI 工作流交给 Agent ↗ 云端多模型路由候选 ↗ 带预览的 Gemini 提示词图库 ↗ 成熟 SDXL 项目的可读风格词表 ↗ 较早期的风格对照词表 ↗ ComfyUI 官方模板 ↗ 官方教程配套工作流 ↗ 历史来源 daily · 来源会话（2026-09-10 起） ↗ 旧研究报告保留当时结论；当前进展以上文为准。原始用户消息按真实会话独立保存。 个人生图主题 · 原图、提示词与研究报告持续积累"
+        },
+        {
+          "file": "artifacts/ai-image-studio-reading-20260912-v2.html",
+          "text": "AI 生图 · 风格、Skill 与实践 muQ / 持续维护的主题 AI 生图 · 风格、Skill 与实践 持续整理 AI 生图的搜索结论、可读写提示词、Agent Skill 与工作流仓库，以及真实素材实践。当前覆盖漫画线稿、厚涂、半厚涂、清新简约与减少常见 AI 视觉套路。 当前状态与操作入口 资料研究、个人 Skill 创建与首轮实测已完成。新 imgen-art-director 已生成帕秋莉 fumo 写实、漫画线稿、厚涂三版；用户认可本次结果与 Skill。长期主题继续积累，尚未做严格受控风格对照或官方直连验证。 2026-09-12 按新版 muq-journal 重新整理。实测与用户反馈来自2026-09-11；本轮只整理归档，不新增生成或重跑联网研究。 个人生图 Skill 源码 本页目录 从资料研究到个人工具 搜索结论与资源选择 帕秋莉 fumo · 三种风格 早期样例 · 半厚涂人物立绘 Skill 的作用与使用边界 实测记录与用户反馈 如何继续使用与积累 网页 文件 历史与来源 01 从资料研究到个人工具 本主题保存 AI 生图调研、提示词、可用 Skill 与实际图像。研究覆盖漫画线稿、厚涂、半厚涂、清新简约，以及具体视觉问题的诊断。 最终选择自建 imgen-art-director：以当前意图为先，仅按需读取风格参考；不强制默认画风，不把“去 AI 味”变成万能负面词。旧 imgen-studio 保留作参考，已从发现入口移除。 02 搜索结论与资源选择 研究区分 Agent Skill、提示词库、风格预设、LoRA 与节点工作流；不同类型不能仅凭同名画风互相替代。检索与直接核对共整理14个来源和9项资源，完整证据与风格配方保留在两份历史报告中。 BFL 官方 Skill 整理 FLUX 提示与模型限制；YouMind 提供带样例的提示检索；ComfyUI 工作流适合节点与模型组合；RunComfy 是依赖账户与云端费用的候选。只审阅的仓库没有被当成本机已验证工具。 Fooocus 已进入有限 LTS，其 JSON 适合拆解词语，不作为追新模型平台。风格参数必须按体系适配：FLUX、Midjourney、SD 与 GPT Image 的提示语法和支持能力不混用。 03 帕秋莉 fumo · 三种风格 三张均为 AI 生成的二创毛绒玩偶形象，非实物照片或官方商品复刻。写实版之后，用户要求漫画线稿与厚涂各一版。两种绘画版独立生成，未输入同一母图，因此局部造型变化不能当作严格风格 A/B 测试。 写实摄影风格：窗边柔光、绒毛、刺绣与接触阴影。 打开原图 漫画线稿：变化线重、细密排线与布料结构。 打开原图 数字厚涂：暖光、紫色块面与沿体积展开的笔触。 打开原图 04 早期样例 · 半厚涂人物立绘 这张帕秋莉人物立绘来自旧 imgen-studio 的通道实测，先于个人 Skill 创建。保留它用于追溯工作流，不把它算作新 Skill 的验证结果。紫发、新月帽饰、魔导书与长袍可辨识；原图完整保留。 帕秋莉半厚涂人物立绘 · 旧 Skill 的历史样例 打开原图 05 Skill 的作用与使用边界 它负责理解用途、核对角色锚点、组织提示、选择相关风格方法、检查实图和保留可复用成果。它不为图像模型增加新能力，参考规范也不能凌驾于当前画面需求。 漫画线稿关注线重、排线和黑白层次；数字厚涂用色块、体积与边缘塑形，不必模拟堆起的油彩；半厚涂关注线条和色块分工；简约风关注信息密度与留白。 减少 AI 味要针对实际缺陷：塑料高光、过度细节、模板灯光、身份漂移或均匀假纹理。合适的高光与丰富细节仍可保留，不能把个人审美写成通用禁令。 06 实测记录与用户反馈 新 Skill 的三张 fumo 均经过实际看图。写实版绒毛、刺绣与接触阴影清楚；线稿版排线比预设更密，属于漫画成稿；厚涂版色块与笔触明显，暖光和紫色阴影塑造体积。 写实版约34秒，线稿版约32秒，厚涂版约39秒。经既有授权的第三方 model-library 与内置 CLI 请求 gpt-image-2、high、1024×1024；三张实际输出均为1254×1254 RGB。请求参数不能证明第三方后端身份。 用户对写实样图反馈“很好”，看完两种绘画版后表示“这个skill不错”。这是本轮结果与使用体验的认可，不代表已确定最喜欢的画风，也不代表多任务稳定性已经验证。 此前另有帕秋莉半厚涂人物立绘，来自旧 Skill，原图与提示词保留作历史样例。清新简约目前只有研究方法，没有本轮出图证据。 07 如何继续使用与积累 直接说明主体、用途与想要的视觉效果即可，例如“用新生图 Skill 画帕秋莉的清新简约立绘”。有参考图时注明它用于身份、风格、构图还是需要修改的原图。 要准确比较风格，后续应指定同一母图与保留项；本轮独立生成会带来蝴蝶结、服装和构图变化。当前没有必要为归档额外生图。 有效源码在共享 agentflow 仓库的 skills/imgen-art-director；馆内 ZIP 是2026-09-11历史快照。用户认可本轮体验，但未指定最偏爱的画风；清新简约仍待按实际任务验证。 08 网页 个人 Skill 源码仓库（私有） 官方 FLUX 提示与 API 指南 跨模型提示词检索 把已注册的 ComfyUI 工作流交给 Agent 云端多模型路由候选 带预览的 Gemini 提示词图库 成熟 SDXL 项目的可读风格词表 较早期的风格对照词表 ComfyUI 官方模板 官方教程配套工作流 09 文件 上一版生图主题归档（历史） AI 生图专题 · 搜索结论与风格配方 此前 GPT/OpenAI 生图研究 可维护研究数据 研究文字版 帕秋莉 · 半厚涂原图 帕秋莉 · 最终提示词 个人生图 Skill 源码快照 帕秋莉 fumo 原图 帕秋莉 fumo 提示词 帕秋莉 fumo · 漫画线稿原图 帕秋莉 fumo · 漫画线稿提示词 帕秋莉 fumo · 厚涂原图 帕秋莉 fumo · 厚涂提示词 10 历史与来源 daily · 日常维护与 AI 日报工作流 来源原话在图书馆馆主视角默认展开；本 HTML 阅读副本不复制原始提示词。"
+        },
+        {
+          "file": "artifacts/ai-image-styles-20260911.html",
+          "text": "AI 生图 · 风格、Skill 与提示词专题 跳到正文 imGen / muQ 搜索结论 Skill 与仓库 四类风格 减少 AI 味 实践记录 来源 AI IMAGE STUDIO / 2026.09.11 找到画风， 也找到可重复的方法。 AI 生图专题：从 GPT 扩展到 FLUX、Midjourney、Gemini 与 SDXL / ComfyUI，收录搜索结论、Skill、风格提示词和实践记录。 这一版收录什么？ 9 项分类资源，附仓库、维护与使用边界。 漫画线稿、厚涂、半厚涂、清新简约 4 组配方。 把“去 AI 味”拆成可检查的视觉选择。 14 处直接核对的来源与已知限制。 本次完成文档与仓库调研，未安装第三方 Skill，也未进行新模型出图评测。提示词是试验起点。 01 / 搜索结论 先分清你需要的是哪一层。 类型 解决什么 本次优先入口 Agent Skill 指导 Agent 查提示词、组织调用或执行已有流程；本身不是模型，也不保证画风。 BFL 官方、YouMind 检索；需要执行时再评估 ComfyUI / RunComfy。 提示词库 / 风格预设 提供语言、构图和配色参考；要拆解媒介、线条、明暗与背景，而非整段堆砌。 YouMind 图库、Fooocus 风格 JSON。 LoRA / 风格参考 提供额外视觉约束。LoRA 是模型适配权重，必须匹配底模；风格参考图不等于人物身份锁定。 Midjourney Style Reference；SDXL/其他底模按各模型卡和 LoRA 说明选择。 节点工作流 组织加载、采样、图像条件、编辑与导出。结构控制比只改 prompt 更适合固定线稿与姿势。 ComfyUI 官方模板与示例。 针对你目前的用法 先用提示词库与风格参考探索审美，再维护自己的母版与风格配方。需要批量、固定构图或线稿控制时才加入 ComfyUI。第三方执行 Skill 先审阅再安装，本次只收录链接。 “比较出名”用官方身份与 GitHub 关注规模辅助判断，不当作效果排名。检索中的一个 Midjourney 图库仅 1 星，未列入主推荐；官方 BFL Skill 规模较小但来源明确。 02 / Skill 与仓库链接 先看用途，再看安装入口。 关注数与最近推送来自 2026-09-11 的 GitHub API 快照。推送时间不等于核心代码更新，仓库许可也不自动覆盖模型、示例图和第三方服务。 全部 Agent Skill 提示词库 风格预设 工作流 9 项资源 Skill 官方 FLUX 提示与 API 指南 ↗ 优先阅读 flux-image-best-practices；它整理的是提示结构和模型限制，不是某种画风滤镜。 适合 FLUX。实际生成需要对应 API 或另配本地流程；仓库 MIT 不等于所有模型权重都可免费商用。 ★ 115 · 核对日快照 最近推送 2026-09-09 许可 MIT black-forest-labs/skills Skill 跨模型提示词检索 ↗ 按用途检索分类数据，返回带样例的提示词。适合找构图、商业插画与漫画分镜灵感。 仓库宣称适配多模型，并不等于相同提示词能复现相同风格；它主要检索与改写，不自带生成模型。 ★ 1,019 · 核对日快照 最近推送 2026-09-11 许可 MIT YouMind-OpenLab/ai-image-prompts-skill Skill 把已注册的 ComfyUI 工作流交给 Agent ↗ 本地执行型 Skill：通过 CLI 调用注册工作流，输出结构化结果。 要求已有本地或可信自托管 ComfyUI 与模型；不提供后端，不是单纯写提示词的工具。 ★ 113 · 核对日快照 最近推送 2026-08-02 许可 Apache-2.0 MieMieeeee/comfyui-agent-skill Skill 云端多模型路由候选 ↗ 提供 ai-image-generation 等 Skill，由 RunComfy CLI 调用服务。原链接已跳转到 prime-skills。 生成依赖 RunComfy 账户与云端费用；只审阅文档，未审计全部代码，也未实测效果。 ★ 43 · 核对日快照 最近推送 2026-05-15 许可 MIT prime-skills/runcomfy-agent-skills 提示词库 带预览的 Gemini 提示词图库 ↗ 适合先看画面，再拆解主体、镜头、风格、留白与约束。图库规模是作者自述，页面样例不是本次复现。 以 Gemini 图像生态为主；图片来源与授权逐项看，GitHub API 未给出明确 SPDX 许可证标识。 ★ 13,406 · 核对日快照 最近推送 2026-09-11 许可 NOASSERTION YouMind-OpenLab/awesome-nano-banana-pro-prompts 风格预设 成熟 SDXL 项目的可读风格词表 ↗ 重点参考 sdxl_styles 下的 JSON：可直接看到某种风格如何拼接正、负面提示。 项目已进入仅修 bug 的有限 LTS，不是追新模型首选。预设词有冲突和过度修饰，需拆开用。 ★ 52,984 · 核对日快照 最近推送 2025-12-01 许可 GPL-3.0 lllyasviel/Fooocus 提示词库 较早期的风格对照词表 ↗ 可用来学习 comic、line art、digital painting 等术语的组织方式。 最后推送较早；含 artist 名和 8k 等旧式词，不推荐整段照搬到现代模型。 ★ 697 · 核对日快照 最近推送 2024-08-21 许可 MIT Dalabad/stable-diffusion-prompt-templates 工作流 ComfyUI 官方模板 ↗ 需要可重复流程、图像编辑、模型加载时，优先从官方模板开始。 不同模板所需节点、权重和显存不同；部分模板使用云 API，并非全部纯本地。仓库中的维护 Skill 不等于生图 Skill。 ★ 892 · 核对日快照 最近推送 2026-09-11 许可 MIT Comfy-Org/workflow_templates 工作流 官方教程配套工作流 ↗ 适合从教程进入具体示例，核对输入图、节点与依赖。 不是提示词大全，不应假定任意 JSON 都可直接在当前机器执行。 ★ 25 · 核对日快照 最近推送 2026-08-21 许可 未声明 Comfy-Org/example_workflows 03 / 风格提示词 用可见特征描述风格。 四组范例均不依赖画师姓名。它们不是从某一图库照搬的“神词”，而是结合已核对指南整理的可修改配方。先固定主体，比较不同媒介和边缘处理。 可选：替换主体与动作 提示词用途 FLUX / Gemini：自然语言 Midjourney：风格控制起点 SDXL：正负面分别使用 更新四组配方 当前为静态阅读：四组完整范例仍可阅读和手动复制；交互版可使用筛选与改写。 墨线 / 结构 / 黑白 01 · 漫画线稿 复制正向提示词 靠线宽、轮廓与黑白面积塑造形体。先决定是清爽线稿，还是有排线和网点的漫画成稿；它们不是同一种密度。 有轻重的墨线，外轮廓较强、内部结构线克制 脸与手线条完整，局部排线表达体积 背景留白，大块纯黑只放在构图需要的位置 不要直接复制 Fooocus 的 sai-line art：它的负面词包含 anime，会与“漫画角色”目标打架。line art 与 anime 不是天然互斥。 依据：S6；下方范例为本次编写，未出图验证。 自然语言范例 · 可按顶部选项改写 A red-haired librarian holding a closed book, three-quarter view, waist-up. Black-and-white manga ink drawing on clean white paper. Confident tapered contour lines with varied line weight, precise facial features and hands, sparse cross-hatching only in the deepest shadows, a few deliberate solid-black shapes. Clear readable silhouette, restrained interior detail, spacious uncluttered background. 仅供支持负面词的 SDXL 工作流尝试 photograph, 3d render, full color, soft airbrush shading, dense background, text, watermark 体块 / 笔触 / 边缘 02 · 厚涂 复制正向提示词 中文“厚涂”常指以色块塑造体积的数字绘画，不一定要模拟凸起的油彩。只有明确想要堆积颜料时，再加 impasto / palette-knife。 用大色块而非黑色轮廓线塑造体积 硬边集中在焦点，软边与消失边用于转折 笔触方向跟随形体，避免整张均匀铺纹理 painterly 是绘画性；impasto 才偏厚重颜料肌理。随意加入 oil painting、photo、cel shading 容易互相拉扯。 依据：S6 / S7 / S10；下方范例为本次编写，未出图验证。 自然语言范例 · 可按顶部选项改写 A red-haired librarian holding a closed book, three-quarter view, waist-up. Painterly digital illustration built from broad opaque color masses. Visible purposeful brush strokes following the form, sculpted light and shadow, a restrained plum, warm ivory and muted vermilion palette. Sharp accents around the eyes and book, softer and lost edges in the hair and clothing. Matte surfaces, simplified background, one broad side light. 仅供支持负面词的 SDXL 工作流尝试 3d render, glossy plastic, airbrushed skin, uniform sharp outlines, excessive microdetail, text, watermark 保留线感 / 局部塑形 03 · 半厚涂 复制正向提示词 半厚涂没有统一的模型参数。更稳妥的说法是：保留哪些线条、哪些区域用绘画性塑形，以及阴影分几层。 面部和轮廓有干净线条，内部线减弱 两到三层主要明暗，再以少量柔和过渡连接 头发与衣料有局部笔触，皮肤不过度磨皮 单写 semi-realistic 会把脸推向写实，未必得到半厚涂；要描述“线稿与色块如何分工”。 依据：S6 / S10 / S11；下方范例为本次编写，未出图验证。 自然语言范例 · 可按顶部选项改写 A red-haired librarian holding a closed book, three-quarter view, waist-up. Semi-painterly anime illustration. Retain delicate clean linework around the eyes, face and silhouette, with understated interior lines. Model the hair and fabric using two or three broad value groups and subtle painterly transitions. Soft matte skin, selective brush texture, crisp focal details and restrained highlights. Muted plum and warm ivory colors, plain warm paper background. 仅供支持负面词的 SDXL 工作流尝试 photograph, 3d render, heavy impasto, oily highlights, excessive airbrush, uniform hard outlines, text, watermark 少色 / 留白 / 清晰形状 04 · 清新简约 复制正向提示词 清新不等于曝光拉满，简约也不是删掉所有层次。限制调色板、形状数量和视觉重心，通常比“minimalist masterpiece”更可控。 三到四色：鼠尾草绿、奶油色、浅珊瑚等 扁平或轻水粉色块，少量纸感 主次形状清楚，保留大面积呼吸空间 flat、gouache、paper cut 可以择一主导；把 3D、油画厚肌理和扁平矢量同时堆上去，容易丢失清爽感。 依据：S10 / S11；下方范例为本次编写，未出图验证。 自然语言范例 · 可按顶部选项改写 A small reading corner with a librarian and one potted plant. Fresh minimalist editorial illustration. Simple rounded shapes, a limited palette of sage green, warm cream and soft coral, flat matte gouache-like color blocks with very subtle paper texture. Gentle daylight expressed with one simple shadow shape, abundant negative space, a slightly off-center balanced composition, calm everyday mood. 仅供支持负面词的 SDXL 工作流尝试 3d render, neon colors, dramatic rim light, glossy reflections, clutter, dense texture, text, watermark 参数不要跨体系搬运。 FLUX.2： 官方明确不支持负面提示词。用“matte surface / clear silhouette”描述目标，而非追加 SD 的负面串。[S10] Gemini： 说明用途、参考图关系和具体改动；官方建议正向描述目标场景。不要把 SD 的权重括号当作通用语法。[S11] Midjourney： 可先用 Raw 与较低 Stylize 做对照，再用 --sref 加风格参考；Style Reference 主要传递媒介、色彩、纹理与光照，不复制角色身份。适用版本以官方页为准。[S12–S14] SDXL / Illustrious 等衍生模型： 标签、负面词、LoRA 和权重取决于具体模型卡与工作流。共享架构不代表推荐词、触发词、采样设置完全相同；不能混用其他架构的 LoRA。 04 / 减少常见 AI 视觉套路 “AI 味”不是一个单独的开关。 这里说的是审美上的默认套路，不是让图片规避检测或伪称人工创作。以下为依据提示指南整理的视觉判断；没有通用负面词能保证解决所有问题。 塑料与磨皮 把“perfect skin / glossy / ultra smooth”换成符合媒介的表面：哑光色块、局部纸纹、受控高光。别用强噪点掩盖结构错误；笔触应跟随形体。 哪里都很精细 只让脸、手和关键道具成为焦点，背景降低细节密度，边缘有硬、软、消失的区分。删除与目标无关的 8k、masterpiece、hyper-detailed 等堆叠，比较实际变化。 默认大片灯光 不是每张画都需要轮廓光、体积光、金色逆光和散景。指定一个明确光源与有限反差；线稿风格用排线与黑白形状表达光，不强行塞摄影镜头词。 模板化构图 先明确画幅、视线方向、主体占比和留白，再选择一个小幅不对称。不是故意画歪，而是让姿态、裁切和重心服务画面的意思。 统一脸与漂移 角色母版、风格参考、姿势参考分别标明用途。变体回到母版生成；如果线稿或构图必须固定，考虑结构条件工作流。新增瑕疵不能代替身份一致性。 伪随机手作感 刻意保留有限笔触、色块边缘与纸张质感，比随处添加划痕、畸形和颗粒更有方向。想要厚涂就检查体块，想要清爽就控制形状与调色板。 建议的小型 A/B 测试 固定模型版本、主体、比例与参考图；支持种子时固定种子，但不把它当跨模型一致性保证。A 用当前提示，B 只改一个风格因素。比较线条、体块、材质、构图和身份；记录参数与失败样例。选定方向后再提高质量，不用单张“抽中”证明方法有效。 05 / 实践记录与后续 把结论变成可积累的素材。 01 · 历史研究 09-10 GPT/OpenAI 生图调研已完成修订；相关 HTML 同条目保存，作为此前的基础资料。 02 · 馆员抠图 09-11 发现发丝封闭缝隙残留浅底。已清理 18 处并补修细缝，验证了深浅底检查的必要性。 03 · 本轮扩展 跨体系仓库与官方指南核对完成；形成四类风格配方。没有新增生成图片，不能称为风格实测图库。 04 · 待实测 下一轮可以用同一主体做四种画风小样，再比较原始提示、风格参考和局部编辑，记录真实效果与成本。 专题长期按“搜索结论 / Skill 与仓库 / 风格提示词 / 实践记录”追加；原始文件保留，新版本另存。普通专题目前按馆主可见入库。 06 / 来源与证据边界 能回到原文，才方便继续研究。 以下关键页面或仓库正文已直接读取。Midjourney 文档的普通 HTTP 抓取返回 403，改用现有浏览器成功核对。未运行仓库代码，未验证服务账户权限或出图质量。 [S1] BFL 官方 Agent Skills ↗ GitHub API、README 与图像 Skill 正文已核对；使用 master 分支。 [S2] YouMind 提示词检索 Skill ↗ 已确认根目录 SKILL.md 与分类检索工作方式；跨模型效果为作者主张，未复现。 [S3] ComfyUI Agent Skill ↗ 已读 SKILL.md，明确需要已有服务，仅执行注册工作流。 [S4] RunComfy Skills ↗ GitHub 跳转与 ai-image-generation/SKILL.md 已核对；生成走服务 API。 [S5] YouMind 图像提示词图库 ↗ 仓库、README、关注数与许可元数据已核对。 [S6] Fooocus 风格 JSON ↗ 实际读取 line art、comic book、digital art 等正负面模板；README 明确有限 LTS。 [S7] Stable Diffusion Prompt Templates ↗ 读取旧式风格词表，作为术语材料而非即用最佳配方。 [S8] ComfyUI 官方模板 ↗ GitHub 仓库和目录已核对；模板类型与模型依赖各异。 [S9] ComfyUI 示例工作流 ↗ 官方组织仓库，示例 JSON 属工作流而非通用 Skill。 [S10] FLUX.2 Prompting Guide ↗ 直接读取官方网页：主体+动作+风格+语境，重要项前置；不支持负面提示词。 [S11] Gemini 图像生成指南 ↗ 直接读取官方网页：具体描述、编辑迭代、正向表达预期场景；不把 SD 参数当通用参数。 [S12] Midjourney Style Reference ↗ 浏览器实际读取：匹配颜色、媒介、纹理、灯光，不是复制人物身份；支持 --sref 与 --sw。 [S13] Midjourney Raw ↗ 浏览器实际读取：减少自动美化与默认创作倾向；不是保证无 AI 痕迹。 [S14] Midjourney Stylize ↗ 浏览器实际读取：默认 100，文档给出 0–1000；低值更贴近提示，高值赋予更多艺术自由。 AI 生图 · muQ 专题 / 核对日期 2026-09-11 · HTML 内嵌样式，无外部字体、图片或脚本依赖。范例是研究起点，非效果保证。"
+        },
+        {
+          "file": "artifacts/image-generation-research.html",
+          "text": "生图技巧调研 · 从角色母版到网页素材 跳到报告正文 imGen 工作流 提示词 抠图对照 来源 打印 RESEARCH NOTES / 2026.09.10 → 09.11 从角色母版， 到真正可用的素材。 生图技巧与工具调研。先固定身份，再逐项编辑；把角色、背景和网页文字分层，最后在真实页面上验收。 资料调研已交付修订版 昨天做到哪一步了？ 搜索记录覆盖 6 个来源。 原稿通过结构检查，未获完整语义验收。 修订版改正角色“双角”、配色及接口能力边界。 第三方工具的真实出图对比尚未进行。 资料核对：09-10；HTML 整理与本地案例补充：09-11。本页没有把历史检索写成今天重新联网验证。 01 / 方法 最值得采用的，是一套编辑顺序。 固定角色身份比不断添加形容词更有用。参考图能提供约束，但并不保证每次生成完全一致；以下流程仍需人工检查。 01 保留同一母版 每张衍生图重新附上母版，明确哪些特征不可改变，避免用连续变体逐代传递误差。 02 把修改范围说清 写明主体、用途、构图、风格、保持项和修改项。一次只改一个方面，方便判断效果。 03 先构图，后精修 先探索姿势和留白，确定方向后再提高质量、修手部与纹理。质量参数按实际接口支持选择。 04 到页面上验收 深浅底检查透明边缘，手机上检查裁切和文字；角色不能遮挡按钮，重要文字交给 HTML。 本项目角色锚点： 深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本；无角、无尾。页面色值：深紫 #292332、暖白 #f5f1eb、梅紫 #665173、浅金 #dfcba2。色值提示不构成像素级保证。 02 / 选择 按工作方式选择工具。 工具或通道 适合什么 本次证据边界 ChatGPT 图像编辑 少量素材、自然语言试姿势和表情；上传同一张参考图，说明改变与保留项。 昨天调研核对了文档；套餐、额度和工作区权限需要实际确认。 GPT Image API 保存参数、组织批量任务；单次生成/编辑用 Image API，需要对话上下文时考虑 Responses。 官方 API、内置 CLI 与第三方代理不能混同；模型名与透明参数以所选接口为准。 Adobe Firefly / Photoshop 需要图层、局部编辑和设计交付的工作流。 已有官方集成文档记录；本项目没有完成真实出图对比。 Clipdrop Remove Background 透明边缘不合格时的背景移除候选工具。 属于通用后处理，不是 OpenAI 集成；未实测其发丝效果优于本地处理。 已跑通的历史生成路径是 gpt-image-2 暖白底输出；不能由官方文档中的新型号推断本机代理已支持。下方来源保留昨天的核对记录，调用前仍应复核接口能力。 03 / 可直接使用 三套角色与网页素材提示词。 复制后上传参考图，并替换方括号变量。第二套允许同时描述表情和手臂动作；若出现身份漂移，拆成两轮修改。 模板 01 透明角色主素材 复制提示词 先上传母版；透明参数需当前接口实际支持，文字要求不能代替 Alpha。 展开完整提示词 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 模板 02 角色表情与动作变体 复制提示词 每张变体都回到同一母版，重复保持项，减少逐代漂移。 展开完整提示词 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 模板 03 图书馆首屏构图 复制提示词 人物放右侧，左侧留文字空间；标题与按钮由网页渲染。 展开完整提示词 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 04 / 本地实证 · 今日补充 透明背景，不能只看外轮廓。 这两张来自同一张馆员图。初次处理只去掉了与外缘相通的背景，头发围住的空隙仍然发白；修正版清除了 18 处封闭残留并补修细缝。这是本地后处理对照，不是第三方工具评测。 深紫 暖白 黑色 白色 修复前 · 封闭缝隙仍有底色 修复后 · 保留白衬衫与面部 PNG / WebP 文件并不必然透明，必须检查 Alpha。 把棋盘格画进图片，仍是一张不透明图片。 深底容易暴露白边；浅底容易暴露暗边。 先检查发丝、翼缘、手部与衣袖，再缩小到实际显示尺寸。 05 / 证据 来源记录与未完成项。 以下为昨天 sources.json 的核对记录，保留日期和原文摘要。社区模板是单帖经验，不能当作“角色锁定”的证明；第三方效果、账号权限与成本对比尚未实测。 Image generation | OpenAI API OpenAI 官方页面已实际获取。页面说明 Image API 提供 generations/edits，Responses API 支持多轮编辑与图像上下文；当前新工作流列出 gpt-image-2.5-sunburst 与 gpt-image-2.5-flare，并提醒组织可能需要验证。页面的限制段明确说明跨多次生成的角色或品牌元素仍可能不一致。 原调研核对：2026-09-10T22:43:01+08:00 GPT Image Generation Models Prompting Guide — Prompting Fundamentals OpenAI 官方页面已实际获取。建议按场景→主体→细节→约束组织提示；编辑时明确 change only X 与 preserve 清单；透明背景需 background=transparent 且输出 PNG/WebP，JPEG 不支持；多图输入应按编号说明关系，并建议小步迭代。 原调研核对：2026-09-10T22:43:01+08:00 Image generation | ChatGPT Docs ChatGPT 官方文档已实际获取。支持在 ChatGPT 中上传参考图来生成或编辑；编辑应具体说明改变项和保持项，一次做小范围调整；ChatGPT Web 的图像可用性与限额取决于套餐和工作区。页面同时注明 Codex 内置生成使用 gpt-image-2，说明不同界面不能简单等同于 API 的最新模型。 原调研核对：2026-09-10T22:43:01+08:00 Use non-Adobe generative AI models in Adobe products Adobe 官方页面已直接获取并核对。页面列出 OpenAI 的 GPT image generation model、GPT Image 1.5、GPT Image 2、GPT Image 2.5 Flare 和 GPT Image 2.5 Sunburst；列明其在 Firefly 的 Text to image、Prompt to Edit Image、Boards、Graph 或 Style generator 等入口，并提示合作模型的国家/地区可用性可能不同。 原调研核对：2026-09-10T22:43:01+08:00 Remove Background | Clipdrop APIs Clipdrop/Jasper 官方 API 页面已直接获取。Remove Background 端点接收 PNG、JPG 或 WebP（页面列出 25MP、30MB 上限），成功响应可按 Accept 返回 PNG/WebP/JPEG，默认 PNG。页面不声称与 OpenAI 集成，因此报告仅把它归为通用后处理。 原调研核对：2026-09-10T22:43:01+08:00 Stable Single-Character Anime Prompt Template (Avoids Multi-Panel Issues) 已直接获取论坛 JSON。原帖创建于 2026-04-27，自述用于 ChatGPT Image 2.0 的单角色动漫模板，强调固定描述结构，以及 single character / no reference sheet / no multiple panels。页面当时显示 2 帖、0 回复、2 赞、876 浏览；属于社区单帖经验，不是 OpenAI 官方能力证明或量化测试。 原调研核对：2026-09-10T22:43:01+08:00 展开昨天完整修订报告（原文） # 当前 GPT/OpenAI 生图工具与角色提示词调研 核对日期：2026-09-10（UTC+8） 中控修订版：修正原报告把小恶魔写成长角角色的错误，匹配页面实际配色，并补充透明输入与代理能力边界。原始 MA3 产物未改动。小恶魔身份锚点：深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本，无角无尾。 实际执行边界：官方文档描述的透明 preview、新模型和参数，不代表本机随附 CLI 或第三方代理已支持；本次已实测成功的路径是 gpt-image-2 暖白背景输出。应先核对所选接口和 CLI 的当前能力，不能仅凭文档替换已验证流程。页面另用梅紫 #665173、浅金 #dfcba2。 ## 结论先行 对于已有“小恶魔馆员”立绘、目标是深紫与暖白个人图书馆网页素材的场景，最稳妥的路线不是重新“抽卡”，而是把现有立绘当作唯一的角色母版，持续做参考图编辑： 1. **少量手工素材：优先 ChatGPT 图像编辑。** 上传母版，用自然语言逐次只改一个变量；它最适合试造型、表情、姿势和构图。 2. **批量、透明背景或需要参数可复现：优先 GPT Image API。** 单次生成/编辑用 Image API；需要保留对话上下文、多轮迭代时用 Responses API。当前官方 Image API 指南列出的新工作流模型是 `gpt-image-2.5-sunburst`（偏编辑精度/高要求质量）和 `gpt-image-2.5-flare`（偏速度/日常生成）。必须以账号中实际可用模型为准，不从产品名推定权限。 3. **设计师式精修：Adobe Firefly/Photoshop 是已核实的第三方集成。** Adobe 官方页面明确列出 GPT Image 2、GPT Image 2.5 Flare 和 Sunburst；可在 Firefly 的 Text to image、Prompt to Edit Image、Boards 等流程中使用，区域可用性可能不同。 4. **透明抠图兜底：Clipdrop 只作后处理。** 它有独立的 Remove Background API，能接收 PNG/JPG/WebP 并返回 PNG/WebP/JPEG；这不是 OpenAI 集成。GPT Image 已能原生输出透明背景时，应先用原生透明，边缘不合格再后处理。 ## 能力与证据边界 | 类别 | 已核实能力 | 对本项目的意义 | 边界 | |---|---|---|---| | ChatGPT / Codex 图像生成 | 官方文档支持上传参考图生成或编辑；建议明确“改什么、什么保持不变”，一次做小范围修改 | 无需写代码，适合围绕现有馆员立绘迭代表情、姿势和构图 | ChatGPT Web 的可用性和额度取决于套餐与工作区；Codex 内置页面标明其内置图像生成使用 `gpt-image-2`，不可把 API 新模型名自动套到所有界面 | | GPT Image API | Image API 支持生成与编辑；Responses API 增加多轮编辑与上下文；可配置尺寸、质量、格式等 | 可批量生成表情包、空状态图、透明角色切图，并保存参数与提示词 | 组织可能需要验证；模型访问、延迟、成本须以账户和实测为准 | | 透明背景 | OpenAI 提示指南明确：`gpt-image-2` 的透明背景为 preview，需 `background=\"transparent\"` 且输出 PNG/WebP，JPEG 无 Alpha | 馆员立绘可直接叠在深紫网页背景上 | “生成一张棋盘格背景”不等于真的透明；交付前必须检查 Alpha 通道和浅色/深色底边缘 | | 角色一致性 | 官方建议明确不变量、用参考图、每轮重复 preserve 清单并小步迭代；API 指南也承认跨多次生成的角色/品牌元素仍可能漂移 | 应维护一个母版和固定角色描述，不要每次从纯文本重生 | 不存在官方保证的“角色锁定”；脸、翼、瞳色、服装纹样、比例仍需人工验收 | | Adobe Firefly | Adobe 官方列出 OpenAI GPT Image 合作模型及可用功能 | 适合生成后继续布局、局部编辑和设计交付 | 属第三方产品；模型、地区、积分和商用条款要按 Adobe 当前界面确认 | | Clipdrop | 官方 Remove Background API 可移除背景，默认可返回 PNG，并支持 WebP/JPEG Accept | 原生透明边缘失败时作为批量兜底 | 只是通用后处理，会误伤发丝、翼尖、半透明阴影；不增强角色一致性 | ## 推荐工作流 ### A. 先建立“角色母版包” - 保留现有原图不动，选一张正面或 3/4 视角、五官和服装清楚的图作为 `master`。 - 写一段不随场景变化的角色锚点：头侧小型蝙蝠翼与背部蝙蝠翼的形状与颜色、瞳色、发型、耳朵、服装剪影、书本/钥匙等标志物、身材比例、线条和上色风格。 - 颜色用语与色值并用，例如“深紫 `#292332`、暖白 `#f5f1eb`”；色值是目标提示，不是像素级保证。 - 每张衍生图都重新附上同一母版。不要把第 8 张衍生图继续当第 9 张的唯一参考，以减少逐代误差；这是基于编辑漂移限制给出的工程建议，并非官方保证。 ### B. 先低成本探索，再高质量定稿 - 用较低质量或 ChatGPT 中的小步修改探索姿势和留白。 - 确认构图后再用 medium/high 做身份敏感的角色图和细小纹理；OpenAI 官方提示指南也建议对身份敏感编辑、小字和高分辨率输出比较 medium/high。 - 一轮只修改一项，例如先改姿势，再改表情，最后处理灯光；每轮重复“保持”清单。 ### C. 网页交付前验收 - 在深紫、暖白、黑、白四种底色上检查 Alpha 边缘，尤其是翼尖、头发、衣袖、书页和投影。 - 检查同一角色的：头侧翼与背翼数量/朝向、眼睛颜色、发型分缝、衣领、配饰、手指、身高比例。 - 图片内不要生成重要正文。若必须有字，提示词中精确引用短文本，最后仍逐字校对；生产级排版应回到 HTML/CSS 或设计工具。 - 导出语义明确的文件名，并保留母版、提示词、模型、质量、尺寸和生成日期，方便回归。 ## 三套可复用提示词 下面的方括号是待替换变量。ChatGPT 中直接上传参考图；API 中把它作为输入图像。若使用支持透明参数的 API，除提示词外还要真正设置 `background=\"transparent\"` 与 `output_format=\"png\"` 或 `\"webp\"`。 ### 1. 透明角色主素材：从现有立绘提取网页可用全身角色 适用：侧边悬浮馆员、首页迎宾角色、空状态插画。 ```text 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 ``` ### 2. 一致性表情/动作变体：只改一个变量 适用：加载、无结果、欢迎、错误、解锁等状态。每次只替换 `[目标状态]` 与动作，不重写角色锚点。 ```text 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 ``` 推荐生成顺序：`中性母版 → 欢迎 → 思考 → 空结果 → 轻微警告`。每次都从中性母版编辑，而不是从上一张变体继续编辑。 ### 3. 深紫暖白图书馆 Hero：角色与网页留白协同 适用：首页宽屏 Hero 背景。建议把角色与背景分层生成；若直接合成，则把文字留白写清楚，真正标题仍由 HTML/CSS 渲染。 ```text 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 ``` 若首轮背景很好但角色漂移，下一轮不要整张重画；改为分别生成“透明角色层”和“无人物背景层”，在网页中用 CSS 定位叠放。这比反复要求模型同时修角色和复杂场景更容易验收。 ## 第三方与社区技巧：如何采用 ### 已核实第三方工具 - **Adobe Firefly/Photoshop：推荐给需要图层、局部精修和设计交付的人。** 官方集成证据充分；但需在实际 Adobe 账户中确认区域和功能入口。 - **Clipdrop Remove Background：仅作为抠图兜底。** 官方文档只证明背景移除端点与格式，不证明它对“小恶魔翼尖/发丝”一定优于 GPT 原生透明；应拿 5–10 张本项目图片做盲测再决定是否批量用。 ### 社区技巧（可试，但不是官方保证） OpenAI Community 有一篇 2026-04-27 的单角色动漫模板帖，核心做法是固定“头发 → 眼睛 → 性格/表情 → 体型 → 服装 → 姿势 → 构图”的描述顺序，并显式写 `single character, no reference sheet, no multiple panels`。该帖只有 2 个帖子、2 个赞，属于单个用户的小样本经验。它与 OpenAI 官方“结构固定、约束明确”的建议方向一致，因此可作为提示词组织法测试，但不能据此声称角色一致性已被解决。 ### 未验证项 - 搜索中出现的“完美角色锁定”“所有帧完全一致”“透明边缘百分百干净”等说法，没有官方保证或量化基准，不采纳。 - 未对第三方工具做真实图片生成/抠图测试；本报告验证的是文档与公开页面，而不是本项目图片上的效果。 - 未验证用户账户是否已获得某个模型、Adobe 区域功能或对应额度；使用前以实际产品界面/API model list 为准。 ## 来源 1. OpenAI Docs — Image generation API guide：<https://developers.openai.com/api/docs/guides/image-generation> 2. OpenAI Docs — GPT Image Generation Models Prompting Guide：<https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide> 3. ChatGPT Docs — Image generation：<https://learn.chatgpt.com/docs/image-generation> 4. Adobe Help — Use non-Adobe generative AI models in Adobe products：<https://helpx.adobe.com/creative-cloud/apps/generative-ai/non-adobe-models-in-adobe-products.html> 5. Clipdrop APIs — Remove Background：<https://clipdrop.co/apis/docs/remove-background> 6. OpenAI Community — Stable Single-Character Anime Prompt Template：<https://community.openai.com/t/stable-single-character-anime-prompt-template-avoids-multi-panel-issues/1379868> 完整核对证据见 `sources.json`。 imGen · 单文件 HTML，图片内嵌，无外部字体或脚本依赖。来源：research-reviewed.md、sources.json、review.json；本页未产生新的生图调用。"
+        },
+        {
+          "file": "artifacts/patchouli-fumo-ink-prompt-v1.txt",
+          "text": "Create one illustration of a Patchouli Knowledge (Touhou Project) fumo-style stuffed plush doll, seated on a simple wooden tabletop. Oversized broad round head, tiny stuffed body, short arms and two stubby legs forward. Deadpan half-lidded embroidered eyes and tiny stitched mouth, fabric bangs and long side locks, frilled crescent-moon cap, bows at cap sides and side locks, ruffled striped dress. Keep unmistakable plush-toy proportions and cloth construction, not a human character. Full doll entirely inside a square frame with breathing room, nearly frontal view. Soft light from the left; simple quiet background. No words, signature, watermark, other dolls, people or extra props. Medium: finished black-and-white manga ink drawing on white paper. Confident tapered pen strokes and varied line weight, heavier outer silhouette and delicate interior stitching and folds. Model the stuffed volume with sparse directional cross-hatching and a few controlled black shadow shapes. White paper remains dominant; light screentone only in selected shadows. Draw fibers with a few intentional marks, not photorealistic texture. Express the purple costume through distinct ink values rather than color. Face and crescent clearly readable. Background suggested with a few economical lines. No color, soft airbrush shading or photographic rendering."
+        },
+        {
+          "file": "artifacts/patchouli-fumo-painterly-prompt-v1.txt",
+          "text": "Create one illustration of a Patchouli Knowledge (Touhou Project) fumo-style stuffed plush doll, seated on a simple wooden tabletop. Oversized broad round head, tiny stuffed body, short arms and two stubby legs forward. Deadpan half-lidded embroidered eyes and tiny stitched mouth, fabric bangs and long side locks, frilled crescent-moon cap, bows at cap sides and side locks, ruffled striped dress. Keep unmistakable plush-toy proportions and cloth construction, not a human character. Full doll entirely inside a square frame with breathing room, nearly frontal view. Soft light from the left; simple quiet background. No words, signature, watermark, other dolls, people or extra props. Medium: expressive digital painterly illustration (Chinese hou-tu / 厚涂). Build the doll in broad opaque painted color masses, with clearly visible directional brush strokes wrapping around stuffed forms. Lavender and violet cloth hair and dress, cream face, yellow felt crescent, muted red and blue bows. Separate large light and shadow groups; warm soft daylight and cooler violet shadows. Selective hard edges around embroidered eyes and crescent, soft and lost edges where fabric blends into shadow. Suggest plush nap with selective broken brushwork, not uniform texture overlay. Painterly restrained wooden tabletop and quiet warm-gray background. Rich sculptural volume and purposeful simplified planes; avoid cel-shaded anime rendering, smooth plastic CGI, and photorealistic fur. This is digital thick painting, not exaggerated raised impasto or palette-knife paint."
+        },
+        {
+          "file": "artifacts/patchouli-fumo-prompt-v1.txt",
+          "text": "A highly believable real-world photograph of a single Patchouli Knowledge (Touhou Project) fumo-style collectible plush doll, sitting on a light oak tabletop. Faithfully recognizable as a fumo plush, with an oversized broad rounded head, a tiny soft stuffed body, short stubby arms, and two little legs extending forward in the iconic seated pose. About 20 cm tall. It is a physical fabric toy, not a human, not an anime drawing, not a vinyl figure. Patchouli's character details translated into sewn plush construction: lavender-purple fabric hair with blunt layered felt bangs and long broad fabric side locks; large purple embroidered anime eyes, a tiny simple stitched mouth and a calm slightly deadpan fumo expression. The face is smooth pale cream short-pile plush fabric, with flat embroidered features rather than glass eyes or modeled human anatomy. A soft pale lavender frilled mob cap carries a small yellow crescent moon made of felt and contrasting muted red and blue fabric bows. A simplified pale lavender long dress has subtly darker lavender vertical panels, a small gathered hem, and short stuffed arms. Preserve the chunky, endearing fumo proportions and simple sewn shapes rather than elaborate realistic human clothing. No book or extra accessories. Photograph: three-quarter frontal view from approximately the plush's eye level, the entire doll including cap and feet comfortably inside a square frame, occupying about 70 percent of the image height. Soft daylight enters from a window to camera left. Realistic subtle shadows under the cap, at the arms and where the seated doll compresses against the table. Show fine short fabric pile, tiny loose fibers, restrained stitching, layered seams, slight stuffing asymmetry and believable cloth folds. The felt moon remains a matte fabric applique, not shiny metal. A natural 50mm-lens product-photo look, moderate depth of field: both eyes and most of the toy remain clearly focused while the distant neutral room background softly falls out of focus. Natural white balance, gentle contrast, tactile material detail, no dramatic cinematic grading, no glowing outlines, no CGI plastic sheen. No text, logos, watermark, packaging, hands, people or additional dolls."
+        },
+        {
+          "file": "artifacts/patchouli-prompt-v1.txt",
+          "text": "Create a polished character illustration of Patchouli Knowledge (パチュリー・ノーレッジ / 帕秋莉·诺蕾姬) from Touhou Project. A recognizable, faithful fan-art interpretation of her classic design, not a redesigned original character. Identity: very long straight lavender-purple hair with neat bangs, purple eyes, a pale complexion, a quiet thoughtful expression. Wear her soft pale pink-lavender frilled mob cap with a small golden crescent-moon ornament and contrasting red/pink and blue ribbons. Matching ribbon ties adorn the long hair beside her face. Her modest ankle-length layered lavender robe has loose sleeves, gentle ruffles and subtle darker purple vertical stripes on the inner dress. No pointed witch hat, no horns, no bat wings, no tail. Pose and framing: a single full-body character in a relaxed three-quarter standing pose, looking slightly toward the viewer while holding one open antique grimoire comfortably with both hands around waist height. Natural hands and coherent book geometry. Keep the cap, hair ends, dress hem and shoes fully within the canvas with generous breathing room. The character occupies approximately 80 percent of the image height. No panels, no alternate views. Art direction: semi-painterly Japanese fantasy illustration. Delicate intentional linework around the face and silhouette, broad matte painted color masses in the clothing, restrained brushwork, two or three coherent value groups. Carefully chosen sharp edges near the eyes and book, softer edges in the lower folds and hair ends. Soft diffuse light from the upper left, restrained ivory highlights, rich but muted lavender and plum shadows. Expressive eyes without a glassy doll appearance; avoid plastic skin, glossy 3D rendering, over-smoothed airbrush gradients and uniform microscopic detail. Background: a simple warm ivory paper-colored field with a very faint soft grounding shadow beneath her feet. Keep the focus on the character; no library set, elaborate magic circles, floating props or ornamental border. This is an opaque illustration, not a transparency request. No text, logo, signature or watermark. Portrait 2:3 composition."
+        },
+        {
+          "file": "artifacts/research.json",
+          "text": "{ \"checked_on\": \"2026-09-11\", \"resources\": [ { \"name\": \"skills\", \"repo\": \"https://github.com/black-forest-labs/skills\", \"kind\": \"Skill\", \"title\": \"官方 FLUX 提示与 API 指南\", \"use\": \"优先阅读 flux-image-best-practices；它整理的是提示结构和模型限制，不是某种画风滤镜。\", \"boundary\": \"适合 FLUX。实际生成需要对应 API 或另配本地流程；仓库 MIT 不等于所有模型权重都可免费商用。\", \"link\": \"https://github.com/black-forest-labs/skills/blob/master/skills/flux-image-best-practices/SKILL.md\", \"stars\": 115, \"pushed\": \"2026-09-09\", \"license\": \"MIT\", \"skill_paths\": [ \"skills/bfl-api/SKILL.md\", \"skills/flux-3-archival-formats/SKILL.md\", \"skills/flux-3-audio-dialogue/SKILL.md\", \"skills/flux-3-cinematic-inserts/SKILL.md\", \"skills/flux-3-generate/SKILL.md\", \"skills/flux-3-keyframes-continuation/SKILL.md\", \"skills/flux-3-product-ads/SKILL.md\", \"skills/flux-3-prompt-doctor/SKILL.md\", \"skills/flux-3-video/SKILL.md\", \"skills/flux-image-best-practices/SKILL.md\" ] }, { \"name\": \"ai-image-prompts-skill\", \"repo\": \"https://github.com/YouMind-OpenLab/ai-image-prompts-skill\", \"kind\": \"Skill\", \"title\": \"跨模型提示词检索\", \"use\": \"按用途检索分类数据，返回带样例的提示词。适合找构图、商业插画与漫画分镜灵感。\", \"boundary\": \"仓库宣称适配多模型，并不等于相同提示词能复现相同风格；它主要检索与改写，不自带生成模型。\", \"link\": \"https://github.com/YouMind-OpenLab/ai-image-prompts-skill/blob/main/SKILL.md\", \"stars\": 1019, \"pushed\": \"2026-09-11\", \"license\": \"MIT\", \"skill_paths\": [ \"SKILL.md\" ] }, { \"name\": \"comfyui-agent-skill\", \"repo\": \"https://github.com/MieMieeeee/comfyui-agent-skill\", \"kind\": \"Skill\", \"title\": \"把已注册的 ComfyUI 工作流交给 Agent\", \"use\": \"本地执行型 Skill：通过 CLI 调用注册工作流，输出结构化结果。\", \"boundary\": \"要求已有本地或可信自托管 ComfyUI 与模型；不提供后端，不是单纯写提示词的工具。\", \"link\": \"https://github.com/MieMieeeee/comfyui-agent-skill\", \"stars\": 113, \"pushed\": \"2026-08-02\", \"license\": \"Apache-2.0\", \"skill_paths\": [ \"SKILL.md\" ] }, { \"name\": \"runcomfy-agent-skills\", \"repo\": \"https://github.com/prime-skills/runcomfy-agent-skills\", \"kind\": \"Skill\", \"title\": \"云端多模型路由候选\", \"use\": \"提供 ai-image-generation 等 Skill，由 RunComfy CLI 调用服务。原链接已跳转到 prime-skills。\", \"boundary\": \"生成依赖 RunComfy 账户与云端费用；只审阅文档，未审计全部代码，也未实测效果。\", \"link\": \"https://github.com/prime-skills/runcomfy-agent-skills/blob/main/ai-image-generation/SKILL.md\", \"stars\": 43, \"pushed\": \"2026-05-15\", \"license\": \"MIT\", \"skill_paths\": [ \"ace-step/SKILL.md\", \"ai-avatar-video/SKILL.md\", \"ai-image-generation/SKILL.md\", \"ai-music/SKILL.md\", \"ai-video-generation/SKILL.md\", \"codex-pet/SKILL.md\", \"controlnet-pose/SKILL.md\", \"elevenlabs-music-generation/SKILL.md\", \"face-swap/SKILL.md\", \"flux-2-klein/SKILL.md\", \"flux-kontext/SKILL.md\", \"gpt-image-2/SKILL.md\", \"gpt-image-edit/SKILL.md\", \"happyhorse-1-0/SKILL.md\", \"image-edit/SKILL.md\", \"image-inpainting/SKILL.md\", \"image-outpainting/SKILL.md\", \"image-to-video/SKILL.md\", \"kling-3-0/SKILL.md\", \"lipsync/SKILL.md\", \"nano-banana-2/SKILL.md\", \"nano-banana-edit/SKILL.md\", \"relight/SKILL.md\", \"runcomfy-cli/SKILL.md\", \"seedance-v2/SKILL.md\", \"video-edit/SKILL.md\", \"video-extend/SKILL.md\", \"video-inpainting/SKILL.md\", \"video-outpainting/SKILL.md\", \"wan-2-7/SKILL.md\" ] }, { \"name\": \"awesome-nano-banana-pro-prompts\", \"repo\": \"https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts\", \"kind\": \"提示词库\", \"title\": \"带预览的 Gemini 提示词图库\", \"use\": \"适合先看画面，再拆解主体、镜头、风格、留白与约束。图库规模是作者自述，页面样例不是本次复现。\", \"boundary\": \"以 Gemini 图像生态为主；图片来源与授权逐项看，GitHub API 未给出明确 SPDX 许可证标识。\", \"link\": \"https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts\", \"stars\": 13406, \"pushed\": \"2026-09-11\", \"license\": \"NOASSERTION\", \"skill_paths\": [] }, { \"name\": \"Fooocus\", \"repo\": \"https://github.com/lllyasviel/Fooocus\", \"kind\": \"风格预设\", \"title\": \"成熟 SDXL 项目的可读风格词表\", \"use\": \"重点参考 sdxl_styles 下的 JSON：可直接看到某种风格如何拼接正、负面提示。\", \"boundary\": \"项目已进入仅修 bug 的有限 LTS，不是追新模型首选。预设词有冲突和过度修饰，需拆开用。\", \"link\": \"https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json\", \"stars\": 52984, \"pushed\": \"2025-12-01\", \"license\": \"GPL-3.0\", \"skill_paths\": [] }, { \"name\": \"stable-diffusion-prompt-templates\", \"repo\": \"https://github.com/Dalabad/stable-diffusion-prompt-templates\", \"kind\": \"提示词库\", \"title\": \"较早期的风格对照词表\", \"use\": \"可用来学习 comic、line art、digital painting 等术语的组织方式。\", \"boundary\": \"最后推送较早；含 artist 名和 8k 等旧式词，不推荐整段照搬到现代模型。\", \"link\": \"https://github.com/Dalabad/stable-diffusion-prompt-templates\", \"stars\": 697, \"pushed\": \"2024-08-21\", \"license\": \"MIT\", \"skill_paths\": [] }, { \"name\": \"workflow_templates\", \"repo\": \"https://github.com/Comfy-Org/workflow_templates\", \"kind\": \"工作流\", \"title\": \"ComfyUI 官方模板\", \"use\": \"需要可重复流程、图像编辑、模型加载时，优先从官方模板开始。\", \"boundary\": \"不同模板所需节点、权重和显存不同；部分模板使用云 API，并非全部纯本地。仓库中的维护 Skill 不等于生图 Skill。\", \"link\": \"https://github.com/Comfy-Org/workflow_templates\", \"stars\": 892, \"pushed\": \"2026-09-11\", \"license\": \"MIT\", \"skill_paths\": [ \".claude/skills/editing-site-content/SKILL.md\", \".claude/skills/importing-subgraphs/SKILL.md\", \".claude/skills/managing-bundles/SKILL.md\", \".claude/skills/managing-mcp-index/SKILL.md\", \".claude/skills/managing-releases/SKILL.md\", \".claude/skills/managing-templates/SKILL.md\", \".claude/skills/managing-thumbnails/SKILL.md\", \".claude/skills/managing-translations/SKILL.md\", \".claude/skills/managing-use-case-pages/SKILL.md\", \".claude/skills/regenerating-ai-content/SKILL.md\" ] }, { \"name\": \"example_workflows\", \"repo\": \"https://github.com/Comfy-Org/example_workflows\", \"kind\": \"工作流\", \"title\": \"官方教程配套工作流\", \"use\": \"适合从教程进入具体示例，核对输入图、节点与依赖。\", \"boundary\": \"不是提示词大全，不应假定任意 JSON 都可直接在当前机器执行。\", \"link\": \"https://github.com/Comfy-Org/example_workflows\", \"stars\": 25, \"pushed\": \"2026-08-21\", \"license\": \"未声明\", \"skill_paths\": [] } ], \"styles\": [ { \"name\": \"漫画线稿\", \"tag\": \"墨线 / 结构 / 黑白\", \"desc\": \"靠线宽、轮廓与黑白面积塑造形体。先决定是清爽线稿，还是有排线和网点的漫画成稿；它们不是同一种密度。\", \"features\": [ \"有轻重的墨线，外轮廓较强、内部结构线克制\", \"脸与手线条完整，局部排线表达体积\", \"背景留白，大块纯黑只放在构图需要的位置\" ], \"prompt\": \"A red-haired librarian holding a closed book, three-quarter view, waist-up. Black-and-white manga ink drawing on clean white paper. Confident tapered contour lines with varied line weight, precise facial features and hands, sparse cross-hatching only in the deepest shadows, a few deliberate solid-black shapes. Clear readable silhouette, restrained interior detail, spacious uncluttered background.\", \"negative\": \"photograph, 3d render, full color, soft airbrush shading, dense background, text, watermark\", \"pitfall\": \"不要直接复制 Fooocus 的 sai-line art：它的负面词包含 anime，会与“漫画角色”目标打架。line art 与 anime 不是天然互斥。\", \"citation\": \"S6\" }, { \"name\": \"厚涂\", \"tag\": \"体块 / 笔触 / 边缘\", \"desc\": \"中文“厚涂”常指以色块塑造体积的数字绘画，不一定要模拟凸起的油彩。只有明确想要堆积颜料时，再加 impasto / palette-knife。\", \"features\": [ \"用大色块而非黑色轮廓线塑造体积\", \"硬边集中在焦点，软边与消失边用于转折\", \"笔触方向跟随形体，避免整张均匀铺纹理\" ], \"prompt\": \"A red-haired librarian holding a closed book, three-quarter view, waist-up. Painterly digital illustration built from broad opaque color masses. Visible purposeful brush strokes following the form, sculpted light and shadow, a restrained plum, warm ivory and muted vermilion palette. Sharp accents around the eyes and book, softer and lost edges in the hair and clothing. Matte surfaces, simplified background, one broad side light.\", \"negative\": \"3d render, glossy plastic, airbrushed skin, uniform sharp outlines, excessive microdetail, text, watermark\", \"pitfall\": \"painterly 是绘画性；impasto 才偏厚重颜料肌理。随意加入 oil painting、photo、cel shading 容易互相拉扯。\", \"citation\": \"S6 / S7 / S10\" }, { \"name\": \"半厚涂\", \"tag\": \"保留线感 / 局部塑形\", \"desc\": \"半厚涂没有统一的模型参数。更稳妥的说法是：保留哪些线条、哪些区域用绘画性塑形，以及阴影分几层。\", \"features\": [ \"面部和轮廓有干净线条，内部线减弱\", \"两到三层主要明暗，再以少量柔和过渡连接\", \"头发与衣料有局部笔触，皮肤不过度磨皮\" ], \"prompt\": \"A red-haired librarian holding a closed book, three-quarter view, waist-up. Semi-painterly anime illustration. Retain delicate clean linework around the eyes, face and silhouette, with understated interior lines. Model the hair and fabric using two or three broad value groups and subtle painterly transitions. Soft matte skin, selective brush texture, crisp focal details and restrained highlights. Muted plum and warm ivory colors, plain warm paper background.\", \"negative\": \"photograph, 3d render, heavy impasto, oily highlights, excessive airbrush, uniform hard outlines, text, watermark\", \"pitfall\": \"单写 semi-realistic 会把脸推向写实，未必得到半厚涂；要描述“线稿与色块如何分工”。\", \"citation\": \"S6 / S10 / S11\" }, { \"name\": \"清新简约\", \"tag\": \"少色 / 留白 / 清晰形状\", \"desc\": \"清新不等于曝光拉满，简约也不是删掉所有层次。限制调色板、形状数量和视觉重心，通常比“minimalist masterpiece”更可控。\", \"features\": [ \"三到四色：鼠尾草绿、奶油色、浅珊瑚等\", \"扁平或轻水粉色块，少量纸感\", \"主次形状清楚，保留大面积呼吸空间\" ], \"prompt\": \"A small reading corner with a librarian and one potted plant. Fresh minimalist editorial illustration. Simple rounded shapes, a limited palette of sage green, warm cream and soft coral, flat matte gouache-like color blocks with very subtle paper texture. Gentle daylight expressed with one simple shadow shape, abundant negative space, a slightly off-center balanced composition, calm everyday mood.\", \"negative\": \"3d render, neon colors, dramatic rim light, glossy reflections, clutter, dense texture, text, watermark\", \"pitfall\": \"flat、gouache、paper cut 可以择一主导；把 3D、油画厚肌理和扁平矢量同时堆上去，容易丢失清爽感。\", \"citation\": \"S10 / S11\" } ], \"sources\": [ { \"id\": \"S1\", \"title\": \"BFL 官方 Agent Skills\", \"url\": \"https://github.com/black-forest-labs/skills\", \"evidence\": \"GitHub API、README 与图像 Skill 正文已核对；使用 master 分支。\" }, { \"id\": \"S2\", \"title\": \"YouMind 提示词检索 Skill\", \"url\": \"https://github.com/YouMind-OpenLab/ai-image-prompts-skill\", \"evidence\": \"已确认根目录 SKILL.md 与分类检索工作方式；跨模型效果为作者主张，未复现。\" }, { \"id\": \"S3\", \"title\": \"ComfyUI Agent Skill\", \"url\": \"https://github.com/MieMieeeee/comfyui-agent-skill\", \"evidence\": \"已读 SKILL.md，明确需要已有服务，仅执行注册工作流。\" }, { \"id\": \"S4\", \"title\": \"RunComfy Skills\", \"url\": \"https://github.com/prime-skills/runcomfy-agent-skills\", \"evidence\": \"GitHub 跳转与 ai-image-generation/SKILL.md 已核对；生成走服务 API。\" }, { \"id\": \"S5\", \"title\": \"YouMind 图像提示词图库\", \"url\": \"https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts\", \"evidence\": \"仓库、README、关注数与许可元数据已核对。\" }, { \"id\": \"S6\", \"title\": \"Fooocus 风格 JSON\", \"url\": \"https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json\", \"evidence\": \"实际读取 line art、comic book、digital art 等正负面模板；README 明确有限 LTS。\" }, { \"id\": \"S7\", \"title\": \"Stable Diffusion Prompt Templates\", \"url\": \"https://github.com/Dalabad/stable-diffusion-prompt-templates\", \"evidence\": \"读取旧式风格词表，作为术语材料而非即用最佳配方。\" }, { \"id\": \"S8\", \"title\": \"ComfyUI 官方模板\", \"url\": \"https://github.com/Comfy-Org/workflow_templates\", \"evidence\": \"GitHub 仓库和目录已核对；模板类型与模型依赖各异。\" }, { \"id\": \"S9\", \"title\": \"ComfyUI 示例工作流\", \"url\": \"https://github.com/Comfy-Org/example_workflows\", \"evidence\": \"官方组织仓库，示例 JSON 属工作流而非通用 Skill。\" }, { \"id\": \"S10\", \"title\": \"FLUX.2 Prompting Guide\", \"url\": \"https://docs.bfl.ai/guides/prompting_guide_flux2\", \"evidence\": \"直接读取官方网页：主体+动作+风格+语境，重要项前置；不支持负面提示词。\" }, { \"id\": \"S11\", \"title\": \"Gemini 图像生成指南\", \"url\": \"https://ai.google.dev/gemini-api/docs/image-generation\", \"evidence\": \"直接读取官方网页：具体描述、编辑迭代、正向表达预期场景；不把 SD 参数当通用参数。\" }, { \"id\": \"S12\", \"title\": \"Midjourney Style Reference\", \"url\": \"https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference\", \"evidence\": \"浏览器实际读取：匹配颜色、媒介、纹理、灯光，不是复制人物身份；支持 --sref 与 --sw。\" }, { \"id\": \"S13\", \"title\": \"Midjourney Raw\", \"url\": \"https://docs.midjourney.com/hc/en-us/articles/32634113811853-Raw-Mode\", \"evidence\": \"浏览器实际读取：减少自动美化与默认创作倾向；不是保证无 AI 痕迹。\" }, { \"id\": \"S14\", \"title\": \"Midjourney Stylize\", \"url\": \"https://docs.midjourney.com/hc/en-us/articles/32196176868109-Stylize\", \"evidence\": \"浏览器实际读取：默认 100，文档给出 0–1000；低值更贴近提示，高值赋予更多艺术自由。\" } ], \"scope\": \"文档与代码库核验；未安装第三方 Skill，未做新模型出图基准。提示词是本次整理的试验起点。\" }"
+        },
+        {
+          "file": "artifacts/research.md",
+          "text": "# AI 生图：风格、Skill 与提示词专题 核对日期：2026-09-11 文档与代码库核验；未安装第三方 Skill，未做新模型出图基准。提示词是本次整理的试验起点。 ## 搜索结论 Skill、提示词库、LoRA 与节点工作流分别解决编排、语言参考、模型适配和执行问题。优先使用官方能力说明与可核对的仓库，不以关注数代替质量。 ## 官方 FLUX 提示与 API 指南 https://github.com/black-forest-labs/skills 优先阅读 flux-image-best-practices；它整理的是提示结构和模型限制，不是某种画风滤镜。 适合 FLUX。实际生成需要对应 API 或另配本地流程；仓库 MIT 不等于所有模型权重都可免费商用。 ## 跨模型提示词检索 https://github.com/YouMind-OpenLab/ai-image-prompts-skill 按用途检索分类数据，返回带样例的提示词。适合找构图、商业插画与漫画分镜灵感。 仓库宣称适配多模型，并不等于相同提示词能复现相同风格；它主要检索与改写，不自带生成模型。 ## 把已注册的 ComfyUI 工作流交给 Agent https://github.com/MieMieeeee/comfyui-agent-skill 本地执行型 Skill：通过 CLI 调用注册工作流，输出结构化结果。 要求已有本地或可信自托管 ComfyUI 与模型；不提供后端，不是单纯写提示词的工具。 ## 云端多模型路由候选 https://github.com/prime-skills/runcomfy-agent-skills 提供 ai-image-generation 等 Skill，由 RunComfy CLI 调用服务。原链接已跳转到 prime-skills。 生成依赖 RunComfy 账户与云端费用；只审阅文档，未审计全部代码，也未实测效果。 ## 带预览的 Gemini 提示词图库 https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts 适合先看画面，再拆解主体、镜头、风格、留白与约束。图库规模是作者自述，页面样例不是本次复现。 以 Gemini 图像生态为主；图片来源与授权逐项看，GitHub API 未给出明确 SPDX 许可证标识。 ## 成熟 SDXL 项目的可读风格词表 https://github.com/lllyasviel/Fooocus 重点参考 sdxl_styles 下的 JSON：可直接看到某种风格如何拼接正、负面提示。 项目已进入仅修 bug 的有限 LTS，不是追新模型首选。预设词有冲突和过度修饰，需拆开用。 ## 较早期的风格对照词表 https://github.com/Dalabad/stable-diffusion-prompt-templates 可用来学习 comic、line art、digital painting 等术语的组织方式。 最后推送较早；含 artist 名和 8k 等旧式词，不推荐整段照搬到现代模型。 ## ComfyUI 官方模板 https://github.com/Comfy-Org/workflow_templates 需要可重复流程、图像编辑、模型加载时，优先从官方模板开始。 不同模板所需节点、权重和显存不同；部分模板使用云 API，并非全部纯本地。仓库中的维护 Skill 不等于生图 Skill。 ## 官方教程配套工作流 https://github.com/Comfy-Org/example_workflows 适合从教程进入具体示例，核对输入图、节点与依赖。 不是提示词大全，不应假定任意 JSON 都可直接在当前机器执行。 ## 漫画线稿 靠线宽、轮廓与黑白面积塑造形体。先决定是清爽线稿，还是有排线和网点的漫画成稿；它们不是同一种密度。 ```text A red-haired librarian holding a closed book, three-quarter view, waist-up. Black-and-white manga ink drawing on clean white paper. Confident tapered contour lines with varied line weight, precise facial features and hands, sparse cross-hatching only in the deepest shadows, a few deliberate solid-black shapes. Clear readable silhouette, restrained interior detail, spacious uncluttered background. ``` 负面提示仅供兼容 SDXL 工作流：photograph, 3d render, full color, soft airbrush shading, dense background, text, watermark 不要直接复制 Fooocus 的 sai-line art：它的负面词包含 anime，会与“漫画角色”目标打架。line art 与 anime 不是天然互斥。 ## 厚涂 中文“厚涂”常指以色块塑造体积的数字绘画，不一定要模拟凸起的油彩。只有明确想要堆积颜料时，再加 impasto / palette-knife。 ```text A red-haired librarian holding a closed book, three-quarter view, waist-up. Painterly digital illustration built from broad opaque color masses. Visible purposeful brush strokes following the form, sculpted light and shadow, a restrained plum, warm ivory and muted vermilion palette. Sharp accents around the eyes and book, softer and lost edges in the hair and clothing. Matte surfaces, simplified background, one broad side light. ``` 负面提示仅供兼容 SDXL 工作流：3d render, glossy plastic, airbrushed skin, uniform sharp outlines, excessive microdetail, text, watermark painterly 是绘画性；impasto 才偏厚重颜料肌理。随意加入 oil painting、photo、cel shading 容易互相拉扯。 ## 半厚涂 半厚涂没有统一的模型参数。更稳妥的说法是：保留哪些线条、哪些区域用绘画性塑形，以及阴影分几层。 ```text A red-haired librarian holding a closed book, three-quarter view, waist-up. Semi-painterly anime illustration. Retain delicate clean linework around the eyes, face and silhouette, with understated interior lines. Model the hair and fabric using two or three broad value groups and subtle painterly transitions. Soft matte skin, selective brush texture, crisp focal details and restrained highlights. Muted plum and warm ivory colors, plain warm paper background. ``` 负面提示仅供兼容 SDXL 工作流：photograph, 3d render, heavy impasto, oily highlights, excessive airbrush, uniform hard outlines, text, watermark 单写 semi-realistic 会把脸推向写实，未必得到半厚涂；要描述“线稿与色块如何分工”。 ## 清新简约 清新不等于曝光拉满，简约也不是删掉所有层次。限制调色板、形状数量和视觉重心，通常比“minimalist masterpiece”更可控。 ```text A small reading corner with a librarian and one potted plant. Fresh minimalist editorial illustration. Simple rounded shapes, a limited palette of sage green, warm cream and soft coral, flat matte gouache-like color blocks with very subtle paper texture. Gentle daylight expressed with one simple shadow shape, abundant negative space, a slightly off-center balanced composition, calm everyday mood. ``` 负面提示仅供兼容 SDXL 工作流：3d render, neon colors, dramatic rim light, glossy reflections, clutter, dense texture, text, watermark flat、gouache、paper cut 可以择一主导；把 3D、油画厚肌理和扁平矢量同时堆上去，容易丢失清爽感。 ## 来源 - [S1] BFL 官方 Agent Skills：https://github.com/black-forest-labs/skills — GitHub API、README 与图像 Skill 正文已核对；使用 master 分支。 - [S2] YouMind 提示词检索 Skill：https://github.com/YouMind-OpenLab/ai-image-prompts-skill — 已确认根目录 SKILL.md 与分类检索工作方式；跨模型效果为作者主张，未复现。 - [S3] ComfyUI Agent Skill：https://github.com/MieMieeeee/comfyui-agent-skill — 已读 SKILL.md，明确需要已有服务，仅执行注册工作流。 - [S4] RunComfy Skills：https://github.com/prime-skills/runcomfy-agent-skills — GitHub 跳转与 ai-image-generation/SKILL.md 已核对；生成走服务 API。 - [S5] YouMind 图像提示词图库：https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts — 仓库、README、关注数与许可元数据已核对。 - [S6] Fooocus 风格 JSON：https://github.com/lllyasviel/Fooocus/blob/main/sdxl_styles/sdxl_styles_sai.json — 实际读取 line art、comic book、digital art 等正负面模板；README 明确有限 LTS。 - [S7] Stable Diffusion Prompt Templates：https://github.com/Dalabad/stable-diffusion-prompt-templates — 读取旧式风格词表，作为术语材料而非即用最佳配方。 - [S8] ComfyUI 官方模板：https://github.com/Comfy-Org/workflow_templates — GitHub 仓库和目录已核对；模板类型与模型依赖各异。 - [S9] ComfyUI 示例工作流：https://github.com/Comfy-Org/example_workflows — 官方组织仓库，示例 JSON 属工作流而非通用 Skill。 - [S10] FLUX.2 Prompting Guide：https://docs.bfl.ai/guides/prompting_guide_flux2 — 直接读取官方网页：主体+动作+风格+语境，重要项前置；不支持负面提示词。 - [S11] Gemini 图像生成指南：https://ai.google.dev/gemini-api/docs/image-generation — 直接读取官方网页：具体描述、编辑迭代、正向表达预期场景；不把 SD 参数当通用参数。 - [S12] Midjourney Style Reference：https://docs.midjourney.com/hc/en-us/articles/32180011136653-Style-Reference — 浏览器实际读取：匹配颜色、媒介、纹理、灯光，不是复制人物身份；支持 --sref 与 --sw。 - [S13] Midjourney Raw：https://docs.midjourney.com/hc/en-us/articles/32634113811853-Raw-Mode — 浏览器实际读取：减少自动美化与默认创作倾向；不是保证无 AI 痕迹。 - [S14] Midjourney Stylize：https://docs.midjourney.com/hc/en-us/articles/32196176868109-Stylize — 浏览器实际读取：默认 100，文档给出 0–1000；低值更贴近提示，高值赋予更多艺术自由。"
+        }
+      ]
     },
     {
       "id": "front-design-lab",
@@ -532,67 +546,7 @@
       "outputs": "双模式设计入口、设计联想与专项方法；独立审查及验收记录；完整真实会话原话快照。",
       "next": "在实际页面和归档任务中继续验证；网站尚未发布本次更新。",
       "current_state": "Open Design 已形成统一入口、阅读交付与表现设计两种模式。当前源码已在本机落盘，仍有未提交修改；持续用真实任务验证模式选择、创意质量与素材协作。",
-      "public_content": true,
       "sections": [],
-      "files": [
-        {
-          "name": "artifacts/front-design-lab-reading-20260912.html",
-          "url": "public-files/front-design-lab/c9d4672d6c7f8d1aa5151422f50c0c3965283b45f1a522e63b98570eb126dec5.bin",
-          "bytes": 17204,
-          "sha256": "c9d4672d6c7f8d1aa5151422f50c0c3965283b45f1a522e63b98570eb126dec5"
-        },
-        {
-          "name": "artifacts/front-design-lab.html",
-          "url": "public-files/front-design-lab/e1563f076cf689efb85ee2313f9a7837cdef30ebacdca1d943e50175d5ec440f.bin",
-          "bytes": 7086,
-          "sha256": "e1563f076cf689efb85ee2313f9a7837cdef30ebacdca1d943e50175d5ec440f"
-        },
-        {
-          "name": "artifacts/merge-20260911-review-after.md",
-          "url": "public-files/front-design-lab/3c74265207e85e4471d3ac9a749a8d011f308b2a1c55f104d896b38cc88a8611.bin",
-          "bytes": 1076,
-          "sha256": "3c74265207e85e4471d3ac9a749a8d011f308b2a1c55f104d896b38cc88a8611",
-          "reading": {
-            "url": "public-files/front-design-lab/1983c84ff9bfbcbd1b9902a74f843e2f10c17dcd4a767136c28d5ac21016b3fe.bin",
-            "bytes": 3239,
-            "sha256": "1983c84ff9bfbcbd1b9902a74f843e2f10c17dcd4a767136c28d5ac21016b3fe"
-          }
-        },
-        {
-          "name": "artifacts/merge-20260911-review-before.md",
-          "url": "public-files/front-design-lab/1210467e6e76127aec142d7313e5f9fb47ef47e34e8c897d07bf7e9ed3ed0153.bin",
-          "bytes": 1916,
-          "sha256": "1210467e6e76127aec142d7313e5f9fb47ef47e34e8c897d07bf7e9ed3ed0153",
-          "reading": {
-            "url": "public-files/front-design-lab/0d21bb7f72d857af39df4bdbed9b5cab8c6dcd1a2419a1efec3defbd8cbd0da1.bin",
-            "bytes": 4169,
-            "sha256": "0d21bb7f72d857af39df4bdbed9b5cab8c6dcd1a2419a1efec3defbd8cbd0da1"
-          }
-        },
-        {
-          "name": "artifacts/merge-20260911-verification.json",
-          "url": "public-files/front-design-lab/18b2dd709035d6d7bb28a46c0c0f0154a0dbdc4338c1fec59c247662dbaaf086.bin",
-          "bytes": 965,
-          "sha256": "18b2dd709035d6d7bb28a46c0c0f0154a0dbdc4338c1fec59c247662dbaaf086"
-        },
-        {
-          "name": "artifacts/open-design-reading-guide-20260912.md",
-          "url": "public-files/front-design-lab/731b6c5e426b4d1f8e22d0c9114608be4d71dd931179d4e69049c45254efe159.bin",
-          "bytes": 4114,
-          "sha256": "731b6c5e426b4d1f8e22d0c9114608be4d71dd931179d4e69049c45254efe159",
-          "reading": {
-            "url": "public-files/front-design-lab/ab4366f08b5c4a4d4a1b329b38fa4c32b6771a14de4454ac5bcf6629858cdb69.bin",
-            "bytes": 6442,
-            "sha256": "ab4366f08b5c4a4d4a1b329b38fa4c32b6771a14de4454ac5bcf6629858cdb69"
-          }
-        },
-        {
-          "name": "artifacts/open-design-ui-20260911.zip",
-          "url": "public-files/front-design-lab/4673d3dcf17aca6218bed26b9d98a7182d3b7743361c2fc1e1f31353c8404b99.bin",
-          "bytes": 36873,
-          "sha256": "4673d3dcf17aca6218bed26b9d98a7182d3b7743361c2fc1e1f31353c8404b99"
-        }
-      ],
       "resources": [
         {
           "kind": "file",
@@ -632,33 +586,6 @@
           "title": "历史 · 首次归档阅读页"
         }
       ],
-      "omitted_files": [],
-      "search_index": [
-        {
-          "file": "artifacts/front-design-lab-reading-20260912.html",
-          "text": "front-design lab muQ / 持续维护的主题 front-design lab 从实际前端设计中提炼创意、动效与素材协作方法，最终形成 Open Design 单一入口、阅读交付与表现设计两模式。 当前状态与操作入口 Open Design 已形成统一入口、阅读交付与表现设计两种模式。当前源码已在本机落盘，仍有未提交修改；持续用真实任务验证模式选择、创意质量与素材协作。 2026-09-12 核对共享 Skill 源码；历史合并验收记录保留。 Open Design 私有源码仓库 本页目录 当前方案 设计联想与取舍 吸收的方法 素材制作与职责 骰子夜参考观察 演变与验证 维护边界与来源 网页 文件 历史与来源 01 当前方案 统一入口 Open Design 是唯一前端设计入口，原 frontend-design-lab 已吸收并撤下。前端设计实验仍以本主题追踪，但它不再是独立 Skill。 阅读交付 用于 muQ 条目、报告和说明。优先内容完整、成熟模板、图文层级与长时间阅读，不是低质量档位。 表现设计 用于个人主页、品牌页和重点展示。主动构思对象、素材和交互，按需要制作动态小样，不强制生图或三维。 选择方式 未指定时按用途自动判断，用户指定优先；允许整页阅读交付、局部演示采用表现设计。 02 设计联想与取舍 从场景里找对象，从对象里找动作，从动作里找交互 先判断对象应该怎样动，再选实现技术。用户可以只给感受与约束，由 Agent 主动提出少量有区别的方向。 创意必须经过筛选 判断主题关联、信息或情绪价值、重复使用舒适度和实现成本。静态构图足够时就停在那里，不把所有联想堆进页面。 让页面直接表达用途 通过真实入口、主视觉与背景表达含义，减少无信息量的欢迎语。必要的说明与无障碍标签保留。 03 吸收的方法 参考拆解 观察入场、稳定、滚动、悬停与点击，结合实际代码区分观察事实和实现推断。 共享页面氛围 当前阅读区控制整页底色，文字、按钮、装饰与模型背景一起协调；整页渐变和从一点向外扩散是不同机制。 动效编排 写清对象、触发、起点、变化、稳定状态和中断。入场与浮动分层，手动操作从当前状态接管，动画能离屏暂停并正常恢复。 角色与媒介 按内容选择 DOM、SVG、视频或三维；角色按动作需要分层，保持原稿一致、关节不露缝、响应式装配不散架。 内部参考 保留跨页连续性、阅读排版、共享氛围、动效、角色管线与来源，按任务读取，而不是每次加载全部技术细节。 04 素材制作与职责 前端负责素材简报 确定用途、位置、尺寸、构图、色调、留白、透明背景与分层要求。 MA3 负责派工 遵循 ma3-control 核对真实可用执行器与回执；执行 Agent 模型和实际生图模型分别确认。 生图与三维各有入口 imgen-art-director / imagegen 负责素材生成和检查，threejs-diorama 负责模型；muq-journal 负责归档与可见范围。 回到页面验收 收到素材后在真实布局、展示尺寸和深浅底色中检查，不能把出图等同于接入完成。 05 骰子夜参考观察 对象与动作呼应 实际试过贴纸拖抛、掷骰子和规则筛选；贴纸松手后继续运动，骰子给出结果，筛选改变列表。 不同对象采用不同表现 贴纸落入，涂鸦沿路径画出，骰子旋转后停稳。按路径长度分配描线时间，保持相对连贯的笔触速度。 借鉴边界 页面明确是虚构产品，营销指标与评价不作事实使用；首屏贴纸循环缺少离屏停止，不能整份代码照搬。 06 演变与验证 先分工，后合并 最初将两个 Skill 分成全站交付与专项动效；用户随后认为单入口更易使用，最终采用 Open Design 内部双模式。 已完成检查 格式、相对引用、UI 元数据、LF 和发现路径通过；四份全局引用经过独立审查与落盘复核。当前客户端列表已显示新版 Open Design，旧入口不再出现。 后续验证 继续在实际归档和页面设计任务中观察自动选模式与创意质量。本主题保存方法与 Skill 成果，主页建设仍是独立主题。 07 维护边界与来源 本主题持续整理前端设计 Skill 的方法、决策与成果；个人主页建造是独立主题。主页动效只作为方法形成的案例，不将其项目进度并入这里。 原话来自同一真实会话，按完整日志快照保留 ID、时间、内容块与顺序。因此原话区包含主页等跨主题消息，正文仅提取前端设计 Skill 相关结论。历史日记保持原版本，本主题保存此次采集快照，不创建第二场会话身份。 当前源码以共享 Skill 目录为准，私有仓库承接长期版本管理。2026-09-11 ZIP 仅代表合并时的历史快照，不代表最新源码或已推送状态。 08 网页 骰子夜 · 动态交互参考 Open Design 上游工作流 09 文件 Open Design · 使用与维护指南 Skill 合并 · 写入前独立审查 Skill 合并 · 落盘后独立复核 Skill 合并 · 验证记录 历史 · 2026-09-11 Skill 源码与审查快照 历史 · 首次归档阅读页 10 历史与来源 最初讨论所在的混合会话 · 历史归档 来源原话在图书馆馆主视角默认展开；本 HTML 阅读副本不复制原始提示词。"
-        },
-        {
-          "file": "artifacts/front-design-lab.html",
-          "text": "front-design lab FRONTEND DESIGN / 独立主题 / 2026-09-11 front-design lab 从实际前端设计中提炼创意、动效与素材协作方法，最终形成 Open Design 单一入口、阅读交付与表现设计两模式。 当前状态：已完成本轮 Skill 合并 统一入口与内部参考已落盘并验证。本条目仅馆主可见；这次先更新本地图书馆。 当前方案 设计联想与取舍 吸收的方法 素材制作与职责 骰子夜参考观察 演变与验证 01 当前方案 统一入口 Open Design 是唯一前端设计入口，原 frontend-design-lab 已吸收并撤下。前端设计实验仍以本主题追踪，但它不再是独立 Skill。 阅读交付 用于 muQ 条目、报告和说明。优先内容完整、成熟模板、图文层级与长时间阅读，不是低质量档位。 表现设计 用于个人主页、品牌页和重点展示。主动构思对象、素材和交互，按需要制作动态小样，不强制生图或三维。 选择方式 未指定时按用途自动判断，用户指定优先；允许整页阅读交付、局部演示采用表现设计。 02 设计联想与取舍 从场景里找对象，从对象里找动作，从动作里找交互 先判断对象应该怎样动，再选实现技术。用户可以只给感受与约束，由 Agent 主动提出少量有区别的方向。 创意必须经过筛选 判断主题关联、信息或情绪价值、重复使用舒适度和实现成本。静态构图足够时就停在那里，不把所有联想堆进页面。 让页面直接表达用途 通过真实入口、主视觉与背景表达含义，减少无信息量的欢迎语。必要的说明与无障碍标签保留。 03 吸收的方法 参考拆解 观察入场、稳定、滚动、悬停与点击，结合实际代码区分观察事实和实现推断。 共享页面氛围 当前阅读区控制整页底色，文字、按钮、装饰与模型背景一起协调；整页渐变和从一点向外扩散是不同机制。 动效编排 写清对象、触发、起点、变化、稳定状态和中断。入场与浮动分层，手动操作从当前状态接管，动画能离屏暂停并正常恢复。 角色与媒介 按内容选择 DOM、SVG、视频或三维；角色按动作需要分层，保持原稿一致、关节不露缝、响应式装配不散架。 内部参考 保留跨页连续性、阅读排版、共享氛围、动效、角色管线与来源，按任务读取，而不是每次加载全部技术细节。 04 素材制作与职责 前端负责素材简报 确定用途、位置、尺寸、构图、色调、留白、透明背景与分层要求。 MA3 负责派工 遵循 ma3-control 核对真实可用执行器与回执；执行 Agent 模型和实际生图模型分别确认。 生图与三维各有入口 imgen-art-director / imagegen 负责素材生成和检查，threejs-diorama 负责模型；muq-journal 负责归档与可见范围。 回到页面验收 收到素材后在真实布局、展示尺寸和深浅底色中检查，不能把出图等同于接入完成。 05 骰子夜参考观察 对象与动作呼应 实际试过贴纸拖抛、掷骰子和规则筛选；贴纸松手后继续运动，骰子给出结果，筛选改变列表。 不同对象采用不同表现 贴纸落入，涂鸦沿路径画出，骰子旋转后停稳。按路径长度分配描线时间，保持相对连贯的笔触速度。 借鉴边界 页面明确是虚构产品，营销指标与评价不作事实使用；首屏贴纸循环缺少离屏停止，不能整份代码照搬。 06 演变与验证 先分工，后合并 最初将两个 Skill 分成全站交付与专项动效；用户随后认为单入口更易使用，最终采用 Open Design 内部双模式。 已完成检查 格式、相对引用、UI 元数据、LF 和发现路径通过；四份全局引用经过独立审查与落盘复核。当前客户端列表已显示新版 Open Design，旧入口不再出现。 后续验证 继续在实际归档和页面设计任务中观察自动选模式与创意质量。本主题保存方法与 Skill 成果，主页建设仍是独立主题。 网页与源码 Open Design 所在私有源码仓库 骰子夜参考页面 仓库是长期源码入口；本轮快照见条目文件区，不代表这些本地更改已经推送远程。 原话与来源 本主题选取同一真实会话中关于前端 Skill 的第 8–17 条消息，保留原消息 ID、时间、内容块与顺序；共 10 条。原文在下方“用户原话”区域查看，不将主页建设的整场会话冒充成本主题内容。"
-        },
-        {
-          "file": "artifacts/merge-20260911-review-after.md",
-          "text": "# 全局指令落盘独立复核 审查员：`/root/review_skill_routing`。 结论：**通过**。 - 重新读取四份实际生效文件，均与 review-before.md 批准候选逐字节一致，SHA-256 全部相符，均为 LF；未发现批准后新增变更。 - `open-design-ui/references/koa-ol.md` 已存在，落盘前配套条件满足。 - 共享源码中 `frontend-design-lab` 目录已撤下；产物目录备份含 SKILL.md、agents/openai.yaml 和五份参考，共七个文件，覆盖 Git 所有六个原跟踪路径及新增 shared-atmosphere.md。 - 已读 persona-after.txt：结构检查 21/21 节通过；已读 facts-after.txt：列出的事实探针通过，Skill 数量为 14。 - 以上不表示四份刻意不同的行为指令逐字一致，也不表示 Linux 已验证 Windows Junction Target 或所有客户端刷新。 备份完整性边界：原 Skill 已在此次复核前撤下，未提供撤下前逐文件哈希清单；能够独立确认七个备份文件可读及原跟踪路径覆盖，不能伪称完成撤下前后逐字节比对。"
-        },
-        {
-          "file": "artifacts/merge-20260911-review-before.md",
-          "text": "# 全局指令候选独立审查 审查员：`/root/review_skill_routing`，独立子 Agent。 结论：**通过**。本结论批准 manifest.json 中四份候选文本；生效前需完成其配套的参考文件迁移，落盘后继续独立复核。 依据：已读取本会话用户的单一入口、双模式方案及明确执行指令，request.md、manifest.json、四份原文与候选涉及的完整章节、全部 diff，并以全文差异核对确认无隐藏改动。已加载 global-instruction-review Skill。 检查结论： - 范围为四处参考路径迁移和 Linux Codex 一处已过时的双 Skill 路由替换，属于完成用户已授权合并所需修正。 - 无权限、凭据、派工许可、发布授权或系统行为范围扩张；用户指定优先保留。 - Windows/Linux 路径换算说明保持不变；各客户端原有 UI 默认规则及 Artifact 差异保留，未强行统一。 - 四份实时生效原文均与 manifest 的原文哈希一致；候选均 LF，无全文重排。增量分别为 +67、-5、-5、-5 bytes。 - 无重复的新流程，双模式具体行为留给共享 Skill，合理控制全局文档体积。 落盘前配套条件：当前检查时 `open-design-ui/references/koa-ol.md` 尚不存在，主 Agent 须先完成参考迁移，避免写入悬空入口。此事已单独通知。文件系统可读不等于客户端刷新，Windows Junction 运行态不在本审查的实测范围。 批准候选 SHA-256： - candidate-0.md：`c2b4d9a8797f68cf3c2fb9e266f73f52479874ee794cdfbe04fc7993d834f930`；31081 bytes，LF。 - candidate-1.md：`1ac1c8c7b257ff689d4fcdc73d41a903b8199a50d17e47f43b53e4044c311a7c`；28841 bytes，LF。 - candidate-2.md：`59501177af493f56be4c177f772449215147208d507931a47281c95ef8f6548c`；19993 bytes，LF。 - candidate-3.md：`c09ac0e3cbfcdc26c8132bef9009c59924176274cf99f4a8ab9174fa2bd499dd`；18654 bytes，LF。"
-        },
-        {
-          "file": "artifacts/merge-20260911-verification.json",
-          "text": "{ \"reviewer\": \"/root/review_skill_routing\", \"before\": \"review-before.md\", \"after\": \"review-after.md\", \"backup_files\": { \"SKILL.md\": \"8e40f6f9db3a4a34c94733a5a1fd6a52d36d54c530819204d462c7defac3ce0b\", \"agents/openai.yaml\": \"5880fe48ad0e7bf5805910e94cf405711f81a965a6c6135996eff67cb84020e3\", \"references/character-pipeline.md\": \"4572d8e6e871962cd18ca2dfd6a2f37a30e0b423ba9e89f4cf118ac3759c98f0\", \"references/koa-ol.md\": \"d5f4f6b9711a6264ff221bcfd647f7cf1e54b1053c1ab44810c0df4b5720ce7e\", \"references/motion-and-reference.md\": \"ca78ee0ac5fc0f89360f743c1e3f03e951d6f40e1b37c4d45f6e353cb36cf33f\", \"references/shared-atmosphere.md\": \"a2c783f1f3e634113746863cbc9687b318620940ae43bc86cfa9b5c6a636166e\", \"references/source-notes.md\": \"27e5dd3deef4b57edbd18b5fe329cd89624adf6c7268a2f5f6068fda61b0d838\" }, \"linux_open_design_discovery\": \"/mnt/c/Users/DTICPW/agent-workflows/skills/open-design-ui/SKILL.md\", \"old_entry_exists\": false }"
-        },
-        {
-          "file": "artifacts/open-design-reading-guide-20260912.md",
-          "text": "# Open Design 使用与维护 从实际前端设计中提炼创意、动效与素材协作方法，最终形成 Open Design 单一入口、阅读交付与表现设计两模式。 ## 当前方案 ### 统一入口 Open Design 是唯一前端设计入口，原 frontend-design-lab 已吸收并撤下。前端设计实验仍以本主题追踪，但它不再是独立 Skill。 ### 阅读交付 用于 muQ 条目、报告和说明。优先内容完整、成熟模板、图文层级与长时间阅读，不是低质量档位。 ### 表现设计 用于个人主页、品牌页和重点展示。主动构思对象、素材和交互，按需要制作动态小样，不强制生图或三维。 ### 选择方式 未指定时按用途自动判断，用户指定优先；允许整页阅读交付、局部演示采用表现设计。 ## 设计联想与取舍 ### 从场景里找对象，从对象里找动作，从动作里找交互 先判断对象应该怎样动，再选实现技术。用户可以只给感受与约束，由 Agent 主动提出少量有区别的方向。 ### 创意必须经过筛选 判断主题关联、信息或情绪价值、重复使用舒适度和实现成本。静态构图足够时就停在那里，不把所有联想堆进页面。 ### 让页面直接表达用途 通过真实入口、主视觉与背景表达含义，减少无信息量的欢迎语。必要的说明与无障碍标签保留。 ## 吸收的方法 ### 参考拆解 观察入场、稳定、滚动、悬停与点击，结合实际代码区分观察事实和实现推断。 ### 共享页面氛围 当前阅读区控制整页底色，文字、按钮、装饰与模型背景一起协调；整页渐变和从一点向外扩散是不同机制。 ### 动效编排 写清对象、触发、起点、变化、稳定状态和中断。入场与浮动分层，手动操作从当前状态接管，动画能离屏暂停并正常恢复。 ### 角色与媒介 按内容选择 DOM、SVG、视频或三维；角色按动作需要分层，保持原稿一致、关节不露缝、响应式装配不散架。 ### 内部参考 保留跨页连续性、阅读排版、共享氛围、动效、角色管线与来源，按任务读取，而不是每次加载全部技术细节。 ## 素材制作与职责 ### 前端负责素材简报 确定用途、位置、尺寸、构图、色调、留白、透明背景与分层要求。 ### MA3 负责派工 遵循 ma3-control 核对真实可用执行器与回执；执行 Agent 模型和实际生图模型分别确认。 ### 生图与三维各有入口 imgen-art-director / imagegen 负责素材生成和检查，threejs-diorama 负责模型；muq-journal 负责归档与可见范围。 ### 回到页面验收 收到素材后在真实布局、展示尺寸和深浅底色中检查，不能把出图等同于接入完成。 ## 骰子夜参考观察 ### 对象与动作呼应 实际试过贴纸拖抛、掷骰子和规则筛选；贴纸松手后继续运动，骰子给出结果，筛选改变列表。 ### 不同对象采用不同表现 贴纸落入，涂鸦沿路径画出，骰子旋转后停稳。按路径长度分配描线时间，保持相对连贯的笔触速度。 ### 借鉴边界 页面明确是虚构产品，营销指标与评价不作事实使用；首屏贴纸循环缺少离屏停止，不能整份代码照搬。 ## 演变与验证 ### 先分工，后合并 最初将两个 Skill 分成全站交付与专项动效；用户随后认为单入口更易使用，最终采用 Open Design 内部双模式。 ### 已完成检查 格式、相对引用、UI 元数据、LF 和发现路径通过；四份全局引用经过独立审查与落盘复核。当前客户端列表已显示新版 Open Design，旧入口不再出现。 ### 后续验证 继续在实际归档和页面设计任务中观察自动选模式与创意质量。本主题保存方法与 Skill 成果，主页建设仍是独立主题。 ## 源码与版本 共享 Skill 目录为当前本机源码，GitHub 私有仓库承接版本管理。2026-09-11 ZIP 为历史快照；本次未提交或推送源码。"
-        }
-      ],
       "topic": {
         "schema": 1,
         "layout": "reading-v2",
@@ -685,7 +612,6 @@
             "id": "codex-7868c500a1d7ef0ddd541fa5",
             "title": "最初讨论所在的混合会话 · 历史归档",
             "date": "2026-09-11",
-            "revision": "7eac3b1a7111478f8bd3e7c376bbc401",
             "primary": false
           }
         ],
@@ -710,8 +636,7 @@
                 "title": "选择方式",
                 "body": "未指定时按用途自动判断，用户指定优先；允许整页阅读交付、局部演示采用表现设计。"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "ideas",
@@ -729,8 +654,7 @@
                 "title": "让页面直接表达用途",
                 "body": "通过真实入口、主视觉与背景表达含义，减少无信息量的欢迎语。必要的说明与无障碍标签保留。"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "methods",
@@ -756,8 +680,7 @@
                 "title": "内部参考",
                 "body": "保留跨页连续性、阅读排版、共享氛围、动效、角色管线与来源，按任务读取，而不是每次加载全部技术细节。"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "assets",
@@ -779,8 +702,7 @@
                 "title": "回到页面验收",
                 "body": "收到素材后在真实布局、展示尺寸和深浅底色中检查，不能把出图等同于接入完成。"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "references",
@@ -798,8 +720,7 @@
                 "title": "借鉴边界",
                 "body": "页面明确是虚构产品，营销指标与评价不作事实使用；首屏贴纸循环缺少离屏停止，不能整份代码照搬。"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "evolution",
@@ -817,8 +738,7 @@
                 "title": "后续验证",
                 "body": "继续在实际归档和页面设计任务中观察自动选模式与创意质量。本主题保存方法与 Skill 成果，主页建设仍是独立主题。"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "archive-scope",
@@ -827,11 +747,97 @@
               "本主题持续整理前端设计 Skill 的方法、决策与成果；个人主页建造是独立主题。主页动效只作为方法形成的案例，不将其项目进度并入这里。",
               "原话来自同一真实会话，按完整日志快照保留 ID、时间、内容块与顺序。因此原话区包含主页等跨主题消息，正文仅提取前端设计 Skill 相关结论。历史日记保持原版本，本主题保存此次采集快照，不创建第二场会话身份。",
               "当前源码以共享 Skill 目录为准，私有仓库承接长期版本管理。2026-09-11 ZIP 仅代表合并时的历史快照，不代表最新源码或已推送状态。"
-            ],
-            "images": []
+            ]
           }
         ]
-      }
+      },
+      "public_content": true,
+      "files": [
+        {
+          "name": "artifacts/front-design-lab-reading-20260912.html",
+          "url": "public-files/front-design-lab/c9d4672d6c7f8d1aa5151422f50c0c3965283b45f1a522e63b98570eb126dec5.bin",
+          "bytes": 17204,
+          "sha256": "c9d4672d6c7f8d1aa5151422f50c0c3965283b45f1a522e63b98570eb126dec5"
+        },
+        {
+          "name": "artifacts/front-design-lab.html",
+          "url": "public-files/front-design-lab/e1563f076cf689efb85ee2313f9a7837cdef30ebacdca1d943e50175d5ec440f.bin",
+          "bytes": 7086,
+          "sha256": "e1563f076cf689efb85ee2313f9a7837cdef30ebacdca1d943e50175d5ec440f"
+        },
+        {
+          "name": "artifacts/merge-20260911-review-after.md",
+          "url": "public-files/front-design-lab/3c74265207e85e4471d3ac9a749a8d011f308b2a1c55f104d896b38cc88a8611.bin",
+          "bytes": 1076,
+          "sha256": "3c74265207e85e4471d3ac9a749a8d011f308b2a1c55f104d896b38cc88a8611",
+          "reading": {
+            "url": "public-files/front-design-lab/6beec4e8a19373d806679f54575f0f27fa8a34bd3d5e779471c703981ba2ee4a.bin",
+            "bytes": 3229,
+            "sha256": "6beec4e8a19373d806679f54575f0f27fa8a34bd3d5e779471c703981ba2ee4a"
+          }
+        },
+        {
+          "name": "artifacts/merge-20260911-review-before.md",
+          "url": "public-files/front-design-lab/1210467e6e76127aec142d7313e5f9fb47ef47e34e8c897d07bf7e9ed3ed0153.bin",
+          "bytes": 1916,
+          "sha256": "1210467e6e76127aec142d7313e5f9fb47ef47e34e8c897d07bf7e9ed3ed0153",
+          "reading": {
+            "url": "public-files/front-design-lab/0e8505a63e4bdeeda9fb5e7ebdd6a9eb6a5831d724992435e171924979f2161d.bin",
+            "bytes": 4159,
+            "sha256": "0e8505a63e4bdeeda9fb5e7ebdd6a9eb6a5831d724992435e171924979f2161d"
+          }
+        },
+        {
+          "name": "artifacts/merge-20260911-verification.json",
+          "url": "public-files/front-design-lab/18b2dd709035d6d7bb28a46c0c0f0154a0dbdc4338c1fec59c247662dbaaf086.bin",
+          "bytes": 965,
+          "sha256": "18b2dd709035d6d7bb28a46c0c0f0154a0dbdc4338c1fec59c247662dbaaf086"
+        },
+        {
+          "name": "artifacts/open-design-reading-guide-20260912.md",
+          "url": "public-files/front-design-lab/731b6c5e426b4d1f8e22d0c9114608be4d71dd931179d4e69049c45254efe159.bin",
+          "bytes": 4114,
+          "sha256": "731b6c5e426b4d1f8e22d0c9114608be4d71dd931179d4e69049c45254efe159",
+          "reading": {
+            "url": "public-files/front-design-lab/d601b8d9021a3841cf1b87e26ea5567c5e6de08c08082916d23f1a2e50c8d9f5.bin",
+            "bytes": 6432,
+            "sha256": "d601b8d9021a3841cf1b87e26ea5567c5e6de08c08082916d23f1a2e50c8d9f5"
+          }
+        },
+        {
+          "name": "artifacts/open-design-ui-20260911.zip",
+          "url": "public-files/front-design-lab/4673d3dcf17aca6218bed26b9d98a7182d3b7743361c2fc1e1f31353c8404b99.bin",
+          "bytes": 36873,
+          "sha256": "4673d3dcf17aca6218bed26b9d98a7182d3b7743361c2fc1e1f31353c8404b99"
+        }
+      ],
+      "omitted_files": [],
+      "search_index": [
+        {
+          "file": "artifacts/front-design-lab-reading-20260912.html",
+          "text": "front-design lab muQ / 持续维护的主题 front-design lab 从实际前端设计中提炼创意、动效与素材协作方法，最终形成 Open Design 单一入口、阅读交付与表现设计两模式。 当前状态与操作入口 Open Design 已形成统一入口、阅读交付与表现设计两种模式。当前源码已在本机落盘，仍有未提交修改；持续用真实任务验证模式选择、创意质量与素材协作。 2026-09-12 核对共享 Skill 源码；历史合并验收记录保留。 Open Design 私有源码仓库 本页目录 当前方案 设计联想与取舍 吸收的方法 素材制作与职责 骰子夜参考观察 演变与验证 维护边界与来源 网页 文件 历史与来源 01 当前方案 统一入口 Open Design 是唯一前端设计入口，原 frontend-design-lab 已吸收并撤下。前端设计实验仍以本主题追踪，但它不再是独立 Skill。 阅读交付 用于 muQ 条目、报告和说明。优先内容完整、成熟模板、图文层级与长时间阅读，不是低质量档位。 表现设计 用于个人主页、品牌页和重点展示。主动构思对象、素材和交互，按需要制作动态小样，不强制生图或三维。 选择方式 未指定时按用途自动判断，用户指定优先；允许整页阅读交付、局部演示采用表现设计。 02 设计联想与取舍 从场景里找对象，从对象里找动作，从动作里找交互 先判断对象应该怎样动，再选实现技术。用户可以只给感受与约束，由 Agent 主动提出少量有区别的方向。 创意必须经过筛选 判断主题关联、信息或情绪价值、重复使用舒适度和实现成本。静态构图足够时就停在那里，不把所有联想堆进页面。 让页面直接表达用途 通过真实入口、主视觉与背景表达含义，减少无信息量的欢迎语。必要的说明与无障碍标签保留。 03 吸收的方法 参考拆解 观察入场、稳定、滚动、悬停与点击，结合实际代码区分观察事实和实现推断。 共享页面氛围 当前阅读区控制整页底色，文字、按钮、装饰与模型背景一起协调；整页渐变和从一点向外扩散是不同机制。 动效编排 写清对象、触发、起点、变化、稳定状态和中断。入场与浮动分层，手动操作从当前状态接管，动画能离屏暂停并正常恢复。 角色与媒介 按内容选择 DOM、SVG、视频或三维；角色按动作需要分层，保持原稿一致、关节不露缝、响应式装配不散架。 内部参考 保留跨页连续性、阅读排版、共享氛围、动效、角色管线与来源，按任务读取，而不是每次加载全部技术细节。 04 素材制作与职责 前端负责素材简报 确定用途、位置、尺寸、构图、色调、留白、透明背景与分层要求。 MA3 负责派工 遵循 ma3-control 核对真实可用执行器与回执；执行 Agent 模型和实际生图模型分别确认。 生图与三维各有入口 imgen-art-director / imagegen 负责素材生成和检查，threejs-diorama 负责模型；muq-journal 负责归档与可见范围。 回到页面验收 收到素材后在真实布局、展示尺寸和深浅底色中检查，不能把出图等同于接入完成。 05 骰子夜参考观察 对象与动作呼应 实际试过贴纸拖抛、掷骰子和规则筛选；贴纸松手后继续运动，骰子给出结果，筛选改变列表。 不同对象采用不同表现 贴纸落入，涂鸦沿路径画出，骰子旋转后停稳。按路径长度分配描线时间，保持相对连贯的笔触速度。 借鉴边界 页面明确是虚构产品，营销指标与评价不作事实使用；首屏贴纸循环缺少离屏停止，不能整份代码照搬。 06 演变与验证 先分工，后合并 最初将两个 Skill 分成全站交付与专项动效；用户随后认为单入口更易使用，最终采用 Open Design 内部双模式。 已完成检查 格式、相对引用、UI 元数据、LF 和发现路径通过；四份全局引用经过独立审查与落盘复核。当前客户端列表已显示新版 Open Design，旧入口不再出现。 后续验证 继续在实际归档和页面设计任务中观察自动选模式与创意质量。本主题保存方法与 Skill 成果，主页建设仍是独立主题。 07 维护边界与来源 本主题持续整理前端设计 Skill 的方法、决策与成果；个人主页建造是独立主题。主页动效只作为方法形成的案例，不将其项目进度并入这里。 原话来自同一真实会话，按完整日志快照保留 ID、时间、内容块与顺序。因此原话区包含主页等跨主题消息，正文仅提取前端设计 Skill 相关结论。历史日记保持原版本，本主题保存此次采集快照，不创建第二场会话身份。 当前源码以共享 Skill 目录为准，私有仓库承接长期版本管理。2026-09-11 ZIP 仅代表合并时的历史快照，不代表最新源码或已推送状态。 08 网页 骰子夜 · 动态交互参考 Open Design 上游工作流 09 文件 Open Design · 使用与维护指南 Skill 合并 · 写入前独立审查 Skill 合并 · 落盘后独立复核 Skill 合并 · 验证记录 历史 · 2026-09-11 Skill 源码与审查快照 历史 · 首次归档阅读页 10 历史与来源 最初讨论所在的混合会话 · 历史归档 来源原话在图书馆馆主视角默认展开；本 HTML 阅读副本不复制原始提示词。"
+        },
+        {
+          "file": "artifacts/front-design-lab.html",
+          "text": "front-design lab FRONTEND DESIGN / 独立主题 / 2026-09-11 front-design lab 从实际前端设计中提炼创意、动效与素材协作方法，最终形成 Open Design 单一入口、阅读交付与表现设计两模式。 当前状态：已完成本轮 Skill 合并 统一入口与内部参考已落盘并验证。本条目仅馆主可见；这次先更新本地图书馆。 当前方案 设计联想与取舍 吸收的方法 素材制作与职责 骰子夜参考观察 演变与验证 01 当前方案 统一入口 Open Design 是唯一前端设计入口，原 frontend-design-lab 已吸收并撤下。前端设计实验仍以本主题追踪，但它不再是独立 Skill。 阅读交付 用于 muQ 条目、报告和说明。优先内容完整、成熟模板、图文层级与长时间阅读，不是低质量档位。 表现设计 用于个人主页、品牌页和重点展示。主动构思对象、素材和交互，按需要制作动态小样，不强制生图或三维。 选择方式 未指定时按用途自动判断，用户指定优先；允许整页阅读交付、局部演示采用表现设计。 02 设计联想与取舍 从场景里找对象，从对象里找动作，从动作里找交互 先判断对象应该怎样动，再选实现技术。用户可以只给感受与约束，由 Agent 主动提出少量有区别的方向。 创意必须经过筛选 判断主题关联、信息或情绪价值、重复使用舒适度和实现成本。静态构图足够时就停在那里，不把所有联想堆进页面。 让页面直接表达用途 通过真实入口、主视觉与背景表达含义，减少无信息量的欢迎语。必要的说明与无障碍标签保留。 03 吸收的方法 参考拆解 观察入场、稳定、滚动、悬停与点击，结合实际代码区分观察事实和实现推断。 共享页面氛围 当前阅读区控制整页底色，文字、按钮、装饰与模型背景一起协调；整页渐变和从一点向外扩散是不同机制。 动效编排 写清对象、触发、起点、变化、稳定状态和中断。入场与浮动分层，手动操作从当前状态接管，动画能离屏暂停并正常恢复。 角色与媒介 按内容选择 DOM、SVG、视频或三维；角色按动作需要分层，保持原稿一致、关节不露缝、响应式装配不散架。 内部参考 保留跨页连续性、阅读排版、共享氛围、动效、角色管线与来源，按任务读取，而不是每次加载全部技术细节。 04 素材制作与职责 前端负责素材简报 确定用途、位置、尺寸、构图、色调、留白、透明背景与分层要求。 MA3 负责派工 遵循 ma3-control 核对真实可用执行器与回执；执行 Agent 模型和实际生图模型分别确认。 生图与三维各有入口 imgen-art-director / imagegen 负责素材生成和检查，threejs-diorama 负责模型；muq-journal 负责归档与可见范围。 回到页面验收 收到素材后在真实布局、展示尺寸和深浅底色中检查，不能把出图等同于接入完成。 05 骰子夜参考观察 对象与动作呼应 实际试过贴纸拖抛、掷骰子和规则筛选；贴纸松手后继续运动，骰子给出结果，筛选改变列表。 不同对象采用不同表现 贴纸落入，涂鸦沿路径画出，骰子旋转后停稳。按路径长度分配描线时间，保持相对连贯的笔触速度。 借鉴边界 页面明确是虚构产品，营销指标与评价不作事实使用；首屏贴纸循环缺少离屏停止，不能整份代码照搬。 06 演变与验证 先分工，后合并 最初将两个 Skill 分成全站交付与专项动效；用户随后认为单入口更易使用，最终采用 Open Design 内部双模式。 已完成检查 格式、相对引用、UI 元数据、LF 和发现路径通过；四份全局引用经过独立审查与落盘复核。当前客户端列表已显示新版 Open Design，旧入口不再出现。 后续验证 继续在实际归档和页面设计任务中观察自动选模式与创意质量。本主题保存方法与 Skill 成果，主页建设仍是独立主题。 网页与源码 Open Design 所在私有源码仓库 骰子夜参考页面 仓库是长期源码入口；本轮快照见条目文件区，不代表这些本地更改已经推送远程。 原话与来源 本主题选取同一真实会话中关于前端 Skill 的第 8–17 条消息，保留原消息 ID、时间、内容块与顺序；共 10 条。原文在下方“用户原话”区域查看，不将主页建设的整场会话冒充成本主题内容。"
+        },
+        {
+          "file": "artifacts/merge-20260911-review-after.md",
+          "text": "# 全局指令落盘独立复核 审查员：`/root/review_skill_routing`。 结论：**通过**。 - 重新读取四份实际生效文件，均与 review-before.md 批准候选逐字节一致，SHA-256 全部相符，均为 LF；未发现批准后新增变更。 - `open-design-ui/references/koa-ol.md` 已存在，落盘前配套条件满足。 - 共享源码中 `frontend-design-lab` 目录已撤下；产物目录备份含 SKILL.md、agents/openai.yaml 和五份参考，共七个文件，覆盖 Git 所有六个原跟踪路径及新增 shared-atmosphere.md。 - 已读 persona-after.txt：结构检查 21/21 节通过；已读 facts-after.txt：列出的事实探针通过，Skill 数量为 14。 - 以上不表示四份刻意不同的行为指令逐字一致，也不表示 Linux 已验证 Windows Junction Target 或所有客户端刷新。 备份完整性边界：原 Skill 已在此次复核前撤下，未提供撤下前逐文件哈希清单；能够独立确认七个备份文件可读及原跟踪路径覆盖，不能伪称完成撤下前后逐字节比对。"
+        },
+        {
+          "file": "artifacts/merge-20260911-review-before.md",
+          "text": "# 全局指令候选独立审查 审查员：`/root/review_skill_routing`，独立子 Agent。 结论：**通过**。本结论批准 manifest.json 中四份候选文本；生效前需完成其配套的参考文件迁移，落盘后继续独立复核。 依据：已读取本会话用户的单一入口、双模式方案及明确执行指令，request.md、manifest.json、四份原文与候选涉及的完整章节、全部 diff，并以全文差异核对确认无隐藏改动。已加载 global-instruction-review Skill。 检查结论： - 范围为四处参考路径迁移和 Linux Codex 一处已过时的双 Skill 路由替换，属于完成用户已授权合并所需修正。 - 无权限、凭据、派工许可、发布授权或系统行为范围扩张；用户指定优先保留。 - Windows/Linux 路径换算说明保持不变；各客户端原有 UI 默认规则及 Artifact 差异保留，未强行统一。 - 四份实时生效原文均与 manifest 的原文哈希一致；候选均 LF，无全文重排。增量分别为 +67、-5、-5、-5 bytes。 - 无重复的新流程，双模式具体行为留给共享 Skill，合理控制全局文档体积。 落盘前配套条件：当前检查时 `open-design-ui/references/koa-ol.md` 尚不存在，主 Agent 须先完成参考迁移，避免写入悬空入口。此事已单独通知。文件系统可读不等于客户端刷新，Windows Junction 运行态不在本审查的实测范围。 批准候选 SHA-256： - candidate-0.md：`c2b4d9a8797f68cf3c2fb9e266f73f52479874ee794cdfbe04fc7993d834f930`；31081 bytes，LF。 - candidate-1.md：`1ac1c8c7b257ff689d4fcdc73d41a903b8199a50d17e47f43b53e4044c311a7c`；28841 bytes，LF。 - candidate-2.md：`59501177af493f56be4c177f772449215147208d507931a47281c95ef8f6548c`；19993 bytes，LF。 - candidate-3.md：`c09ac0e3cbfcdc26c8132bef9009c59924176274cf99f4a8ab9174fa2bd499dd`；18654 bytes，LF。"
+        },
+        {
+          "file": "artifacts/merge-20260911-verification.json",
+          "text": "{ \"reviewer\": \"/root/review_skill_routing\", \"before\": \"review-before.md\", \"after\": \"review-after.md\", \"backup_files\": { \"SKILL.md\": \"8e40f6f9db3a4a34c94733a5a1fd6a52d36d54c530819204d462c7defac3ce0b\", \"agents/openai.yaml\": \"5880fe48ad0e7bf5805910e94cf405711f81a965a6c6135996eff67cb84020e3\", \"references/character-pipeline.md\": \"4572d8e6e871962cd18ca2dfd6a2f37a30e0b423ba9e89f4cf118ac3759c98f0\", \"references/koa-ol.md\": \"d5f4f6b9711a6264ff221bcfd647f7cf1e54b1053c1ab44810c0df4b5720ce7e\", \"references/motion-and-reference.md\": \"ca78ee0ac5fc0f89360f743c1e3f03e951d6f40e1b37c4d45f6e353cb36cf33f\", \"references/shared-atmosphere.md\": \"a2c783f1f3e634113746863cbc9687b318620940ae43bc86cfa9b5c6a636166e\", \"references/source-notes.md\": \"27e5dd3deef4b57edbd18b5fe329cd89624adf6c7268a2f5f6068fda61b0d838\" }, \"linux_open_design_discovery\": \"/mnt/c/Users/DTICPW/agent-workflows/skills/open-design-ui/SKILL.md\", \"old_entry_exists\": false }"
+        },
+        {
+          "file": "artifacts/open-design-reading-guide-20260912.md",
+          "text": "# Open Design 使用与维护 从实际前端设计中提炼创意、动效与素材协作方法，最终形成 Open Design 单一入口、阅读交付与表现设计两模式。 ## 当前方案 ### 统一入口 Open Design 是唯一前端设计入口，原 frontend-design-lab 已吸收并撤下。前端设计实验仍以本主题追踪，但它不再是独立 Skill。 ### 阅读交付 用于 muQ 条目、报告和说明。优先内容完整、成熟模板、图文层级与长时间阅读，不是低质量档位。 ### 表现设计 用于个人主页、品牌页和重点展示。主动构思对象、素材和交互，按需要制作动态小样，不强制生图或三维。 ### 选择方式 未指定时按用途自动判断，用户指定优先；允许整页阅读交付、局部演示采用表现设计。 ## 设计联想与取舍 ### 从场景里找对象，从对象里找动作，从动作里找交互 先判断对象应该怎样动，再选实现技术。用户可以只给感受与约束，由 Agent 主动提出少量有区别的方向。 ### 创意必须经过筛选 判断主题关联、信息或情绪价值、重复使用舒适度和实现成本。静态构图足够时就停在那里，不把所有联想堆进页面。 ### 让页面直接表达用途 通过真实入口、主视觉与背景表达含义，减少无信息量的欢迎语。必要的说明与无障碍标签保留。 ## 吸收的方法 ### 参考拆解 观察入场、稳定、滚动、悬停与点击，结合实际代码区分观察事实和实现推断。 ### 共享页面氛围 当前阅读区控制整页底色，文字、按钮、装饰与模型背景一起协调；整页渐变和从一点向外扩散是不同机制。 ### 动效编排 写清对象、触发、起点、变化、稳定状态和中断。入场与浮动分层，手动操作从当前状态接管，动画能离屏暂停并正常恢复。 ### 角色与媒介 按内容选择 DOM、SVG、视频或三维；角色按动作需要分层，保持原稿一致、关节不露缝、响应式装配不散架。 ### 内部参考 保留跨页连续性、阅读排版、共享氛围、动效、角色管线与来源，按任务读取，而不是每次加载全部技术细节。 ## 素材制作与职责 ### 前端负责素材简报 确定用途、位置、尺寸、构图、色调、留白、透明背景与分层要求。 ### MA3 负责派工 遵循 ma3-control 核对真实可用执行器与回执；执行 Agent 模型和实际生图模型分别确认。 ### 生图与三维各有入口 imgen-art-director / imagegen 负责素材生成和检查，threejs-diorama 负责模型；muq-journal 负责归档与可见范围。 ### 回到页面验收 收到素材后在真实布局、展示尺寸和深浅底色中检查，不能把出图等同于接入完成。 ## 骰子夜参考观察 ### 对象与动作呼应 实际试过贴纸拖抛、掷骰子和规则筛选；贴纸松手后继续运动，骰子给出结果，筛选改变列表。 ### 不同对象采用不同表现 贴纸落入，涂鸦沿路径画出，骰子旋转后停稳。按路径长度分配描线时间，保持相对连贯的笔触速度。 ### 借鉴边界 页面明确是虚构产品，营销指标与评价不作事实使用；首屏贴纸循环缺少离屏停止，不能整份代码照搬。 ## 演变与验证 ### 先分工，后合并 最初将两个 Skill 分成全站交付与专项动效；用户随后认为单入口更易使用，最终采用 Open Design 内部双模式。 ### 已完成检查 格式、相对引用、UI 元数据、LF 和发现路径通过；四份全局引用经过独立审查与落盘复核。当前客户端列表已显示新版 Open Design，旧入口不再出现。 ### 后续验证 继续在实际归档和页面设计任务中观察自动选模式与创意质量。本主题保存方法与 Skill 成果，主页建设仍是独立主题。 ## 源码与版本 共享 Skill 目录为当前本机源码，GitHub 私有仓库承接版本管理。2026-09-11 ZIP 为历史快照；本次未提交或推送源码。"
+        }
+      ]
     },
     {
       "id": "personal-homepage",
@@ -852,64 +858,7 @@
       "outputs": "",
       "next": "",
       "current_state": "主页与主要子页面已有上线记录；本主题是持续维护中的总览。",
-      "public_content": true,
       "sections": [],
-      "files": [
-        {
-          "name": "artifacts/home-chat-block.png",
-          "url": "public-files/personal-homepage/83b1dcf1415f04ae810383526d0b76363931f0a3f41785a18f64626b221b0767.bin",
-          "bytes": 52679,
-          "sha256": "83b1dcf1415f04ae810383526d0b76363931f0a3f41785a18f64626b221b0767"
-        },
-        {
-          "name": "artifacts/home-games-block.png",
-          "url": "public-files/personal-homepage/830817813989a1d7f43ad8ac375450c28954ad5e1c7bd5980a7d3f6ed4fc4bfd.bin",
-          "bytes": 125287,
-          "sha256": "830817813989a1d7f43ad8ac375450c28954ad5e1c7bd5980a7d3f6ed4fc4bfd"
-        },
-        {
-          "name": "artifacts/home-hero.png",
-          "url": "public-files/personal-homepage/c3ad1233881573cfe37b1ad093aa4ec7249e4d5709651374ec23eda019d06cfa.bin",
-          "bytes": 295238,
-          "sha256": "c3ad1233881573cfe37b1ad093aa4ec7249e4d5709651374ec23eda019d06cfa"
-        },
-        {
-          "name": "artifacts/home-muq-library.png",
-          "url": "public-files/personal-homepage/694f87c4ff977c7715fc2de735cb5ac6be37f2f8c3dd71ab0210928a686b4cc6.bin",
-          "bytes": 269113,
-          "sha256": "694f87c4ff977c7715fc2de735cb5ac6be37f2f8c3dd71ab0210928a686b4cc6"
-        },
-        {
-          "name": "artifacts/homepage-evidence-20260911.png",
-          "url": "public-files/personal-homepage/59a2b10fc01e2e1c05781f19d8743181c3dcc2b2b1f2b18fd7542d792c523e5d.bin",
-          "bytes": 297278,
-          "sha256": "59a2b10fc01e2e1c05781f19d8743181c3dcc2b2b1f2b18fd7542d792c523e5d"
-        },
-        {
-          "name": "artifacts/homepage-live-20260911.png",
-          "url": "public-files/personal-homepage/007b84db0c270b4662d1ee26cb51d598abc9329c7c2b15a4f183069c403814b2.bin",
-          "bytes": 295069,
-          "sha256": "007b84db0c270b4662d1ee26cb51d598abc9329c7c2b15a4f183069c403814b2"
-        },
-        {
-          "name": "artifacts/personal-homepage-0169bd63e981.html",
-          "url": "public-files/personal-homepage/0169bd63e981efcd487e403db7046d188ba93281fc6df2610c413a56ed264069.bin",
-          "bytes": 1010039,
-          "sha256": "0169bd63e981efcd487e403db7046d188ba93281fc6df2610c413a56ed264069"
-        },
-        {
-          "name": "artifacts/personal-homepage-0a432e94eec9.html",
-          "url": "public-files/personal-homepage/0a432e94eec9763383bc60530f3eac6c14d7330c9e6fe1b7a330506527f50fac.bin",
-          "bytes": 408372,
-          "sha256": "0a432e94eec9763383bc60530f3eac6c14d7330c9e6fe1b7a330506527f50fac"
-        },
-        {
-          "name": "artifacts/personal-homepage-8f12c865ffaa.html",
-          "url": "public-files/personal-homepage/8f12c865ffaa9efad2778858d457644e643d866593c891f1393e50e55b215e0a.bin",
-          "bytes": 405442,
-          "sha256": "8f12c865ffaa9efad2778858d457644e643d866593c891f1393e50e55b215e0a"
-        }
-      ],
       "resources": [
         {
           "kind": "file",
@@ -943,32 +892,11 @@
           "title": "主页截图 · 当前首屏"
         }
       ],
-      "omitted_files": [],
-      "search_index": [
-        {
-          "file": "artifacts/personal-homepage-0169bd63e981.html",
-          "text": "个人主页建造 muQ / 持续维护的主题 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 线上首页实拍 · 2026-09-11 · 1440 × 1000；隐藏浏览器滚动条并启用减少动态效果。 当前状态与操作入口 整站已有可用版本，神社、AI Chat／Stats、muQ 与 Games 由个人主页串联。本主题使用新版阅读目录与章节布局，补充当前主页各区域的真实截图；muQ 自身已整理为独立长期主题。 2026-09-11：实拍线上主页首屏及三个项目区域，截图保持原始比例。这里展示界面与入口；历史功能测试仍以各来源报告为准，不把本次截图当成全部功能重测。 打开个人主页 使用 AI Chat 查看 Stats 本页目录 主页界面一览 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 网页 文件 历史与来源 01 主页界面一览 首页以神社建立视觉印象，向下依次进入对话、图书馆和游戏区域。以下三张实拍保留各区域的原始构图，便于回忆布局与实际入口。 主页对话区域：AI Chat 的主要入口与 Stats 用量入口。 2026-09-11 线上实拍，等比展示。 打开原图 主页图书馆区域：红魔馆藏书室模型及进入图书馆的入口。 2026-09-11 线上实拍，等比展示。 打开原图 主页游戏区域：Blackjack 与 Texas Hold’em 的入口与纸牌视觉。 2026-09-11 线上实拍，等比展示。 打开原图 02 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 阅读关联档案 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 阅读关联档案 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。图书馆已建立长期主题，集中展示当前能力、使用指南、源码仓库、维护说明与历史证据。 阅读关联档案 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 阅读关联档案 03 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 04 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 05 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 06 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 07 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 08 文件 首页截图 · 2026-09-11 主页截图 · AI Chat 与 Stats 入口 主页截图 · muQ 与红魔馆藏书室 主页截图 · Games 入口 主页截图 · 当前首屏 09 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型 来源原话在图书馆馆主视角默认展开；本 HTML 阅读副本不复制原始提示词。"
-        },
-        {
-          "file": "artifacts/personal-homepage-0a432e94eec9.html",
-          "text": "个人主页建造 KOA-OL / 主题档案 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 主页归档截图 · 2026-09-11 · 原始尺寸 1440 × 1000，等比展示。用于识别当前设计方向，不代表所有子页面的最新状态。 当前状态与操作入口 整站已有可用版本。主页保留神社与藏书室模型，按阅读区域切换整体氛围；Chat 已加入三模型、GPT 可选联网、流式回复、停止／重试和本机历史。muQ 正在从会话目录向主题档案演进，本页是首个试点。 资料基线：2026-09-11 的归档记录及当前网站源码。下文区分已有验收记录与仍需实际使用验证的内容。 打开个人主页 使用 AI Chat 查看 Stats 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。网站主页提供访问入口；图书馆自身的归档模型、权限与阅读器继续独立维护。旧项目档案较早，近期变更另见相关会话。 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型"
-        },
-        {
-          "file": "artifacts/personal-homepage-8f12c865ffaa.html",
-          "text": "个人主页建造 KOA-OL / 主题档案 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 线上主页实拍 · 2026-09-11 · 1440 × 1000，等比展示。截图时隐藏浏览器滚动条；神社模型已渲染，使用减少动态效果的稳定状态。 当前状态与操作入口 整站已有可用版本。主页保留神社与藏书室模型，按阅读区域切换整体氛围；Chat 已加入三模型、GPT 可选联网、流式回复、停止／重试和本机历史。muQ 正在从会话目录向主题档案演进，本页是首个试点。 资料基线：2026-09-11 的归档记录及当前网站源码。下文区分已有验收记录与仍需实际使用验证的内容。 打开个人主页 使用 AI Chat 查看 Stats 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。网站主页提供访问入口；图书馆自身的归档模型、权限与阅读器继续独立维护。旧项目档案较早，近期变更另见相关会话。 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型"
-        }
-      ],
       "topic": {
         "schema": 1,
+        "layout": "reading-v2",
         "state": "整站已有可用版本，神社、AI Chat／Stats、muQ 与 Games 由个人主页串联。本主题使用新版阅读目录与章节布局，补充当前主页各区域的真实截图；muQ 自身已整理为独立长期主题。",
         "checked": "2026-09-11：实拍线上主页首屏及三个项目区域，截图保持原始比例。这里展示界面与入口；历史功能测试仍以各来源报告为准，不把本次截图当成全部功能重测。",
-        "image": {
-          "file": "artifacts/home-hero.png",
-          "width": 1440,
-          "height": 1000,
-          "alt": "Koa-OL 当前首页：神社微缩庭院、标题与导航",
-          "caption": "线上首页实拍 · 2026-09-11 · 1440 × 1000；隐藏浏览器滚动条并启用减少动态效果。"
-        },
         "actions": [
           {
             "title": "打开个人主页",
@@ -983,6 +911,60 @@
             "url": "https://koa-ol.com/stats/"
           }
         ],
+        "webpages": [
+          {
+            "title": "Koa-OL 个人主页",
+            "url": "https://koa-ol.com/"
+          },
+          {
+            "title": "AI Chat",
+            "url": "https://koa-ol.com/chat/"
+          },
+          {
+            "title": "Stats · 对话与模型用量",
+            "url": "https://koa-ol.com/stats/"
+          },
+          {
+            "title": "muQ · 大图书馆",
+            "url": "https://koa-ol.com/library/"
+          },
+          {
+            "title": "博丽神社 · 独立模型",
+            "url": "https://koa-ol.com/shrine/"
+          },
+          {
+            "title": "红魔馆藏书室 · 独立模型",
+            "url": "https://koa-ol.com/library-scene/"
+          },
+          {
+            "title": "Games",
+            "url": "https://koa-ol.com/games/"
+          }
+        ],
+        "sources": [
+          {
+            "id": "codex-7868c500a1d7ef0ddd541fa5",
+            "title": "个人主页建造",
+            "date": "2026-09-11"
+          },
+          {
+            "id": "codex-7edd133d0ae2021ca6d089f6",
+            "title": "个人主页 AI Chat 与 Stats：三模型接入与界面优化",
+            "date": "2026-09-11"
+          },
+          {
+            "id": "codex-8013b0f1f387225dbd548198",
+            "title": "为 muQ 主页制作红魔馆图书馆微缩模型",
+            "date": "2026-09-11"
+          }
+        ],
+        "image": {
+          "file": "artifacts/home-hero.png",
+          "width": 1440,
+          "height": 1000,
+          "alt": "Koa-OL 当前首页：神社微缩庭院、标题与导航",
+          "caption": "线上首页实拍 · 2026-09-11 · 1440 × 1000；隐藏浏览器滚动条并启用减少动态效果。"
+        },
         "sections": [
           {
             "id": "screens",
@@ -1041,8 +1023,7 @@
                 "body": "神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。",
                 "entry": "codex-8013b0f1f387225dbd548198"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "use",
@@ -1064,8 +1045,7 @@
                 "title": "从主页进入 muQ",
                 "body": "检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "state",
@@ -1090,8 +1070,7 @@
                 "title": "归档状态不等于产品状态",
                 "body": "某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。"
               }
-            ],
-            "images": []
+            ]
           },
           {
             "id": "design",
@@ -1100,8 +1079,7 @@
               "当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。",
               "神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。",
               "主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。"
-            ],
-            "images": []
+            ]
           },
           {
             "id": "handoff",
@@ -1123,62 +1101,112 @@
                 "title": "维护入口的边界",
                 "body": "本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。"
               }
-            ],
-            "images": []
+            ]
           }
-        ],
-        "webpages": [
-          {
-            "title": "Koa-OL 个人主页",
-            "url": "https://koa-ol.com/"
-          },
-          {
-            "title": "AI Chat",
-            "url": "https://koa-ol.com/chat/"
-          },
-          {
-            "title": "Stats · 对话与模型用量",
-            "url": "https://koa-ol.com/stats/"
-          },
-          {
-            "title": "muQ · 大图书馆",
-            "url": "https://koa-ol.com/library/"
-          },
-          {
-            "title": "博丽神社 · 独立模型",
-            "url": "https://koa-ol.com/shrine/"
-          },
-          {
-            "title": "红魔馆藏书室 · 独立模型",
-            "url": "https://koa-ol.com/library-scene/"
-          },
-          {
-            "title": "Games",
-            "url": "https://koa-ol.com/games/"
+        ]
+      },
+      "public_content": true,
+      "files": [
+        {
+          "name": "artifacts/home-chat-block.png",
+          "url": "public-files/personal-homepage/83b1dcf1415f04ae810383526d0b76363931f0a3f41785a18f64626b221b0767.bin",
+          "bytes": 52679,
+          "sha256": "83b1dcf1415f04ae810383526d0b76363931f0a3f41785a18f64626b221b0767",
+          "thumbnail": {
+            "url": "public-files/personal-homepage/2b75c1a6b9e9315e36e24931d1534814a6c947d7d808b458b0f251be13abf35f.bin",
+            "bytes": 7721,
+            "sha256": "2b75c1a6b9e9315e36e24931d1534814a6c947d7d808b458b0f251be13abf35f"
           }
-        ],
-        "sources": [
-          {
-            "id": "codex-7868c500a1d7ef0ddd541fa5",
-            "title": "个人主页建造",
-            "revision": "c8825274e7554f6b809a1016b1e4321b",
-            "date": "2026-09-11"
-          },
-          {
-            "id": "codex-7edd133d0ae2021ca6d089f6",
-            "title": "个人主页 AI Chat 与 Stats：三模型接入与界面优化",
-            "revision": "c84c5a51be524e80ba842aa65a8ab812",
-            "date": "2026-09-11"
-          },
-          {
-            "id": "codex-8013b0f1f387225dbd548198",
-            "title": "为 muQ 主页制作红魔馆图书馆微缩模型",
-            "revision": "da153f77aab24e869bfae174736146a0",
-            "date": "2026-09-11"
+        },
+        {
+          "name": "artifacts/home-games-block.png",
+          "url": "public-files/personal-homepage/830817813989a1d7f43ad8ac375450c28954ad5e1c7bd5980a7d3f6ed4fc4bfd.bin",
+          "bytes": 125287,
+          "sha256": "830817813989a1d7f43ad8ac375450c28954ad5e1c7bd5980a7d3f6ed4fc4bfd",
+          "thumbnail": {
+            "url": "public-files/personal-homepage/c728df6c4165ee7a51ae2cc2c15cd5f1e2c147080bb3f8dfebf477ecdfa81700.bin",
+            "bytes": 10132,
+            "sha256": "c728df6c4165ee7a51ae2cc2c15cd5f1e2c147080bb3f8dfebf477ecdfa81700"
           }
-        ],
-        "layout": "reading-v2"
-      }
+        },
+        {
+          "name": "artifacts/home-hero.png",
+          "url": "public-files/personal-homepage/c3ad1233881573cfe37b1ad093aa4ec7249e4d5709651374ec23eda019d06cfa.bin",
+          "bytes": 295238,
+          "sha256": "c3ad1233881573cfe37b1ad093aa4ec7249e4d5709651374ec23eda019d06cfa",
+          "thumbnail": {
+            "url": "public-files/personal-homepage/277cc3c43ff134c16077be455a7d47c47159a8ad27dcbc07fbf8883df3c0b044.bin",
+            "bytes": 11906,
+            "sha256": "277cc3c43ff134c16077be455a7d47c47159a8ad27dcbc07fbf8883df3c0b044"
+          }
+        },
+        {
+          "name": "artifacts/home-muq-library.png",
+          "url": "public-files/personal-homepage/694f87c4ff977c7715fc2de735cb5ac6be37f2f8c3dd71ab0210928a686b4cc6.bin",
+          "bytes": 269113,
+          "sha256": "694f87c4ff977c7715fc2de735cb5ac6be37f2f8c3dd71ab0210928a686b4cc6",
+          "thumbnail": {
+            "url": "public-files/personal-homepage/0433ada235335090b1632812bb43539bf3ee5d2cc03ab8740e527afbd4da67cf.bin",
+            "bytes": 10450,
+            "sha256": "0433ada235335090b1632812bb43539bf3ee5d2cc03ab8740e527afbd4da67cf"
+          }
+        },
+        {
+          "name": "artifacts/homepage-evidence-20260911.png",
+          "url": "public-files/personal-homepage/59a2b10fc01e2e1c05781f19d8743181c3dcc2b2b1f2b18fd7542d792c523e5d.bin",
+          "bytes": 297278,
+          "sha256": "59a2b10fc01e2e1c05781f19d8743181c3dcc2b2b1f2b18fd7542d792c523e5d",
+          "thumbnail": {
+            "url": "public-files/personal-homepage/975706ffb9e79a4794e6837370ead9f92f15e36fb296ee98ccf259e9118fd390.bin",
+            "bytes": 12174,
+            "sha256": "975706ffb9e79a4794e6837370ead9f92f15e36fb296ee98ccf259e9118fd390"
+          }
+        },
+        {
+          "name": "artifacts/homepage-live-20260911.png",
+          "url": "public-files/personal-homepage/007b84db0c270b4662d1ee26cb51d598abc9329c7c2b15a4f183069c403814b2.bin",
+          "bytes": 295069,
+          "sha256": "007b84db0c270b4662d1ee26cb51d598abc9329c7c2b15a4f183069c403814b2",
+          "thumbnail": {
+            "url": "public-files/personal-homepage/7e619648b0c759fbe736ed32c3287ab420733253fa744cfe577a21d1c6c055ec.bin",
+            "bytes": 11904,
+            "sha256": "7e619648b0c759fbe736ed32c3287ab420733253fa744cfe577a21d1c6c055ec"
+          }
+        },
+        {
+          "name": "artifacts/personal-homepage-0169bd63e981.html",
+          "url": "public-files/personal-homepage/0169bd63e981efcd487e403db7046d188ba93281fc6df2610c413a56ed264069.bin",
+          "bytes": 1010039,
+          "sha256": "0169bd63e981efcd487e403db7046d188ba93281fc6df2610c413a56ed264069"
+        },
+        {
+          "name": "artifacts/personal-homepage-0a432e94eec9.html",
+          "url": "public-files/personal-homepage/0a432e94eec9763383bc60530f3eac6c14d7330c9e6fe1b7a330506527f50fac.bin",
+          "bytes": 408372,
+          "sha256": "0a432e94eec9763383bc60530f3eac6c14d7330c9e6fe1b7a330506527f50fac"
+        },
+        {
+          "name": "artifacts/personal-homepage-8f12c865ffaa.html",
+          "url": "public-files/personal-homepage/8f12c865ffaa9efad2778858d457644e643d866593c891f1393e50e55b215e0a.bin",
+          "bytes": 405442,
+          "sha256": "8f12c865ffaa9efad2778858d457644e643d866593c891f1393e50e55b215e0a"
+        }
+      ],
+      "omitted_files": [],
+      "search_index": [
+        {
+          "file": "artifacts/personal-homepage-0169bd63e981.html",
+          "text": "个人主页建造 muQ / 持续维护的主题 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 线上首页实拍 · 2026-09-11 · 1440 × 1000；隐藏浏览器滚动条并启用减少动态效果。 当前状态与操作入口 整站已有可用版本，神社、AI Chat／Stats、muQ 与 Games 由个人主页串联。本主题使用新版阅读目录与章节布局，补充当前主页各区域的真实截图；muQ 自身已整理为独立长期主题。 2026-09-11：实拍线上主页首屏及三个项目区域，截图保持原始比例。这里展示界面与入口；历史功能测试仍以各来源报告为准，不把本次截图当成全部功能重测。 打开个人主页 使用 AI Chat 查看 Stats 本页目录 主页界面一览 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 网页 文件 历史与来源 01 主页界面一览 首页以神社建立视觉印象，向下依次进入对话、图书馆和游戏区域。以下三张实拍保留各区域的原始构图，便于回忆布局与实际入口。 主页对话区域：AI Chat 的主要入口与 Stats 用量入口。 2026-09-11 线上实拍，等比展示。 打开原图 主页图书馆区域：红魔馆藏书室模型及进入图书馆的入口。 2026-09-11 线上实拍，等比展示。 打开原图 主页游戏区域：Blackjack 与 Texas Hold’em 的入口与纸牌视觉。 2026-09-11 线上实拍，等比展示。 打开原图 02 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 阅读关联档案 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 阅读关联档案 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。图书馆已建立长期主题，集中展示当前能力、使用指南、源码仓库、维护说明与历史证据。 阅读关联档案 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 阅读关联档案 03 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 04 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 05 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 06 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 07 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 08 文件 首页截图 · 2026-09-11 主页截图 · AI Chat 与 Stats 入口 主页截图 · muQ 与红魔馆藏书室 主页截图 · Games 入口 主页截图 · 当前首屏 09 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型 来源原话在图书馆馆主视角默认展开；本 HTML 阅读副本不复制原始提示词。"
+        },
+        {
+          "file": "artifacts/personal-homepage-0a432e94eec9.html",
+          "text": "个人主页建造 KOA-OL / 主题档案 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 主页归档截图 · 2026-09-11 · 原始尺寸 1440 × 1000，等比展示。用于识别当前设计方向，不代表所有子页面的最新状态。 当前状态与操作入口 整站已有可用版本。主页保留神社与藏书室模型，按阅读区域切换整体氛围；Chat 已加入三模型、GPT 可选联网、流式回复、停止／重试和本机历史。muQ 正在从会话目录向主题档案演进，本页是首个试点。 资料基线：2026-09-11 的归档记录及当前网站源码。下文区分已有验收记录与仍需实际使用验证的内容。 打开个人主页 使用 AI Chat 查看 Stats 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。网站主页提供访问入口；图书馆自身的归档模型、权限与阅读器继续独立维护。旧项目档案较早，近期变更另见相关会话。 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型"
+        },
+        {
+          "file": "artifacts/personal-homepage-8f12c865ffaa.html",
+          "text": "个人主页建造 KOA-OL / 主题档案 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 线上主页实拍 · 2026-09-11 · 1440 × 1000，等比展示。截图时隐藏浏览器滚动条；神社模型已渲染，使用减少动态效果的稳定状态。 当前状态与操作入口 整站已有可用版本。主页保留神社与藏书室模型，按阅读区域切换整体氛围；Chat 已加入三模型、GPT 可选联网、流式回复、停止／重试和本机历史。muQ 正在从会话目录向主题档案演进，本页是首个试点。 资料基线：2026-09-11 的归档记录及当前网站源码。下文区分已有验收记录与仍需实际使用验证的内容。 打开个人主页 使用 AI Chat 查看 Stats 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。网站主页提供访问入口；图书馆自身的归档模型、权限与阅读器继续独立维护。旧项目档案较早，近期变更另见相关会话。 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型"
+        }
+      ]
     },
     {
       "id": "codex-7bdfb3a609cc16f657b9c69a",
@@ -1218,16 +1246,7 @@
       "outputs": "报告全文和来源见附件；历次附件保留，不覆盖。",
       "next": "",
       "current_state": "",
-      "public_content": true,
       "sections": [],
-      "files": [
-        {
-          "name": "artifacts/ai-daily-2026-09-04-7a95d30437fee497.html",
-          "url": "public-files/ai-daily-2026-09/7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2.bin",
-          "bytes": 8850,
-          "sha256": "7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2"
-        }
-      ],
       "resources": [
         {
           "kind": "file",
@@ -1235,6 +1254,15 @@
           "title": "2026-09-04 · AI 日报",
           "description": "2026-09-03 至 2026-09-04 · 6 条信息",
           "featured": true
+        }
+      ],
+      "public_content": true,
+      "files": [
+        {
+          "name": "artifacts/ai-daily-2026-09-04-7a95d30437fee497.html",
+          "url": "public-files/ai-daily-2026-09/7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2.bin",
+          "bytes": 8850,
+          "sha256": "7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2"
         }
       ],
       "omitted_files": [],
@@ -1264,28 +1292,7 @@
       "outputs": "报告全文和来源见附件；历次附件保留，不覆盖。",
       "next": "",
       "current_state": "",
-      "public_content": true,
       "sections": [],
-      "files": [
-        {
-          "name": "artifacts/ai-daily-2026-08-27-3fd8ba332460d577.html",
-          "url": "public-files/ai-daily-2026-08/3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9.bin",
-          "bytes": 11792,
-          "sha256": "3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9"
-        },
-        {
-          "name": "artifacts/ai-daily-2026-08-27-fa0ef066d66a04f0.html",
-          "url": "public-files/ai-daily-2026-08/fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a.bin",
-          "bytes": 9024,
-          "sha256": "fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a"
-        },
-        {
-          "name": "artifacts/ai-daily-2026-08-31-707345bff06ba5d0.html",
-          "url": "public-files/ai-daily-2026-08/707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e.bin",
-          "bytes": 11605,
-          "sha256": "707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e"
-        }
-      ],
       "resources": [
         {
           "kind": "file",
@@ -1307,6 +1314,27 @@
           "title": "2026-08-31 · AI 日报",
           "description": "2026-08-25 至 2026-08-31 · 8 条信息",
           "featured": true
+        }
+      ],
+      "public_content": true,
+      "files": [
+        {
+          "name": "artifacts/ai-daily-2026-08-27-3fd8ba332460d577.html",
+          "url": "public-files/ai-daily-2026-08/3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9.bin",
+          "bytes": 11792,
+          "sha256": "3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9"
+        },
+        {
+          "name": "artifacts/ai-daily-2026-08-27-fa0ef066d66a04f0.html",
+          "url": "public-files/ai-daily-2026-08/fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a.bin",
+          "bytes": 9024,
+          "sha256": "fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a"
+        },
+        {
+          "name": "artifacts/ai-daily-2026-08-31-707345bff06ba5d0.html",
+          "url": "public-files/ai-daily-2026-08/707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e.bin",
+          "bytes": 11605,
+          "sha256": "707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e"
         }
       ],
       "omitted_files": [],
