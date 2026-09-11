@@ -553,86 +553,6 @@ a:focus-visible,iframe:focus-visible {
   font-size:18px;
   transform:rotate(-8deg);
 }
-.agent-card {
-  background:#eaece7;
-}
-.agent-art svg {
-  width:265px;
-  max-width:100%;
-  height:140px;
-  fill:none;
-  stroke:#b4bdac;
-  stroke-width:1.2;
-}
-.agent-art rect {
-  fill:#f8f7ed;
-  stroke:#b7c1ad;
-}
-.agent-art .agent-root {
-  fill:#6f8170;
-  stroke:#6f8170;
-}
-.agent-art circle {
-  stroke:#e9edd9;
-  fill:#e9edd9;
-}
-.agent-art svg>path:last-child {
-  stroke:#6b8069;
-  stroke-width:1.8;
-}
-.story-card {
-  background:#f0e7dc;
-  border-color:#e0d1c1;
-}
-.story-art {
-  perspective:700px;
-}
-.book-page {
-  position:absolute;
-  width:119px;
-  height:110px;
-  border:1px solid #caba9f;
-  background:#eee4d3;
-  border-radius:3px;
-  box-shadow:3px 6px 12px #70593f08;
-}
-.book-page.back {
-  transform:rotate(-12deg);
-  left:calc(50% - 70px);
-}
-.book-page.front {
-  transform:rotate(8deg);
-  left:calc(50% - 45px);
-  background:#f9f3e5;
-  display:flex;
-  flex-direction:column;
-  padding:23px 14px 9px;
-  justify-content:space-between;
-}
-.book-page.front>span {
-  font:12px/1.85 var(--serif);
-  color:#806753;
-}
-.book-page i {
-  font:8px var(--serif);
-  color:#977a61;
-  align-self:flex-end;
-}
-.story-orbit {
-  position:absolute;
-  width:192px;
-  height:119px;
-  border:1px solid #d7c3ac;
-  border-radius:50%;
-  transform:rotate(-25deg);
-}
-.story-star {
-  position:absolute;
-  right:calc(50% - 120px);
-  top:21px;
-  color:#a48261;
-  font-size:30px;
-}
 .compact-card {
   min-height:229px;
   background:transparent;
@@ -894,9 +814,6 @@ a:focus-visible,iframe:focus-visible {
   .project-grid {
     gap:16px;
     grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-  .story-card {
-    grid-column:1;
   }
   .compact-card {
     min-height:229px;
