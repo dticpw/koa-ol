@@ -28,9 +28,10 @@ function render(){
  renderTags();const host=$('#entries');host.replaceChildren();const query=$('#search').value.trim().toLocaleLowerCase();
  const result=state.entries.filter(e=>{
   if(state.kind!=='all'&&e.kind!==state.kind)return false;
+  if(state.kind==='all'&&!query&&!state.tag&&e.kind==='journal'&&state.entries.some(t=>t.topic?.sources.some(source=>source.id===e.id)))return false;
   if(state.tag&&!(e.tags||[]).includes(state.tag))return false;
   if($('#status-filter').value!=='all'&&e.status!==$('#status-filter').value)return false;
-  const text=(state.unlocked||e.public_content)?[e.title,...Object.keys(labels).map(k=>e[k]),e.prompts,e.current_state,JSON.stringify(e.sections||[]),JSON.stringify(e.resources||[]),JSON.stringify(e.search_index||[])].join('\n'):[e.title,e.summary].join('\n');
+  const text=(state.unlocked||e.public_content)?[e.title,...Object.keys(labels).map(k=>e[k]),e.prompts,e.current_state,JSON.stringify(e.sections||[]),JSON.stringify(e.resources||[]),JSON.stringify(e.search_index||[]),JSON.stringify(e.topic||{})].join('\n'):[e.title,e.summary].join('\n');
   return (text+' '+(e.tags||[]).join(' ')).toLocaleLowerCase().includes(query);
  }).sort((a,b)=>(b.date+b.updated).localeCompare(a.date+a.updated));
  if(!result.length){const box=create('div','empty');box.append(create('h3','',query?'这一页，还没有找到。':'馆藏正在慢慢生长。'),create('p','',query?'换一个关键词，或调整筛选条件。':state.unlocked?'用 muQ Skill 归档一次会话，它就会出现在这里。':'公开目录暂未收录内容，可由馆主解锁完整档案。'));host.append(box);return;}
@@ -94,10 +95,12 @@ function resourceCard(e,r){
  return card;
 }
 function openEntry(id){
- state.selected=id;const host=$('#reader-content');host.classList.remove('has-frontpage');host.replaceChildren();const e=state.entries.find(x=>x.id===id);
+ state.selected=id;const host=$('#reader-content');host.classList.remove('has-frontpage','topic-page');host.replaceChildren();const e=state.entries.find(x=>x.id===id);
  if(!e){host.append(create('h1','reader-title','这份档案需要馆主解锁'));const b=create('button','primary','解锁完整馆藏');b.onclick=showLogin;host.append(b);return;}
  document.title=e.title+' · muQ';
  if((state.unlocked||e.public_content)&&params.get('file')){previewFile(e,params.get('file'),host);return;}
+ if(e.topic&&(state.unlocked||e.public_content)){renderTopic(e,host);return;}
+ const parentTopics=state.entries.filter(t=>t.topic?.sources.some(source=>source.id===e.id));for(const topic of parentTopics)host.append(link('返回主题 · '+topic.title,href(topic.id)));
  host.append(create('h1','reader-title',e.title),create('p','reader-meta',`${e.kind==='journal'?'会话日记':'项目档案'} · ${e.date} · ${statuses[e.status]||'已收录'}`),tagNodes(e.tags));
  const frontResource=(state.unlocked||e.public_content)&&(e.resources||[]).find(r=>r.presentation==='frontpage'&&r.kind==='file'&&/\.html?$/i.test(r.file)&&e.files.some(f=>f.name===r.file));
  if(frontResource){
