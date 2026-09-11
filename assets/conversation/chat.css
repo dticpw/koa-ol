@@ -120,3 +120,10 @@
 /* Let the message area shrink when a phone keyboard reduces the visual viewport. */
 @media(max-width:760px){.chat-main{min-height:0}}
 @media(max-height:620px){.chat-main{min-height:0}}
+
+.search-toggle{flex-shrink:0;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--muted);padding:7px 9px;font-size:11px}
+.search-toggle[aria-pressed="true"]:not(:disabled){background:#e5eadc;border-color:#91a384;color:#29483d}
+.search-toggle:disabled{opacity:.45;cursor:not-allowed}
+.source-citation{display:inline;color:#365d45;text-decoration:underline;text-underline-offset:3px;font-size:.9em;overflow-wrap:anywhere}
+.search-note{font-size:10px;color:var(--muted);margin-top:12px}
+@media(max-width:400px){#model-select{max-width:140px}.composer-toolbar{gap:4px;padding-inline:8px}.model-picker{padding-right:3px}.search-toggle{padding-inline:7px}}

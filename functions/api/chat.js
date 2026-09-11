@@ -54,6 +54,12 @@ export async function onRequestPost(context) {
     ? { model, input: converted, stream: false, store: false, max_output_tokens: 4096 }
     : { model, messages: converted, stream: false, max_tokens: 1024 };
 
+  const searchRequested = provider === 'gpt' && body.web_search === true;
+  if (searchRequested) {
+    payload.tools = [{ type: 'web_search' }];
+    payload.tool_choice = 'auto';
+  }
+
   // --- 3. 调上游 ---
   let apiResponse;
   const requestStart = Date.now();
@@ -144,8 +150,31 @@ export async function onRequestPost(context) {
 
   return json({
     reply: replyText,
+    web_search: { requested: searchRequested, calls: provider === 'gpt' ? (data.output || []).filter(item => item.type === 'web_search_call' && item.status === 'completed').length : 0 },
+    citations: provider === 'gpt' ? extractCitations(data.output || []) : [],
     _debug: { elapsed_ms: elapsed, model: data.model, requested_model: model },
   });
+}
+
+// Citation offsets refer to each output_text block; reply joins those blocks with newlines.
+function extractCitations(output) {
+  const citations = [];
+  let offset = 0;
+  for (const block of output.filter(item => item.type === 'message').flatMap(item => item.content || []).filter(block => block.type === 'output_text')) {
+    const text = block.text || '';
+    for (const annotation of block.annotations || []) {
+      if (annotation.type !== 'url_citation') continue;
+      try {
+        const url = new URL(annotation.url);
+        if (!['https:', 'http:'].includes(url.protocol)) continue;
+        const { start_index: start, end_index: end } = annotation;
+        if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end < start || end > text.length) continue;
+        citations.push({ start: offset + start, end: offset + end, url: url.href, title: annotation.title || url.hostname });
+      } catch { /* Ignore malformed upstream URLs. */ }
+    }
+    offset += text.length + 1;
+  }
+  return citations.sort((a, b) => a.start - b.start);
 }
 
 // 前端保留现有附件结构，在服务端转换为各 API 接受的格式。

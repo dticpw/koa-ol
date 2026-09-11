@@ -98,7 +98,7 @@
             let m;
             while ((m = regex.exec(text)) !== null) {
                 if (m.index > lastIndex) {
-                    segments.push({ type: 'text', content: text.slice(lastIndex, m.index) });
+                    segments.push({ type: 'text', content: text.slice(lastIndex, m.index), start: lastIndex });
                 }
                 segments.push({
                     type: 'code',
@@ -108,7 +108,7 @@
                 lastIndex = regex.lastIndex;
             }
             if (lastIndex < text.length) {
-                segments.push({ type: 'text', content: text.slice(lastIndex) });
+                segments.push({ type: 'text', content: text.slice(lastIndex), start: lastIndex });
             }
             return segments;
         }
@@ -184,14 +184,33 @@
             container.appendChild(box);
         }
 
-        function renderTextWithCodeBlocks(text, container) {
+        function renderTextWithCodeBlocks(text, container, citations = []) {
             const segments = parseCodeBlocks(text);
             for (const seg of segments) {
                 if (seg.type === 'text') {
                     if (seg.content.length === 0) continue;
                     const p = document.createElement('div');
                     p.className = 'text-segment';
-                    p.textContent = seg.content;
+                    let cursor = 0;
+                    for (const citation of citations) {
+                        const start = citation.start - seg.start;
+                        const end = citation.end - seg.start;
+                        if (!Number.isInteger(start) || !Number.isInteger(end) || start < cursor || end < start || end > seg.content.length) continue;
+                        let url;
+                        try { url = new URL(citation.url); } catch { continue; }
+                        if (!['https:', 'http:'].includes(url.protocol)) continue;
+                        p.append(document.createTextNode(seg.content.slice(cursor, start)));
+                        const link = document.createElement('a');
+                        link.className = 'source-citation';
+                        link.href = url.href;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.textContent = citation.title || url.hostname;
+                        link.title = url.href;
+                        p.append(link);
+                        cursor = end;
+                    }
+                    p.append(document.createTextNode(seg.content.slice(cursor)));
                     container.appendChild(p);
                 } else if (seg.type === 'code') {
                     renderCodeBlock(seg, container);
@@ -401,6 +420,12 @@
             }
         }
 
+        const searchToggle = document.getElementById('web-search-toggle');
+        searchToggle.addEventListener('click', () => {
+            if (sending) return;
+            searchToggle.setAttribute('aria-pressed', String(searchToggle.getAttribute('aria-pressed') !== 'true'));
+        });
+
         function render() {
             messagesEl.innerHTML = '';
             if (history.length === 0) {
@@ -414,7 +439,14 @@
                 role.className = 'role';
                 role.textContent = m.role === 'user' ? '你' : (m.modelLabel || 'AI');
                 div.appendChild(role);
-                renderMessageContent(m.content, div);
+                if (m.role === 'assistant') renderTextWithCodeBlocks(m.content, div, m.citations);
+                else renderMessageContent(m.content, div);
+                if (m.searchRequested) {
+                    const note = document.createElement('div');
+                    note.className = 'search-note';
+                    note.textContent = m.searchCalls > 0 ? '已联网检索' : '本次未调用搜索';
+                    div.append(note);
+                }
                 messagesEl.appendChild(div);
             }
             document.querySelector('.message-viewport').scrollTop = document.querySelector('.message-viewport').scrollHeight;
@@ -425,6 +457,7 @@
             if (sending || attachmentLoading) return;
             const selectedProvider = modelSelect.value;
             const selectedLabel = modelLabels[selectedProvider];
+            const searchRequested = selectedProvider === 'gpt' && searchToggle.getAttribute('aria-pressed') === 'true';
             const text = input.value.trim();
             if (!text && pendingAttachments.length === 0) return;
 
@@ -451,7 +484,7 @@
             const thinking = document.createElement('div');
             thinking.id = 'thinking'; thinking.className = 'thinking-row';
             thinking.innerHTML = '<span class="thinking-dots" aria-hidden="true"><i></i><i></i><i></i></span>';
-            thinking.append(document.createTextNode(`${selectedLabel} 正在回复`));
+            thinking.append(document.createTextNode(`${selectedLabel} 正在回复${searchRequested ? ' · 可按需联网' : ''}`));
             messagesEl.append(thinking);
             document.querySelector('.message-viewport').scrollTop = document.querySelector('.message-viewport').scrollHeight;
             statusEl.textContent = `${selectedLabel} 思考中...`;
@@ -462,7 +495,7 @@
                 res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: history, model: selectedProvider }),
+                    body: JSON.stringify({ messages: history.map(({role, content}) => ({role, content})), model: selectedProvider, web_search: searchRequested }),
                 });
                 rawText = await res.text();
             } catch (e) {
@@ -507,7 +540,7 @@
                 return;
             }
 
-            history.push({ role: 'assistant', content: data.reply || '(空回复)', modelLabel: selectedLabel });
+            history.push({ role: 'assistant', content: data.reply || '(空回复)', modelLabel: selectedLabel, citations: data.citations || [], searchRequested: data.web_search?.requested, searchCalls: data.web_search?.calls || 0 });
             render();
             statusEl.textContent = data._debug
                 ? `${data._debug.model || selectedLabel} · ${(data._debug.elapsed_ms / 1000).toFixed(1)} 秒`
@@ -531,6 +564,8 @@
         });
         input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 180) + 'px'; });
         const updateModelHint = () => {
+            searchToggle.disabled = modelSelect.value !== 'gpt';
+            searchToggle.title = modelSelect.value === 'gpt' ? '允许 GPT 按需联网搜索' : '联网搜索暂仅支持 GPT';
             document.getElementById('attachment-hint').textContent = modelSelect.value === 'gpt' ? '文字 / 图片 / PDF' : '文字 / 文本文件';
             fileInput.accept = modelSelect.value === 'gpt' ? 'image/jpeg,image/png,image/gif,image/webp,application/pdf,text/plain,text/markdown,.md,.txt,.csv,.json,.js,.py,.html,.css' : 'text/plain,text/markdown,.md,.txt,.csv,.json,.js,.py,.html,.css';
         };
