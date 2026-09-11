@@ -2,7 +2,7 @@
   "schema": 1,
   "name": "muQ · 大图书馆",
   "mode": "catalogue",
-  "updated": "2026-09-11T01:51:01.074334+00:00",
+  "updated": "2026-09-11T01:55:20.463194+00:00",
   "entries": [
     {
       "id": "codex-7bdfb3a609cc16f657b9c69a",
@@ -11,7 +11,7 @@
       "title": "从日记本到 muQ：让每场会话进入大图书馆",
       "summary": "一场会话对应一篇持续更新的日记。原始提示词、项目问题与过程产物，从本机走进自己的大图书馆。",
       "date": "2026-09-10",
-      "updated": "2026-09-11T01:51:01.074334+00:00",
+      "updated": "2026-09-11T01:55:20.463194+00:00",
       "status": "done",
       "cover": "covers/codex-7bdfb3a609cc16f657b9c69a-c299ded828f5.png",
       "cover_kind": "screenshot",
