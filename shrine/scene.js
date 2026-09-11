@@ -12,7 +12,7 @@ const notifyParent = type => {
 };
 let renderer;
 try {
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: embedded, powerPreference: 'high-performance' });
 } catch {
   notifyParent('shrine-unavailable');
   const notice = document.createElement('div');
@@ -27,7 +27,8 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.15;
-renderer.setClearColor(0xeee9df);
+renderer.setClearColor(0xeee9df,embedded?0:1);
+if(embedded){document.documentElement.style.background="transparent";document.body.style.background="transparent";}
 const scene = new THREE.Scene();
 const model = new THREE.Group();
 scene.add(model);
@@ -513,7 +514,7 @@ function bakeStatic(root){
 }
 bakeStatic(model);
 // Studio floor, with no horizon or surrounding town.
-const floor=mesh(new THREE.PlaneGeometry(400,400),new THREE.MeshBasicMaterial({color:'#eee9df',toneMapped:false}),0,-.51,0,scene);floor.rotation.x=-Math.PI/2;floor.castShadow=false;
+const floor=mesh(new THREE.PlaneGeometry(400,400),new THREE.MeshBasicMaterial({color:'#eee9df',toneMapped:false}),0,-.51,0,scene);floor.rotation.x=-Math.PI/2;floor.castShadow=false;floor.visible=!embedded;
 const shadowFloor=mesh(new THREE.PlaneGeometry(100,100),new THREE.ShadowMaterial({color:'#635a4c',opacity:.23}),0,-.505,0,scene);shadowFloor.rotation.x=-Math.PI/2;shadowFloor.castShadow=false;
 // Sparse, slow petals. The reduced-motion setting keeps the diorama still.
 const petalCount=26;
@@ -531,7 +532,7 @@ function updatePetals(t){
 }
 function resize(){
  const w=innerWidth,h=innerHeight,a=w/h;
- const span=Math.max(24.3,28.2/a);
+ const span=embedded?Math.max(21.5,25/a):Math.max(24.3,28.2/a);
  camera.left=-span*a/2;camera.right=span*a/2;camera.top=span/2;camera.bottom=-span/2;camera.updateProjectionMatrix();renderer.setSize(w,h);
  renderer.render(scene,camera);
 }

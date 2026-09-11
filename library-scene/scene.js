@@ -1,11 +1,20 @@
 import * as THREE from 'three';
-import {createRuntime} from './lib/runtime.js';
+import {createRuntime} from './lib/runtime.js?v=immersive1';
 import {palette,box,cylinder,beam,mesh,batchStatic,seededRandom} from './lib/geometry.js';
 const embedded=new URLSearchParams(location.search).has('embed');
 const canvas=document.querySelector('canvas');
 const tell=type=>{if(parent!==window)parent.postMessage({type},location.origin);};
 try {
-const rt=createRuntime({canvas,background:'#eee8ef',embedded});
+let turn=null;
+const rt=createRuntime({canvas,background:'#eee8ef',embedded,onFrame:({dt,reducedMotion})=>{
+ if(!turn)return;
+ turn.elapsed+=dt;
+ const t=reducedMotion?1:Math.min(1,turn.elapsed/1.85);
+ const eased=1-Math.pow(1-t,3);
+ const view=turn.view.clone();view.theta+=Math.PI*(1-eased);
+ rt.camera.position.copy(new THREE.Vector3().setFromSpherical(view).add(rt.controls.target));
+ if(t===1){turn=null;rt.controls.enableDamping=true;}
+}});
 const model=new THREE.Group();rt.scene.add(model);
 const p=palette({base:'#413849',edge:'#796077',floor:'#a58c7d',tile:'#b69b87',wood:'#533730',trim:'#986746',dark:'#302a36',gold:'#c6a367',paper:'#e4d5ad',rug:'#674c79',red:'#954b5d',blue:'#536981',green:'#61776d',purple:'#82668e',stone:'#a197a8'});
 const rand=seededRandom(495);
@@ -73,6 +82,27 @@ for(const tilt of [-.45,.75]){const ring=mesh(orb,new THREE.TorusGeometry(.6,.03
 const before=new THREE.Box3().setFromObject(model);const batching=batchStatic(model);const after=new THREE.Box3().setFromObject(model);
 rt.camera.position.set(20,18,27);rt.fit(model);
 window.libraryScene={runtime:rt,model,batching,boundsError:before.min.distanceTo(after.min)+before.max.distanceTo(after.max)};
+const front=new THREE.Spherical().setFromVector3(rt.camera.position.clone().sub(rt.controls.target));
+let entered=false;
+const stopTurn=()=>{turn=null;rt.controls.enableDamping=true;};
+canvas.addEventListener('pointerdown',stopTurn,{capture:true});
+canvas.addEventListener('keydown',stopTurn,{capture:true});
+const entrance=e=>{
+ if(!embedded||e.origin!==location.origin||e.source!==parent||e.data?.type!=='library-entrance')return;
+ const active=e.data.active===true;
+ if(active&&!entered){
+  rt.reset();
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+   rt.controls.enableDamping=false;
+   turn={elapsed:0,view:front.clone()};
+   const back=front.clone();back.theta+=Math.PI;
+   rt.camera.position.copy(new THREE.Vector3().setFromSpherical(back).add(rt.controls.target));rt.controls.update();
+  }
+ }
+ if(!active)stopTurn();
+ entered=active;
+};
+window.addEventListener('message',entrance);
 const visibility=e=>{if(e.origin===location.origin&&e.source===parent&&e.data?.type==='library-visibility')rt.setVisible(e.data.visible);};
 window.addEventListener('message',visibility);
 canvas.addEventListener('webglcontextlost',()=>tell('library-unavailable'));

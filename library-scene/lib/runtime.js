@@ -5,14 +5,15 @@ import { OrbitControls } from '../../shrine/vendor/OrbitControls.js';
 export function createRuntime({canvas, background='#eee9df', embedded=false, onFrame=()=>{}}) {
   const host = canvas.parentElement;
   let renderer;
-  try { renderer = new THREE.WebGLRenderer({canvas, antialias:true}); }
+  try { renderer = new THREE.WebGLRenderer({canvas, antialias:true,alpha:embedded}); }
   catch (error) {
     const notice=document.createElement('p');
     notice.textContent='三维场景需要 WebGL。请开启浏览器硬件加速，或查看提供的静态预览。';
     notice.setAttribute('role','status');host.append(notice);throw error;
   }
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1,1.75));
-  renderer.setClearColor(background);
+  renderer.setClearColor(background,embedded?0:1);
+  if(embedded){document.documentElement.style.background="transparent";document.body.style.background="transparent";}
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure=1.15;
@@ -36,7 +37,7 @@ export function createRuntime({canvas, background='#eee9df', embedded=false, onF
   sun.shadow.bias=-.00035;sun.shadow.normalBias=.035;scene.add(sun);
   const fill=new THREE.DirectionalLight(0xc8e2e6,.55);fill.position.set(12,8,-8);scene.add(fill);
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(400,400),new THREE.MeshBasicMaterial({color:background,toneMapped:false}));
-  floor.rotation.x=-Math.PI/2;floor.position.y=-.51;scene.add(floor);
+  floor.visible=!embedded;floor.rotation.x=-Math.PI/2;floor.position.y=-.51;scene.add(floor);
   const shadow=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.ShadowMaterial({color:'#635a4c',opacity:.23}));
   shadow.rotation.x=-Math.PI/2;shadow.position.y=-.505;shadow.receiveShadow=true;scene.add(shadow);
   let bounds=null,visible=true,hostVisible=true,lost=false,disposed=false,raf=0,previous=0,time=0;

@@ -1,0 +1,26 @@
+/* All chapters share the atmosphere of the current reading position. */
+body{--page-bg:#eee9df;--page-ink:#303e37;--page-muted:#636b61;--page-line:#b8baac;--page-accent:#aa4637;--page-button:#303e37;--page-button-text:#fff8ec;--page-surface:#e0dfd2;--paper:var(--page-bg);--ink:var(--page-ink);--muted:var(--page-muted);--line:var(--page-line);background:var(--page-bg);color:var(--page-ink);transition:background-color .85s ease,color .65s ease}
+body[data-chapter=chat]{--page-bg:#173d37;--page-ink:#ecf3df;--page-muted:#bfcebe;--page-line:#668777;--page-accent:#d8ed92;--page-button:#d8ed92;--page-button-text:#203c31;--page-surface:#2d5746}
+body[data-chapter=library]{--page-bg:#eee8ef;--page-ink:#413849;--page-muted:#715b7b;--page-line:#b6a5bd;--page-accent:#71547c;--page-button:#58435f;--page-button-text:#fff8ff;--page-surface:#e1d7e5}
+body[data-chapter=games]{--page-bg:#ffe36c;--page-ink:#253237;--page-muted:#655638;--page-line:#ba9c4f;--page-accent:#263dcd;--page-button:#263dcd;--page-button-text:#fff;--page-surface:#f7d663}
+.chapter,.chapter-home,.chapter-chat,.chapter-library,.chapter-games,.site-footer,.site-header{background:transparent;color:inherit}
+.chapter-chat:before{display:none}
+.chapter .chapter-kicker,.chapter .feature-line,.library-scene-label,.library-caption p,.exhibit-bottom p,.exhibit-top,.stats-tile small,.footer-bottom,.hero .eyebrow{color:var(--page-muted);transition:color .65s ease}
+.chapter .button.primary,.chapter .chat-launch,.chapter .games-launch{background:var(--page-button);color:var(--page-button-text);transition:background-color .65s,color .65s,transform .2s}
+.chapter .button:hover{filter:brightness(1.12)}
+.chapter .stats-tile,.library-caption,.library-exhibit{border-color:var(--page-line);transition:border-color .65s}
+.stats-symbol,.motion-toggle{background:var(--page-surface);color:var(--page-ink);border-color:var(--page-line);transition:background-color .65s,color .65s}
+.chat-title-dot,.library-seal,.site-header nav a[aria-current]{color:var(--page-accent)}
+.library-seal{border-color:var(--page-line)}
+.stats-tile:hover{color:var(--page-accent)}
+/* The games atmosphere is revealed only when its chapter owns the page. */
+body:not([data-chapter=games]) .games-decor{opacity:0;transform:scale(1.05)}
+.games-decor{transition:opacity .85s,transform 1.3s!important}
+/* Keep bitmap fallbacks from drawing opaque rectangles in another theme. */
+body[data-chapter]:not([data-chapter=home]) .scene-poster,body[data-chapter]:not([data-chapter=library]) .library-poster{mix-blend-mode:luminosity;opacity:.35}
+@media(min-width:851px){.hero{grid-template-columns:36% 64%}.shrine-exhibit{height:clamp(500px,65svh,690px)}.scene-stage{inset:2px -18px 42px}.hero h1{font-size:clamp(45px,4.8vw,70px)}}
+@media(max-width:850px){.shrine-exhibit{height:450px}}
+@media(max-width:600px){.shrine-exhibit{height:355px}.scene-stage{inset:10px -12px 38px}}
+@media(prefers-reduced-motion:reduce){body,.games-decor{transition:none!important}}
+body[data-chapter]:not([data-chapter=games]) .chapter .games-decor{opacity:0;transform:scale(1.05)}
+.hero h1 .title-final{color:var(--page-accent);transition:color .65s}
