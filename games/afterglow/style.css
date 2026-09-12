@@ -6,3 +6,5 @@
 @media(max-height:650px){#shell{min-height:650px}.panel{top:53%}header{top:18px}}
 
 .control-select{display:flex;align-items:center;gap:14px;margin-top:18px;font-size:12px;color:#b8c9cc}.control-select select{font:inherit;padding:8px 12px;color:#d9ffe8;border:1px solid #8dcbb550;border-radius:6px;background:#11272c}.control-select select:focus-visible{outline:2px solid #b9ffdb;outline-offset:3px}#intro .buttons{margin-top:20px}@media(max-width:700px){#intro h1{font-size:34px}#intro .controls{margin-top:12px}.control-select{margin-top:12px}#intro .best-score{margin-top:12px}}
+
+.brand small{letter-spacing:2px;font-size:9px}.brand span{letter-spacing:3px}@media(max-width:700px){.brand span{font-size:14px;letter-spacing:1.5px}.brand small{font-size:8px;letter-spacing:1.5px}}
