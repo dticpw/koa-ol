@@ -1,9 +1,9 @@
 {
-  "build_id": "7eaa5f90e1d6fad4ebb81e97e62ef76bda7f982c67214a00f42bedd9419a7725",
+  "build_id": "252cacf53e5a4cbdef353aca837c2a2811b9112ac9ae2e5dabae6b50f3fe747b",
   "schema": 2,
   "name": "muQ · 大图书馆",
   "mode": "catalogue",
-  "updated": "2026-09-12T12:45:47.444342+00:00",
+  "updated": "2026-09-12T16:03:23.282973+00:00",
   "entries": [
     {
       "id": "codex-39aeb281462c2a07e4ef0e5b",
@@ -13,7 +13,7 @@
       "locked": true,
       "public": false,
       "public_content": false,
-      "cover": "covers/codex-39aeb281462c2a07e4ef0e5b-f32da7aa6c3b.png",
+      "cover": "covers/codex-39aeb281462c2a07e4ef0e5b-c4b20d8be310.png",
       "cover_kind": "locked",
       "catalogue_order": 0,
       "date": "",
