@@ -14,7 +14,8 @@ const tabId=crypto.randomUUID();
 const href=(id,file)=>'./entry.html?id='+encodeURIComponent(id)+(file?'&file='+encodeURIComponent(file):'');
 function blobURL(blob){const url=URL.createObjectURL(blob);assetURLs.add(url);return url;}
 function clearAssets(){for(const url of assetURLs)URL.revokeObjectURL(url);assetURLs.clear();}
-function link(text,url){const a=create('a','related-link',text);a.href=url;a.target='_blank';a.rel='noopener';return a;}
+function entryTarget(url){try{const u=new URL(url,location.href);if(![location.hostname,'koa-ol.com','www.koa-ol.com','127.0.0.1','localhost'].includes(u.hostname)||!u.pathname.endsWith('/library/entry.html'))return null;return u.searchParams.get('id');}catch{return null;}}
+function link(text,url){const id=entryTarget(url),target=state.entries.find(e=>e.id===id);if(!state.unlocked&&id&&(!target||target.locked)){const n=create('span','related-link locked-link','🔒 '+(target?.title||'私密条目')+' · 馆主解锁后可查看');n.setAttribute('aria-disabled','true');return n;}const a=create('a','related-link',text);a.href=url;a.target='_blank';a.rel='noopener';return a;}
 function tagNodes(tags){const row=create('div','entry-tags');for(const tag of tags||[])row.append(create('span','tag','#'+tag));return row;}
 function renderTags(){const counts=new Map();for(const e of state.entries.filter(e=>state.kind==='all'||e.kind===state.kind))for(const tag of e.tags||[])counts.set(tag,(counts.get(tag)||0)+1);const host=$('#tags');host.replaceChildren();const all=create('button','tag','全部标签');all.setAttribute('aria-pressed',String(!state.tag));all.onclick=()=>{state.tag='';render();};host.append(all);const sorted=[...counts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));for(const [tag,count] of state.expanded?sorted:sorted.slice(0,12)){const b=create('button','tag','#'+tag+' '+count);b.setAttribute('aria-pressed',String(state.tag===tag));b.onclick=()=>{state.tag=state.tag===tag?'':tag;render();};host.append(b);}if(sorted.length>12){const b=create('button','tag',state.expanded?'收起标签':'展开全部 '+sorted.length);b.onclick=()=>{state.expanded=!state.expanded;render();};host.append(b);}}
 const isLocal=location.hostname==='127.0.0.1';
@@ -28,15 +29,14 @@ function render(){
  renderTags();const host=$('#entries');host.replaceChildren();const query=$('#search').value.trim().toLocaleLowerCase();
  const result=state.entries.filter(e=>{
   if(state.kind!=='all'&&e.kind!==state.kind)return false;
-  if(state.kind==='all'&&!query&&!state.tag&&e.kind==='journal'&&state.entries.some(t=>t.topic?.sources.some(source=>source.id===e.id&&source.primary!==false)))return false;
   if(state.tag&&!(e.tags||[]).includes(state.tag))return false;
   if($('#status-filter').value!=='all'&&e.status!==$('#status-filter').value)return false;
   const text=(state.unlocked||e.public_content)?[e.title,...Object.keys(labels).map(k=>e[k]),e.prompts,e.current_state,JSON.stringify(e.sections||[]),JSON.stringify(e.resources||[]),JSON.stringify(e.search_index||[]),JSON.stringify(e.topic||{})].join('\n'):[e.title,e.summary].join('\n');
   return (text+' '+(e.tags||[]).join(' ')).toLocaleLowerCase().includes(query);
- }).sort((a,b)=>(b.date+b.updated).localeCompare(a.date+a.updated));
+ }).sort((a,b)=>(a.catalogue_order??0)-(b.catalogue_order??0));
  if(!result.length){const box=create('div','empty');box.append(create('h3','',query?'这一页，还没有找到。':'馆藏正在慢慢生长。'),create('p','',query?'换一个关键词，或调整筛选条件。':state.unlocked?'用 muQ Skill 归档一次会话，它就会出现在这里。':'公开目录暂未收录内容，可由馆主解锁完整档案。'));host.append(box);return;}
- const groups=new Map();for(const e of result){const month=e.date.slice(0,7);if(!groups.has(month))groups.set(month,[]);groups.get(month).push(e);}
- for(const [month,entries] of groups){const section=create('section');const h=create('h3','month-title',month.replace('-',' / '));h.append(create('small','',`${entries.length} 份馆藏`));section.append(h);const grid=create('div','card-grid');for(const e of entries){const card=create('a','card');card.href=href(e.id);card.target='_blank';card.rel='noopener';card.setAttribute('aria-label',`打开${e.kind==='journal'?'日记':'项目'}：${e.title}`);const cover=create('div','card-cover');const img=create('img');img.src=safeCover(e.cover||'');if(state.unlocked&&e.cover_asset)loadCover(img,e.cover_asset);img.alt=e.cover_kind==='screenshot'?`${e.title}的产出截图`:`${e.title}的内容概览图`;img.loading='lazy';img.width=1200;img.height=750;cover.append(img,create('span','cover-label',e.cover_kind==='screenshot'?'产出截图':'内容概览'));const body=create('div','card-body');const meta=create('div','card-meta');meta.append(create('span','kind',e.kind==='journal'?'会话日记':'项目档案'),create('time','',e.date));body.append(meta,create('h3','',e.title),create('p','card-description',e.summary||'打开这一页，看看探索的过程。'));const bottom=create('div','card-bottom');bottom.append(create('span','',`${statuses[e.status]||'已收录'}${e.kind==='journal'?' · '+promptCount(e)+' 条提示词':''}`),create('b','','↗'));if(query){const hit=(e.search_index||[]).find(x=>x.text.toLocaleLowerCase().includes(query));if(hit){const at=hit.text.toLocaleLowerCase().indexOf(query);body.append(create('p','search-hit',hit.file+' · …'+hit.text.slice(Math.max(0,at-35),at+100)+'…'));}}body.append(tagNodes(e.tags),bottom);card.append(cover,body);grid.append(card);}section.append(grid);host.append(section);}
+ const groups=new Map([['馆藏',result]]);
+ for(const [month,entries] of groups){const section=create('section');const h=create('h3','month-title',month.replace('-',' / '));h.append(create('small','',`${entries.length} 份馆藏`));section.append(h);const grid=create('div','card-grid');for(const e of entries){const locked=!state.unlocked&&e.locked;const card=create(locked?'article':'a','card'+(locked?' locked-card':''));card.dataset.entryId=e.id;if(!locked){card.href=href(e.id);card.target='_blank';card.rel='noopener';}else card.setAttribute('aria-disabled','true');card.setAttribute('aria-label',(locked?'已锁定：':'打开：')+e.title);const cover=create('div','card-cover');const img=create('img');img.src=safeCover(e.cover||'');if(state.unlocked&&e.cover_asset)loadCover(img,e.cover_asset);img.alt=e.cover_kind==='screenshot'?`${e.title}的产出截图`:`${e.title}的内容概览图`;img.loading='lazy';img.width=1200;img.height=750;cover.append(img,create('span','cover-label',locked?'🔒 私密条目':e.cover_kind==='screenshot'?'产出截图':'内容概览'));const body=create('div','card-body');const meta=create('div','card-meta');meta.append(create('span','kind',e.kind==='journal'?'会话日记':'项目档案'),create('time','',e.date));body.append(meta,create('h3','',e.title),create('p','card-description',e.summary||'打开这一页，看看探索的过程。'));const bottom=create('div','card-bottom');bottom.append(create('span','',locked?'馆主解锁后可查看':`${statuses[e.status]||'已收录'}${state.unlocked&&e.kind==='journal'?' · '+promptCount(e)+' 条提示词':''}`),create('b','',locked?'🔒':'↗'));if(query){const hit=(e.search_index||[]).find(x=>x.text.toLocaleLowerCase().includes(query));if(hit){const at=hit.text.toLocaleLowerCase().indexOf(query);body.append(create('p','search-hit',hit.file+' · …'+hit.text.slice(Math.max(0,at-35),at+100)+'…'));}}body.append(tagNodes(e.tags),bottom);card.append(cover,body);grid.append(card);}section.append(grid);host.append(section);}
 }
 function download(name,data,type){const blob=new Blob([data],{type});const url=URL.createObjectURL(blob);const a=create('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);}
 async function asset(descriptor){
@@ -96,8 +96,9 @@ function resourceCard(e,r){
 }
 function openEntry(id){
  disposeTopicReading();state.selected=id;const host=$('#reader-content');host.classList.remove('has-frontpage','topic-page');host.replaceChildren();const e=state.entries.find(x=>x.id===id);
- if(!e){document.title='muQ · 大图书馆';host.append(create('h1','reader-title','这份档案需要馆主解锁'));const b=create('button','primary','解锁完整馆藏');b.onclick=showLogin;host.append(b);return;}
+ if(!e||!state.unlocked&&e.locked){document.title='muQ · 大图书馆';host.append(create('h1','reader-title','这份档案需要馆主解锁'));const b=create('button','primary','解锁完整馆藏');b.onclick=showLogin;host.append(b);return;}
  document.title=e.title+' · muQ';
+ if(state.unlocked){const scope=create('button','entry-visibility',e.public?'公开 · 调整可见范围':'私有 · 调整可见范围');scope.onclick=()=>openManagement(e.id);host.append(scope);}
  if((state.unlocked||e.public_content)&&params.get('file')){previewFile(e,params.get('file'),host);return;}
  if(e.topic&&(state.unlocked||e.public_content)){renderTopic(e,host);return;}
  const parentTopics=state.entries.filter(t=>t.topic?.sources.some(source=>source.id===e.id));for(const topic of parentTopics)host.append(link('返回主题 · '+topic.title,href(topic.id)));
@@ -124,7 +125,7 @@ function openEntry(id){
 }
 function showLogin(){$('#login-error').textContent='';$('#login').showModal();$('#password').focus();}
 function resetIdle(){clearTimeout(idleTimer);if(!state.unlocked)return;const remaining=rememberedUntil?rememberedUntil-Date.now():30*60*1000;if(remaining<=0){lock();return;}idleTimer=setTimeout(()=>rememberedUntil>Date.now()?resetIdle():lock(),Math.min(remaining,2147483647));}
-function lock(broadcast=true){disposeTopicReading();endManagement();state.epoch++;rememberedUntil=0;deviceMemory.clear().catch(()=>message('页面已退出，但浏览器存储清除失败；请清除此网站的数据。'));state.unlocked=false;$('#manage-top').hidden=true;state.payload=null;state.entries=state.public;clearAssets();coverObserver.disconnect();$('#password').value='';$('#reader-content').replaceChildren();$('#lock').hidden=true;$('#unlock-top').textContent='馆主入口 ⌑';$('#access-status').textContent='公开馆藏';$('#access-status').classList.remove('unlocked');$('#search').placeholder='搜索可见正文与附件';state.tag='';setCounts();render();if(entryId)openEntry(entryId);message('已锁定，完整档案已清除。');clearTimeout(idleTimer);if(broadcast)channel?.postMessage({type:'lock'});}
+function lock(broadcast=true){disposeTopicReading();endManagement();state.epoch++;rememberedUntil=0;deviceMemory.clear().catch(()=>message('页面已退出，但浏览器存储清除失败；请清除此网站的数据。'));state.unlocked=false;$('#manage-top').hidden=true;state.payload=null;state.entries=state.public;clearAssets();coverObserver.disconnect();$('#password').value='';$('#reader-content').replaceChildren();$('#lock').hidden=true;$('#unlock-top').textContent='馆主入口 ⌑';$('#access-status').textContent='游客浏览 · 私有条目已锁定';$('#access-status').classList.remove('unlocked');$('#search').placeholder='搜索可见正文与附件';state.tag='';setCounts();render();if(entryId)openEntry(entryId);message('已锁定，完整档案已清除。');clearTimeout(idleTimer);if(broadcast)channel?.postMessage({type:'lock'});}
 function accept(payload,expires=0){rememberedUntil=expires;if(payload.schema!==2)throw new Error('档案已更新，请刷新重试。');state.payload=payload;state.unlocked=true;$('#manage-top').hidden=false;state.entries=payload.entries;$('#password').value='';$('#login').close();$('#lock').hidden=false;$('#unlock-top').textContent='退出并忘记此设备';$('#access-status').textContent='馆主阅读 · 完整档案已解锁';$('#access-status').classList.add('unlocked');$('#search').placeholder='搜索正文、附件与原始提示词';setCounts();render();resetIdle();message(rememberedUntil?'此浏览器已记住，至 '+new Date(rememberedUntil).toLocaleDateString('zh-CN')+'。':'已临时解锁完整馆藏。');if(entryId)openEntry(entryId);if(params.get('manage')==='1'&&!$('#management').open)openManagement();}
 async function readArchive(material){
  const envelope=await json('./archive.enc.json');
@@ -175,6 +176,10 @@ function makeZip(files){
 
 // Management sessions exist only on the local owner service, never on the public site.
 let managementToken='';
+let managementScope='all';
+const syncLabels={pending:'待同步：本地修改尚未发布',deploying:'已推送，等待网站部署',live:'网站已生效',failed:'同步失败，本地修改已保留'};
+async function showSyncStatus(){if(!managementToken||!state.unlocked||!$('#management').open)return;try{const result=await manageAPI('status');if(managementToken&&state.unlocked)$('#management-message').textContent=syncLabels[result.state]||'待同步';}catch{}}
+setInterval(showSyncStatus,15000);
 async function manageAPI(path,data){
  const headers={'X-MuQ-Local':'1'};if(managementToken)headers.Authorization='Bearer '+managementToken;
  if(data!==undefined)headers['Content-Type']='application/json';
@@ -193,32 +198,39 @@ async function refreshPublic(){
 async function renderManagement(){
  const epoch=state.epoch;const result=await manageAPI('entries');if(epoch!==state.epoch||!state.unlocked)return;
  const host=$('#management-entries');host.replaceChildren();
+ const filters=create('div','management-filters');for(const [value,label] of [['all','全部'],['public','公开'],['private','私有']]){const b=create('button','secondary',label);b.type='button';b.setAttribute('aria-pressed',String(managementScope===value));b.onclick=()=>{managementScope=value;renderManagement();};filters.append(b);}host.append(filters);
  for(const e of result.entries){
-  const form=create('form','management-entry');const heading=create('div','management-heading');
-  heading.append(create('h3','',e.title),create('span','visibility-badge',e.public?(e.public_content?'公开':'公开概览'):'仅馆主可见'));form.append(heading);
+  if(managementScope!=='all'&&e.public!==(managementScope==='public'))continue;
+  const form=create('form','management-entry');form.dataset.entryId=e.id;const heading=create('div','management-heading');
+  heading.append(create('h3','',e.title),create('span','visibility-badge',e.public?'公开':'私有 · 游客锁定'));form.append(heading);
   const scope=create('fieldset','visibility-options');scope.append(create('legend','','可见范围'));
-  for(const [value,text] of [['private','仅馆主可见'],['public','公开']]){const label=create('label');const input=create('input');input.type='radio';input.name='visibility';input.value=value;input.checked=value===(e.public?'public':'private');label.append(input,document.createTextNode(text));scope.append(label);}
+  for(const [value,text] of [['private','私有 · 游客仅见锁定卡片'],['public','公开']]){const label=create('label');const input=create('input');input.type='radio';input.name='visibility';input.value=value;input.checked=value===(e.public?'public':'private');label.append(input,document.createTextNode(text));scope.append(label);}
   const fields=create('div','public-fields');const title=create('input');title.type='text';title.maxLength=200;title.value=e.public_title||e.title;title.id='public-title-'+e.id;
   const titleLabel=create('label','','公开标题');titleLabel.htmlFor=title.id;
   const summary=create('textarea');summary.rows=3;summary.maxLength=5000;summary.value=e.public_summary||e.summary||'';summary.id='public-summary-'+e.id;
   const summaryLabel=create('label','','公开概述');summaryLabel.htmlFor=summary.id;
   fields.append(titleLabel,title,summaryLabel,summary,create('p','reader-meta','公开标题、概述、正文及可上传附件。原始提示词和本机文件索引仍仅馆主可见。'));
-  const updateFields=()=>{const visible=form.elements.visibility.value==='public';fields.hidden=!visible;title.required=summary.required=visible;};
-  scope.onchange=updateFields;
+  const lockedFields=create('div','locked-fields'),lockedTitle=create('input'),lockedLabel=create('label','','游客可见名称（可留空）');lockedTitle.id='locked-title-'+e.id;lockedLabel.htmlFor=lockedTitle.id;lockedTitle.value=e.locked_title||'';lockedTitle.maxLength=200;lockedTitle.placeholder='私密条目';lockedFields.append(lockedLabel,lockedTitle,create('p','reader-meta','游客可见模糊封面与条目数量，不能打开。设为私有并同步后会撤下公开内容，已下载的副本无法收回。'));
+  const preview=create('section','visitor-preview');preview.setAttribute('aria-label','游客预览');
+  const updateFields=()=>{const visible=form.elements.visibility.value==='public';fields.hidden=!visible;lockedFields.hidden=visible;title.required=summary.required=visible;preview.replaceChildren(create('h4','','游客预览'),create('strong','',visible?title.value:lockedTitle.value||'私密条目'),create('p','',visible?summary.value:'🔒 馆主解锁后可查看'));
+   const entry=state.entries.find(v=>v.id===e.id);if(visible){const count=(entry?.files||[]).filter(f=>f.name.startsWith('artifacts/')).length;preview.append(create('p','reader-meta',`将公开正文及 ${count} 个可上传附件；原话、本机路径和禁止发布附件不公开。`));preview.append(link('检查当前正文与文件',href(e.id)));const coverButton=create('button','secondary','预览公开封面');coverButton.type='button';coverButton.onclick=()=>busy(coverButton,async()=>{const snap={title:title.value,summary:summary.value};const response=await manageAPI('preview',{id:e.id,...snap});if(!state.unlocked||!preview.isConnected||title.value!==snap.title||summary.value!==snap.summary)return;preview.querySelector('img')?.remove();const image=create('img');image.src=safeCover(response.cover);image.alt='游客将看到的封面';preview.append(image);});preview.append(coverButton);}else{const card=state.public.find(v=>v.id===e.id);if(card?.locked){const image=create('img');image.src=safeCover(card.cover);image.alt='游客看到的模糊封面';preview.append(image);}}};
+  scope.onchange=updateFields;title.oninput=summary.oninput=lockedTitle.oninput=updateFields;
   const save=create('button','secondary','保存可见范围');save.type='submit';
   const notice=create('p','management-result');notice.setAttribute('role','status');
-  form.append(scope,fields,save,notice);host.append(form);updateFields();
+  form.append(scope,fields,lockedFields,preview,save,notice);host.append(form);updateFields();
   form.onsubmit=async event=>{event.preventDefault();save.disabled=true;notice.textContent='正在保存…';$('#management-message').textContent='正在保存…';
-   try{const result=await manageAPI('visibility',{id:e.id,revision:e.revision,public:form.elements.visibility.value==='public',title:title.value,summary:summary.value});
+   try{const result=await manageAPI('visibility',{id:e.id,revision:e.revision,public:form.elements.visibility.value==='public',title:title.value,summary:summary.value,locked_title:lockedTitle.value});
     await refreshPublic();
     if(epoch!==state.epoch||!state.unlocked)return;
+    const owner=state.entries.find(v=>v.id===e.id);if(owner){owner.public=form.elements.visibility.value==='public';owner.public_content=owner.public;owner.revision=result.revision;}
+    if(entryId)openEntry(entryId);
     await renderManagement();
     $('#management-message').textContent=result.status==='saved_build_failed'?result.error:'已保存并更新本机。点击“同步到网站”发布这些设置。';
    }catch(error){if(epoch===state.epoch)notice.textContent=error.message;}finally{save.disabled=false;}
   };
  }
 }
-async function openManagement(){
+async function openManagement(focusId){
  const modal=$('#management');$('#management-message').textContent='';$('#management-entries').replaceChildren();modal.showModal();
  $('#management-build').hidden=$('#management-publish').hidden=!isLocal;
  if(!isLocal){const p=create('p','dialog-description','馆藏的原始档案保存在你的电脑上。请打开本机管理，保存后同步到网站。');const a=link('打开本机馆藏管理 ↗','http://127.0.0.1:6767/library/'+(entryId?'entry.html?id='+encodeURIComponent(entryId)+'&':'?')+'manage=1');$('#management-entries').append(p,a);return;}
@@ -227,10 +239,10 @@ async function openManagement(){
   const r=await fetch('/api/local-key',{headers:{'X-MuQ-Local':'1'}});if(!r.ok)throw new Error('请启动更新后的本机图书馆服务');
   const local=await r.json();const session=await manageAPI('session',{password:local.password});local.password='';
   if(epoch!==state.epoch||!state.unlocked)return;managementToken=session.token;
-  await renderManagement();$('#management-message').textContent='设置保存在本机，所有条目都可以单独管理。';
+  managementScope='all';await renderManagement();await showSyncStatus();if(typeof focusId==='string'){$('#management-entries').querySelector(`[data-entry-id="${CSS.escape(focusId)}"]`)?.scrollIntoView({block:'start'});}
  }catch(error){if(epoch===state.epoch)$('#management-message').textContent=error.message;}
 }
-$('#manage-top').onclick=openManagement;
+$('#manage-top').onclick=()=>openManagement();
 for(const [id,path,done] of [['management-build','build','本地图书馆已更新。'],['management-publish','publish','已推送网站更新，正在等待部署。']]){
  $('#'+id).onclick=async()=>{const button=$('#'+id);button.disabled=true;$('#management-message').textContent=path==='publish'?'正在同步网站，请稍候…':'正在构建…';
   try{await manageAPI(path,{});await refreshPublic();$('#management-message').textContent=done;}catch(error){$('#management-message').textContent=error.message;}finally{button.disabled=false;}

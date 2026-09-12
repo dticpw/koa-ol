@@ -6,7 +6,7 @@
   <title>muQ · 大图书馆</title><link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./theme.css?v=7471cb9936f7"><link rel="stylesheet" href="./topic.css?v=579b4f0ce88a">
 <link rel="stylesheet" href="./reading.css?v=b8ae363e62d2">
-<link rel="stylesheet" href="./library.css?v=6227ae6a998a"><script defer src="./remember.js?v=ea90b24a80d2"></script><script defer src="./reader.js?v=1b815e46b161"></script><script defer src="./topic.js?v=31850a2345ad"></script><script defer src="./files.js?v=a27509803cf3"></script><script defer src="./library.js?v=1a540370e4cc"></script>
+<link rel="stylesheet" href="./library.css?v=baf77e0cd44b"><script defer src="./remember.js?v=ea90b24a80d2"></script><script defer src="./reader.js?v=9ec3d4ee704a"></script><script defer src="./topic.js?v=31850a2345ad"></script><script defer src="./files.js?v=a27509803cf3"></script><script defer src="./library.js?v=38875317ff8d"></script>
 </head>
 <body>
   <a class="skip" href="#collection">跳到馆藏</a>
@@ -14,7 +14,7 @@
   <main>
     <section class="hero"><div class="librarian-background" aria-hidden="true"><img src="./koakuma-librarian-background.webp" width="768" height="1152" alt="" fetchpriority="high"></div><div class="wrap hero-grid"><div class="hero-copy"><p class="eyebrow">A CONVERSATION, A CHAPTER.</p><h1>让每一次探索，<br>都有一页归处。</h1><p class="hero-description">这里收藏做过的事、尚未解开的疑问，<br>和那些终于变成现实的想法。</p><a class="hero-link" href="#collection">翻开馆藏 <span aria-hidden="true">↓</span></a></div><div class="keeper-desk"><aside class="catalogue-note"><div class="note-top"><span class="note-seal">蔵</span><span>muQ COLLECTION<br>会话与项目档案</span></div><div class="collection-number"><b id="count">—</b><span>份馆藏<br><small id="count-description">正在读取目录</small></span></div><div class="note-rule"></div><p>一场会话，一篇日记。<br>原话按顺序留下，故事接着往下写。</p><div class="note-bottom"><span id="updated">等待更新</span><span aria-hidden="true">✦</span></div></aside></div></div></section>
     <section class="collection wrap" id="collection" aria-labelledby="collection-title">
-      <div class="collection-heading"><div><p class="eyebrow">THE COLLECTION / 馆藏目录</p><h2 id="collection-title">沿着留下的痕迹。</h2></div><span class="access-status" id="access-status">公开馆藏</span></div>
+      <div class="collection-heading"><div><p class="eyebrow">THE COLLECTION / 馆藏目录</p><h2 id="collection-title">沿着留下的痕迹。</h2></div><span class="access-status" id="access-status">游客浏览 · 私有条目已锁定</span></div>
       <div class="catalogue-tools"><nav class="tabs" aria-label="馆藏类型"><button data-kind="all" aria-pressed="true">全部馆藏</button><button data-kind="journal" aria-pressed="false">会话日记</button><button data-kind="project" aria-pressed="false">项目档案</button></nav><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" aria-label="搜索馆藏" placeholder="搜索标题与概述"><kbd>/</kbd></label><label class="sr-only" for="status-filter">按状态筛选</label><select id="status-filter"><option value="all">全部状态</option><option value="active">进行中</option><option value="done">已完成</option><option value="archived">已归档</option></select></div>
       <nav id="tags" class="tag-bar" aria-label="按标签筛选"></nav><p id="message" role="status" aria-live="polite"></p><div id="entries" aria-live="polite"></div>
       <div class="reading-note"><span aria-hidden="true">☾</span><p>有些收获是一个成果，<br>有些只是把问题问得更清楚。</p><small>每一页，都算数。</small></div>
@@ -29,8 +29,8 @@
     <p class="eyebrow">THE KEEPER'S DESK</p><h2 id="management-title">馆藏管理</h2>
     <p class="dialog-description">为每一份馆藏选择可见范围。保存更新本机，<br>同步到网站后，访客会看到新的设置。</p>
     <p id="management-message" role="status" aria-live="polite"></p>
-    <div id="management-entries"></div>
     <div class="management-actions"><button id="management-build" class="secondary" type="button">重新构建本机</button><button id="management-publish" class="primary" type="button">同步到网站 ↗</button></div>
+    <div id="management-entries"></div>
   </dialog>
 </body>
 </html>
