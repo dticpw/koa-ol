@@ -1,9 +1,9 @@
 {
-  "build_id": "4cd7d3a6ca0a0f71f2171ceddc8b6649bcf46866e653dc87a8e4d186789891a6",
+  "build_id": "b5a37ced28f31cf67880143491fb44cdfa7fdeedacceca62064ca05560168bb3",
   "schema": 2,
   "name": "muQ · 大图书馆",
   "mode": "catalogue",
-  "updated": "2026-09-12T07:50:31.259075+00:00",
+  "updated": "2026-09-12T08:10:54.969253+00:00",
   "entries": [
     {
       "id": "codex-edce98a162dad0f9de088ba4",
@@ -22,6 +22,22 @@
       "tags": []
     },
     {
+      "id": "codex-7868c500a1d7ef0ddd541fa5",
+      "kind": "journal",
+      "title": "私密条目",
+      "summary": "馆主解锁后可查看",
+      "locked": true,
+      "public": false,
+      "public_content": false,
+      "cover": "covers/codex-7868c500a1d7ef0ddd541fa5-5cf9e22108e5.png",
+      "cover_kind": "locked",
+      "catalogue_order": 1,
+      "date": "",
+      "updated": "",
+      "status": "",
+      "tags": []
+    },
+    {
       "id": "codex-ba0db004d3170f54c87a64dd",
       "kind": "journal",
       "title": "私密条目",
@@ -29,9 +45,9 @@
       "locked": true,
       "public": false,
       "public_content": false,
-      "cover": "covers/codex-ba0db004d3170f54c87a64dd-4afe22c1eb3d.png",
+      "cover": "covers/codex-ba0db004d3170f54c87a64dd-1fa937af160f.png",
       "cover_kind": "locked",
-      "catalogue_order": 1,
+      "catalogue_order": 2,
       "date": "",
       "updated": "",
       "status": "",
@@ -47,7 +63,7 @@
       "public_content": false,
       "cover": "covers/codex-8013b0f1f387225dbd548198-08c2fd751553.png",
       "cover_kind": "locked",
-      "catalogue_order": 2,
+      "catalogue_order": 3,
       "date": "",
       "updated": "",
       "status": "",
@@ -63,398 +79,11 @@
       "public_content": false,
       "cover": "covers/codex-7edd133d0ae2021ca6d089f6-e68a7c977492.png",
       "cover_kind": "locked",
-      "catalogue_order": 3,
-      "date": "",
-      "updated": "",
-      "status": "",
-      "tags": []
-    },
-    {
-      "id": "codex-7868c500a1d7ef0ddd541fa5",
-      "kind": "journal",
-      "title": "私密条目",
-      "summary": "馆主解锁后可查看",
-      "locked": true,
-      "public": false,
-      "public_content": false,
-      "cover": "covers/codex-7868c500a1d7ef0ddd541fa5-5cf9e22108e5.png",
-      "cover_kind": "locked",
       "catalogue_order": 4,
       "date": "",
       "updated": "",
       "status": "",
       "tags": []
-    },
-    {
-      "id": "personal-homepage",
-      "kind": "project",
-      "collection": "topic",
-      "title": "个人主页建造",
-      "summary": "Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。",
-      "date": "2026-09-11",
-      "updated": "2026-09-12T07:30:45.684432+00:00",
-      "status": "active",
-      "cover": "covers/personal-homepage-f22599f721cc.png",
-      "cover_kind": "overview",
-      "public": true,
-      "locked": false,
-      "catalogue_order": 5,
-      "tags": [],
-      "work": "",
-      "problems": "",
-      "decisions": "",
-      "outputs": "",
-      "next": "",
-      "current_state": "主页与主要子页面已有上线记录；本主题是持续维护中的总览。",
-      "sections": [],
-      "resources": [
-        {
-          "kind": "file",
-          "file": "artifacts/personal-homepage-0169bd63e981.html",
-          "title": "个人主页建造 · HTML 阅读副本",
-          "featured": true
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/homepage-live-20260911.png",
-          "title": "首页截图 · 2026-09-11"
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/home-chat-block.png",
-          "title": "主页截图 · AI Chat 与 Stats 入口"
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/home-muq-library.png",
-          "title": "主页截图 · muQ 与红魔馆藏书室"
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/home-games-block.png",
-          "title": "主页截图 · Games 入口"
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/home-hero.png",
-          "title": "主页截图 · 当前首屏"
-        }
-      ],
-      "topic": {
-        "schema": 1,
-        "layout": "reading-v2",
-        "state": "整站已有可用版本，神社、AI Chat／Stats、muQ 与 Games 由个人主页串联。本主题使用新版阅读目录与章节布局，补充当前主页各区域的真实截图；muQ 自身已整理为独立长期主题。",
-        "checked": "2026-09-11：实拍线上主页首屏及三个项目区域，截图保持原始比例。这里展示界面与入口；历史功能测试仍以各来源报告为准，不把本次截图当成全部功能重测。",
-        "actions": [
-          {
-            "title": "打开个人主页",
-            "url": "https://koa-ol.com/"
-          },
-          {
-            "title": "使用 AI Chat",
-            "url": "https://koa-ol.com/chat/"
-          },
-          {
-            "title": "查看 Stats",
-            "url": "https://koa-ol.com/stats/"
-          }
-        ],
-        "webpages": [
-          {
-            "title": "Koa-OL 个人主页",
-            "url": "https://koa-ol.com/"
-          },
-          {
-            "title": "AI Chat",
-            "url": "https://koa-ol.com/chat/"
-          },
-          {
-            "title": "Stats · 对话与模型用量",
-            "url": "https://koa-ol.com/stats/"
-          },
-          {
-            "title": "muQ · 大图书馆",
-            "url": "https://koa-ol.com/library/"
-          },
-          {
-            "title": "博丽神社 · 独立模型",
-            "url": "https://koa-ol.com/shrine/"
-          },
-          {
-            "title": "红魔馆藏书室 · 独立模型",
-            "url": "https://koa-ol.com/library-scene/"
-          },
-          {
-            "title": "Games",
-            "url": "https://koa-ol.com/games/"
-          }
-        ],
-        "sources": [
-          {
-            "id": "codex-7868c500a1d7ef0ddd541fa5",
-            "title": "私密条目",
-            "locked": true
-          },
-          {
-            "id": "codex-7edd133d0ae2021ca6d089f6",
-            "title": "私密条目",
-            "locked": true
-          },
-          {
-            "id": "codex-8013b0f1f387225dbd548198",
-            "title": "私密条目",
-            "locked": true
-          }
-        ],
-        "image": {
-          "file": "artifacts/home-hero.png",
-          "width": 1440,
-          "height": 1000,
-          "alt": "Koa-OL 当前首页：神社微缩庭院、标题与导航",
-          "caption": "线上首页实拍 · 2026-09-11 · 1440 × 1000；隐藏浏览器滚动条并启用减少动态效果。"
-        },
-        "sections": [
-          {
-            "id": "screens",
-            "title": "主页界面一览",
-            "paragraphs": [
-              "首页以神社建立视觉印象，向下依次进入对话、图书馆和游戏区域。以下三张实拍保留各区域的原始构图，便于回忆布局与实际入口。"
-            ],
-            "images": [
-              {
-                "file": "artifacts/home-chat-block.png",
-                "width": 1440,
-                "height": 750,
-                "alt": "AI Chat 与 Stats 入口",
-                "caption": "主页对话区域：AI Chat 的主要入口与 Stats 用量入口。 2026-09-11 线上实拍，等比展示。"
-              },
-              {
-                "file": "artifacts/home-muq-library.png",
-                "width": 1440,
-                "height": 750,
-                "alt": "muQ 与红魔馆藏书室",
-                "caption": "主页图书馆区域：红魔馆藏书室模型及进入图书馆的入口。 2026-09-11 线上实拍，等比展示。"
-              },
-              {
-                "file": "artifacts/home-games-block.png",
-                "width": 1440,
-                "height": 750,
-                "alt": "Games 入口",
-                "caption": "主页游戏区域：Blackjack 与 Texas Hold’em 的入口与纸牌视觉。 2026-09-11 线上实拍，等比展示。"
-              }
-            ]
-          },
-          {
-            "id": "scope",
-            "title": "项目范围与关联主题",
-            "paragraphs": [
-              "这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。"
-            ],
-            "items": [
-              {
-                "title": "私密条目",
-                "entry": "codex-7868c500a1d7ef0ddd541fa5",
-                "locked": true
-              },
-              {
-                "title": "私密条目",
-                "entry": "codex-7edd133d0ae2021ca6d089f6",
-                "locked": true
-              },
-              {
-                "title": "私密条目",
-                "entry": "worklog-library",
-                "locked": true
-              },
-              {
-                "title": "私密条目",
-                "entry": "codex-8013b0f1f387225dbd548198",
-                "locked": true
-              }
-            ]
-          },
-          {
-            "id": "use",
-            "title": "使用与验收路径",
-            "items": [
-              {
-                "title": "浏览整站",
-                "body": "打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。"
-              },
-              {
-                "title": "操作模型",
-                "body": "从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。"
-              },
-              {
-                "title": "使用 Chat，再核对 Stats",
-                "body": "选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。"
-              },
-              {
-                "title": "从主页进入 muQ",
-                "body": "检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。"
-              }
-            ]
-          },
-          {
-            "id": "state",
-            "title": "已交付与证据边界",
-            "paragraphs": [
-              "以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。"
-            ],
-            "items": [
-              {
-                "title": "主页布局与模型入场已有验收记录",
-                "body": "主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。"
-              },
-              {
-                "title": "Chat 两阶段功能已有上线记录",
-                "body": "Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。"
-              },
-              {
-                "title": "Games 保留为站点入口",
-                "body": "当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。"
-              },
-              {
-                "title": "归档状态不等于产品状态",
-                "body": "某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。"
-              }
-            ]
-          },
-          {
-            "id": "design",
-            "title": "保留的设计方向",
-            "paragraphs": [
-              "当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。",
-              "神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。",
-              "主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。"
-            ]
-          },
-          {
-            "id": "handoff",
-            "title": "后续维护与交接",
-            "items": [
-              {
-                "title": "源码与发布",
-                "body": "站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。"
-              },
-              {
-                "title": "主题与归档",
-                "body": "本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。"
-              },
-              {
-                "title": "仍需反馈和验证",
-                "body": "真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。"
-              },
-              {
-                "title": "维护入口的边界",
-                "body": "本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。"
-              }
-            ]
-          }
-        ]
-      },
-      "public_content": true,
-      "files": [
-        {
-          "name": "artifacts/home-chat-block.png",
-          "url": "public-files/personal-homepage/83b1dcf1415f04ae810383526d0b76363931f0a3f41785a18f64626b221b0767.bin",
-          "bytes": 52679,
-          "sha256": "83b1dcf1415f04ae810383526d0b76363931f0a3f41785a18f64626b221b0767",
-          "thumbnail": {
-            "url": "public-files/personal-homepage/2b75c1a6b9e9315e36e24931d1534814a6c947d7d808b458b0f251be13abf35f.bin",
-            "bytes": 7721,
-            "sha256": "2b75c1a6b9e9315e36e24931d1534814a6c947d7d808b458b0f251be13abf35f"
-          }
-        },
-        {
-          "name": "artifacts/home-games-block.png",
-          "url": "public-files/personal-homepage/830817813989a1d7f43ad8ac375450c28954ad5e1c7bd5980a7d3f6ed4fc4bfd.bin",
-          "bytes": 125287,
-          "sha256": "830817813989a1d7f43ad8ac375450c28954ad5e1c7bd5980a7d3f6ed4fc4bfd",
-          "thumbnail": {
-            "url": "public-files/personal-homepage/c728df6c4165ee7a51ae2cc2c15cd5f1e2c147080bb3f8dfebf477ecdfa81700.bin",
-            "bytes": 10132,
-            "sha256": "c728df6c4165ee7a51ae2cc2c15cd5f1e2c147080bb3f8dfebf477ecdfa81700"
-          }
-        },
-        {
-          "name": "artifacts/home-hero.png",
-          "url": "public-files/personal-homepage/c3ad1233881573cfe37b1ad093aa4ec7249e4d5709651374ec23eda019d06cfa.bin",
-          "bytes": 295238,
-          "sha256": "c3ad1233881573cfe37b1ad093aa4ec7249e4d5709651374ec23eda019d06cfa",
-          "thumbnail": {
-            "url": "public-files/personal-homepage/277cc3c43ff134c16077be455a7d47c47159a8ad27dcbc07fbf8883df3c0b044.bin",
-            "bytes": 11906,
-            "sha256": "277cc3c43ff134c16077be455a7d47c47159a8ad27dcbc07fbf8883df3c0b044"
-          }
-        },
-        {
-          "name": "artifacts/home-muq-library.png",
-          "url": "public-files/personal-homepage/694f87c4ff977c7715fc2de735cb5ac6be37f2f8c3dd71ab0210928a686b4cc6.bin",
-          "bytes": 269113,
-          "sha256": "694f87c4ff977c7715fc2de735cb5ac6be37f2f8c3dd71ab0210928a686b4cc6",
-          "thumbnail": {
-            "url": "public-files/personal-homepage/0433ada235335090b1632812bb43539bf3ee5d2cc03ab8740e527afbd4da67cf.bin",
-            "bytes": 10450,
-            "sha256": "0433ada235335090b1632812bb43539bf3ee5d2cc03ab8740e527afbd4da67cf"
-          }
-        },
-        {
-          "name": "artifacts/homepage-evidence-20260911.png",
-          "url": "public-files/personal-homepage/59a2b10fc01e2e1c05781f19d8743181c3dcc2b2b1f2b18fd7542d792c523e5d.bin",
-          "bytes": 297278,
-          "sha256": "59a2b10fc01e2e1c05781f19d8743181c3dcc2b2b1f2b18fd7542d792c523e5d",
-          "thumbnail": {
-            "url": "public-files/personal-homepage/975706ffb9e79a4794e6837370ead9f92f15e36fb296ee98ccf259e9118fd390.bin",
-            "bytes": 12174,
-            "sha256": "975706ffb9e79a4794e6837370ead9f92f15e36fb296ee98ccf259e9118fd390"
-          }
-        },
-        {
-          "name": "artifacts/homepage-live-20260911.png",
-          "url": "public-files/personal-homepage/007b84db0c270b4662d1ee26cb51d598abc9329c7c2b15a4f183069c403814b2.bin",
-          "bytes": 295069,
-          "sha256": "007b84db0c270b4662d1ee26cb51d598abc9329c7c2b15a4f183069c403814b2",
-          "thumbnail": {
-            "url": "public-files/personal-homepage/7e619648b0c759fbe736ed32c3287ab420733253fa744cfe577a21d1c6c055ec.bin",
-            "bytes": 11904,
-            "sha256": "7e619648b0c759fbe736ed32c3287ab420733253fa744cfe577a21d1c6c055ec"
-          }
-        },
-        {
-          "name": "artifacts/personal-homepage-0169bd63e981.html",
-          "url": "public-files/personal-homepage/0169bd63e981efcd487e403db7046d188ba93281fc6df2610c413a56ed264069.bin",
-          "bytes": 1010039,
-          "sha256": "0169bd63e981efcd487e403db7046d188ba93281fc6df2610c413a56ed264069"
-        },
-        {
-          "name": "artifacts/personal-homepage-0a432e94eec9.html",
-          "url": "public-files/personal-homepage/0a432e94eec9763383bc60530f3eac6c14d7330c9e6fe1b7a330506527f50fac.bin",
-          "bytes": 408372,
-          "sha256": "0a432e94eec9763383bc60530f3eac6c14d7330c9e6fe1b7a330506527f50fac"
-        },
-        {
-          "name": "artifacts/personal-homepage-8f12c865ffaa.html",
-          "url": "public-files/personal-homepage/8f12c865ffaa9efad2778858d457644e643d866593c891f1393e50e55b215e0a.bin",
-          "bytes": 405442,
-          "sha256": "8f12c865ffaa9efad2778858d457644e643d866593c891f1393e50e55b215e0a"
-        }
-      ],
-      "omitted_files": [],
-      "search_index": [
-        {
-          "file": "artifacts/personal-homepage-0169bd63e981.html",
-          "text": "个人主页建造 muQ / 持续维护的主题 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 线上首页实拍 · 2026-09-11 · 1440 × 1000；隐藏浏览器滚动条并启用减少动态效果。 当前状态与操作入口 整站已有可用版本，神社、AI Chat／Stats、muQ 与 Games 由个人主页串联。本主题使用新版阅读目录与章节布局，补充当前主页各区域的真实截图；muQ 自身已整理为独立长期主题。 2026-09-11：实拍线上主页首屏及三个项目区域，截图保持原始比例。这里展示界面与入口；历史功能测试仍以各来源报告为准，不把本次截图当成全部功能重测。 打开个人主页 使用 AI Chat 查看 Stats 本页目录 主页界面一览 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 网页 文件 历史与来源 01 主页界面一览 首页以神社建立视觉印象，向下依次进入对话、图书馆和游戏区域。以下三张实拍保留各区域的原始构图，便于回忆布局与实际入口。 主页对话区域：AI Chat 的主要入口与 Stats 用量入口。 2026-09-11 线上实拍，等比展示。 打开原图 主页图书馆区域：红魔馆藏书室模型及进入图书馆的入口。 2026-09-11 线上实拍，等比展示。 打开原图 主页游戏区域：Blackjack 与 Texas Hold’em 的入口与纸牌视觉。 2026-09-11 线上实拍，等比展示。 打开原图 02 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 阅读关联档案 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 阅读关联档案 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。图书馆已建立长期主题，集中展示当前能力、使用指南、源码仓库、维护说明与历史证据。 阅读关联档案 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 阅读关联档案 03 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 04 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 05 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 06 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 07 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 08 文件 首页截图 · 2026-09-11 主页截图 · AI Chat 与 Stats 入口 主页截图 · muQ 与红魔馆藏书室 主页截图 · Games 入口 主页截图 · 当前首屏 09 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型 来源原话在图书馆馆主视角默认展开；本 HTML 阅读副本不复制原始提示词。"
-        },
-        {
-          "file": "artifacts/personal-homepage-0a432e94eec9.html",
-          "text": "个人主页建造 KOA-OL / 主题档案 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 主页归档截图 · 2026-09-11 · 原始尺寸 1440 × 1000，等比展示。用于识别当前设计方向，不代表所有子页面的最新状态。 当前状态与操作入口 整站已有可用版本。主页保留神社与藏书室模型，按阅读区域切换整体氛围；Chat 已加入三模型、GPT 可选联网、流式回复、停止／重试和本机历史。muQ 正在从会话目录向主题档案演进，本页是首个试点。 资料基线：2026-09-11 的归档记录及当前网站源码。下文区分已有验收记录与仍需实际使用验证的内容。 打开个人主页 使用 AI Chat 查看 Stats 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。网站主页提供访问入口；图书馆自身的归档模型、权限与阅读器继续独立维护。旧项目档案较早，近期变更另见相关会话。 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型"
-        },
-        {
-          "file": "artifacts/personal-homepage-8f12c865ffaa.html",
-          "text": "个人主页建造 KOA-OL / 主题档案 个人主页建造 Koa-OL 是个人项目的统一入口：用幻想乡的神社与红魔馆藏书室建立视觉识别，将 AI Chat、Stats、muQ 与 Games 连接在同一站点。本主题持续记录整站的当前状态、使用入口、相关项目及交接信息；各次设计与开发会话作为历史来源保留。 线上主页实拍 · 2026-09-11 · 1440 × 1000，等比展示。截图时隐藏浏览器滚动条；神社模型已渲染，使用减少动态效果的稳定状态。 当前状态与操作入口 整站已有可用版本。主页保留神社与藏书室模型，按阅读区域切换整体氛围；Chat 已加入三模型、GPT 可选联网、流式回复、停止／重试和本机历史。muQ 正在从会话目录向主题档案演进，本页是首个试点。 资料基线：2026-09-11 的归档记录及当前网站源码。下文区分已有验收记录与仍需实际使用验证的内容。 打开个人主页 使用 AI Chat 查看 Stats 项目范围与关联主题 使用与验收路径 已交付与证据边界 保留的设计方向 后续维护与交接 项目范围与关联主题 这里维护整站的整体结构、设计取舍和当前入口。Chat、muQ 与模型各有独立的实现与演进过程；总览只保留它们与个人主页的关系，细节由对应档案承接。 个人主页与整站体验 首页按介绍与神社、Chat／Stats、muQ、Games 组织内容。保留真实项目入口，背景随当前阅读区域统一变化；手机按内容自然延展。 AI Chat 与 Stats Chat 承担日常模型对话，Stats 展示调用与模型用量。当前归档包括 GPT、DeepSeek、Qwen 接入，以及联网引用、流式回复、停止重试和浏览器本机历史。 muQ · 大图书馆 muQ 是项目阅读、验收与交接的入口。网站主页提供访问入口；图书馆自身的归档模型、权限与阅读器继续独立维护。旧项目档案较早，近期变更另见相关会话。 Three.js 微缩模型 神社负责首页的幻想乡识别，红魔馆藏书室连接 muQ。模型可独立打开；藏书室保留旋转、缩放、复位、按需加载与离屏暂停。早期模型会话的“未发布”属于当时状态，后续主页会话已记录上线。 使用与验收路径 浏览整站 打开主页，依次查看神社、Chat、muQ 与 Games。滚动时检查整页氛围是否一致，文字和操作入口是否清楚；不需要等待动画完成再操作。 操作模型 从主页进入独立神社或藏书室页面，尝试旋转、缩放和复位。主页内的滚轮应继续服务页面滚动，离开模型区域后应停止无意义绘制。 使用 Chat，再核对 Stats 选择模型发送消息；如需验收，可检查流式输出、停止后的片段、重试与历史恢复，再查看 Stats。真实发送会产生模型调用及可能的费用，本次主题整理不重复发起付费测试。 从主页进入 muQ 检查入口是否清楚，进入后按主题查看状态、网页、文件和来源。私人条目与用户原话在馆主解锁后读取。 已交付与证据边界 以下结论来源于已保存的实施与验收记录。本次整理负责核对来源、入口与主题呈现，不把历史测试改称为本轮重新测试。 主页布局与模型入场已有验收记录 主页会话记录了桌面、平板、手机模拟视口、主题切色、模型旋转入场、手动接管和减少动态效果验证。手机真机触摸尚未验证。 Chat 两阶段功能已有上线记录 Chat 会话记录了三模型真实调用、Stats 入库、GPT 联网引用，以及第二阶段流式、计时、停止重试和本机历史；源码提交 39d478f 对应流式功能。 Games 保留为站点入口 当前主页源码仍链接 Games；这次没有将完整游戏规则和运行质量纳入验收范围。 归档状态不等于产品状态 某次会话写“本地归档尚未发布”，描述的是当时图书馆的同步进度；不能因此推断 Chat 或主页本身尚未上线。 保留的设计方向 当前采用既有主页基础上的持续改进。两份独立设计实验未被用户采用，保留为历史候选，不作为线上当前版本。 神社与图书馆承担真实的视觉识别。整页按阅读区域共享背景与文字色，动画最终停在适合操作的位置；手动操作和系统减少动态效果优先。 主题档案本身采用单列阅读：摘要之后给出真实截图，接着是当前状态、入口和目录。正文可以很长，但网页、文件与历史保持简洁，方便回查。 后续维护与交接 源码与发布 站点源码：/mnt/f/bak/git_koa-ol（Windows：F:\\bak\\git_koa-ol）。入口 index.html；主页模块在 assets/home，Chat 与 Stats 在各自目录，服务端在 functions。GitHub main 触发 Cloudflare Pages 部署；提交前检查当前 Git 状态，不夹带其他任务的改动。 主题与归档 本主题固定 ID 为 personal-homepage。后续先读取当前版本及来源会话，再修改受影响的内容；新进展更新当前状态，旧成果保留在来源与历史。原始提示词仍按真实会话独立保存。 仍需反馈和验证 真机触摸仍待验证；Chat 的联网三档、模型对照、个人预设和完成提醒只是候选想法。muQ 的全库主题迁移与管理员规范尚未完成，不把本试点外推为全库已迁移。 维护入口的边界 本页私人路径与交接信息仅供馆主阅读。公开站点正常访问不需要解锁；公开本主题前应另做公开内容筛选。 网页 Koa-OL 个人主页 AI Chat Stats · 对话与模型用量 muQ · 大图书馆 博丽神社 · 独立模型 红魔馆藏书室 · 独立模型 Games 历史与来源 个人主页建造 个人主页 AI Chat 与 Stats：三模型接入与界面优化 为 muQ 主页制作红魔馆图书馆微缩模型"
-        }
-      ]
     },
     {
       "id": "front-design-lab",
@@ -469,7 +98,7 @@
       "cover_kind": "overview",
       "public": true,
       "locked": false,
-      "catalogue_order": 6,
+      "catalogue_order": 5,
       "tags": [],
       "work": "已完成独立主题归档，汇集设计联想、案例拆解、双模式方案、专项方法与素材派工流程。",
       "problems": "未来仍需在实际任务中验证自动模式选择与创意质量。",
@@ -783,7 +412,7 @@
       "cover_kind": "overview",
       "public": true,
       "locked": false,
-      "catalogue_order": 7,
+      "catalogue_order": 6,
       "tags": [],
       "work": "",
       "problems": "",
@@ -1305,6 +934,22 @@
       "public_content": false,
       "cover": "covers/worklog-library-5d659c37506f.png",
       "cover_kind": "locked",
+      "catalogue_order": 7,
+      "date": "",
+      "updated": "",
+      "status": "",
+      "tags": []
+    },
+    {
+      "id": "codex-7bdfb3a609cc16f657b9c69a",
+      "kind": "journal",
+      "title": "私密条目",
+      "summary": "馆主解锁后可查看",
+      "locked": true,
+      "public": false,
+      "public_content": false,
+      "cover": "covers/codex-7bdfb3a609cc16f657b9c69a-01485aaefc8e.png",
+      "cover_kind": "locked",
       "catalogue_order": 8,
       "date": "",
       "updated": "",
@@ -1328,22 +973,6 @@
       "tags": []
     },
     {
-      "id": "codex-7bdfb3a609cc16f657b9c69a",
-      "kind": "journal",
-      "title": "私密条目",
-      "summary": "馆主解锁后可查看",
-      "locked": true,
-      "public": false,
-      "public_content": false,
-      "cover": "covers/codex-7bdfb3a609cc16f657b9c69a-01485aaefc8e.png",
-      "cover_kind": "locked",
-      "catalogue_order": 10,
-      "date": "",
-      "updated": "",
-      "status": "",
-      "tags": []
-    },
-    {
       "id": "codex-4d581ad1e98ee8f22621fa93",
       "kind": "journal",
       "title": "私密条目",
@@ -1353,7 +982,7 @@
       "public_content": false,
       "cover": "covers/codex-4d581ad1e98ee8f22621fa93-43abd534fcee.png",
       "cover_kind": "locked",
-      "catalogue_order": 11,
+      "catalogue_order": 10,
       "date": "",
       "updated": "",
       "status": "",
@@ -1369,7 +998,7 @@
       "public_content": false,
       "cover": "covers/codex-1ec6e6e4e98f484b8a7bf0da-cc842b1ba2d6.png",
       "cover_kind": "locked",
-      "catalogue_order": 12,
+      "catalogue_order": 11,
       "date": "",
       "updated": "",
       "status": "",
@@ -1388,7 +1017,7 @@
       "cover_kind": "overview",
       "public": true,
       "locked": false,
-      "catalogue_order": 13,
+      "catalogue_order": 12,
       "tags": [],
       "work": "2026-09-04｜2026-09-03 至 2026-09-04｜6 条｜ai-daily-2026-09-04-7a95d30437fee497.html",
       "problems": "",
@@ -1436,7 +1065,7 @@
       "cover_kind": "overview",
       "public": true,
       "locked": false,
-      "catalogue_order": 14,
+      "catalogue_order": 13,
       "tags": [],
       "work": "2026-08-27｜2026-08-21 至 2026-08-27｜9 条｜ai-daily-2026-08-27-3fd8ba332460d577.html\n2026-08-27｜2026-08-21 至 2026-08-27｜8 条｜ai-daily-2026-08-27-fa0ef066d66a04f0.html\n2026-08-31｜2026-08-25 至 2026-08-31｜8 条｜ai-daily-2026-08-31-707345bff06ba5d0.html",
       "problems": "",
