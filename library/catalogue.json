@@ -1,9 +1,9 @@
 {
-  "build_id": "a08f55d82b9f222197c3ce0f1bf2ce98afb4a5f910f4d95b2120ba401f42539f",
+  "build_id": "8d458e8153781998a2c861afc4ce9ed9a6a21650f2a141a33a434d5b2141ce23",
   "schema": 2,
   "name": "muQ · 大图书馆",
   "mode": "catalogue",
-  "updated": "2026-09-12T16:57:41.462734+00:00",
+  "updated": "2026-09-12T17:22:21.298926+00:00",
   "entries": [
     {
       "id": "codex-39aeb281462c2a07e4ef0e5b",
@@ -1343,479 +1343,19 @@
       ]
     },
     {
-      "id": "codex-4d581ad1e98ee8f22621fa93",
-      "kind": "journal",
-      "collection": "",
-      "title": "daily · 日常维护与 AI 日报工作流",
-      "summary": "日常维护会话：Fcitx 5 拼音配置；AI 日报增量搜索、按月归档、工作时提醒、默认公开及馆主可见范围管理。",
-      "date": "2026-09-10",
-      "updated": "2026-09-12T16:57:41.425705+00:00",
-      "status": "active",
-      "cover": "covers/codex-4d581ad1e98ee8f22621fa93-07d5ae5b8af6.png",
-      "cover_kind": "overview",
-      "public": true,
-      "locked": false,
-      "catalogue_order": 6,
-      "tags": [],
-      "work": "已核实用户安装 Fcitx 5 完整，设置全拼、Ctrl+空格/左 Shift 切换与候选字体 13，默认框架改为 Fcitx 5，等待注销重登实测。已更新 ai-daily 与 muq-journal：日报增量窗口、按月固定条目、重复归档不新增版本、按可见范围构建和失败重试；四份全局指令添加工作时提醒入口。\n历史日报归档：扫描 5877 个 HTML，确认并导入 4 份有效报告，8 月 3 份、9 月 1 份；来源原件未修改，入库附件与原件逐字节和 SHA256 核对通过。空验收文件和工作流图未导入。\n已将8月和9月AI月刊共4份历史报告设为公开正文与附件；新月刊默认公开，显式私有设置在后续追加中保留。馆主本机界面支持逐条公开/私有、编辑公开标题概述、保存构建与同步网站。线上管理入口返回本机。\n线上已部署公开月刊与管理入口：匿名HTTP实际取回两个月刊目录和4份HTML，内容SHA256全部匹配。线上馆主管理指向本机对应条目。\n输入法补修：已确认 X11 下 Fcitx 5 正常自启动、应用已连接，无 IBus 守护进程。将 Shift_L 与 Shift_R 加入正式 TriggerKeys，保留 Control+space，清空临时 AltTriggerKeys；fcitx5-remote -r 热加载后通过 DBus GetConfig 确认运行值。保留默认英文输入，不修改 GNOME 输入源和自启动。\n2026-09-11：将 MP4 默认播放器设为 VLC，xdg-mime 验证成功。图书馆馆员从首屏相框改为右侧大幅背景人物，原图保留，生成透明背景衍生 WebP；用渐隐与层级保护正文，手机端降低透明度。360/768/1440 宽度无横向溢出，图片加载、馆藏锚点和搜索交互检查通过，无页面运行异常。\n馆员抠图补修：先前仅从边界连通清背景，漏掉发丝封闭空隙。通过逐区域检查清除 18 处内部浅色背景，并补修细缝，保留白衬衫、面部与红发；深色底两倍放大检查和浏览器加载验证通过。\n找到昨日生图技巧任务：6 个来源，原稿 submitted 且未完整语义验收，已有 research-reviewed.md 修订版。以修订版制作单文件 HTML，含工具选择、3 套可复制提示词、来源记录及发丝抠图前后深浅底交互对照，保留完整修订原文。未重新联网检索，未进行第三方生成测试。浏览器已打开，复制/底色切换/展开/移动布局检查通过。\n扩展 AI 生图研究：完成跨体系真实搜索及 14 个直接核对来源，筛选 9 项资源，编写漫画线稿/厚涂/半厚涂/清新简约提示词与减少 AI 视觉套路的方法。风格搜索超时后直接核对 BFL、Google、Midjourney 文档及 Fooocus 风格 JSON，不虚构未取得的搜索结果。未安装第三方 Skill、未新增生图测试。\n条目实际在桌面与手机验收：无横向溢出，隔离交互筛选返回 4 项 Skill。将阅读器来源链接排序到正文后；本机服务停止后用现有 start-linux.sh 恢复。未发布网站。\n实际调用 imgen-studio 生成东方 Project 帕秋莉立绘：默认环境缺少 SDK，已隔离安装依赖，再用既有授权的第三方 model-library + 内置 CLI 请求 gpt-image-2 成功，约72秒。已检查形象并归档原图、提示词到 ai-image-studio。\n按用户要求移除旧 imgen-studio，备份为非活动参考；创建 imgen-art-director，主流程49行、7份按需参考。更新 open-design-ui 两处旧名称引用，未改变其他现有修改。格式、LF、引用与Linux两处发现链接通过验证。未运行新的付费生图，质量提升尚待验证。\n使用新 imgen-art-director 完成帕秋莉 fumo 写实摄影样图，第三方既有通道请求 gpt-image-2，34秒成功，已实际看图并保留PNG与WebP预览。用户反馈待确认。\n按用户要求，用新 Skill 各生成帕秋莉 fumo 漫画线稿版与厚涂版，已实际看图，保留原图与提示词；两张独立生成存在局部造型变化。\n用户认可新生图 Skill，并要求正式归档本主题。已更新 ai-image-studio 当前状态、首轮实测与用户反馈；新版门面直接展开写实、漫画线稿与厚涂样图，保留旧报告、原图、提示词与源码快照。\n归档验收：桌面1440与手机390无横向溢出，三张图加载且保持原比例。修复阅读器沙箱门面的锚点误导航；原reader.js已备份。单独附件网页导航超时，改以全部附件哈希校验确认入库完整性。\n2026-09-12 按更新后的 muq-journal 重新归档 AI 生图主题：迁移原生 reading-v2，章节等比展示3张fumo与1张历史人物立绘，随读目录、纵向文件入口、来源原话默认展开；混合daily来源设primary=false。历史附件与可见范围保留。\n重新归档验收通过：1440/820/390宽度无溢出，4图完整加载且等比，sticky目录和当前章节高亮有效，24条来源原话默认展开，原图附件页实际打开1254×1254；15份附件哈希一致。仅本地构建，未发布线上。",
-      "problems": "HTTP/HTTPS 小文件测速未能预测完整 apt 下载，用户反馈换协议未显著提速，根因未完全确定。Fcitx 实际输入效果尚待用户确认。新日报流程真实联网生成与 Windows 实机触发未测。",
-      "decisions": "月刊使用 kind=project 和 ai-daily-YYYY-MM 固定 ID；普通会话仍一会话一日记。上次主动请求与成功归档日期分离，失败不推进搜索游标。提醒只在工作会话触发，用户同意才派 Agent；提醒七天冷却，支持用户指定延期。采用真实独立审查员 /root/review_daily_reminder，写前及落盘均通过。\n本轮为历史材料归档，保留原新闻及原核验标签，不把归档当作重新查证；导入不伪造原始生成时刻，仅保留 HTML 报告日期。未把整理历史文件当作新的生成请求。\n按用户本轮修正：公开默认仅适用于AI日报；普通条目默认私有，原始提示词始终加密。本机管理有同源校验、馆主验证和短时管理会话，保存采用版本检查。公开导出仅正文与可上传artifacts，不包含原始prompt、内部bundle或本机索引。",
-      "outputs": "共享 ai-daily 与 muq-journal Skill、workflow.py、monthly.py 与 13 项隔离测试；四份全局指令及独立审查证据位于 /mnt/d/Linux_share/persona-history/ai-daily-reminder-20260910-213012。提醒启用日期 2026-09-10，last_requested_at 未设置，首次到期 2026-09-17。\n历史日报月刊：ai-daily-2026-08、ai-daily-2026-09。导入清单 /mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/inventory.json。增量计划识别最后综合日报日期为 2026-09-04。\n25项muQ测试、14项AI日报测试通过；浏览器临时馆藏验证匿名正文/HTML预览、公开↔私有、退出回到公开目录、键盘操作，桌面1280和手机390无横向溢出。全局默认规则经独立写前与落盘审查通过。\n首个可见性发布提交 ff0f5c77d5e9b68cb49740e6379d2cb3c9fca664 已部署并核验。公开页面真实截图 public-month-production.png；最后同步包含公开正文的当前状态/下一步显示及本次验收记录。\n输入法回退：sh /home/dticpw/.local/share/input-method-backups/20260910-234350/restore.sh\n馆员背景修改与回退原件：/mnt/e/PG/muQ/docs/librarian-background-20260911/；源码 web/index.html、library.css、koakuma-librarian-background.webp。\n抠图修正备份与对比图：/mnt/e/PG/muQ/docs/librarian-hair-20260911/。\n生图调研 HTML：/mnt/e/PG/imGen/research-gpt-image-2026-09-10/report/image-generation-research.html；本机预览 http://127.0.0.1:6771/image-generation-research.html 。\n创建 muQ 项目条目 ai-image-studio（仅馆主可见），5 个子版块，HTML 作为 frontpage 直接渲染，保留昨日 GPT 研究 HTML。独立报告：/mnt/e/PG/imGen/research-styles-2026-09-11/ai-image-styles-20260911.html。\n帕秋莉原图：/mnt/e/PG/imGen/2026-09-11-patchouli/patchouli-original-v1.png。\n新Skill：/mnt/c/Users/DTICPW/agent-workflows/skills/imgen-art-director/SKILL.md；旧版参考与快照：/mnt/e/PG/imGen/skill-reference/。\n帕秋莉 fumo 样图、提示词与生成记录：/mnt/e/PG/imGen/2026-09-11-patchouli-fumo；原图与提示词补入 ai-image-studio 本地条目。\n两种风格原图与提示词：/mnt/e/PG/imGen/2026-09-11-patchouli-fumo-styles；已复制入本地 ai-image-studio，未发布线上。\n生图阶段归档页：/mnt/e/PG/agent-artifacts/ai-image-archive-20260911/ai-image-studio-archive-20260911-v1.html。\n新版归档与盘点：/mnt/e/PG/agent-artifacts/ai-image-rearchive-20260912。",
-      "next": "待用户实测左右 Shift 中英文切换，以及下次登录后不点击托盘菜单能否直接切换；本轮已确认配置加载，尚不能宣称开机问题实测解决。后续日常验证 AI 日报生成、月刊可见范围及馆主管理。",
-      "current_state": "",
-      "sections": [],
-      "resources": [
-        {
-          "kind": "link",
-          "url": "http://127.0.0.1:6767/library/entry.html?id=ai-image-studio",
-          "title": "AI 生图专题（本机）",
-          "description": "长期积累风格研究、Skill 与工作流链接、提示词和实践。"
-        }
-      ],
-      "public_content": true,
-      "files": [
-        {
-          "name": "artifacts/historical-ai-reports-inventory.json",
-          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/b5fecf0f9191845dea18462c0735300bc02be76183307ff4e13e1f4d4a090338.bin",
-          "bytes": 1603,
-          "sha256": "b5fecf0f9191845dea18462c0735300bc02be76183307ff4e13e1f4d4a090338"
-        },
-        {
-          "name": "artifacts/image-generation-research.html",
-          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/a0862949f795e19c13275892fd3b6100d8904316bed09b72c92a1844ac8a7470.bin",
-          "bytes": 483162,
-          "sha256": "a0862949f795e19c13275892fd3b6100d8904316bed09b72c92a1844ac8a7470"
-        },
-        {
-          "name": "artifacts/review.txt",
-          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/1abecf022c09403099693edc531d8cb84ab7c6b2bc093ccc99939f01be989278.bin",
-          "bytes": 467,
-          "sha256": "1abecf022c09403099693edc531d8cb84ab7c6b2bc093ccc99939f01be989278"
-        },
-        {
-          "name": "artifacts/validation.txt",
-          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/0afb3c936cc66ffa3c9844c0b40dfb73d63f5580c9353fc28a4364bd7394e4a6.bin",
-          "bytes": 571,
-          "sha256": "0afb3c936cc66ffa3c9844c0b40dfb73d63f5580c9353fc28a4364bd7394e4a6"
-        },
-        {
-          "name": "artifacts/visibility-final-validation.md",
-          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/d80f7924df3d650470e611e559103e93416094468ed25a7f3f64633e9eccf6ba.bin",
-          "bytes": 1108,
-          "sha256": "d80f7924df3d650470e611e559103e93416094468ed25a7f3f64633e9eccf6ba",
-          "reading": {
-            "url": "public-files/codex-4d581ad1e98ee8f22621fa93/052a21b13d17dbccb0bc82a8102f6f528eb5d30807176fe1f33280e5ce197243.bin",
-            "bytes": 3182,
-            "sha256": "052a21b13d17dbccb0bc82a8102f6f528eb5d30807176fe1f33280e5ce197243"
-          }
-        },
-        {
-          "name": "artifacts/visibility-validation-20260910.md",
-          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/841c18c47bd80d12c6b8e02df0595c31f9f2f526a38425e68e9720e4eec3072e.bin",
-          "bytes": 634,
-          "sha256": "841c18c47bd80d12c6b8e02df0595c31f9f2f526a38425e68e9720e4eec3072e",
-          "reading": {
-            "url": "public-files/codex-4d581ad1e98ee8f22621fa93/b21343aedd7d2f387e6e98621c73b6033fc65ac6ea997f32ff83004ba10f1c60.bin",
-            "bytes": 2699,
-            "sha256": "b21343aedd7d2f387e6e98621c73b6033fc65ac6ea997f32ff83004ba10f1c60"
-          }
-        }
-      ],
-      "omitted_files": [],
-      "search_index": [
-        {
-          "file": "artifacts/historical-ai-reports-inventory.json",
-          "text": "[ { \"source\": \"/mnt/e/PG/keys/AI周报-2026-08-27.html\", \"manifest\": \"/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/1-AI周报-2026-08-27.report.json\", \"report_date\": \"2026-08-27\", \"window_start\": \"2026-08-21\", \"items\": 9, \"sources\": 16, \"sha256\": \"3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9\", \"month\": \"ai-daily-2026-08\" }, { \"source\": \"/mnt/e/PG/keys/GitHub社区周报-2026-08-27.html\", \"manifest\": \"/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/2-GitHub社区周报-2026-08-27.report.json\", \"report_date\": \"2026-08-27\", \"window_start\": \"2026-08-21\", \"items\": 8, \"sources\": 12, \"sha256\": \"fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a\", \"month\": \"ai-daily-2026-08\" }, { \"source\": \"/mnt/c/Users/DTICPW/Desktop/codex/daily/ai-weekly-2026-08-31.html\", \"manifest\": \"/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/3-ai-weekly-2026-08-31.report.json\", \"report_date\": \"2026-08-31\", \"window_start\": \"2026-08-25\", \"items\": 8, \"sources\": 18, \"sha256\": \"707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e\", \"month\": \"ai-daily-2026-08\" }, { \"source\": \"/mnt/c/Users/DTICPW/Desktop/codex/daily/ai-daily-2026-09-04.html\", \"manifest\": \"/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/4-ai-daily-2026-09-04.report.json\", \"report_date\": \"2026-09-04\", \"window_start\": \"2026-09-03\", \"items\": 6, \"sources\": 13, \"sha256\": \"7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2\", \"month\": \"ai-daily-2026-09\" } ]"
-        },
-        {
-          "file": "artifacts/image-generation-research.html",
-          "text": "生图技巧调研 · 从角色母版到网页素材 跳到报告正文 imGen 工作流 提示词 抠图对照 来源 打印 RESEARCH NOTES / 2026.09.10 → 09.11 从角色母版， 到真正可用的素材。 生图技巧与工具调研。先固定身份，再逐项编辑；把角色、背景和网页文字分层，最后在真实页面上验收。 资料调研已交付修订版 昨天做到哪一步了？ 搜索记录覆盖 6 个来源。 原稿通过结构检查，未获完整语义验收。 修订版改正角色“双角”、配色及接口能力边界。 第三方工具的真实出图对比尚未进行。 资料核对：09-10；HTML 整理与本地案例补充：09-11。本页没有把历史检索写成今天重新联网验证。 01 / 方法 最值得采用的，是一套编辑顺序。 固定角色身份比不断添加形容词更有用。参考图能提供约束，但并不保证每次生成完全一致；以下流程仍需人工检查。 01 保留同一母版 每张衍生图重新附上母版，明确哪些特征不可改变，避免用连续变体逐代传递误差。 02 把修改范围说清 写明主体、用途、构图、风格、保持项和修改项。一次只改一个方面，方便判断效果。 03 先构图，后精修 先探索姿势和留白，确定方向后再提高质量、修手部与纹理。质量参数按实际接口支持选择。 04 到页面上验收 深浅底检查透明边缘，手机上检查裁切和文字；角色不能遮挡按钮，重要文字交给 HTML。 本项目角色锚点： 深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本；无角、无尾。页面色值：深紫 #292332、暖白 #f5f1eb、梅紫 #665173、浅金 #dfcba2。色值提示不构成像素级保证。 02 / 选择 按工作方式选择工具。 工具或通道 适合什么 本次证据边界 ChatGPT 图像编辑 少量素材、自然语言试姿势和表情；上传同一张参考图，说明改变与保留项。 昨天调研核对了文档；套餐、额度和工作区权限需要实际确认。 GPT Image API 保存参数、组织批量任务；单次生成/编辑用 Image API，需要对话上下文时考虑 Responses。 官方 API、内置 CLI 与第三方代理不能混同；模型名与透明参数以所选接口为准。 Adobe Firefly / Photoshop 需要图层、局部编辑和设计交付的工作流。 已有官方集成文档记录；本项目没有完成真实出图对比。 Clipdrop Remove Background 透明边缘不合格时的背景移除候选工具。 属于通用后处理，不是 OpenAI 集成；未实测其发丝效果优于本地处理。 已跑通的历史生成路径是 gpt-image-2 暖白底输出；不能由官方文档中的新型号推断本机代理已支持。下方来源保留昨天的核对记录，调用前仍应复核接口能力。 03 / 可直接使用 三套角色与网页素材提示词。 复制后上传参考图，并替换方括号变量。第二套允许同时描述表情和手臂动作；若出现身份漂移，拆成两轮修改。 模板 01 透明角色主素材 复制提示词 先上传母版；透明参数需当前接口实际支持，文字要求不能代替 Alpha。 展开完整提示词 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 模板 02 角色表情与动作变体 复制提示词 每张变体都回到同一母版，重复保持项，减少逐代漂移。 展开完整提示词 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 模板 03 图书馆首屏构图 复制提示词 人物放右侧，左侧留文字空间；标题与按钮由网页渲染。 展开完整提示词 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 04 / 本地实证 · 今日补充 透明背景，不能只看外轮廓。 这两张来自同一张馆员图。初次处理只去掉了与外缘相通的背景，头发围住的空隙仍然发白；修正版清除了 18 处封闭残留并补修细缝。这是本地后处理对照，不是第三方工具评测。 深紫 暖白 黑色 白色 修复前 · 封闭缝隙仍有底色 修复后 · 保留白衬衫与面部 PNG / WebP 文件并不必然透明，必须检查 Alpha。 把棋盘格画进图片，仍是一张不透明图片。 深底容易暴露白边；浅底容易暴露暗边。 先检查发丝、翼缘、手部与衣袖，再缩小到实际显示尺寸。 05 / 证据 来源记录与未完成项。 以下为昨天 sources.json 的核对记录，保留日期和原文摘要。社区模板是单帖经验，不能当作“角色锁定”的证明；第三方效果、账号权限与成本对比尚未实测。 Image generation | OpenAI API OpenAI 官方页面已实际获取。页面说明 Image API 提供 generations/edits，Responses API 支持多轮编辑与图像上下文；当前新工作流列出 gpt-image-2.5-sunburst 与 gpt-image-2.5-flare，并提醒组织可能需要验证。页面的限制段明确说明跨多次生成的角色或品牌元素仍可能不一致。 原调研核对：2026-09-10T22:43:01+08:00 GPT Image Generation Models Prompting Guide — Prompting Fundamentals OpenAI 官方页面已实际获取。建议按场景→主体→细节→约束组织提示；编辑时明确 change only X 与 preserve 清单；透明背景需 background=transparent 且输出 PNG/WebP，JPEG 不支持；多图输入应按编号说明关系，并建议小步迭代。 原调研核对：2026-09-10T22:43:01+08:00 Image generation | ChatGPT Docs ChatGPT 官方文档已实际获取。支持在 ChatGPT 中上传参考图来生成或编辑；编辑应具体说明改变项和保持项，一次做小范围调整；ChatGPT Web 的图像可用性与限额取决于套餐和工作区。页面同时注明 Codex 内置生成使用 gpt-image-2，说明不同界面不能简单等同于 API 的最新模型。 原调研核对：2026-09-10T22:43:01+08:00 Use non-Adobe generative AI models in Adobe products Adobe 官方页面已直接获取并核对。页面列出 OpenAI 的 GPT image generation model、GPT Image 1.5、GPT Image 2、GPT Image 2.5 Flare 和 GPT Image 2.5 Sunburst；列明其在 Firefly 的 Text to image、Prompt to Edit Image、Boards、Graph 或 Style generator 等入口，并提示合作模型的国家/地区可用性可能不同。 原调研核对：2026-09-10T22:43:01+08:00 Remove Background | Clipdrop APIs Clipdrop/Jasper 官方 API 页面已直接获取。Remove Background 端点接收 PNG、JPG 或 WebP（页面列出 25MP、30MB 上限），成功响应可按 Accept 返回 PNG/WebP/JPEG，默认 PNG。页面不声称与 OpenAI 集成，因此报告仅把它归为通用后处理。 原调研核对：2026-09-10T22:43:01+08:00 Stable Single-Character Anime Prompt Template (Avoids Multi-Panel Issues) 已直接获取论坛 JSON。原帖创建于 2026-04-27，自述用于 ChatGPT Image 2.0 的单角色动漫模板，强调固定描述结构，以及 single character / no reference sheet / no multiple panels。页面当时显示 2 帖、0 回复、2 赞、876 浏览；属于社区单帖经验，不是 OpenAI 官方能力证明或量化测试。 原调研核对：2026-09-10T22:43:01+08:00 展开昨天完整修订报告（原文） # 当前 GPT/OpenAI 生图工具与角色提示词调研 核对日期：2026-09-10（UTC+8） 中控修订版：修正原报告把小恶魔写成长角角色的错误，匹配页面实际配色，并补充透明输入与代理能力边界。原始 MA3 产物未改动。小恶魔身份锚点：深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本，无角无尾。 实际执行边界：官方文档描述的透明 preview、新模型和参数，不代表本机随附 CLI 或第三方代理已支持；本次已实测成功的路径是 gpt-image-2 暖白背景输出。应先核对所选接口和 CLI 的当前能力，不能仅凭文档替换已验证流程。页面另用梅紫 #665173、浅金 #dfcba2。 ## 结论先行 对于已有“小恶魔馆员”立绘、目标是深紫与暖白个人图书馆网页素材的场景，最稳妥的路线不是重新“抽卡”，而是把现有立绘当作唯一的角色母版，持续做参考图编辑： 1. **少量手工素材：优先 ChatGPT 图像编辑。** 上传母版，用自然语言逐次只改一个变量；它最适合试造型、表情、姿势和构图。 2. **批量、透明背景或需要参数可复现：优先 GPT Image API。** 单次生成/编辑用 Image API；需要保留对话上下文、多轮迭代时用 Responses API。当前官方 Image API 指南列出的新工作流模型是 `gpt-image-2.5-sunburst`（偏编辑精度/高要求质量）和 `gpt-image-2.5-flare`（偏速度/日常生成）。必须以账号中实际可用模型为准，不从产品名推定权限。 3. **设计师式精修：Adobe Firefly/Photoshop 是已核实的第三方集成。** Adobe 官方页面明确列出 GPT Image 2、GPT Image 2.5 Flare 和 Sunburst；可在 Firefly 的 Text to image、Prompt to Edit Image、Boards 等流程中使用，区域可用性可能不同。 4. **透明抠图兜底：Clipdrop 只作后处理。** 它有独立的 Remove Background API，能接收 PNG/JPG/WebP 并返回 PNG/WebP/JPEG；这不是 OpenAI 集成。GPT Image 已能原生输出透明背景时，应先用原生透明，边缘不合格再后处理。 ## 能力与证据边界 | 类别 | 已核实能力 | 对本项目的意义 | 边界 | |---|---|---|---| | ChatGPT / Codex 图像生成 | 官方文档支持上传参考图生成或编辑；建议明确“改什么、什么保持不变”，一次做小范围修改 | 无需写代码，适合围绕现有馆员立绘迭代表情、姿势和构图 | ChatGPT Web 的可用性和额度取决于套餐与工作区；Codex 内置页面标明其内置图像生成使用 `gpt-image-2`，不可把 API 新模型名自动套到所有界面 | | GPT Image API | Image API 支持生成与编辑；Responses API 增加多轮编辑与上下文；可配置尺寸、质量、格式等 | 可批量生成表情包、空状态图、透明角色切图，并保存参数与提示词 | 组织可能需要验证；模型访问、延迟、成本须以账户和实测为准 | | 透明背景 | OpenAI 提示指南明确：`gpt-image-2` 的透明背景为 preview，需 `background=\"transparent\"` 且输出 PNG/WebP，JPEG 无 Alpha | 馆员立绘可直接叠在深紫网页背景上 | “生成一张棋盘格背景”不等于真的透明；交付前必须检查 Alpha 通道和浅色/深色底边缘 | | 角色一致性 | 官方建议明确不变量、用参考图、每轮重复 preserve 清单并小步迭代；API 指南也承认跨多次生成的角色/品牌元素仍可能漂移 | 应维护一个母版和固定角色描述，不要每次从纯文本重生 | 不存在官方保证的“角色锁定”；脸、翼、瞳色、服装纹样、比例仍需人工验收 | | Adobe Firefly | Adobe 官方列出 OpenAI GPT Image 合作模型及可用功能 | 适合生成后继续布局、局部编辑和设计交付 | 属第三方产品；模型、地区、积分和商用条款要按 Adobe 当前界面确认 | | Clipdrop | 官方 Remove Background API 可移除背景，默认可返回 PNG，并支持 WebP/JPEG Accept | 原生透明边缘失败时作为批量兜底 | 只是通用后处理，会误伤发丝、翼尖、半透明阴影；不增强角色一致性 | ## 推荐工作流 ### A. 先建立“角色母版包” - 保留现有原图不动，选一张正面或 3/4 视角、五官和服装清楚的图作为 `master`。 - 写一段不随场景变化的角色锚点：头侧小型蝙蝠翼与背部蝙蝠翼的形状与颜色、瞳色、发型、耳朵、服装剪影、书本/钥匙等标志物、身材比例、线条和上色风格。 - 颜色用语与色值并用，例如“深紫 `#292332`、暖白 `#f5f1eb`”；色值是目标提示，不是像素级保证。 - 每张衍生图都重新附上同一母版。不要把第 8 张衍生图继续当第 9 张的唯一参考，以减少逐代误差；这是基于编辑漂移限制给出的工程建议，并非官方保证。 ### B. 先低成本探索，再高质量定稿 - 用较低质量或 ChatGPT 中的小步修改探索姿势和留白。 - 确认构图后再用 medium/high 做身份敏感的角色图和细小纹理；OpenAI 官方提示指南也建议对身份敏感编辑、小字和高分辨率输出比较 medium/high。 - 一轮只修改一项，例如先改姿势，再改表情，最后处理灯光；每轮重复“保持”清单。 ### C. 网页交付前验收 - 在深紫、暖白、黑、白四种底色上检查 Alpha 边缘，尤其是翼尖、头发、衣袖、书页和投影。 - 检查同一角色的：头侧翼与背翼数量/朝向、眼睛颜色、发型分缝、衣领、配饰、手指、身高比例。 - 图片内不要生成重要正文。若必须有字，提示词中精确引用短文本，最后仍逐字校对；生产级排版应回到 HTML/CSS 或设计工具。 - 导出语义明确的文件名，并保留母版、提示词、模型、质量、尺寸和生成日期，方便回归。 ## 三套可复用提示词 下面的方括号是待替换变量。ChatGPT 中直接上传参考图；API 中把它作为输入图像。若使用支持透明参数的 API，除提示词外还要真正设置 `background=\"transparent\"` 与 `output_format=\"png\"` 或 `\"webp\"`。 ### 1. 透明角色主素材：从现有立绘提取网页可用全身角色 适用：侧边悬浮馆员、首页迎宾角色、空状态插画。 ```text 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 ``` ### 2. 一致性表情/动作变体：只改一个变量 适用：加载、无结果、欢迎、错误、解锁等状态。每次只替换 `[目标状态]` 与动作，不重写角色锚点。 ```text 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 ``` 推荐生成顺序：`中性母版 → 欢迎 → 思考 → 空结果 → 轻微警告`。每次都从中性母版编辑，而不是从上一张变体继续编辑。 ### 3. 深紫暖白图书馆 Hero：角色与网页留白协同 适用：首页宽屏 Hero 背景。建议把角色与背景分层生成；若直接合成，则把文字留白写清楚，真正标题仍由 HTML/CSS 渲染。 ```text 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 ``` 若首轮背景很好但角色漂移，下一轮不要整张重画；改为分别生成“透明角色层”和“无人物背景层”，在网页中用 CSS 定位叠放。这比反复要求模型同时修角色和复杂场景更容易验收。 ## 第三方与社区技巧：如何采用 ### 已核实第三方工具 - **Adobe Firefly/Photoshop：推荐给需要图层、局部精修和设计交付的人。** 官方集成证据充分；但需在实际 Adobe 账户中确认区域和功能入口。 - **Clipdrop Remove Background：仅作为抠图兜底。** 官方文档只证明背景移除端点与格式，不证明它对“小恶魔翼尖/发丝”一定优于 GPT 原生透明；应拿 5–10 张本项目图片做盲测再决定是否批量用。 ### 社区技巧（可试，但不是官方保证） OpenAI Community 有一篇 2026-04-27 的单角色动漫模板帖，核心做法是固定“头发 → 眼睛 → 性格/表情 → 体型 → 服装 → 姿势 → 构图”的描述顺序，并显式写 `single character, no reference sheet, no multiple panels`。该帖只有 2 个帖子、2 个赞，属于单个用户的小样本经验。它与 OpenAI 官方“结构固定、约束明确”的建议方向一致，因此可作为提示词组织法测试，但不能据此声称角色一致性已被解决。 ### 未验证项 - 搜索中出现的“完美角色锁定”“所有帧完全一致”“透明边缘百分百干净”等说法，没有官方保证或量化基准，不采纳。 - 未对第三方工具做真实图片生成/抠图测试；本报告验证的是文档与公开页面，而不是本项目图片上的效果。 - 未验证用户账户是否已获得某个模型、Adobe 区域功能或对应额度；使用前以实际产品界面/API model list 为准。 ## 来源 1. OpenAI Docs — Image generation API guide：<https://developers.openai.com/api/docs/guides/image-generation> 2. OpenAI Docs — GPT Image Generation Models Prompting Guide：<https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide> 3. ChatGPT Docs — Image generation：<https://learn.chatgpt.com/docs/image-generation> 4. Adobe Help — Use non-Adobe generative AI models in Adobe products：<https://helpx.adobe.com/creative-cloud/apps/generative-ai/non-adobe-models-in-adobe-products.html> 5. Clipdrop APIs — Remove Background：<https://clipdrop.co/apis/docs/remove-background> 6. OpenAI Community — Stable Single-Character Anime Prompt Template：<https://community.openai.com/t/stable-single-character-anime-prompt-template-avoids-multi-panel-issues/1379868> 完整核对证据见 `sources.json`。 imGen · 单文件 HTML，图片内嵌，无外部字体或脚本依赖。来源：research-reviewed.md、sources.json、review.json；本页未产生新的生图调用。"
-        },
-        {
-          "file": "artifacts/review.txt",
-          "text": "独立审查员：/root/review_daily_reminder 写前结论：通过。四份仅新增同一条工作时提醒入口，LF、原文哈希及候选哈希核对通过。未同意不派工或搜索。 落盘：四份原文写前哈希未变；落盘后等于获批候选。 落盘复核结论：通过。审查员逐份确认 live 等于获批候选，状态未虚构 last_requested_at。延期字段仅限制提醒。Windows 实机与真实日报端到端尚未验证。"
-        },
-        {
-          "file": "artifacts/validation.txt",
-          "text": "13 项 unittest 通过：月刊追加/幂等/跨月/附件摘要校验、增量窗口/覆盖优先级、日期标题去重、七天提醒/冷却/延期、dry-run 无写入、搜索失败请求记录、成功生成入库、构建失败可恢复、临时私有构建。 两个 Skill 通过 quick_validate；使用 py310 加载系统已有 PyYAML，无安装或升级依赖。 git diff --check 通过。未提交或推送共享 Skill 仓库。 persona-sync status 21/21 一致；facts 唯一 WARN 为已有历史 Skill 数量记录与当前探针比较，未扩大改动。"
-        },
-        {
-          "file": "artifacts/visibility-final-validation.md",
-          "text": "# 馆藏可见范围验收 25 项 muQ 测试、14 项 ai-daily 测试通过。覆盖公开正文与附件、原始提示词与本机路径索引隔离、改私有移除公开文件、上传排除项、管理身份/来源验证、旧版本拒绝、月刊显式私有优先。 浏览器使用临时馆藏，验证匿名正文/HTML附件、馆主通过键盘公开再改私有、退出后只显示公开条目。1280×900与390×844无横向溢出，截图为临时示例。 全局规则独立审查 /root/review_daily_reminder 写前与落盘均通过，persona-sync 21/21。生产本机服务已重载。线上发布单独验收。 生产本机未解锁访问9月月刊：正文显示，附件入口可见，无解锁提示；管理API匿名返回401。已公开两月刊、4份HTML；公开目录无prompt_records/prompts/session，四个公开附件SHA256与原件一致。 线上验收：koa-ol.com 两个月刊public_content=true，4份HTML无需cookie或Authorization即可下载，SHA256匹配。线上馆主管理链接指向127.0.0.1:6767相同条目；未对其他私有条目更改可见性。"
-        },
-        {
-          "file": "artifacts/visibility-validation-20260910.md",
-          "text": "# 馆藏可见范围验收 25 项 muQ 测试、14 项 ai-daily 测试通过。覆盖公开正文与附件、原始提示词与本机路径索引隔离、改私有移除公开文件、上传排除项、管理身份/来源验证、旧版本拒绝、月刊显式私有优先。 浏览器使用临时馆藏，验证匿名正文/HTML附件、馆主通过键盘公开再改私有、退出后只显示公开条目。1280×900与390×844无横向溢出，截图为临时示例。 全局规则独立审查 /root/review_daily_reminder 写前与落盘均通过，persona-sync 21/21。生产本机服务已重载。线上发布单独验收。"
-        }
-      ]
-    },
-    {
-      "id": "codex-714f66826a43b6acd589dcb5",
-      "kind": "journal",
-      "collection": "",
-      "title": "imGen 生图工作室与 muQ 小恶魔馆员",
-      "summary": "建立个人生图 Skill，研究 muQ 配色和小恶魔资料，按用户要求测试朋友脚本与密码本两条路径，成功生成馆员立绘。 已将馆员接入线上图书馆，并通过 MA3 的真实 tmux 执行器开展 GPT 生图工具与提示词调研。",
-      "date": "2026-09-10",
-      "updated": "2026-09-12T16:57:41.417752+00:00",
-      "status": "done",
-      "cover": "covers/codex-714f66826a43b6acd589dcb5-3bf41679dd1f.png",
-      "cover_kind": "screenshot",
-      "public": true,
-      "locked": false,
-      "catalogue_order": 7,
-      "tags": [],
-      "work": "创建共享 imgen-studio Skill、任务目录、提示词；生成 PNG 原图、WebP 网页版及头像裁切版。 页面采用馆员肖像与馆藏卡并排；1440/390/320px 浏览器检查通过，搜索、登录入口和 Escape 关闭正常。 MA3 已 claim、heartbeat、ack 两条消息并 submit；结构验收通过，原报告角色细节有误，未标 verified；中控在 imGen 交付修订版。",
-      "problems": "朋友脚本返回 HTTP 401 后停止。内置 CLI 先遇参数适用范围和 socks 代理初始化问题，修正调用后成功。图片为暖白背景，非透明。 MA3 模板遗留“不联网”提示与本次任务冲突，已记录补充授权；搜索首次缺少凭据路径，执行器自行按 Linux 前缀修正。",
-      "decisions": "两条路径实际使用同一第三方服务、不同凭据。成功路径使用随附 CLI 和 model-library 凭据，gpt-image-2、1024×1536、high。原图保留不覆盖；后续获用户授权，将网页素材接入 muQ/web 源文件并发布。",
-      "outputs": "/mnt/e/PG/imGen/2026-09-10-muq-koakuma；线上 https://koa-ol.com/library/；页面发布提交 af1cf56。",
-      "next": "馆员已上线；后续生图可参考修订报告中的三套提示词。MA3 原报告保留 submitted 状态及语义审阅备注。",
-      "current_state": "",
-      "sections": [],
-      "resources": [
-        {
-          "kind": "link",
-          "url": "https://koa-ol.com/library/",
-          "title": "小恶魔馆员已上线",
-          "description": "完整立绘与馆藏卡并排；线上图片校验与源素材一致。",
-          "featured": true
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/library-desktop.png",
-          "title": "桌面端页面验收截图",
-          "featured": true
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/library-mobile.png",
-          "title": "手机端页面验收截图"
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/research-reviewed.md",
-          "title": "GPT 生图工具与提示词（中控修订）",
-          "featured": true
-        }
-      ],
-      "public_content": true,
-      "files": [
-        {
-          "name": "artifacts/koakuma-vault-original.png",
-          "url": "public-files/codex-714f66826a43b6acd589dcb5/a78bb87fec94449b1d4e97fdc85eb1b427208b1f6dcebe8504010716af16c025.bin",
-          "bytes": 1430987,
-          "sha256": "a78bb87fec94449b1d4e97fdc85eb1b427208b1f6dcebe8504010716af16c025",
-          "thumbnail": {
-            "url": "public-files/codex-714f66826a43b6acd589dcb5/a78fc0fe320235b8290b12b200ddfee3cc57e658ad28e527b765e53b3afbdd34.bin",
-            "bytes": 7763,
-            "sha256": "a78fc0fe320235b8290b12b200ddfee3cc57e658ad28e527b765e53b3afbdd34"
-          }
-        },
-        {
-          "name": "artifacts/library-desktop.png",
-          "url": "public-files/codex-714f66826a43b6acd589dcb5/a715538aad59625d4a2f2c775d8d27b6161cec61e8a737c8936d7d9a20a2061a.bin",
-          "bytes": 317454,
-          "sha256": "a715538aad59625d4a2f2c775d8d27b6161cec61e8a737c8936d7d9a20a2061a",
-          "thumbnail": {
-            "url": "public-files/codex-714f66826a43b6acd589dcb5/a2d0a68588165b4b1b05c9f06eb7df93654db1f34f09e2218c5cdf56660b37ba.bin",
-            "bytes": 5270,
-            "sha256": "a2d0a68588165b4b1b05c9f06eb7df93654db1f34f09e2218c5cdf56660b37ba"
-          }
-        },
-        {
-          "name": "artifacts/library-mobile.png",
-          "url": "public-files/codex-714f66826a43b6acd589dcb5/b59989c24d158190d3eae182bae595ec8de78c1dd633a5c78566ceb26b7ad871.bin",
-          "bytes": 211270,
-          "sha256": "b59989c24d158190d3eae182bae595ec8de78c1dd633a5c78566ceb26b7ad871",
-          "thumbnail": {
-            "url": "public-files/codex-714f66826a43b6acd589dcb5/6f887fcc596b650a319bc07ada4a670ce1fb9549d05ef35e4a4dc8c42f530bb0.bin",
-            "bytes": 2789,
-            "sha256": "6f887fcc596b650a319bc07ada4a670ce1fb9549d05ef35e4a4dc8c42f530bb0"
-          }
-        },
-        {
-          "name": "artifacts/prompt.txt",
-          "url": "public-files/codex-714f66826a43b6acd589dcb5/3a043ad0cf2a061386bd66d2078563df025dfad82ae3bc3f2d16046bba885699.bin",
-          "bytes": 1742,
-          "sha256": "3a043ad0cf2a061386bd66d2078563df025dfad82ae3bc3f2d16046bba885699"
-        },
-        {
-          "name": "artifacts/research-reviewed.md",
-          "url": "public-files/codex-714f66826a43b6acd589dcb5/c476ad1af8d0ff7fd256be86db1983ca6e7e2f0d90da7845fbb175c791693589.bin",
-          "bytes": 12475,
-          "sha256": "c476ad1af8d0ff7fd256be86db1983ca6e7e2f0d90da7845fbb175c791693589",
-          "reading": {
-            "url": "public-files/codex-714f66826a43b6acd589dcb5/fd392b40db923af037f67f336b965f83b0c68869499cbc39a48c961d40b1443e.bin",
-            "bytes": 16057,
-            "sha256": "fd392b40db923af037f67f336b965f83b0c68869499cbc39a48c961d40b1443e"
-          }
-        }
-      ],
-      "omitted_files": [],
-      "search_index": [
-        {
-          "file": "artifacts/prompt.txt",
-          "text": "Use case: stylized-concept Asset type: standalone librarian character illustration for the muQ online library. Primary request: a tasteful Touhou Project Koakuma fan-art librarian, recognizable as Koakuma, with long deep auburn-red hair, red-brown eyes and small black bat wings at the sides of her head. A modest pair of black bat wings on her back, smaller than her body and fully within the frame. Young adult appearance, warm intelligent expression, gentle welcoming smile. White collared blouse, dark plum-black sleeveless long dress / waistcoat and skirt, restrained burgundy necktie. Modest, fully clothed. Pose: standing naturally in a gentle three-quarter view toward the viewer, holding one closed antique book securely against her torso with both hands. Clear, anatomically coherent hands. Entire figure visible, including hair, wings, skirt and shoes, with comfortable margins. Style: refined Japanese anime character illustration, delicate confident linework, softly painted cel shading, restrained detail that remains legible at small website sizes. Elegant and approachable, a quiet library assistant. Palette: auburn hair as the warm accent; dark plum #292332 and #665173, ivory #f5f1eb, muted gold #dfcba2 for subtle book ornament. Soft diffuse lighting with readable dark clothing contours. Composition: one character only, portrait canvas, centered silhouette. Plain uniform background for easy extraction; no room, no furniture, no floor shadow, no effects outside the silhouette. Text: none. Avoid: horns, pointed tail, angel wings, large fantasy weapons, maid headdress, purple hair, extra limbs or fingers, detached objects, sexualized costume, chibi proportions, typography, logos, watermark, border, character sheet."
-        },
-        {
-          "file": "artifacts/research-reviewed.md",
-          "text": "# 当前 GPT/OpenAI 生图工具与角色提示词调研 核对日期：2026-09-10（UTC+8） 中控修订版：修正原报告把小恶魔写成长角角色的错误，匹配页面实际配色，并补充透明输入与代理能力边界。原始 MA3 产物未改动。小恶魔身份锚点：深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本，无角无尾。 实际执行边界：官方文档描述的透明 preview、新模型和参数，不代表本机随附 CLI 或第三方代理已支持；本次已实测成功的路径是 gpt-image-2 暖白背景输出。应先核对所选接口和 CLI 的当前能力，不能仅凭文档替换已验证流程。页面另用梅紫 #665173、浅金 #dfcba2。 ## 结论先行 对于已有“小恶魔馆员”立绘、目标是深紫与暖白个人图书馆网页素材的场景，最稳妥的路线不是重新“抽卡”，而是把现有立绘当作唯一的角色母版，持续做参考图编辑： 1. **少量手工素材：优先 ChatGPT 图像编辑。** 上传母版，用自然语言逐次只改一个变量；它最适合试造型、表情、姿势和构图。 2. **批量、透明背景或需要参数可复现：优先 GPT Image API。** 单次生成/编辑用 Image API；需要保留对话上下文、多轮迭代时用 Responses API。当前官方 Image API 指南列出的新工作流模型是 `gpt-image-2.5-sunburst`（偏编辑精度/高要求质量）和 `gpt-image-2.5-flare`（偏速度/日常生成）。必须以账号中实际可用模型为准，不从产品名推定权限。 3. **设计师式精修：Adobe Firefly/Photoshop 是已核实的第三方集成。** Adobe 官方页面明确列出 GPT Image 2、GPT Image 2.5 Flare 和 Sunburst；可在 Firefly 的 Text to image、Prompt to Edit Image、Boards 等流程中使用，区域可用性可能不同。 4. **透明抠图兜底：Clipdrop 只作后处理。** 它有独立的 Remove Background API，能接收 PNG/JPG/WebP 并返回 PNG/WebP/JPEG；这不是 OpenAI 集成。GPT Image 已能原生输出透明背景时，应先用原生透明，边缘不合格再后处理。 ## 能力与证据边界 | 类别 | 已核实能力 | 对本项目的意义 | 边界 | |---|---|---|---| | ChatGPT / Codex 图像生成 | 官方文档支持上传参考图生成或编辑；建议明确“改什么、什么保持不变”，一次做小范围修改 | 无需写代码，适合围绕现有馆员立绘迭代表情、姿势和构图 | ChatGPT Web 的可用性和额度取决于套餐与工作区；Codex 内置页面标明其内置图像生成使用 `gpt-image-2`，不可把 API 新模型名自动套到所有界面 | | GPT Image API | Image API 支持生成与编辑；Responses API 增加多轮编辑与上下文；可配置尺寸、质量、格式等 | 可批量生成表情包、空状态图、透明角色切图，并保存参数与提示词 | 组织可能需要验证；模型访问、延迟、成本须以账户和实测为准 | | 透明背景 | OpenAI 提示指南明确：`gpt-image-2` 的透明背景为 preview，需 `background=\"transparent\"` 且输出 PNG/WebP，JPEG 无 Alpha | 馆员立绘可直接叠在深紫网页背景上 | “生成一张棋盘格背景”不等于真的透明；交付前必须检查 Alpha 通道和浅色/深色底边缘 | | 角色一致性 | 官方建议明确不变量、用参考图、每轮重复 preserve 清单并小步迭代；API 指南也承认跨多次生成的角色/品牌元素仍可能漂移 | 应维护一个母版和固定角色描述，不要每次从纯文本重生 | 不存在官方保证的“角色锁定”；脸、翼、瞳色、服装纹样、比例仍需人工验收 | | Adobe Firefly | Adobe 官方列出 OpenAI GPT Image 合作模型及可用功能 | 适合生成后继续布局、局部编辑和设计交付 | 属第三方产品；模型、地区、积分和商用条款要按 Adobe 当前界面确认 | | Clipdrop | 官方 Remove Background API 可移除背景，默认可返回 PNG，并支持 WebP/JPEG Accept | 原生透明边缘失败时作为批量兜底 | 只是通用后处理，会误伤发丝、翼尖、半透明阴影；不增强角色一致性 | ## 推荐工作流 ### A. 先建立“角色母版包” - 保留现有原图不动，选一张正面或 3/4 视角、五官和服装清楚的图作为 `master`。 - 写一段不随场景变化的角色锚点：头侧小型蝙蝠翼与背部蝙蝠翼的形状与颜色、瞳色、发型、耳朵、服装剪影、书本/钥匙等标志物、身材比例、线条和上色风格。 - 颜色用语与色值并用，例如“深紫 `#292332`、暖白 `#f5f1eb`”；色值是目标提示，不是像素级保证。 - 每张衍生图都重新附上同一母版。不要把第 8 张衍生图继续当第 9 张的唯一参考，以减少逐代误差；这是基于编辑漂移限制给出的工程建议，并非官方保证。 ### B. 先低成本探索，再高质量定稿 - 用较低质量或 ChatGPT 中的小步修改探索姿势和留白。 - 确认构图后再用 medium/high 做身份敏感的角色图和细小纹理；OpenAI 官方提示指南也建议对身份敏感编辑、小字和高分辨率输出比较 medium/high。 - 一轮只修改一项，例如先改姿势，再改表情，最后处理灯光；每轮重复“保持”清单。 ### C. 网页交付前验收 - 在深紫、暖白、黑、白四种底色上检查 Alpha 边缘，尤其是翼尖、头发、衣袖、书页和投影。 - 检查同一角色的：头侧翼与背翼数量/朝向、眼睛颜色、发型分缝、衣领、配饰、手指、身高比例。 - 图片内不要生成重要正文。若必须有字，提示词中精确引用短文本，最后仍逐字校对；生产级排版应回到 HTML/CSS 或设计工具。 - 导出语义明确的文件名，并保留母版、提示词、模型、质量、尺寸和生成日期，方便回归。 ## 三套可复用提示词 下面的方括号是待替换变量。ChatGPT 中直接上传参考图；API 中把它作为输入图像。若使用支持透明参数的 API，除提示词外还要真正设置 `background=\"transparent\"` 与 `output_format=\"png\"` 或 `\"webp\"`。 ### 1. 透明角色主素材：从现有立绘提取网页可用全身角色 适用：侧边悬浮馆员、首页迎宾角色、空状态插画。 ```text 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 ``` ### 2. 一致性表情/动作变体：只改一个变量 适用：加载、无结果、欢迎、错误、解锁等状态。每次只替换 `[目标状态]` 与动作，不重写角色锚点。 ```text 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 ``` 推荐生成顺序：`中性母版 → 欢迎 → 思考 → 空结果 → 轻微警告`。每次都从中性母版编辑，而不是从上一张变体继续编辑。 ### 3. 深紫暖白图书馆 Hero：角色与网页留白协同 适用：首页宽屏 Hero 背景。建议把角色与背景分层生成；若直接合成，则把文字留白写清楚，真正标题仍由 HTML/CSS 渲染。 ```text 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 ``` 若首轮背景很好但角色漂移，下一轮不要整张重画；改为分别生成“透明角色层”和“无人物背景层”，在网页中用 CSS 定位叠放。这比反复要求模型同时修角色和复杂场景更容易验收。 ## 第三方与社区技巧：如何采用 ### 已核实第三方工具 - **Adobe Firefly/Photoshop：推荐给需要图层、局部精修和设计交付的人。** 官方集成证据充分；但需在实际 Adobe 账户中确认区域和功能入口。 - **Clipdrop Remove Background：仅作为抠图兜底。** 官方文档只证明背景移除端点与格式，不证明它对“小恶魔翼尖/发丝”一定优于 GPT 原生透明；应拿 5–10 张本项目图片做盲测再决定是否批量用。 ### 社区技巧（可试，但不是官方保证） OpenAI Community 有一篇 2026-04-27 的单角色动漫模板帖，核心做法是固定“头发 → 眼睛 → 性格/表情 → 体型 → 服装 → 姿势 → 构图”的描述顺序，并显式写 `single character, no reference sheet, no multiple panels`。该帖只有 2 个帖子、2 个赞，属于单个用户的小样本经验。它与 OpenAI 官方“结构固定、约束明确”的建议方向一致，因此可作为提示词组织法测试，但不能据此声称角色一致性已被解决。 ### 未验证项 - 搜索中出现的“完美角色锁定”“所有帧完全一致”“透明边缘百分百干净”等说法，没有官方保证或量化基准，不采纳。 - 未对第三方工具做真实图片生成/抠图测试；本报告验证的是文档与公开页面，而不是本项目图片上的效果。 - 未验证用户账户是否已获得某个模型、Adobe 区域功能或对应额度；使用前以实际产品界面/API model list 为准。 ## 来源 1. OpenAI Docs — Image generation API guide：<https://developers.openai.com/api/docs/guides/image-generation> 2. OpenAI Docs — GPT Image Generation Models Prompting Guide：<https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide> 3. ChatGPT Docs — Image generation：<https://learn.chatgpt.com/docs/image-generation> 4. Adobe Help — Use non-Adobe generative AI models in Adobe products：<https://helpx.adobe.com/creative-cloud/apps/generative-ai/non-adobe-models-in-adobe-products.html> 5. Clipdrop APIs — Remove Background：<https://clipdrop.co/apis/docs/remove-background> 6. OpenAI Community — Stable Single-Character Anime Prompt Template：<https://community.openai.com/t/stable-single-character-anime-prompt-template-avoids-multi-panel-issues/1379868> 完整核对证据见 `sources.json`。"
-        }
-      ]
-    },
-    {
-      "id": "codex-7bdfb3a609cc16f657b9c69a",
-      "kind": "journal",
-      "collection": "",
-      "title": "从日记本到 muQ：让每场会话进入大图书馆",
-      "summary": "一场会话对应一篇持续更新的日记。原始提示词、项目问题与过程产物，从本机走进自己的大图书馆。",
-      "date": "2026-09-10",
-      "updated": "2026-09-12T16:57:41.405484+00:00",
-      "status": "active",
-      "cover": "covers/codex-7bdfb3a609cc16f657b9c69a-c299ded828f5.png",
-      "cover_kind": "screenshot",
-      "public": true,
-      "locked": false,
-      "catalogue_order": 8,
-      "tags": [
-        "muQ",
-        "日记系统",
-        "Skill",
-        "前端"
-      ],
-      "work": "第一阶段实现本地日记、项目档案、版本历史、全文搜索和 bundle 导出。第二阶段按用户补充要求迁到 muQ，新增 Codex / Claude 日志解析、稳定会话 ID、逐条提示词保存、封面目录和加密网页档案。\n已完成 13 项回归测试、Skill 校验与真实调用、主页两处入口、封面纵览、线上桌面/移动端与口令拒绝测试。线上密文与本地产物 SHA256 相同，本机可解密得到完整 3 条提示词。\n第三阶段加入带数量的标签筛选，默认会话日记、项目分栏，独立详情页与附件页，图片/Markdown/JSON/静态 HTML 预览。附件改为二进制分块加密、按需加载、内容去重与未变密文复用，ZIP 在浏览器生成。\n第四阶段评阅朋友 jarvis-voice 的档案与门面：成果入口、状态断点、演示真实性说明及时间线值得借鉴；指出双层重复、端到端验收状态与首包指标易被误读的问题。实现默认此浏览器记住 30 天：IndexedDB 保存不可导出密钥，刷新后读取最新密文；保留临时模式与退出忘记设备。\n第五阶段增加当前状态与成果卡片、图片小预览、可选主题章节、来源链接和文字结论，隐藏空白章节。新增 --reference-file，超阈值输入自动只登记；发布时省略过大或明确不上传的本地附件。网页 ZIP 含资源范围清单。\n2026-09-11 阅读朋友 hth-kb 项目总览、复刻套件、重建复盘、SPEC/PUBLISH/THEME-CONTRACT 相关章节和 09-10 前端策划，生成 8 项借鉴建议的 HTML 报告。对照当前 muQ 的公开正文、馆主管理、搜索与隔离实现，区分已实现、计划与文档冲突。浏览器已打开报告，桌面/手机、筛选和目录检查通过。本轮未修改 muQ 功能，未发布网站。\n本次完成 HTML 阅读版、共享主题、条目首屏阅读入口、纵向资源行、附件全文索引、紧凑 CLI、恢复与单条分享服务端。月刊不再把内部规则当决策。\n完成 personal-homepage 主题试点：按三个原始会话整理整站状态，建立共享单列门面、真实等比截图、锚点目录、简洁网页文件历史及默认展开的来源原话。\n\n2026-09-11：制作个人主页主题 Open Design 本地阅读对照稿，增强章节分隔，将目录与资源入口模式写入 muq-journal。创建 GitHub 私有源码仓库 dticpw/muQ，将共享目录中的 61 个源码和维护文件推送 main。\n\n已将 worklog-library 升级为 muQ 长期主题，本地入库并构建。关联六条来源，提供12个文件入口，新增使用、维护、设计证据指南，原有来源及历史附件保留。混合会话采用 primary=false 保留纵览入口。\n\n2026-09-11：核对线上个人主页已有早期主题版，但Open Design对照版未发布，muQ长期主题亦未上线。用户要求一起推送；补拍个人主页首屏、Chat/Stats、muQ模型、Games四张截图，入库并在正文等比展示，个人主页启用reading-v2。\n\n网站提交8c7e6b9已部署，线上两个主题、4张主页截图及muQ使用指南验证成功。按用户要求编写HANDOFF-20260911.md，写明归档规范、目录职责、源码与运行目录两处差异、版本、验证边界和待办。",
-      "problems": "原初版按任务建日记，无法保证一个会话仅有一篇；原话依赖手工填写，会遗漏中途补充。现在改为从当前会话真实日志采集并去重更新。网站仓库为公开仓库，完整原文不能直接混入公开目录。\n线上首次部署曾命中旧 HTML 回退缓存，导致样式/脚本 MIME 错误；通过内容版本化的资源 URL 修复。锁定后隐藏弹窗残留私密正文的问题已修复并验证节点清空。",
-      "decisions": "固定日记身份取 provider + conversational thread ID，续聊更新原条目并保留版本；重复文字按不同消息 ID 保留，自动注入的环境说明另存上下文。主页以 /library/ 作为入口。目录封面与概述公开，全文与附件以 AES-GCM 加密保存，馆主在浏览器解锁。\n详情页使用共享 entry.html 与稳定 id URL；解锁在同源已打开的馆藏页间临时共享，锁定同步清除正文与 Blob。公开标签独立于私有标签。含馆主口令的提示词在本地单独加密，解锁网页仍恢复原话。\n设备记忆固定 30 天，不滑动续期；记住期间取消 30 分钟闲置退出。口令不明文保存；同浏览器使用者可读馆藏，公共设备取消勾选。\n读者优先 HTML，MD/JSON 为维护来源；隔离 HTML 禁止读取馆主页面并限制外部资源与 fetch 请求；独立分享只复制明确选定的内容。主题组件集中管理，历史附件不强改样式。\n项目主题与来源日记分开维护；试点使用结构化 topic schema 和共享 HTML 模板。当前仅维护 personal-homepage，不自动迁移全库。\n\n源码仓库不收录 data、备份、导出网页、会话总结与临时截图；共享目录与 Linux 检出需审阅后同步。此次没有更新线上图书馆，阅读对照稿未替换线上主题。",
-      "outputs": "主项目：/mnt/e/PG/muQ。\n会话导入：app/sessions.py、app/muq.py。\n网页：web/。\nSkill 源码位于共享 agent-workflows/skills/muq-journal。\n部署目标：https://koa-ol.com/library/。\n网站已通过 GitHub/Cloudflare 部署并在 Chrome 验收。初始接入提交 4a456f5，资源版本修复 f0905a2。Skill 本地提交 4041c00；保留共享仓库此前未推送提交，不连带推送。源码 ZIP、验证报告、部署结果和桌面/手机截图已入库。\n新增阅读改造实施报告、DESIGN.md、RECOVERY.md、私人恢复包。\n主题入口：/library/entry.html?id=personal-homepage。维护说明 docs/topic-pilot.md；试点脚本 scripts/homepage_pilot.py；截图与候选位于 agent-artifacts/muq-homepage-pilot。\n\n源码仓库 https://github.com/dticpw/muQ；提交 c574fdc7ed3796fe361d2b6704bdad3a3b948a18。Linux 检出 /home/dticpw/PG_linux/muQ；共享运行目录仍为 /mnt/e/PG/muQ。33 项 Python 测试及 Node 分享测试通过，远端提交匹配。\n\n主题版本 2bb99804d9094a558d766ba6bf25479f；35项 Python测试、Node分享测试通过。桌面1440、平板820、手机390无横向溢出；目录高亮、真实指南打开、原图比例、原话默认展开及退出清除通过。源码提交6ec926b；本轮不发布个人网站。\n\n个人主页主题版本ba06e662156a4dd49a4b3d6742f52668，muQ主题版本83863e037177465ab7686af364adc5be；36项Python测试通过，桌面/手机图片加载、比例、目录与无溢出验证通过。准备按用户授权推送并验收网站。\n\n交接文档：/mnt/e/PG/muQ/docs/HANDOFF-20260911.md；最终线上验收：/mnt/e/PG/agent-artifacts/muq-homepage-publish/verification.json。",
-      "next": "新会话先阅读交接文档并核对实际状态，按用户要求继续；本次交接仅补本地日记，未再次部署网站。",
-      "current_state": "个人主页建造主题试点已本地完成。33项测试及1440/820/390浏览器检查通过；来源会话未改写，默认纵览优先主题，日记/搜索可访问来源。",
-      "sections": [
-        {
-          "title": "归档如何适应不同会话",
-          "body": "搜索会话以结论与来源为成果，不要求生成文件；混合任务在同一会话日记内按主题分段。文件、链接、文字结论及本地原件索引都可进入成果区。单附件默认超过 20 MiB 自动只登记，发布已有本地大附件时也会省略原件并保留清单。"
-        }
-      ],
-      "resources": [
-        {
-          "kind": "file",
-          "file": "artifacts/curation-validation.md",
-          "title": "灵活归档与成果展示验收",
-          "description": "本轮实现、归档边界及大文件处理的验证记录。",
-          "featured": true
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/library-v2-validation.md",
-          "title": "标签与独立阅读验收报告",
-          "description": "记录标签、独立页、附件预览与容量限制的实测依据。",
-          "featured": true
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/muq-entry-v2-mobile.png",
-          "title": "手机端独立阅读页",
-          "description": "上一轮独立详情页的真实手机截图。",
-          "featured": true
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/jarvis-voice-review.md",
-          "title": "朋友条目评阅与设备记忆说明",
-          "description": "值得借鉴的内容结构、展示问题，以及 30 天设备记忆的实现边界。",
-          "featured": true
-        },
-        {
-          "kind": "link",
-          "url": "https://kb.hth-ai.com/e/jarvis-voice/",
-          "title": "jarvis-voice 参考条目",
-          "description": "朋友的档案页；此前已阅读档案与门面页，作为内容组织参考。",
-          "featured": true
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/reading-v2-results.html",
-          "title": "HTML 阅读改造 · 实施与验证",
-          "description": "八项建议的实现、验证证据与使用边界。",
-          "featured": true
-        },
-        {
-          "kind": "link",
-          "url": "https://koa-ol.com/library/entry.html?id=codex-7868c500a1d7ef0ddd541fa5",
-          "title": "个人主页建造 · 主题试点",
-          "description": "私人主题入口，含三个来源会话、项目现状与接手说明。"
-        },
-        {
-          "kind": "file",
-          "file": "artifacts/HANDOFF-20260911.md",
-          "title": "muQ · 新会话交接文档（2026-09-11）"
-        }
-      ],
-      "public_content": true,
-      "files": [
-        {
-          "name": "artifacts/HANDOFF-20260911.md",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/fc9f0d98d737ba0cd59a3e8bd757ff2578c4d9b529be5714b8d5e3686b96640b.bin",
-          "bytes": 14895,
-          "sha256": "fc9f0d98d737ba0cd59a3e8bd757ff2578c4d9b529be5714b8d5e3686b96640b",
-          "reading": {
-            "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/8a931152c2e7ecefd7ae8fd1e153a100674eced60506b46d55b1b01c8d51718d.bin",
-            "bytes": 19159,
-            "sha256": "8a931152c2e7ecefd7ae8fd1e153a100674eced60506b46d55b1b01c8d51718d"
-          }
-        },
-        {
-          "name": "artifacts/MUQ-RESULTS.md",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/bfef2252e68643d0d89e11eb368a0164f085c5f284400b11a3923dd2e64d9810.bin",
-          "bytes": 1545,
-          "sha256": "bfef2252e68643d0d89e11eb368a0164f085c5f284400b11a3923dd2e64d9810",
-          "reading": {
-            "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/fec7dd39537d6e09d40be480fdc184ced08543eed6967651707bb83eed901252.bin",
-            "bytes": 3665,
-            "sha256": "fec7dd39537d6e09d40be480fdc184ced08543eed6967651707bb83eed901252"
-          }
-        },
-        {
-          "name": "artifacts/curation-validation.md",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/b17af8866a490a1c11ea161d21502b0b5d87fb588b6820873d3fc4ec839d4d5c.bin",
-          "bytes": 2687,
-          "sha256": "b17af8866a490a1c11ea161d21502b0b5d87fb588b6820873d3fc4ec839d4d5c",
-          "reading": {
-            "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/d6e179ae4a8eb8ea6ca285b951cb5ea5993a9c2dd35fd25a24ac31cd91204b26.bin",
-            "bytes": 4821,
-            "sha256": "d6e179ae4a8eb8ea6ca285b951cb5ea5993a9c2dd35fd25a24ac31cd91204b26"
-          }
-        },
-        {
-          "name": "artifacts/deployment.json",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/4af6fcd11c52fba59fb486d6100fbab77ff112ebabe3f489a0a2d8ce02b28b66.bin",
-          "bytes": 591,
-          "sha256": "4af6fcd11c52fba59fb486d6100fbab77ff112ebabe3f489a0a2d8ce02b28b66"
-        },
-        {
-          "name": "artifacts/jarvis-voice-review.md",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/33e9610fd30d547ad966c1b25c507a7f8726f939296cb6a0ea131be256931256.bin",
-          "bytes": 3403,
-          "sha256": "33e9610fd30d547ad966c1b25c507a7f8726f939296cb6a0ea131be256931256",
-          "reading": {
-            "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/c8cdf0ecc728f3fa650930e7b5c721f198769cc995c5d258aac93bc2bb0a5c4c.bin",
-            "bytes": 5607,
-            "sha256": "c8cdf0ecc728f3fa650930e7b5c721f198769cc995c5d258aac93bc2bb0a5c4c"
-          }
-        },
-        {
-          "name": "artifacts/library-v2-validation.md",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/cbc395ba9ec2bf042ee0151adbcf286e4ae396312b0d52235ac803c46f36b480.bin",
-          "bytes": 4148,
-          "sha256": "cbc395ba9ec2bf042ee0151adbcf286e4ae396312b0d52235ac803c46f36b480",
-          "reading": {
-            "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/fb846bcb2ca614d8804347f41cb9bd1e7148ce903dd0ca4daa863cb95754e72e.bin",
-            "bytes": 6961,
-            "sha256": "fb846bcb2ca614d8804347f41cb9bd1e7148ce903dd0ca4daa863cb95754e72e"
-          }
-        },
-        {
-          "name": "artifacts/muq-desktop.png",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/baa5dd6057855255cea567730383c1de72f4270f4a566be104dac19268b2b1f3.bin",
-          "bytes": 154525,
-          "sha256": "baa5dd6057855255cea567730383c1de72f4270f4a566be104dac19268b2b1f3",
-          "thumbnail": {
-            "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/40304d6be17b5955616ec7ae899e2e94441dd590e30fb040b3b80dc0abc71498.bin",
-            "bytes": 5675,
-            "sha256": "40304d6be17b5955616ec7ae899e2e94441dd590e30fb040b3b80dc0abc71498"
-          }
-        },
-        {
-          "name": "artifacts/muq-entry-v2-mobile.png",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/41f0e48e8fdd7239043e2d619aa5ca9f945e13ac3ba65660fdb7408719c3fc82.bin",
-          "bytes": 64602,
-          "sha256": "41f0e48e8fdd7239043e2d619aa5ca9f945e13ac3ba65660fdb7408719c3fc82",
-          "thumbnail": {
-            "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/f5109d8a32b29cc7cf4c637c398b5c70022494bcb9965a7196e369b657170e00.bin",
-            "bytes": 6988,
-            "sha256": "f5109d8a32b29cc7cf4c637c398b5c70022494bcb9965a7196e369b657170e00"
-          }
-        },
-        {
-          "name": "artifacts/muq-mobile.png",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/67eccf0471971fb81276da46f67775d92ec72b54eb1fe4d4bf2b3dbbf36b64bb.bin",
-          "bytes": 123074,
-          "sha256": "67eccf0471971fb81276da46f67775d92ec72b54eb1fe4d4bf2b3dbbf36b64bb",
-          "thumbnail": {
-            "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/f384abc85b4d3aa9dbf341d89d1ff4ec314003a33529ed7a1dfb7b6d53bf1bca.bin",
-            "bytes": 3335,
-            "sha256": "f384abc85b4d3aa9dbf341d89d1ff4ec314003a33529ed7a1dfb7b6d53bf1bca"
-          }
-        },
-        {
-          "name": "artifacts/muq-source-20260910.zip",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/6184b75a5e5060f62fb9bbbc4c36d45817e96ef2ac6441660108689c2095271c.bin",
-          "bytes": 54280,
-          "sha256": "6184b75a5e5060f62fb9bbbc4c36d45817e96ef2ac6441660108689c2095271c"
-        },
-        {
-          "name": "artifacts/muq-source-v2.zip",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/81a777472d5e254809a52b5b4fb16b632a0ee641280fde6e1993a8632e356f2f.bin",
-          "bytes": 54575,
-          "sha256": "81a777472d5e254809a52b5b4fb16b632a0ee641280fde6e1993a8632e356f2f"
-        },
-        {
-          "name": "artifacts/muq-source-v3.zip",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/cc32bb84737bfbba9fdf5639cbcfc9786ed767fe569a5154b9e1210f98a89ae3.bin",
-          "bytes": 63330,
-          "sha256": "cc32bb84737bfbba9fdf5639cbcfc9786ed767fe569a5154b9e1210f98a89ae3"
-        },
-        {
-          "name": "artifacts/reading-v2-results.html",
-          "url": "public-files/codex-7bdfb3a609cc16f657b9c69a/09fa9f50108df4ba71c85a0f466dece50aef4a567776328db4ed8dd082729173.bin",
-          "bytes": 5638,
-          "sha256": "09fa9f50108df4ba71c85a0f466dece50aef4a567776328db4ed8dd082729173"
-        }
-      ],
-      "omitted_files": [],
-      "search_index": [
-        {
-          "file": "artifacts/HANDOFF-20260911.md",
-          "text": "# muQ 交接文档 · 2026-09-11 供新的 Codex / Claude 会话接手。本文是交接快照，继续操作前重新核对 Git、Store 当前版本和实际服务状态。日期按北京时间理解；元数据中的时间带 `Z` / `+00:00` 表示 UTC。 ## 先读这段 muQ 已从“一会话一日记”的图书馆，开始演进为“长期主题展示当前状态，真实会话保存来源与原话”。用户常在图书馆阅读和验收项目，门面质量直接影响协作效率。 **muQ 与“个人主页建造”的新版长期主题都已发布并在线验证，不再只是本地对照稿。** 网站提交 `8c7e6b999f3d7419ab676cb48d65af5cb1d2fc81`。个人主页正文现有 4 张真实界面截图，muQ 主题有 12 个文件入口。两个主题完整内容均需馆主解锁。 当前没有明确要求立刻继续某项开发；用户要求结束长会话并交接。下一会话先了解用户反馈和本次任务，再选取下文待办。不要自动执行全库迁移、公开资料或重跑旧的主题生成脚本。 ## 入口与目录职责 | 内容 | 入口 | 职责 | | --- | --- | --- | | 线上图书馆 | https://koa-ol.com/library/ | 日常访问 | | muQ 主题 | https://koa-ol.com/library/entry?id=worklog-library | 项目现状、指南、仓库与历史来源 | | 个人主页主题 | https://koa-ol.com/library/entry?id=personal-homepage | 整站介绍、4 张截图、关联主题 | | 共享运行目录 | `/mnt/e/PG/muQ` / Windows `E:/PG/muQ` | 程序、真实馆藏、现有启动器与 Skill 的目标 | | Linux Git 检出 | `/home/dticpw/PG_linux/muQ` | 私有仓库 https://github.com/dticpw/muQ 的提交副本 | | 网站仓库 | `/mnt/f/bak/git_koa-ol` / Windows `F:/bak/git_koa-ol` | https://github.com/dticpw/koa-ol ，Cloudflare Pages 发布来源 | | 本机服务 | http://127.0.0.1:6767/library/ | 馆主管理、预览与构建；是否运行须现场检查 | | Skill 源码 | `/mnt/c/Users/DTICPW/agent-workflows/skills/muq-journal` | 共享 agentflow 仓库内维护，不复制进 muQ 仓库 | **共享运行目录与 Linux Git 检出不会自动同步。** 当前仍以共享目录运行及编辑，检出用于审阅后提交。不要用 Git 检出覆盖共享目录，也不要使用带 `--delete` 的整目录同步。Git 检出不含 `data/`；从空检出启动服务看到空库不意味着原馆藏丢失。 源码仓库不收录：真实馆藏、密码本、恢复包、exports、会话总结、临时截图、旧源码 ZIP。`web/` 的页面图片是必要源码资源，已收录。源码仓库不能替代私人数据备份。 ## 实测版本与已知差异 交接前只读检查结果： - muQ 源码仓库 HEAD：`1e39283`，工作区干净；前一提交 `6ec926b` 为主题指南及 reading-v2 布局。均已推送。 - 站点仓库 HEAD：`8c7e6b9`，本轮已推送且部署生效。 - 站点仍有无关未跟踪文件：`design-experiments/`、`docs/games-project-handoff.md`、`games/3240bd2c-1ca2-4f93-bc7a-19b84552459d.png`、`games/e5ab6421-6b7c-4fd7-b3ee-729ecd34bc4a.png`。不要混提交或删除；下次仍须重新查状态。 - 共享运行目录与 muQ Git 检出的已跟踪文件有两处差异：`web/library.js`、`web/reader.js`。前者让非日记但有原话的条目也展示原话；后者补充沙箱门面的锚点消息与外层滚动处理。这些是共享目录已有的其他工作，未混入本会话的源码提交；站点发布使用共享目录，所以源码仓库不能直接视为当前全部站点实现的精确副本。下一会话先审阅并确认归属，再决定如何同步，不能回退共享版本。 | 主题 | 当前 revision | 状态 | | --- | --- | --- | | `worklog-library` | `83863e037177465ab7686af364adc5be` | active；保留原项目 ID 和历史 | | `personal-homepage` | `ba06e662156a4dd49a4b3d6742f52668` | active；新版阅读布局与截图已上线 | 线上已核对：`topic.js` 与本地 SHA256 一致，值为 `68340325d9f882534e9a4c9e3d71ca0920e3cfc32553cd6264475374996ed82c`。详细记录：`/mnt/e/PG/agent-artifacts/muq-homepage-publish/verification.json`。 ## 用户已确认的归档与阅读规范 1. 长期入口按项目／主题持续维护。会话日记仍一会话一个固定 ID，续聊补采真实日志；不同会话原话不拼成一篇日记。混合会话只提取与主题相关的结论，其他工作保留在来源中。 2. 门面顺序：**摘要 → 等比项目截图（如有）→ 当前状态与操作入口 → 目录与正文 → 网页、文件、历史来源**。用户通常先操作，但摘要要服务长久理解。 3. 门面必须是实际渲染、认真排版的 HTML，不能只有短概述和附件按钮。正文讲清楚优先，允许长页面，不为省版面缩小字或图片。 4. 不采用左小 Overview、右小截图的默认两列布局。图片原比例展示，避免拉伸和过度裁切；截图尽量无浏览器滚动条白边。截图不得伪造，动态模型应实际渲染后截图。 5. 长正文要有有效目录。已认可桌面随阅读定位的侧栏目录，手机目录移到正文前、默认展开。主章节要有明显视觉边界：独立编号、加粗标题、浅底色标题带和章间留白。 6. 网页只显示带链接的网页标题；网页、文件和历史来源使用简洁纵向长条入口。按有用顺序展示成果，现行使用指南优先，旧报告标明阶段。 7. 原话在馆主视角默认展开，仍可手动收起，权限不改变。新会话的原话归档必须从真实日志采集，不能从本文重建。 8. 长期项目关联仓库；源码和版本由仓库管理。文件区要盘点有效交付物，不能只沿用上一版稀疏清单。已有来源附件直接链接；大文件按索引策略，不强行上传。 9. 页面设计使用 `open-design-ui` 的阅读交付模式，数据、身份、权限及入库发布交给 `muq-journal`。配色、排版应可集中调整，不将每条档案写成不可维护的孤立样式。 详细复用规范：共享 Skill `references/reading-layout.md`。Skill 已记录 muQ 和个人主页两个固定主题的维护入口。`muq-maintainer` 管理员 Skill 尚未创建，不要声称已具备全库维护能力。 ## 两个主题目前收录什么 ### muQ · 大图书馆 五个内容章节：项目范围与能力、日常使用与验收、源码／馆藏／发布、成果与关联工作、后续维护。主图是图书馆真实首页。 文件区 12 个入口：当前主题 HTML 阅读副本、日常使用指南、维护交接指南、设计证据索引、仓库说明、备份恢复说明、5 份来源阶段报告，以及首页截图。阶段报告直接链接原附件；旧附件没有删除。 来源共 6 条： | 来源 ID | 用途 | primary | | --- | --- | --- | | `codex-7bdfb3a609cc16f657b9c69a` | 本会话，核心开发与归档演进 | true | | `day-2026-09-10-worklog` | 最初原型，保持 archived | true | | `codex-4d581ad1e98ee8f22621fa93` | daily 中的月刊、可见范围及馆员背景修整 | false | | `codex-714f66826a43b6acd589dcb5` | 小恶魔馆员生成与接入 | false | | `codex-8013b0f1f387225dbd548198` | 红魔馆藏书室模型 | false | | `codex-7868c500a1d7ef0ddd541fa5` | 个人主页与 Open Design 工作 | false | `primary=false` 使这一次主题关联不会隐藏混合会话的独立纵览入口。若另一个主题把同来源列为主来源，仍可能由那个主题承接；不要将其理解为全局强制显示。来源日记仍能从日记筛选、搜索、标签或历史入口找到。 ### 个人主页建造 早期主题版原已上线，后来的 Open Design 对照稿一度仅在本地。最后一轮已将其应用为 `reading-v2`，并在正文加入 4 张实拍：首屏神社 1440×1000；Chat／Stats、muQ模型、Games 各1440×750。新截图总计约725 KiB。主图紧接摘要，另外3张在“主页界面一览”中纵向展示，均有附件入口。 此主题仍有6个文件入口，包含旧首页截图作为保留成果；其跨来源的完整文件盘点还没有像 muQ 那样系统补齐。不能因为有4张截图就声称个人主页全部历史交付物已整理。 ## 架构与修改入口 - `app/kb.py`：Store、固定身份、CURRENT、不可变版本、revision 乐观锁。真实 `data/` 不能做测试夹具，不手改历史 JSON。 - `app/sessions.py`：真实会话日志定位与提示词采集；`app/protected_prompts.py`：含馆主口令的原话保护。 - `app/curation.py`：资源结构、附件阈值与本机索引；`app/publishing.py`：网站构建与加密导出。 - `app/topic_pages.py`：topic schema 校验、主题 HTML 派生。`reading_document` 使用共享样式，正文图片可通过 `section_images` 提供自包含数据；不复制来源原话。 - `web/topic.js` / `topic.css`：原生 DOM 主题门面、按主题启用 reading-v2、随读目录、章节图。`disposeTopicReading` 在切换／退出时清除监听与布局标记。 - `web/library.js`：馆藏筛选、解锁、主题路由；`web/reader.js`：附件隔离阅读；`web/theme.css`：主题 token。 - `scripts/publish.py`：构建并按授权推送站点。不是 muQ 源码仓库的 push 工具。 结构字段：`entry.topic` schema 1；`topic.layout='reading-v2'`；`topic.image` 是摘要后主图；`topic.sections[].images` 为章节图数组，最多20张／章，包含 file、width、height、alt、caption；`sources` 保存来源 ID、日期与参考 revision。`resources` 按顺序展示，`kind='link', group='files'` 把来源附件链接放进文件区。 **来源 revision 是整理时的依据快照；当前网页来源链接及原话读取当前来源条目，不是锁定该 revision 的历史浏览器。** 后续更新主题时重新读来源，不假设快照后来源不会变化。 `homepage_pilot.py` 仅支持最初 personal-homepage 试点，且会重设资源清单。任务目录里的 `curate.py`、`prepare.py` 也是一次性脚本，含当时版本和内容，不是通用管理器。不要直接重跑。需要修改时读当前 Store，准备最小字段更新和新附件，带当前 revision 调用 Store.put，保留既有资源与历史。 ## 权限、运行、归档与发布 普通新条目默认私人；AI月刊默认公开正文与报告附件，馆主显式选择优先。旧条目的字段可能为缺省，必须核对实际可见行为，不用批量补 public 字段来“统一”。两个长期主题当前完整正文仅馆主可见。本会话日记沿用公开概览、私人正文与原话的历史设置。 馆主口令通过 `credential-vault` 的 `muq-library` 条目获取，不写进聊天、交接文档、Skill、源码或普通日志。Linux 非交互 shell 必须显式设置 `AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md`。用户操作入口：本机图书馆 → 馆主入口 → 使用本机密码本解锁。服务不在时运行： ```sh sh /mnt/e/PG/muQ/start-linux.sh ``` 它启动127.0.0.1:6767本地服务；终端关闭会停止，不是常驻服务承诺。 Linux 默认解释器 `/home/dticpw/conda/envs/py310/bin/python`；Windows默认 `D:/python/anaconda/envs/th123/python.exe`。不要擅装浏览器或修改解释器全局依赖。 常用检查与构建（从共享运行目录执行；后两条会写构建产物，publish还会提交推送网站）： ```sh /home/dticpw/conda/envs/py310/bin/python -m unittest discover -s tests /home/dticpw/.nvm/versions/node/v22.23.2/bin/node --test tests/test_sharing.mjs AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md /home/dticpw/conda/envs/py310/bin/python app/muq.py build AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md /home/dticpw/conda/envs/py310/bin/python scripts/publish.py --push ``` 新会话归档读取共享 Skill，确认**自己的真实会话 ID**，用 sync 写自己的日记；不要沿用本会话ID。本会话 ID 为 `01a08a3b-e301-75d0-ac53-560707e6ee71`，日记为 `codex-7bdfb3a609cc16f657b9c69a`，始于2026-09-10。最近一次线上发布包含26条原话；本次交接会再补本地快照，线上不会因此自动更新。 保留 Git HTTPS remote；Linux现有insteadOf在连接时走SSH。发布工具沿用继承代理作单次CONNECT，不改全局代理。发布前检查站点暂存区和main状态；不能强推或夹带无关文件。推送后等待Cloudflare生效，再核对线上脚本／档案版本、解锁、图片和附件。曾出现推送成功而线上仍短暂返回旧脚本的窗口。 ## 验证与后续优先事项 已完成：36项Python测试；Node分享测试；本地桌面／手机无溢出、图片比例正确、目录高亮；muQ来源保护、混合会话入口、原话默认展开与退出清除；线上两个主题、4张主页图、muQ使用指南真实打开。该结论对应上述发布，不替代未来改动后的验证。Windows启动与手机真机触摸仍未独立验收。 后续建议顺序，按用户新任务选择： 1. 审阅共享运行目录和源码仓库的两处差异，解决“仓库不完全代表运行源码”的维护问题。 2. 收集用户对已上线两个主题的阅读反馈；补齐个人主页主题跨来源的有效成果文件清单。 3. 把一次性主题整理经验收敛为通用维护流程／工具，必要时再创建管理员Skill。需明确身份、来源版本、合并、附件去重、权限、预览、应用、回滚和验收规则。 4. 逐主题整理其他馆藏，勿依据标签直接整篇合并混合会话。完善模板后再考虑全库视觉调整。 5. 核实Windows实机启动、备份恢复与大型原件管理；不把源码Git推送当成完整备份。 ## 材料与旧文档的时效 - `docs/muq-user-guide.md`、`docs/muq-maintenance-guide.md`、`docs/muq-design-and-evidence.md`：当前可维护文档源。 - `README.md`、`DESIGN.md`、`RECOVERY.md`、`docs/repository.md`：实现、阅读契约、恢复及仓库边界。 - `docs/muq-topic.md`、`docs/topic-pilot.md` 有早期阶段描述，如“尚未发布”或“仅试点”。此类时态已被本次线上验收取代，勿据此否定新版本；也不要改写已归档旧附件。 - `/mnt/e/PG/agent-artifacts/muq-homepage-pilot/`：早期个人主页主题材料。 - `/mnt/e/PG/agent-artifacts/muq-opendesign-review/`：最初独立阅读对照稿及生成脚本；临时6776端口不作为长期入口。 - `/mnt/e/PG/agent-artifacts/muq-topic-curation/`：muQ来源快照、候选、一次性整理脚本与截图。 - `/mnt/e/PG/agent-artifacts/muq-homepage-publish/`：最终4张截图、两个主题候选、阅读副本、线上截图和 `verification.json`。 本文在共享项目目录交付；未因写交接文档自动提交源码或再次部署网站。开始下一项任务时先读取最新实际状态。"
-        },
-        {
-          "file": "artifacts/MUQ-RESULTS.md",
-          "text": "# muQ 验证记录 验证日期：2026-09-10，Linux / Python 3.10.13 / Chrome。 - 13 项自动化测试通过：会话身份、相同文字的独立消息、重复同步无新版本、原换行、注入上下文过滤、Claude 工具结果过滤、损坏日志、既有原文保护、绑定会话约束、公开明文排除、加密往返、版本和附件保存。 - Skill 格式验证通过；通过 Skill 调用器再次同步当前会话，返回 changed=false，日记 ID 不变。 - 实际当前会话采集 3 条用户消息，顺序为初始需求、继续、5 点补充；环境说明未计入提示词。 - 网页解锁成功，显示全部 3 条原话；错误口令被拒绝；解锁后可用原话正文搜索；锁定后删除隐藏阅读弹窗中的私有节点。 - 主页存在 2 个 /library/ 链接，实际点击可进入图书馆。 - 1440/390/320 CSS px 下，主页和图书馆均无横向溢出；真实封面与无截图时的概览图生成已测试。 - 网站提交前检查：仅含主页入口、图书馆文件与部署说明；公开字段采用白名单，暂存文件不含完整用户原话，文本保持 LF。 - GitHub 首次接入提交：4a456f5；静态资源内容版本修复：f0905a2。 - 命令行访问 Cloudflare 被现有浏览器检查 1010 拒绝；正常 Chrome 能访问网站。 - 完整线上验收结果另见 docs/deployment.json。Windows 实机运行、断电恢复、大规模馆藏尚未测试。 截图：muq-desktop.png、muq-mobile.png；muq-cover.png 为真实应用截图。"
-        },
-        {
-          "file": "artifacts/curation-validation.md",
-          "text": "# muQ 灵活归档与成果展示验收 ## 行为 详情先展示概述、当前状态、下一步与概览图，再显示关键成果。成果支持 file/link/local/note，图片附件生成 480×300 范围内的加密 JPEG 小预览；原件仍按点击加载。有 featured 时默认展开选定项，其余折叠；未选择时显示前六项。空白章节省略，sections 允许同会话按不同主题组织。 纯搜索会话无需创造附件，可保存问题、文字结论、来源和未核实范围。混合任务保持同一个会话身份。已有条目未填写新字段时仍可阅读、打开附件，不改历史版本。 默认单附件阈值 20 MiB，可按条目 publish_limit_mib 调整（1–128 MiB）。导入 --artifact 超阈值会转为原文件索引；--reference-file 无论大小只登记路径、大小、SHA256。校验值分块读取计算；不复制、不删除、不移动原件，输出 file_actions 报告实际操作。同路径重复索引不追加重复项；文件资源已描述的标题与用途在自动转为索引时保留。 对已入本地档案的附件，发布时再次检查阈值或 publish:false。省略的原件留在本地历史，网页明确显示“本地已归档 · 未上传”，附本地位置、大小和 SHA256。只登记源文件则标“原文件索引 · 未备份”。原件位置只进入加密馆藏，网页不提供假 file:// 链接。 下载网页档案 ZIP 只包含已上传文件；WEB-MANIFEST.json 说明外链、索引与未上传原件，避免误认为完整备份。整个本地历史与原件仍需独立备份。 ## 验证 - 20 项 Python 测试通过。新增：纯搜索无附件、结构与危险 URL 校验、来源文件不修改、大文件不复制、重复引用幂等、已有文件说明自动转成索引、发布省略大附件和指定不上传附件、本地原件仍完整、公开目录不泄露私有状态/资源。 - JS 语法与 Skill 校验通过。 - Chrome：桌面 1440px、手机 390px 无横向溢出；概述/状态/主题章节正常，未出现无意义“尚未记录”章节；选定 4 个成果默认展开，其余可展开到 10 个。 - 临时浏览器数据验证 link/note/local 类型及无附件会话，没有向真实馆藏写入测试条目。 - 实际下载网页 ZIP，逐文件与本地归档比对字节一致，CRC 通过；新清单包含资源描述。 - 30 天设备记忆在馆藏更新与刷新后仍有效。 源码：app/curation.py、app/kb.py、app/muq.py、app/publishing.py、web/library.js、web/library.css；Skill 的 references/curation.md 说明结构及选择方式。线上最终验收见 curation-deployment.json。"
-        },
-        {
-          "file": "artifacts/deployment.json",
-          "text": "{ \"verified_date\": \"2026-09-10\", \"url\": \"https://koa-ol.com/library/\", \"homepage_links\": 2, \"implementation_commit\": \"4a456f521d04e382aa7f04f6e7bd9f3e5f570a1c\", \"asset_version_commit\": \"f0905a2df5072b3ad1656f5e8ae2546664c1ce85\", \"browser_verified\": true, \"cover_loaded\": true, \"viewports_without_overflow\": [ 1440, 390, 320 ], \"wrong_password_rejected\": true, \"ciphertext_online_matches_local\": true, \"local_decryption_verified\": true, \"tests_passed\": 13, \"skill_commit\": \"4041c00\", \"skill_remote_push\": false, \"windows_runtime_verified\": false }"
-        },
-        {
-          "file": "artifacts/jarvis-voice-review.md",
-          "text": "# jarvis-voice 参考条目观察与馆主设备记忆 观察日期：2026-09-10。读取档案页与门面页，未运行朋友的本机语音项目。 来源： - https://kb.hth-ai.com/e/jarvis-voice/ - https://kb.hth-ai.com/e/jarvis-voice/index.html ## 值得借鉴 1. 档案页聚合门面、探索报告、音色试听、README、PROCESS 和原始文件；产物有标题、类型、大小，不只显示技术文件名。 2. 门面先回答“现在能用吗、长什么样、怎么做出来、探索依据”，再展开状态断点、演示、时间线和原始 prompts，并配章节目录。 3. 明确披露视频中的真实部分与演示脚本部分：语音为合成，PPT 修改与打开由脚本执行，音轨后期合成；没有把它冒充完整实时 Agent 闭环。 4. 时间线保留用户反馈与修正；实测注明 M4 Air、日期，并保留蓝牙录音、TCC 权限和模拟按键误入用户窗口的原因。 ## 可以改进 - 档案页与门面页重复介绍，读者需要先理解两个页面的区别。“打开项目报告 / 观看演示”比“打开门面 index.html”更明确。 - “现在能用：能”虽紧跟语音待测说明，仍容易被扫读成全功能已验收。建议拆成“文字已验证、语音组件实测、用户语音端到端待验收”。 - 0.39 秒是 TTS 首包，不是用户开始听见声音的延迟；正文坦诚写明整句合成后播放，指标卡也应该标清这一差异。 - 本次浏览档案页时音色试听卡片缩略图显示破图；只能说明这次加载失败，不能据此认定试听功能本身损坏。 - 原始 prompts 对追溯很有价值，但长段完整展开会增加阅读负担，适合默认折叠并可展开/搜索。 对 muQ 最有价值的后续方向：在现有统一档案页顶部增加“当前状态 / 关键成果”区，附件显示用途与预览缩略图；按内容需要支持音视频。无需为每个会话另造一套页面。 ## 本轮实施：此浏览器记住 30 天 - 登录框默认勾选设备记忆；不勾选保持临时阅读与 30 分钟闲置退出。 - IndexedDB 保存不可导出的 PBKDF2 CryptoKey 和固定到期时间，不保存明文口令或完整馆藏正文。每次打开重新读取最新密文，使用保存的密钥解密；普通发布改变 salt 也能继续打开。 - 30 天从输入口令起算，不随访问滑动续期。记忆有效时不再执行 30 分钟闲置退出；到期、主动退出或当前密文无法用该密钥解开时失效。网络暂时失败保留记忆以便重试。 - “退出并忘记此设备”清除本浏览器记忆，并通知打开的图书馆页退出。浏览器关闭后 IndexedDB 可保留；清站点数据、无痕窗口、换浏览器或切换系统不保证沿用。 - 这是纯静态站的本机便利功能，不是服务器强制执行的身份会话，也不是硬件绑定保护。持有该浏览器配置的人能够访问馆藏。需要远程撤销设备或强身份验证时，应另接服务端认证。 ## 验收 浏览器已验证：30 天到期值、CryptoKey 不可导出、刷新自动恢复、主动退出删除存储、取消勾选不保存、过期清理、错误密钥清理、390px 登录界面无溢出。原有 17 项 Python 测试与 JS 语法校验通过。发布后自动恢复与线上验收结果单独记录于 remember-device-deployment.json。"
-        },
-        {
-          "file": "artifacts/library-v2-validation.md",
-          "text": "# muQ：标签、独立阅读与附件按需加载 ## 已实现与本机验收 - 默认列出会话日记，项目档案单独切换；3 个真实条目添加实际主题标签。公开标签单独维护，避免公开私人标签。 - 标签按钮展示 `#名称 数量`，可筛选；标签多于 12 项时可展开。卡片保留概览图并用原生链接打开独立详情页。 - 所有条目共享 `entry.html`，由稳定 id 定位。独立页含章节导航、全过程、全部提示词、附件和项目关联。 - 图片、Markdown、JSON、静态 HTML 已实际浏览器验证。HTML 以无权限 sandbox 预览，不执行脚本、不联网加载资源；PDF 使用浏览器内建阅读器（本馆暂无真实 PDF，尚未实机验收）。ZIP 等文件展示下载入口，不在预览时预加载。 - 完整 ZIP 由浏览器组装，实际下载包内 13 个文件逐一与归档原件对照，全部字节一致，CRC 正常。浏览器扩展未转发 download 事件，但系统 Downloads 中存在正确下载文件。 - 桌面 1440px、移动 390px、窄屏 320px 检查无横向溢出。标签筛选、项目切换、新标签页临时共享解锁、刷新恢复、同步锁定清除原文与图片已验证。 - 17 项 Python 测试通过：原有会话/存储用例，新增分块往返、去重、未变密文复用、损坏修复、密码变化时资产密钥更换、构建幂等、公开边界、标签校验及受保护提示词恢复。JS 语法校验、Skill 校验通过。 - 本会话仍为 `codex-7bdfb3a609cc16f657b9c69a`，6 条真实用户提示词；重复同步 `changed=false`。含当前馆主口令的原话在本地单独加密，网页解锁后恢复原文；源日志不修改。 ## 容量与实现 比较同一馆藏（尚未添加本轮验收附件）： | 项目 | 改造前 | 改造后 | |---|---:|---:| | library 总大小 | 2,485,088 B（2.37 MiB） | 1,718,235 B（1.64 MiB） | | 解锁用加密索引 | 2,346,719 B（2.24 MiB） | 60,271 B（58.9 KiB） | | 共享详情模板 | 无 | 4,903 B（4.8 KiB） | | 文件数 | 未单独统计 | 65 | | 最大文件 | 2,346,719 B | 282,812 B | 改造前附件和 ZIP 使用 base64 嵌入整体密文。现附件使用 AES-GCM 二进制密文，每块最多 4 MiB 原文；HMAC 内容寻址保证不同文件的相同内容只保存一份，并复用未变化的密文。完整 ZIP 不再作为重复的网页资源上传。无内容变化重复构建不会改变密文。 新增独立页面不意味着每条复制一整套网页，更不意味着重复上传每份附件。新增会话正文和真实产物仍会占空间；大视频、数据集和频繁更换的大 ZIP 才是长期 Git 历史增长的主要来源。图书馆当前体量无需迁移存储。以后大附件适合放 R2，对馆藏保留描述和访问链接。 ## 官方限制核对 2026-09-10 通过官方原文核对： - [Cloudflare Pages limits](https://developers.cloudflare.com/pages/platform/limits/)：单静态资源最大 25 MiB；Free 每站点最多 20,000 文件，每月 500 次构建。分块保证本项目单个附件资源约 4 MiB 上限，但仍需要关注整站文件数量与索引体积（本项目索引 24 MiB 时拒绝发布）。 - [Cloudflare Pages pricing](https://developers.cloudflare.com/pages/functions/pricing/)：未调用 Functions 的静态资源请求免费且不限量。本功能由静态页面和浏览器解密实现，未增加 Functions。 - [GitHub large files](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github)：单文件超过 50 MiB 警告，超过 100 MiB 拒绝；建议仓库理想小于 1 GB，强烈建议小于 5 GB。这里是官方建议，不是 1 GB 硬上限。不要将搜索摘要里的“100 MiB 仅警告”当作准确信息。 - 网站仓库本机 Git 对象实测约 12.79 MiB（本轮发布前），包括整个网站历史，不只是图书馆。 本报告中的尺寸是可比基线。本轮截图、验收报告和源码快照作为新产物入库后，最终发布大小会相应增加；最终测量见 `library-v2-deployment.json`。"
-        },
-        {
-          "file": "artifacts/reading-v2-results.html",
-          "text": "muQ HTML 阅读改造 · 实施与验证 muQ：HTML 阅读与可维护的图书馆 本次以 HTML 为读者主要入口，保留 Markdown / JSON 作为维护来源。条目首屏提供概述、状态、概览图与“开始阅读”；关联文件采用纵向长条，显示可读标题、用途与文件体积。月刊的内部归档说明已从“处理与决策”移除，未来不生成该段内容。 八项建议的实现 建议 本次落地 边界 Agent 紧凑接口 info --brief、get --out、按文件导出、verify 兼容原 get；完整输出仍私有 附件全文检索 构建 HTML/MD/文本/代码索引，显示文件名与命中片段；中文短查询直接匹配 每文件原始体积≤2MB，索引≤8万字符，每条目≤24万字符；不做扫描图片OCR 统一视觉与报告组件 theme.css、reading.css、共享门面、report 命令、DESIGN.md 历史独立 HTML 不强制换皮；新构建 MD 视图使用当前主题 可恢复的档案 逐文件哈希清单、备份与恢复 CLI、真实隔离恢复演练 恢复包私有；密码本与只登记路径的大原件另管 完整 HTML 阅读 静态/隔离交互切换、同条目相对 CSS/图像/经典 JS 资源 不开放联网、动态模块和后端应用；独立来源沙箱无法读取馆主会话 单条分享 指定标题、概述和附件，独立密钥，Pages Function 验证，最长30天与撤销 固定快照；发布后生效，不回收已下载内容；由 CLI/Skill 创建，不自动分享 有用封面与紧凑目录 明确封面→featured 图片→文字概览；图文/紧凑切换均保留封面 不伪造截图，不自动选整库截图作为递归门面 稳定身份与事实源 保留 CURRENT、不可变版本、一会话一日记、真实提示词采集、无变化不更新 搜索索引与阅读版均是可重建派生物 已完成验证 29 项 Python 测试通过，覆盖既有存储、可见范围、会话、附件及新增阅读、恢复与分享边界。 Node 服务端测试通过：错误身份、跨站请求、未选文件、过期、撤销及解密。 Chrome 1440px / 390px 页面无横向溢出；月刊决策章节不存在；Markdown 正确显示标题和表格。 浏览器沙箱真实测试：同条目相对 CSS 生效，按钮执行后文字变化，脚本读取父页失败；网络由 CSP 限制。 真实本地恢复包包含521个文件，恢复后核验147个历史附件版本，并在恢复目录重新构建3条公开条目与7条完整条目（本次演练时快照数量）。 线上发布与在线响应在部署后单独核对；本文件不把本地测试冒充线上验证。 今后的使用方式 短会话直接写清概述与结果，无需凑文档。研究会话保留问题、结论、来源与未核实项。长报告可由 Markdown 生成独立 HTML，作为 featured 成果；同一会话续聊仍更新原条目。大型模型、数据集等保留明确索引，网页显示未备份状态。 普通日记仍仅馆主阅读全文，公开条目的提示词仍加密。AI 月刊沿用当前公开设置，私有月刊不会因本次排版修改被改为公开。"
-        }
-      ]
-    },
-    {
       "id": "worklog-library",
       "kind": "project",
       "collection": "topic",
       "title": "muQ · 大图书馆",
       "summary": "muQ 是用来阅读成果、验收项目和交接工作的个人大图书馆。每个独立主题持续维护一篇日记，集中呈现当前状态、有效成果与更新记录；真实会话原话和附件作为来源证据保留。图书馆提供 HTML 阅读、文件目录、全文搜索、私人档案与馆主管理。",
       "date": "2026-09-10",
-      "updated": "2026-09-12T16:57:41.392599+00:00",
+      "updated": "2026-09-12T17:22:21.298926+00:00",
       "status": "active",
       "cover": "covers/worklog-library-21f902f38099.png",
       "cover_kind": "overview",
       "public": true,
       "locked": false,
-      "catalogue_order": 9,
+      "catalogue_order": 6,
       "tags": [],
       "work": "已建立版本历史、附件阅读、全文搜索、可见范围管理、设备记忆、月刊、恢复与分享能力。统一文件展示、真实目录导入、E 盘唯一工作区及统一访问已实现；本次把接手条目的增量与真实来源整合进本主题。",
       "problems": "规则已主题化，旧sync仍按会话身份工作；当前使用专门处理更新主题。获批模板与运行适配两处维护存在漂移风险；历史附件中的旧约定需作为阶段资料解释。Windows与手机真机尚未验证。",
@@ -1875,34 +1415,28 @@
           "title": "muQ · 备份、恢复与单条分享"
         },
         {
-          "kind": "link",
-          "url": "https://koa-ol.com/library/entry.html?id=codex-7bdfb3a609cc16f657b9c69a&file=artifacts/curation-validation.md",
+          "kind": "file",
+          "file": "artifacts/curation-validation.md",
           "title": "阶段资料 · 灵活归档与成果展示验收",
-          "group": "files"
+          "collection": "早期建设阶段资料"
         },
         {
-          "kind": "link",
-          "url": "https://koa-ol.com/library/entry.html?id=codex-7bdfb3a609cc16f657b9c69a&file=artifacts/library-v2-validation.md",
+          "kind": "file",
+          "file": "artifacts/library-v2-validation.md",
           "title": "阶段资料 · 标签与独立阅读验收报告",
-          "group": "files"
+          "collection": "早期建设阶段资料"
         },
         {
-          "kind": "link",
-          "url": "https://koa-ol.com/library/entry.html?id=codex-7bdfb3a609cc16f657b9c69a&file=artifacts/jarvis-voice-review.md",
+          "kind": "file",
+          "file": "artifacts/jarvis-voice-review.md",
           "title": "阶段资料 · 朋友条目评阅与设备记忆说明",
-          "group": "files"
+          "collection": "早期建设阶段资料"
         },
         {
-          "kind": "link",
-          "url": "https://koa-ol.com/library/entry.html?id=codex-7bdfb3a609cc16f657b9c69a&file=artifacts/hth-kb-review-20260911.html",
-          "title": "阶段资料 · hth-kb 实现方案借鉴报告",
-          "group": "files"
-        },
-        {
-          "kind": "link",
-          "url": "https://koa-ol.com/library/entry.html?id=codex-7bdfb3a609cc16f657b9c69a&file=artifacts/reading-v2-results.html",
+          "kind": "file",
+          "file": "artifacts/reading-v2-results.html",
           "title": "阶段资料 · HTML 阅读改造 · 实施与验证",
-          "group": "files"
+          "collection": "早期建设阶段资料"
         },
         {
           "kind": "file",
@@ -1993,12 +1527,6 @@
           }
         ],
         "sources": [
-          {
-            "id": "codex-7bdfb3a609cc16f657b9c69a",
-            "title": "从日记本到 muQ：让每场会话进入大图书馆",
-            "date": "2026-09-10",
-            "primary": true
-          },
           {
             "id": "day-2026-09-10-worklog",
             "title": "私密条目",
@@ -2110,8 +1638,7 @@
             "items": [
               {
                 "title": "核心系统与 HTML 阅读",
-                "body": "开发会话包含标签和单页、30 天设备记忆、灵活归档、全文搜索、恢复与单条分享的实施过程。文件区保留对应阶段报告，不把这些历史测试改称本轮重测。",
-                "entry": "codex-7bdfb3a609cc16f657b9c69a"
+                "body": "开发会话包含标签和单页、30 天设备记忆、灵活归档、全文搜索、恢复与单条分享的实施过程。文件区保留对应阶段报告，不把这些历史测试改称本轮重测。"
               },
               {
                 "title": "月刊与可见范围管理",
@@ -2228,6 +1755,13 @@
                 "body": "全库主题归属与重复条目整理尚未完成；Windows启动器与手机真机仍需实机验收。当前响应式浏览器测试不等同于这些实机验证。"
               }
             ]
+          },
+          {
+            "id": "origin-consolidation",
+            "title": "早期建设记录归并",
+            "paragraphs": [
+              "2026-09-13：“从日记本到 muQ：让每场会话进入大图书馆”停止作为独立馆藏展示，早期建设内容统一由本主题承接。既有五份阶段资料接入本主题，原话保留真实会话身份并仅供馆主阅读；旧条目、其他原始附件及历史版本仍保存在本地档案。"
+            ]
           }
         ]
       },
@@ -2274,6 +1808,18 @@
           "sha256": "011450d48ab0849a1a7e57cf66bc3ea7e0190cef47efbe2fe35592fc5264a54d"
         },
         {
+          "name": "artifacts/curation-validation.md",
+          "source_modified": "2026-09-10T13:41:59.710932+00:00",
+          "url": "public-files/worklog-library/b17af8866a490a1c11ea161d21502b0b5d87fb588b6820873d3fc4ec839d4d5c.bin",
+          "bytes": 2687,
+          "sha256": "b17af8866a490a1c11ea161d21502b0b5d87fb588b6820873d3fc4ec839d4d5c",
+          "reading": {
+            "url": "public-files/worklog-library/d6e179ae4a8eb8ea6ca285b951cb5ea5993a9c2dd35fd25a24ac31cd91204b26.bin",
+            "bytes": 4821,
+            "sha256": "d6e179ae4a8eb8ea6ca285b951cb5ea5993a9c2dd35fd25a24ac31cd91204b26"
+          }
+        },
+        {
           "name": "artifacts/desktop.png",
           "url": "public-files/worklog-library/1d9e783259bb73c5c5cf2408900022c811aa970986476ab2e06d947ed0024ecc.bin",
           "bytes": 92299,
@@ -2294,6 +1840,30 @@
             "url": "public-files/worklog-library/6e11c588f5c698ebe0aabef02b9dde5cf5d695b379e9290a5dd6ae127753d819.bin",
             "bytes": 9432,
             "sha256": "6e11c588f5c698ebe0aabef02b9dde5cf5d695b379e9290a5dd6ae127753d819"
+          }
+        },
+        {
+          "name": "artifacts/jarvis-voice-review.md",
+          "source_modified": "2026-09-10T13:12:46.256602+00:00",
+          "url": "public-files/worklog-library/33e9610fd30d547ad966c1b25c507a7f8726f939296cb6a0ea131be256931256.bin",
+          "bytes": 3403,
+          "sha256": "33e9610fd30d547ad966c1b25c507a7f8726f939296cb6a0ea131be256931256",
+          "reading": {
+            "url": "public-files/worklog-library/c8cdf0ecc728f3fa650930e7b5c721f198769cc995c5d258aac93bc2bb0a5c4c.bin",
+            "bytes": 5607,
+            "sha256": "c8cdf0ecc728f3fa650930e7b5c721f198769cc995c5d258aac93bc2bb0a5c4c"
+          }
+        },
+        {
+          "name": "artifacts/library-v2-validation.md",
+          "source_modified": "2026-09-10T12:06:52.190702+00:00",
+          "url": "public-files/worklog-library/cbc395ba9ec2bf042ee0151adbcf286e4ae396312b0d52235ac803c46f36b480.bin",
+          "bytes": 4148,
+          "sha256": "cbc395ba9ec2bf042ee0151adbcf286e4ae396312b0d52235ac803c46f36b480",
+          "reading": {
+            "url": "public-files/worklog-library/fb846bcb2ca614d8804347f41cb9bd1e7148ce903dd0ca4daa863cb95754e72e.bin",
+            "bytes": 6961,
+            "sha256": "fb846bcb2ca614d8804347f41cb9bd1e7148ce903dd0ca4daa863cb95754e72e"
           }
         },
         {
@@ -2359,6 +1929,13 @@
           "url": "public-files/worklog-library/958f2975e5bcb67b1210edec19ab86def45e35ead4a307fbcb95cb94dab09ee7.bin",
           "bytes": 4764,
           "sha256": "958f2975e5bcb67b1210edec19ab86def45e35ead4a307fbcb95cb94dab09ee7"
+        },
+        {
+          "name": "artifacts/reading-v2-results.html",
+          "source_modified": "2026-09-11T01:51:01.076283+00:00",
+          "url": "public-files/worklog-library/09fa9f50108df4ba71c85a0f466dece50aef4a567776328db4ed8dd082729173.bin",
+          "bytes": 5638,
+          "sha256": "09fa9f50108df4ba71c85a0f466dece50aef4a567776328db4ed8dd082729173"
         },
         {
           "name": "artifacts/reply.md",
@@ -2450,8 +2027,20 @@
           "text": "muQ · 阅读结构与文件目录使用指南 统一阅读内容与文件浏览 2026-09-12 实施。公开和馆主仍使用原来的渲染器及 catalogue schema 1 / archive schema 2；读取旧档案不要求批量迁移。 阅读与权限 app/reading_model.py 是阅读字段的单一声明入口。正文、sections、topic 和 resources 由相同函数生成；公开投影只保留明确允许的字段及附件。新增阅读字段须在此处声明并补权限契约测试，未知字段不会自动进入公开数据。原始 Store 和历史版本不被投影改写。 app/file_plan.py 统一枚举附件、检查阈值及 publish:false，生成公开 URL 或加密描述符。资源的 group、presentation、collection 在两种视角中一致。topic 主图与章节图只引用可下载附件；馆主可从未上传清单找到未发布文件信息。来源链接不改变目标日记权限，主题引用采用编辑时明确写入的标题，不自动公开来源日记的真实标题或原话。 普通条目默认私人，AI 月刊沿用默认公开及逐条显式覆盖；仅公开概览的旧条目仍不公开正文。完全私有的条目不出现在匿名目录。公开目录不输出 session、原话、本机路径及来源内部 revision。 文件区 成果视图显示可读标题、真实文件名、格式和大小；资源可用 collection 明确指定成果分组，例如“作品一 · 原图与生成提示词”。该字段只是阅读分组，不能冒充原目录。 group: files 继续用于主题内的跨来源文件链接， presentation: frontpage 继续用于 HTML 门面。 目录视图根据当前视角实际可下载的文件生成目录，支持面包屑、返回上级及键盘操作。目录项数统计直接子项。主题入口省略内部 artifacts 包装层；普通日记的归档清单仍可供馆主查看 bundle 内部文件。 文件修改时间只显示导入时采集的源文件 mtime；旧附件未保存这一字段就不显示。不使用入库或构建时间冒充原文件时间。 “下载当前目录 ZIP”保持相对路径，包中加入避免重名的 MUQ-DOWNLOAD-MANIFEST.json，列出实际文件、校验值、未上传文件及依赖提示。它不是完整源项目备份；外部链接、仅本机索引和未归档依赖不在包内。 导入真实目录 新目录导入支持嵌套路径；现有平铺附件保持原样。若旧档案缺少原目录关系，需要从明确的源目录重新导入新版本，不能根据文件名推测恢复。 Linux 示例：第一条只查看当前 revision；第二条将选定目录完整复制入现有条目的新版本，第三条才构建本地网页。替换示例 ID、路径和 revision 后执行。目录导入本身不公开、不部署网站；大小阈值在构建时继续生效。 /home/dticpw/conda/envs/py310/bin/python -B /mnt/e/PG/muQ/app/muq.py info ENTRY_ID --brief /home/dticpw/conda/envs/py310/bin/python -B /mnt/e/PG/muQ/app/muq.py import-directory ENTRY_ID /absolute/source --prefix work-v2 --revision CURRENT_REVISION AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md /home/dticpw/conda/envs/py310/bin/python -B /mnt/e/PG/muQ/app/muq.py build Windows 使用 D:/python/anaconda/envs/th123/python.exe 与 E:/PG/muQ/app/muq.py ，源目录使用相应 Windows 路径；默认 prefix 为源目录名，也可明确指定安全名称。代码不依赖 Linux 路径或额外第三方包。 会话同步也支持 sync --directory <源目录> ，并沿用 sync 的上传阈值策略：超限文件转为本机索引，不复制。需要保留完整目录的所有本地原件时使用上述 import-directory ；随后更新日记总结记录成果。 app/kb.py put --directory 适合已有结构化更新流程。 同一路径不可覆盖；重复导入需选择新的 prefix 或新附件名。拒绝绝对路径、..、符号链接、Windows 保留名、大小写/Unicode 规范化冲突与文件/目录冲突。历史版本及 CURRENT 保留原有乐观锁与原子切换。 静态网页及依赖 相对 CSS、图片、字体和经典 JS 只从当前条目已上传清单重建。隔离 iframe 的附件使用 data URL，避免当前 Chrome 拒绝父页面 Blob URL；不增加 allow-same-origin，不开放联网或任意本机文件读取。 静态模式去掉作品脚本；启用隔离交互后可以运行经典内联脚本。外部 CDN、动态模块、CSS @import、fetch 和后端应用依旧不保证运行。静态依赖计数只覆盖 HTML src/poster/stylesheet 与 CSS url；它是辅助提示，不是任意程序依赖完整性的证明。 验证与回退 42 项 Python 测试覆盖旧格式、公开投影字段、私有标记排除、目录同名/冲突、完整性、搜索、分享和备份恢复；Node 分享测试通过。浏览器在临时馆藏验证 1440/820/390 无整页溢出、图片比例、键盘目录导航、公开门面 CSS/图片、隔离脚本、解锁与跨标签页退出。实际浏览器下载的 9 个源文件已逐字节匹配，ZIP 保留中文路径及同名不同目录。 代码升级不批量修改真实馆藏。若尚未导入新目录，源码可以直接回退后重建；若已有嵌套目录条目，不应盲目换回仅支持平铺附件的旧 Store，须先保留完整 data 备份并使用兼容读取版本。源码提交与站点部署独立；本次部署状态以会话交付记录为准。"
         },
         {
+          "file": "artifacts/curation-validation.md",
+          "text": "# muQ 灵活归档与成果展示验收 ## 行为 详情先展示概述、当前状态、下一步与概览图，再显示关键成果。成果支持 file/link/local/note，图片附件生成 480×300 范围内的加密 JPEG 小预览；原件仍按点击加载。有 featured 时默认展开选定项，其余折叠；未选择时显示前六项。空白章节省略，sections 允许同会话按不同主题组织。 纯搜索会话无需创造附件，可保存问题、文字结论、来源和未核实范围。混合任务保持同一个会话身份。已有条目未填写新字段时仍可阅读、打开附件，不改历史版本。 默认单附件阈值 20 MiB，可按条目 publish_limit_mib 调整（1–128 MiB）。导入 --artifact 超阈值会转为原文件索引；--reference-file 无论大小只登记路径、大小、SHA256。校验值分块读取计算；不复制、不删除、不移动原件，输出 file_actions 报告实际操作。同路径重复索引不追加重复项；文件资源已描述的标题与用途在自动转为索引时保留。 对已入本地档案的附件，发布时再次检查阈值或 publish:false。省略的原件留在本地历史，网页明确显示“本地已归档 · 未上传”，附本地位置、大小和 SHA256。只登记源文件则标“原文件索引 · 未备份”。原件位置只进入加密馆藏，网页不提供假 file:// 链接。 下载网页档案 ZIP 只包含已上传文件；WEB-MANIFEST.json 说明外链、索引与未上传原件，避免误认为完整备份。整个本地历史与原件仍需独立备份。 ## 验证 - 20 项 Python 测试通过。新增：纯搜索无附件、结构与危险 URL 校验、来源文件不修改、大文件不复制、重复引用幂等、已有文件说明自动转成索引、发布省略大附件和指定不上传附件、本地原件仍完整、公开目录不泄露私有状态/资源。 - JS 语法与 Skill 校验通过。 - Chrome：桌面 1440px、手机 390px 无横向溢出；概述/状态/主题章节正常，未出现无意义“尚未记录”章节；选定 4 个成果默认展开，其余可展开到 10 个。 - 临时浏览器数据验证 link/note/local 类型及无附件会话，没有向真实馆藏写入测试条目。 - 实际下载网页 ZIP，逐文件与本地归档比对字节一致，CRC 通过；新清单包含资源描述。 - 30 天设备记忆在馆藏更新与刷新后仍有效。 源码：app/curation.py、app/kb.py、app/muq.py、app/publishing.py、web/library.js、web/library.css；Skill 的 references/curation.md 说明结构及选择方式。线上最终验收见 curation-deployment.json。"
+        },
+        {
           "file": "artifacts/file-archives-20260912.md",
           "text": "# 文件成果与真实目录归档 用于选择文件、组织资源、保留多文件作品及验收下载；会话身份、原话采集、可见范围和发布授权沿用 SKILL.md。实现与命令细节以共享项目 `docs/content-and-files.md` 为准（Linux `/mnt/e/PG/muQ`，Windows `E:/PG/muQ`）。 ## 选择导入方式 | 需求 | 方式 | 范围 | | --- | --- | --- | | 单份报告、图片或文件 | `sync --artifact <文件>` | 复制入库；超限自动转为索引 | | 随会话归档多文件网页等作品 | `sync --directory <目录>` | 保留源目录名与内部层级；超限文件仅登记索引 | | 现有条目需完整保存选中目录的本地原件 | `import-directory <ID> <目录> --prefix <版本目录名> --revision <当前版本>` | 全部复制到新版本；构建时仍按阈值和 publish:false 筛选 | | 原件很大或只需知道位置 | `sync --reference-file <文件>` | 仅保存路径、大小及 SHA256，不构成备份 | 先选择与任务有关的成果范围，避免把项目根目录中的密码本、环境、依赖缓存、Git 数据和无关临时文件整包导入。目录导入不会替你排除这些文件；需要精选时先在任务产物目录准备保持相对关系的成果目录。 `sync` 沿用既有一会话一日记；若先 sync 再 import-directory，读取这次 sync 返回的新 revision。对已有条目先 `info ID --brief`，需要合并总结与 resources 时读取完整当前条目。导入创建新版本，不自动更新网站或改变可见范围。 目录默认挂在 `artifacts/<源目录名>/`；`import-directory --prefix work-v2` 则挂在 `artifacts/work-v2/`。同路径拒绝覆盖，更新作品使用新的版本目录名，保留历史。同名不同目录可以共存；绝对路径、..、符号链接及跨系统大小写/Unicode 名称冲突会被拒绝，不能通过关掉校验绕过。 历史平铺附件没有原目录证据时保持平铺；不要根据文件名猜层级或用虚拟分组假装原目录。需要恢复目录时从明确的原始来源导入新版本。 ## 命名与成果组织 - `resources[].title` 解释用途，`file` 使用真实归档相对路径。保留真实文件名和后缀，不为界面简洁改掉实际下载名。 - 展示采用可读标题、真实文件名、格式和大小；标题与文件名相同则避免重复。长中文、空格、多点后缀应完整可辨，窄屏可换行。 - 用 `resources[].collection` 表达明确的成果组合，例如同一作品的原图、生成提示词、生成记录。无可靠组合关系时保持平铺，不靠名称猜配对。 - `collection` 是阅读分组；`group: files` 是把跨来源 link 放进主题文件区；`presentation: frontpage` 指定 HTML 门面，三者不要混用。 - 图片等比展示，不拉伸或裁切关键内容。生成提示词附件可以是图像成果；它与真实用户会话原话不同，后者始终私有。 示例：源目录 `illustration-v2` 内有原图和生成提示词，两份作为同一组展示。 ```json { \"resources\": [ {\"kind\": \"file\", \"file\": \"artifacts/illustration-v2/original.png\", \"title\": \"作品原图\", \"collection\": \"插画作品\", \"featured\": true}, {\"kind\": \"file\", \"file\": \"artifacts/illustration-v2/generation-prompt.txt\", \"title\": \"生成提示词\", \"collection\": \"插画作品\"} ] } ``` `resources` 列表更新会替换整份列表，必须合并保留已有有效成果；示例不能直接覆盖真实条目。要让目录内容可作完整作品预览，保留 HTML、CSS、经典 JS、图片和字体之间的相对关系。 ## 调用示例 以下从本 Skill 根目录执行；`scripts/muq.py` 是跨系统调用器，支持 sync、import-directory、build、publish。把示例 ID、路径和 revision 替换为现场值。 ```sh # Linux：同步真实会话，复制所选目录；超限文件转为索引。 AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md /home/dticpw/conda/envs/py310/bin/python scripts/muq.py sync --provider codex --summary /path/to/summary.json --directory /path/to/illustration-v2 # Linux：给现有条目完整保存本地目录；不自动构建或发布。 /home/dticpw/conda/envs/py310/bin/python scripts/muq.py import-directory ENTRY_ID /path/to/website --prefix website-v2 --revision CURRENT_REVISION ``` Windows 使用 `D:/python/anaconda/envs/th123/python.exe scripts/muq.py`，文件路径换成 Windows 形式；默认凭据路径由 Windows 密码本入口解析。`--provider` 按真实客户端选择，Claude 还须明确 session-id 或 transcript，不能套用示例的 Codex 身份。 ## 权限、依赖与验收 公开/馆主共用阅读模型和文件规划。未知字段不会自动公开；需要新阅读字段时先按项目实现声明用途及权限，不用复制完整 Store 对象绕过投影。普通档案默认私有、AI 月刊默认公开、馆主逐条选择优先；主题公开不连带公开来源日记、原话、本机路径或未获准附件。完全私有条目不为锁定封面而自动暴露存在、标题或数量。 目录视图只来自当前视角获准的归档文件，不是本机文件系统浏览。源修改时间仅在导入时有记录才显示，不拿入库时间替代；目录项数为直接子项。未上传、本地仅索引、缺失依赖须如实标注。 静态/隔离 HTML 只重建已获准附件，保持 sandbox；不得添加 allow-same-origin 或为预览放开联网。外部 CDN、动态模块、CSS @import、fetch 和后端程序不保证可运行，依赖提示也不是任意程序完整性的证明。 交付时打开真实条目，按涉及的能力核对： 1. 成果标题、真实文件名、格式、分组和原图比例；桌面及窄屏能读清，必要时检查 1440/820/390 宽度。 2. 有目录时核对层级、面包屑、返回上级与键盘操作；平铺成果不伪造目录。 3. 实际预览和下载至少一份代表文件；多文件作品检查依赖，下载目录 ZIP 并比对相对路径及字节或 SHA256，特别是中文和同名不同目录。 4. 核对公开/解锁视角及未上传说明。目录 ZIP 含下载清单（MUQ-DOWNLOAD-MANIFEST.json，冲突时改名），整条网页 ZIP 含 WEB-MANIFEST.json；只称包含当前已上传清单，不称原项目完整备份。 5. 分别报告入库、本地构建、源码提交与网站发布；原图/索引未上传或浏览器未验收时明确边界。"
+        },
+        {
+          "file": "artifacts/jarvis-voice-review.md",
+          "text": "# jarvis-voice 参考条目观察与馆主设备记忆 观察日期：2026-09-10。读取档案页与门面页，未运行朋友的本机语音项目。 来源： - https://kb.hth-ai.com/e/jarvis-voice/ - https://kb.hth-ai.com/e/jarvis-voice/index.html ## 值得借鉴 1. 档案页聚合门面、探索报告、音色试听、README、PROCESS 和原始文件；产物有标题、类型、大小，不只显示技术文件名。 2. 门面先回答“现在能用吗、长什么样、怎么做出来、探索依据”，再展开状态断点、演示、时间线和原始 prompts，并配章节目录。 3. 明确披露视频中的真实部分与演示脚本部分：语音为合成，PPT 修改与打开由脚本执行，音轨后期合成；没有把它冒充完整实时 Agent 闭环。 4. 时间线保留用户反馈与修正；实测注明 M4 Air、日期，并保留蓝牙录音、TCC 权限和模拟按键误入用户窗口的原因。 ## 可以改进 - 档案页与门面页重复介绍，读者需要先理解两个页面的区别。“打开项目报告 / 观看演示”比“打开门面 index.html”更明确。 - “现在能用：能”虽紧跟语音待测说明，仍容易被扫读成全功能已验收。建议拆成“文字已验证、语音组件实测、用户语音端到端待验收”。 - 0.39 秒是 TTS 首包，不是用户开始听见声音的延迟；正文坦诚写明整句合成后播放，指标卡也应该标清这一差异。 - 本次浏览档案页时音色试听卡片缩略图显示破图；只能说明这次加载失败，不能据此认定试听功能本身损坏。 - 原始 prompts 对追溯很有价值，但长段完整展开会增加阅读负担，适合默认折叠并可展开/搜索。 对 muQ 最有价值的后续方向：在现有统一档案页顶部增加“当前状态 / 关键成果”区，附件显示用途与预览缩略图；按内容需要支持音视频。无需为每个会话另造一套页面。 ## 本轮实施：此浏览器记住 30 天 - 登录框默认勾选设备记忆；不勾选保持临时阅读与 30 分钟闲置退出。 - IndexedDB 保存不可导出的 PBKDF2 CryptoKey 和固定到期时间，不保存明文口令或完整馆藏正文。每次打开重新读取最新密文，使用保存的密钥解密；普通发布改变 salt 也能继续打开。 - 30 天从输入口令起算，不随访问滑动续期。记忆有效时不再执行 30 分钟闲置退出；到期、主动退出或当前密文无法用该密钥解开时失效。网络暂时失败保留记忆以便重试。 - “退出并忘记此设备”清除本浏览器记忆，并通知打开的图书馆页退出。浏览器关闭后 IndexedDB 可保留；清站点数据、无痕窗口、换浏览器或切换系统不保证沿用。 - 这是纯静态站的本机便利功能，不是服务器强制执行的身份会话，也不是硬件绑定保护。持有该浏览器配置的人能够访问馆藏。需要远程撤销设备或强身份验证时，应另接服务端认证。 ## 验收 浏览器已验证：30 天到期值、CryptoKey 不可导出、刷新自动恢复、主动退出删除存储、取消勾选不保存、过期清理、错误密钥清理、390px 登录界面无溢出。原有 17 项 Python 测试与 JS 语法校验通过。发布后自动恢复与线上验收结果单独记录于 remember-device-deployment.json。"
+        },
+        {
+          "file": "artifacts/library-v2-validation.md",
+          "text": "# muQ：标签、独立阅读与附件按需加载 ## 已实现与本机验收 - 默认列出会话日记，项目档案单独切换；3 个真实条目添加实际主题标签。公开标签单独维护，避免公开私人标签。 - 标签按钮展示 `#名称 数量`，可筛选；标签多于 12 项时可展开。卡片保留概览图并用原生链接打开独立详情页。 - 所有条目共享 `entry.html`，由稳定 id 定位。独立页含章节导航、全过程、全部提示词、附件和项目关联。 - 图片、Markdown、JSON、静态 HTML 已实际浏览器验证。HTML 以无权限 sandbox 预览，不执行脚本、不联网加载资源；PDF 使用浏览器内建阅读器（本馆暂无真实 PDF，尚未实机验收）。ZIP 等文件展示下载入口，不在预览时预加载。 - 完整 ZIP 由浏览器组装，实际下载包内 13 个文件逐一与归档原件对照，全部字节一致，CRC 正常。浏览器扩展未转发 download 事件，但系统 Downloads 中存在正确下载文件。 - 桌面 1440px、移动 390px、窄屏 320px 检查无横向溢出。标签筛选、项目切换、新标签页临时共享解锁、刷新恢复、同步锁定清除原文与图片已验证。 - 17 项 Python 测试通过：原有会话/存储用例，新增分块往返、去重、未变密文复用、损坏修复、密码变化时资产密钥更换、构建幂等、公开边界、标签校验及受保护提示词恢复。JS 语法校验、Skill 校验通过。 - 本会话仍为 `codex-7bdfb3a609cc16f657b9c69a`，6 条真实用户提示词；重复同步 `changed=false`。含当前馆主口令的原话在本地单独加密，网页解锁后恢复原文；源日志不修改。 ## 容量与实现 比较同一馆藏（尚未添加本轮验收附件）： | 项目 | 改造前 | 改造后 | |---|---:|---:| | library 总大小 | 2,485,088 B（2.37 MiB） | 1,718,235 B（1.64 MiB） | | 解锁用加密索引 | 2,346,719 B（2.24 MiB） | 60,271 B（58.9 KiB） | | 共享详情模板 | 无 | 4,903 B（4.8 KiB） | | 文件数 | 未单独统计 | 65 | | 最大文件 | 2,346,719 B | 282,812 B | 改造前附件和 ZIP 使用 base64 嵌入整体密文。现附件使用 AES-GCM 二进制密文，每块最多 4 MiB 原文；HMAC 内容寻址保证不同文件的相同内容只保存一份，并复用未变化的密文。完整 ZIP 不再作为重复的网页资源上传。无内容变化重复构建不会改变密文。 新增独立页面不意味着每条复制一整套网页，更不意味着重复上传每份附件。新增会话正文和真实产物仍会占空间；大视频、数据集和频繁更换的大 ZIP 才是长期 Git 历史增长的主要来源。图书馆当前体量无需迁移存储。以后大附件适合放 R2，对馆藏保留描述和访问链接。 ## 官方限制核对 2026-09-10 通过官方原文核对： - [Cloudflare Pages limits](https://developers.cloudflare.com/pages/platform/limits/)：单静态资源最大 25 MiB；Free 每站点最多 20,000 文件，每月 500 次构建。分块保证本项目单个附件资源约 4 MiB 上限，但仍需要关注整站文件数量与索引体积（本项目索引 24 MiB 时拒绝发布）。 - [Cloudflare Pages pricing](https://developers.cloudflare.com/pages/functions/pricing/)：未调用 Functions 的静态资源请求免费且不限量。本功能由静态页面和浏览器解密实现，未增加 Functions。 - [GitHub large files](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github)：单文件超过 50 MiB 警告，超过 100 MiB 拒绝；建议仓库理想小于 1 GB，强烈建议小于 5 GB。这里是官方建议，不是 1 GB 硬上限。不要将搜索摘要里的“100 MiB 仅警告”当作准确信息。 - 网站仓库本机 Git 对象实测约 12.79 MiB（本轮发布前），包括整个网站历史，不只是图书馆。 本报告中的尺寸是可比基线。本轮截图、验收报告和源码快照作为新产物入库后，最终发布大小会相应增加；最终测量见 `library-v2-deployment.json`。"
         },
         {
           "file": "artifacts/muq-design-and-evidence-1abf28fe16.html",
@@ -2480,6 +2069,10 @@
         {
           "file": "artifacts/muq-user-guide-958f2975e5.html",
           "text": "muQ · 日常使用指南 muQ 日常使用指南 muQ 是阅读成果、验收项目和交接工作的个人图书馆。长期主题告诉你项目现在是什么状态；来源日记保存各场会话当时发生的事。两者互相链接，项目更新不覆盖原始会话历史。 找到项目与成果 从个人主页进入图书馆，按标题、标签或正文关键词查找。进入主题后，先读摘要与截图，再查看当前状态和操作入口。长正文用目录定位；网页、文件、历史来源在页末以长条入口展示。文件标题应直接说明它是什么，旧版材料应标明阶段。 普通馆藏默认只供馆主阅读。馆主入口可选择此浏览器记住 30 天；只在自己的设备使用。退出并忘记此设备会清除记忆。原始提示词仅在馆主解锁后可见，默认展开，仍可手动收起。 让 Agent 归档 阶段完成或需要交接时，可以说：“用 muq-journal 归档本次工作；更新相关长期主题的当前状态，保留真实会话来源。” Agent 必须定位真实会话日志，续聊更新同一个日记 ID，不能凭记忆补写提示词。长期主题只总结与本项目相关的工作；混合会话中的其他任务不被搬进主题。Skill 是按需调用，不是持续监听服务。 验收与查证 当前状态应区分已上线、本地完成、未验证和候选计划。门面展示必要结论与证据，不要求你先打开一堆附件才能明白项目。需要查证时，打开使用文档、验收报告或来源日记；旧报告中的“未发布”只代表当时进度。 HTML、图片和排版后的 Markdown 可在网页阅读。HTML 默认静态预览，复杂脚本可按需尝试隔离交互；后端服务、外部模块和联网应用不保证在阅读器运行。源站或独立演示通过网页标题入口访问。 文件、权限与备份 超出上传阈值的文件可以只登记本机位置、大小与校验值。索引不是备份，也不是远程可下载文件。网页 ZIP 只包含实际上传的附件及未上传清单；完整原件与历史另用私人恢复包保护。 AI 日报按自然月维护，默认公开正文与报告附件，馆主显式设置优先。其他项目不套用月刊的公开默认。馆主管理在本机保存、构建后，还需同步网站才能影响线上访问。 当前边界 这份指南依据 2026-09-11 的源码与已保存验收记录整理。主题整理逐项推进，当前 muQ 主题的新版门面先在本机验收；不能据此认为全库已经迁移或网站已经更新。Windows 启动器仍缺少实机运行验收。"
+        },
+        {
+          "file": "artifacts/reading-v2-results.html",
+          "text": "muQ HTML 阅读改造 · 实施与验证 muQ：HTML 阅读与可维护的图书馆 本次以 HTML 为读者主要入口，保留 Markdown / JSON 作为维护来源。条目首屏提供概述、状态、概览图与“开始阅读”；关联文件采用纵向长条，显示可读标题、用途与文件体积。月刊的内部归档说明已从“处理与决策”移除，未来不生成该段内容。 八项建议的实现 建议 本次落地 边界 Agent 紧凑接口 info --brief、get --out、按文件导出、verify 兼容原 get；完整输出仍私有 附件全文检索 构建 HTML/MD/文本/代码索引，显示文件名与命中片段；中文短查询直接匹配 每文件原始体积≤2MB，索引≤8万字符，每条目≤24万字符；不做扫描图片OCR 统一视觉与报告组件 theme.css、reading.css、共享门面、report 命令、DESIGN.md 历史独立 HTML 不强制换皮；新构建 MD 视图使用当前主题 可恢复的档案 逐文件哈希清单、备份与恢复 CLI、真实隔离恢复演练 恢复包私有；密码本与只登记路径的大原件另管 完整 HTML 阅读 静态/隔离交互切换、同条目相对 CSS/图像/经典 JS 资源 不开放联网、动态模块和后端应用；独立来源沙箱无法读取馆主会话 单条分享 指定标题、概述和附件，独立密钥，Pages Function 验证，最长30天与撤销 固定快照；发布后生效，不回收已下载内容；由 CLI/Skill 创建，不自动分享 有用封面与紧凑目录 明确封面→featured 图片→文字概览；图文/紧凑切换均保留封面 不伪造截图，不自动选整库截图作为递归门面 稳定身份与事实源 保留 CURRENT、不可变版本、一会话一日记、真实提示词采集、无变化不更新 搜索索引与阅读版均是可重建派生物 已完成验证 29 项 Python 测试通过，覆盖既有存储、可见范围、会话、附件及新增阅读、恢复与分享边界。 Node 服务端测试通过：错误身份、跨站请求、未选文件、过期、撤销及解密。 Chrome 1440px / 390px 页面无横向溢出；月刊决策章节不存在；Markdown 正确显示标题和表格。 浏览器沙箱真实测试：同条目相对 CSS 生效，按钮执行后文字变化，脚本读取父页失败；网络由 CSP 限制。 真实本地恢复包包含521个文件，恢复后核验147个历史附件版本，并在恢复目录重新构建3条公开条目与7条完整条目（本次演练时快照数量）。 线上发布与在线响应在部署后单独核对；本文件不把本地测试冒充线上验证。 今后的使用方式 短会话直接写清概述与结果，无需凑文档。研究会话保留问题、结论、来源与未核实项。长报告可由 Markdown 生成独立 HTML，作为 featured 成果；同一会话续聊仍更新原条目。大型模型、数据集等保留明确索引，网页显示未备份状态。 普通日记仍仅馆主阅读全文，公开条目的提示词仍加密。AI 月刊沿用当前公开设置，私有月刊不会因本次排版修改被改为公开。"
         },
         {
           "file": "artifacts/reply.md",
@@ -2516,6 +2109,226 @@
       ]
     },
     {
+      "id": "codex-4d581ad1e98ee8f22621fa93",
+      "kind": "journal",
+      "collection": "",
+      "title": "daily · 日常维护与 AI 日报工作流",
+      "summary": "日常维护会话：Fcitx 5 拼音配置；AI 日报增量搜索、按月归档、工作时提醒、默认公开及馆主可见范围管理。",
+      "date": "2026-09-10",
+      "updated": "2026-09-12T16:57:41.425705+00:00",
+      "status": "active",
+      "cover": "covers/codex-4d581ad1e98ee8f22621fa93-07d5ae5b8af6.png",
+      "cover_kind": "overview",
+      "public": true,
+      "locked": false,
+      "catalogue_order": 7,
+      "tags": [],
+      "work": "已核实用户安装 Fcitx 5 完整，设置全拼、Ctrl+空格/左 Shift 切换与候选字体 13，默认框架改为 Fcitx 5，等待注销重登实测。已更新 ai-daily 与 muq-journal：日报增量窗口、按月固定条目、重复归档不新增版本、按可见范围构建和失败重试；四份全局指令添加工作时提醒入口。\n历史日报归档：扫描 5877 个 HTML，确认并导入 4 份有效报告，8 月 3 份、9 月 1 份；来源原件未修改，入库附件与原件逐字节和 SHA256 核对通过。空验收文件和工作流图未导入。\n已将8月和9月AI月刊共4份历史报告设为公开正文与附件；新月刊默认公开，显式私有设置在后续追加中保留。馆主本机界面支持逐条公开/私有、编辑公开标题概述、保存构建与同步网站。线上管理入口返回本机。\n线上已部署公开月刊与管理入口：匿名HTTP实际取回两个月刊目录和4份HTML，内容SHA256全部匹配。线上馆主管理指向本机对应条目。\n输入法补修：已确认 X11 下 Fcitx 5 正常自启动、应用已连接，无 IBus 守护进程。将 Shift_L 与 Shift_R 加入正式 TriggerKeys，保留 Control+space，清空临时 AltTriggerKeys；fcitx5-remote -r 热加载后通过 DBus GetConfig 确认运行值。保留默认英文输入，不修改 GNOME 输入源和自启动。\n2026-09-11：将 MP4 默认播放器设为 VLC，xdg-mime 验证成功。图书馆馆员从首屏相框改为右侧大幅背景人物，原图保留，生成透明背景衍生 WebP；用渐隐与层级保护正文，手机端降低透明度。360/768/1440 宽度无横向溢出，图片加载、馆藏锚点和搜索交互检查通过，无页面运行异常。\n馆员抠图补修：先前仅从边界连通清背景，漏掉发丝封闭空隙。通过逐区域检查清除 18 处内部浅色背景，并补修细缝，保留白衬衫、面部与红发；深色底两倍放大检查和浏览器加载验证通过。\n找到昨日生图技巧任务：6 个来源，原稿 submitted 且未完整语义验收，已有 research-reviewed.md 修订版。以修订版制作单文件 HTML，含工具选择、3 套可复制提示词、来源记录及发丝抠图前后深浅底交互对照，保留完整修订原文。未重新联网检索，未进行第三方生成测试。浏览器已打开，复制/底色切换/展开/移动布局检查通过。\n扩展 AI 生图研究：完成跨体系真实搜索及 14 个直接核对来源，筛选 9 项资源，编写漫画线稿/厚涂/半厚涂/清新简约提示词与减少 AI 视觉套路的方法。风格搜索超时后直接核对 BFL、Google、Midjourney 文档及 Fooocus 风格 JSON，不虚构未取得的搜索结果。未安装第三方 Skill、未新增生图测试。\n条目实际在桌面与手机验收：无横向溢出，隔离交互筛选返回 4 项 Skill。将阅读器来源链接排序到正文后；本机服务停止后用现有 start-linux.sh 恢复。未发布网站。\n实际调用 imgen-studio 生成东方 Project 帕秋莉立绘：默认环境缺少 SDK，已隔离安装依赖，再用既有授权的第三方 model-library + 内置 CLI 请求 gpt-image-2 成功，约72秒。已检查形象并归档原图、提示词到 ai-image-studio。\n按用户要求移除旧 imgen-studio，备份为非活动参考；创建 imgen-art-director，主流程49行、7份按需参考。更新 open-design-ui 两处旧名称引用，未改变其他现有修改。格式、LF、引用与Linux两处发现链接通过验证。未运行新的付费生图，质量提升尚待验证。\n使用新 imgen-art-director 完成帕秋莉 fumo 写实摄影样图，第三方既有通道请求 gpt-image-2，34秒成功，已实际看图并保留PNG与WebP预览。用户反馈待确认。\n按用户要求，用新 Skill 各生成帕秋莉 fumo 漫画线稿版与厚涂版，已实际看图，保留原图与提示词；两张独立生成存在局部造型变化。\n用户认可新生图 Skill，并要求正式归档本主题。已更新 ai-image-studio 当前状态、首轮实测与用户反馈；新版门面直接展开写实、漫画线稿与厚涂样图，保留旧报告、原图、提示词与源码快照。\n归档验收：桌面1440与手机390无横向溢出，三张图加载且保持原比例。修复阅读器沙箱门面的锚点误导航；原reader.js已备份。单独附件网页导航超时，改以全部附件哈希校验确认入库完整性。\n2026-09-12 按更新后的 muq-journal 重新归档 AI 生图主题：迁移原生 reading-v2，章节等比展示3张fumo与1张历史人物立绘，随读目录、纵向文件入口、来源原话默认展开；混合daily来源设primary=false。历史附件与可见范围保留。\n重新归档验收通过：1440/820/390宽度无溢出，4图完整加载且等比，sticky目录和当前章节高亮有效，24条来源原话默认展开，原图附件页实际打开1254×1254；15份附件哈希一致。仅本地构建，未发布线上。",
+      "problems": "HTTP/HTTPS 小文件测速未能预测完整 apt 下载，用户反馈换协议未显著提速，根因未完全确定。Fcitx 实际输入效果尚待用户确认。新日报流程真实联网生成与 Windows 实机触发未测。",
+      "decisions": "月刊使用 kind=project 和 ai-daily-YYYY-MM 固定 ID；普通会话仍一会话一日记。上次主动请求与成功归档日期分离，失败不推进搜索游标。提醒只在工作会话触发，用户同意才派 Agent；提醒七天冷却，支持用户指定延期。采用真实独立审查员 /root/review_daily_reminder，写前及落盘均通过。\n本轮为历史材料归档，保留原新闻及原核验标签，不把归档当作重新查证；导入不伪造原始生成时刻，仅保留 HTML 报告日期。未把整理历史文件当作新的生成请求。\n按用户本轮修正：公开默认仅适用于AI日报；普通条目默认私有，原始提示词始终加密。本机管理有同源校验、馆主验证和短时管理会话，保存采用版本检查。公开导出仅正文与可上传artifacts，不包含原始prompt、内部bundle或本机索引。",
+      "outputs": "共享 ai-daily 与 muq-journal Skill、workflow.py、monthly.py 与 13 项隔离测试；四份全局指令及独立审查证据位于 /mnt/d/Linux_share/persona-history/ai-daily-reminder-20260910-213012。提醒启用日期 2026-09-10，last_requested_at 未设置，首次到期 2026-09-17。\n历史日报月刊：ai-daily-2026-08、ai-daily-2026-09。导入清单 /mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/inventory.json。增量计划识别最后综合日报日期为 2026-09-04。\n25项muQ测试、14项AI日报测试通过；浏览器临时馆藏验证匿名正文/HTML预览、公开↔私有、退出回到公开目录、键盘操作，桌面1280和手机390无横向溢出。全局默认规则经独立写前与落盘审查通过。\n首个可见性发布提交 ff0f5c77d5e9b68cb49740e6379d2cb3c9fca664 已部署并核验。公开页面真实截图 public-month-production.png；最后同步包含公开正文的当前状态/下一步显示及本次验收记录。\n输入法回退：sh /home/dticpw/.local/share/input-method-backups/20260910-234350/restore.sh\n馆员背景修改与回退原件：/mnt/e/PG/muQ/docs/librarian-background-20260911/；源码 web/index.html、library.css、koakuma-librarian-background.webp。\n抠图修正备份与对比图：/mnt/e/PG/muQ/docs/librarian-hair-20260911/。\n生图调研 HTML：/mnt/e/PG/imGen/research-gpt-image-2026-09-10/report/image-generation-research.html；本机预览 http://127.0.0.1:6771/image-generation-research.html 。\n创建 muQ 项目条目 ai-image-studio（仅馆主可见），5 个子版块，HTML 作为 frontpage 直接渲染，保留昨日 GPT 研究 HTML。独立报告：/mnt/e/PG/imGen/research-styles-2026-09-11/ai-image-styles-20260911.html。\n帕秋莉原图：/mnt/e/PG/imGen/2026-09-11-patchouli/patchouli-original-v1.png。\n新Skill：/mnt/c/Users/DTICPW/agent-workflows/skills/imgen-art-director/SKILL.md；旧版参考与快照：/mnt/e/PG/imGen/skill-reference/。\n帕秋莉 fumo 样图、提示词与生成记录：/mnt/e/PG/imGen/2026-09-11-patchouli-fumo；原图与提示词补入 ai-image-studio 本地条目。\n两种风格原图与提示词：/mnt/e/PG/imGen/2026-09-11-patchouli-fumo-styles；已复制入本地 ai-image-studio，未发布线上。\n生图阶段归档页：/mnt/e/PG/agent-artifacts/ai-image-archive-20260911/ai-image-studio-archive-20260911-v1.html。\n新版归档与盘点：/mnt/e/PG/agent-artifacts/ai-image-rearchive-20260912。",
+      "next": "待用户实测左右 Shift 中英文切换，以及下次登录后不点击托盘菜单能否直接切换；本轮已确认配置加载，尚不能宣称开机问题实测解决。后续日常验证 AI 日报生成、月刊可见范围及馆主管理。",
+      "current_state": "",
+      "sections": [],
+      "resources": [
+        {
+          "kind": "link",
+          "url": "http://127.0.0.1:6767/library/entry.html?id=ai-image-studio",
+          "title": "AI 生图专题（本机）",
+          "description": "长期积累风格研究、Skill 与工作流链接、提示词和实践。"
+        }
+      ],
+      "public_content": true,
+      "files": [
+        {
+          "name": "artifacts/historical-ai-reports-inventory.json",
+          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/b5fecf0f9191845dea18462c0735300bc02be76183307ff4e13e1f4d4a090338.bin",
+          "bytes": 1603,
+          "sha256": "b5fecf0f9191845dea18462c0735300bc02be76183307ff4e13e1f4d4a090338"
+        },
+        {
+          "name": "artifacts/image-generation-research.html",
+          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/a0862949f795e19c13275892fd3b6100d8904316bed09b72c92a1844ac8a7470.bin",
+          "bytes": 483162,
+          "sha256": "a0862949f795e19c13275892fd3b6100d8904316bed09b72c92a1844ac8a7470"
+        },
+        {
+          "name": "artifacts/review.txt",
+          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/1abecf022c09403099693edc531d8cb84ab7c6b2bc093ccc99939f01be989278.bin",
+          "bytes": 467,
+          "sha256": "1abecf022c09403099693edc531d8cb84ab7c6b2bc093ccc99939f01be989278"
+        },
+        {
+          "name": "artifacts/validation.txt",
+          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/0afb3c936cc66ffa3c9844c0b40dfb73d63f5580c9353fc28a4364bd7394e4a6.bin",
+          "bytes": 571,
+          "sha256": "0afb3c936cc66ffa3c9844c0b40dfb73d63f5580c9353fc28a4364bd7394e4a6"
+        },
+        {
+          "name": "artifacts/visibility-final-validation.md",
+          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/d80f7924df3d650470e611e559103e93416094468ed25a7f3f64633e9eccf6ba.bin",
+          "bytes": 1108,
+          "sha256": "d80f7924df3d650470e611e559103e93416094468ed25a7f3f64633e9eccf6ba",
+          "reading": {
+            "url": "public-files/codex-4d581ad1e98ee8f22621fa93/052a21b13d17dbccb0bc82a8102f6f528eb5d30807176fe1f33280e5ce197243.bin",
+            "bytes": 3182,
+            "sha256": "052a21b13d17dbccb0bc82a8102f6f528eb5d30807176fe1f33280e5ce197243"
+          }
+        },
+        {
+          "name": "artifacts/visibility-validation-20260910.md",
+          "url": "public-files/codex-4d581ad1e98ee8f22621fa93/841c18c47bd80d12c6b8e02df0595c31f9f2f526a38425e68e9720e4eec3072e.bin",
+          "bytes": 634,
+          "sha256": "841c18c47bd80d12c6b8e02df0595c31f9f2f526a38425e68e9720e4eec3072e",
+          "reading": {
+            "url": "public-files/codex-4d581ad1e98ee8f22621fa93/b21343aedd7d2f387e6e98621c73b6033fc65ac6ea997f32ff83004ba10f1c60.bin",
+            "bytes": 2699,
+            "sha256": "b21343aedd7d2f387e6e98621c73b6033fc65ac6ea997f32ff83004ba10f1c60"
+          }
+        }
+      ],
+      "omitted_files": [],
+      "search_index": [
+        {
+          "file": "artifacts/historical-ai-reports-inventory.json",
+          "text": "[ { \"source\": \"/mnt/e/PG/keys/AI周报-2026-08-27.html\", \"manifest\": \"/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/1-AI周报-2026-08-27.report.json\", \"report_date\": \"2026-08-27\", \"window_start\": \"2026-08-21\", \"items\": 9, \"sources\": 16, \"sha256\": \"3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9\", \"month\": \"ai-daily-2026-08\" }, { \"source\": \"/mnt/e/PG/keys/GitHub社区周报-2026-08-27.html\", \"manifest\": \"/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/2-GitHub社区周报-2026-08-27.report.json\", \"report_date\": \"2026-08-27\", \"window_start\": \"2026-08-21\", \"items\": 8, \"sources\": 12, \"sha256\": \"fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a\", \"month\": \"ai-daily-2026-08\" }, { \"source\": \"/mnt/c/Users/DTICPW/Desktop/codex/daily/ai-weekly-2026-08-31.html\", \"manifest\": \"/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/3-ai-weekly-2026-08-31.report.json\", \"report_date\": \"2026-08-31\", \"window_start\": \"2026-08-25\", \"items\": 8, \"sources\": 18, \"sha256\": \"707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e\", \"month\": \"ai-daily-2026-08\" }, { \"source\": \"/mnt/c/Users/DTICPW/Desktop/codex/daily/ai-daily-2026-09-04.html\", \"manifest\": \"/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/4-ai-daily-2026-09-04.report.json\", \"report_date\": \"2026-09-04\", \"window_start\": \"2026-09-03\", \"items\": 6, \"sources\": 13, \"sha256\": \"7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2\", \"month\": \"ai-daily-2026-09\" } ]"
+        },
+        {
+          "file": "artifacts/image-generation-research.html",
+          "text": "生图技巧调研 · 从角色母版到网页素材 跳到报告正文 imGen 工作流 提示词 抠图对照 来源 打印 RESEARCH NOTES / 2026.09.10 → 09.11 从角色母版， 到真正可用的素材。 生图技巧与工具调研。先固定身份，再逐项编辑；把角色、背景和网页文字分层，最后在真实页面上验收。 资料调研已交付修订版 昨天做到哪一步了？ 搜索记录覆盖 6 个来源。 原稿通过结构检查，未获完整语义验收。 修订版改正角色“双角”、配色及接口能力边界。 第三方工具的真实出图对比尚未进行。 资料核对：09-10；HTML 整理与本地案例补充：09-11。本页没有把历史检索写成今天重新联网验证。 01 / 方法 最值得采用的，是一套编辑顺序。 固定角色身份比不断添加形容词更有用。参考图能提供约束，但并不保证每次生成完全一致；以下流程仍需人工检查。 01 保留同一母版 每张衍生图重新附上母版，明确哪些特征不可改变，避免用连续变体逐代传递误差。 02 把修改范围说清 写明主体、用途、构图、风格、保持项和修改项。一次只改一个方面，方便判断效果。 03 先构图，后精修 先探索姿势和留白，确定方向后再提高质量、修手部与纹理。质量参数按实际接口支持选择。 04 到页面上验收 深浅底检查透明边缘，手机上检查裁切和文字；角色不能遮挡按钮，重要文字交给 HTML。 本项目角色锚点： 深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本；无角、无尾。页面色值：深紫 #292332、暖白 #f5f1eb、梅紫 #665173、浅金 #dfcba2。色值提示不构成像素级保证。 02 / 选择 按工作方式选择工具。 工具或通道 适合什么 本次证据边界 ChatGPT 图像编辑 少量素材、自然语言试姿势和表情；上传同一张参考图，说明改变与保留项。 昨天调研核对了文档；套餐、额度和工作区权限需要实际确认。 GPT Image API 保存参数、组织批量任务；单次生成/编辑用 Image API，需要对话上下文时考虑 Responses。 官方 API、内置 CLI 与第三方代理不能混同；模型名与透明参数以所选接口为准。 Adobe Firefly / Photoshop 需要图层、局部编辑和设计交付的工作流。 已有官方集成文档记录；本项目没有完成真实出图对比。 Clipdrop Remove Background 透明边缘不合格时的背景移除候选工具。 属于通用后处理，不是 OpenAI 集成；未实测其发丝效果优于本地处理。 已跑通的历史生成路径是 gpt-image-2 暖白底输出；不能由官方文档中的新型号推断本机代理已支持。下方来源保留昨天的核对记录，调用前仍应复核接口能力。 03 / 可直接使用 三套角色与网页素材提示词。 复制后上传参考图，并替换方括号变量。第二套允许同时描述表情和手臂动作；若出现身份漂移，拆成两轮修改。 模板 01 透明角色主素材 复制提示词 先上传母版；透明参数需当前接口实际支持，文字要求不能代替 Alpha。 展开完整提示词 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 模板 02 角色表情与动作变体 复制提示词 每张变体都回到同一母版，重复保持项，减少逐代漂移。 展开完整提示词 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 模板 03 图书馆首屏构图 复制提示词 人物放右侧，左侧留文字空间；标题与按钮由网页渲染。 展开完整提示词 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 04 / 本地实证 · 今日补充 透明背景，不能只看外轮廓。 这两张来自同一张馆员图。初次处理只去掉了与外缘相通的背景，头发围住的空隙仍然发白；修正版清除了 18 处封闭残留并补修细缝。这是本地后处理对照，不是第三方工具评测。 深紫 暖白 黑色 白色 修复前 · 封闭缝隙仍有底色 修复后 · 保留白衬衫与面部 PNG / WebP 文件并不必然透明，必须检查 Alpha。 把棋盘格画进图片，仍是一张不透明图片。 深底容易暴露白边；浅底容易暴露暗边。 先检查发丝、翼缘、手部与衣袖，再缩小到实际显示尺寸。 05 / 证据 来源记录与未完成项。 以下为昨天 sources.json 的核对记录，保留日期和原文摘要。社区模板是单帖经验，不能当作“角色锁定”的证明；第三方效果、账号权限与成本对比尚未实测。 Image generation | OpenAI API OpenAI 官方页面已实际获取。页面说明 Image API 提供 generations/edits，Responses API 支持多轮编辑与图像上下文；当前新工作流列出 gpt-image-2.5-sunburst 与 gpt-image-2.5-flare，并提醒组织可能需要验证。页面的限制段明确说明跨多次生成的角色或品牌元素仍可能不一致。 原调研核对：2026-09-10T22:43:01+08:00 GPT Image Generation Models Prompting Guide — Prompting Fundamentals OpenAI 官方页面已实际获取。建议按场景→主体→细节→约束组织提示；编辑时明确 change only X 与 preserve 清单；透明背景需 background=transparent 且输出 PNG/WebP，JPEG 不支持；多图输入应按编号说明关系，并建议小步迭代。 原调研核对：2026-09-10T22:43:01+08:00 Image generation | ChatGPT Docs ChatGPT 官方文档已实际获取。支持在 ChatGPT 中上传参考图来生成或编辑；编辑应具体说明改变项和保持项，一次做小范围调整；ChatGPT Web 的图像可用性与限额取决于套餐和工作区。页面同时注明 Codex 内置生成使用 gpt-image-2，说明不同界面不能简单等同于 API 的最新模型。 原调研核对：2026-09-10T22:43:01+08:00 Use non-Adobe generative AI models in Adobe products Adobe 官方页面已直接获取并核对。页面列出 OpenAI 的 GPT image generation model、GPT Image 1.5、GPT Image 2、GPT Image 2.5 Flare 和 GPT Image 2.5 Sunburst；列明其在 Firefly 的 Text to image、Prompt to Edit Image、Boards、Graph 或 Style generator 等入口，并提示合作模型的国家/地区可用性可能不同。 原调研核对：2026-09-10T22:43:01+08:00 Remove Background | Clipdrop APIs Clipdrop/Jasper 官方 API 页面已直接获取。Remove Background 端点接收 PNG、JPG 或 WebP（页面列出 25MP、30MB 上限），成功响应可按 Accept 返回 PNG/WebP/JPEG，默认 PNG。页面不声称与 OpenAI 集成，因此报告仅把它归为通用后处理。 原调研核对：2026-09-10T22:43:01+08:00 Stable Single-Character Anime Prompt Template (Avoids Multi-Panel Issues) 已直接获取论坛 JSON。原帖创建于 2026-04-27，自述用于 ChatGPT Image 2.0 的单角色动漫模板，强调固定描述结构，以及 single character / no reference sheet / no multiple panels。页面当时显示 2 帖、0 回复、2 赞、876 浏览；属于社区单帖经验，不是 OpenAI 官方能力证明或量化测试。 原调研核对：2026-09-10T22:43:01+08:00 展开昨天完整修订报告（原文） # 当前 GPT/OpenAI 生图工具与角色提示词调研 核对日期：2026-09-10（UTC+8） 中控修订版：修正原报告把小恶魔写成长角角色的错误，匹配页面实际配色，并补充透明输入与代理能力边界。原始 MA3 产物未改动。小恶魔身份锚点：深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本，无角无尾。 实际执行边界：官方文档描述的透明 preview、新模型和参数，不代表本机随附 CLI 或第三方代理已支持；本次已实测成功的路径是 gpt-image-2 暖白背景输出。应先核对所选接口和 CLI 的当前能力，不能仅凭文档替换已验证流程。页面另用梅紫 #665173、浅金 #dfcba2。 ## 结论先行 对于已有“小恶魔馆员”立绘、目标是深紫与暖白个人图书馆网页素材的场景，最稳妥的路线不是重新“抽卡”，而是把现有立绘当作唯一的角色母版，持续做参考图编辑： 1. **少量手工素材：优先 ChatGPT 图像编辑。** 上传母版，用自然语言逐次只改一个变量；它最适合试造型、表情、姿势和构图。 2. **批量、透明背景或需要参数可复现：优先 GPT Image API。** 单次生成/编辑用 Image API；需要保留对话上下文、多轮迭代时用 Responses API。当前官方 Image API 指南列出的新工作流模型是 `gpt-image-2.5-sunburst`（偏编辑精度/高要求质量）和 `gpt-image-2.5-flare`（偏速度/日常生成）。必须以账号中实际可用模型为准，不从产品名推定权限。 3. **设计师式精修：Adobe Firefly/Photoshop 是已核实的第三方集成。** Adobe 官方页面明确列出 GPT Image 2、GPT Image 2.5 Flare 和 Sunburst；可在 Firefly 的 Text to image、Prompt to Edit Image、Boards 等流程中使用，区域可用性可能不同。 4. **透明抠图兜底：Clipdrop 只作后处理。** 它有独立的 Remove Background API，能接收 PNG/JPG/WebP 并返回 PNG/WebP/JPEG；这不是 OpenAI 集成。GPT Image 已能原生输出透明背景时，应先用原生透明，边缘不合格再后处理。 ## 能力与证据边界 | 类别 | 已核实能力 | 对本项目的意义 | 边界 | |---|---|---|---| | ChatGPT / Codex 图像生成 | 官方文档支持上传参考图生成或编辑；建议明确“改什么、什么保持不变”，一次做小范围修改 | 无需写代码，适合围绕现有馆员立绘迭代表情、姿势和构图 | ChatGPT Web 的可用性和额度取决于套餐与工作区；Codex 内置页面标明其内置图像生成使用 `gpt-image-2`，不可把 API 新模型名自动套到所有界面 | | GPT Image API | Image API 支持生成与编辑；Responses API 增加多轮编辑与上下文；可配置尺寸、质量、格式等 | 可批量生成表情包、空状态图、透明角色切图，并保存参数与提示词 | 组织可能需要验证；模型访问、延迟、成本须以账户和实测为准 | | 透明背景 | OpenAI 提示指南明确：`gpt-image-2` 的透明背景为 preview，需 `background=\"transparent\"` 且输出 PNG/WebP，JPEG 无 Alpha | 馆员立绘可直接叠在深紫网页背景上 | “生成一张棋盘格背景”不等于真的透明；交付前必须检查 Alpha 通道和浅色/深色底边缘 | | 角色一致性 | 官方建议明确不变量、用参考图、每轮重复 preserve 清单并小步迭代；API 指南也承认跨多次生成的角色/品牌元素仍可能漂移 | 应维护一个母版和固定角色描述，不要每次从纯文本重生 | 不存在官方保证的“角色锁定”；脸、翼、瞳色、服装纹样、比例仍需人工验收 | | Adobe Firefly | Adobe 官方列出 OpenAI GPT Image 合作模型及可用功能 | 适合生成后继续布局、局部编辑和设计交付 | 属第三方产品；模型、地区、积分和商用条款要按 Adobe 当前界面确认 | | Clipdrop | 官方 Remove Background API 可移除背景，默认可返回 PNG，并支持 WebP/JPEG Accept | 原生透明边缘失败时作为批量兜底 | 只是通用后处理，会误伤发丝、翼尖、半透明阴影；不增强角色一致性 | ## 推荐工作流 ### A. 先建立“角色母版包” - 保留现有原图不动，选一张正面或 3/4 视角、五官和服装清楚的图作为 `master`。 - 写一段不随场景变化的角色锚点：头侧小型蝙蝠翼与背部蝙蝠翼的形状与颜色、瞳色、发型、耳朵、服装剪影、书本/钥匙等标志物、身材比例、线条和上色风格。 - 颜色用语与色值并用，例如“深紫 `#292332`、暖白 `#f5f1eb`”；色值是目标提示，不是像素级保证。 - 每张衍生图都重新附上同一母版。不要把第 8 张衍生图继续当第 9 张的唯一参考，以减少逐代误差；这是基于编辑漂移限制给出的工程建议，并非官方保证。 ### B. 先低成本探索，再高质量定稿 - 用较低质量或 ChatGPT 中的小步修改探索姿势和留白。 - 确认构图后再用 medium/high 做身份敏感的角色图和细小纹理；OpenAI 官方提示指南也建议对身份敏感编辑、小字和高分辨率输出比较 medium/high。 - 一轮只修改一项，例如先改姿势，再改表情，最后处理灯光；每轮重复“保持”清单。 ### C. 网页交付前验收 - 在深紫、暖白、黑、白四种底色上检查 Alpha 边缘，尤其是翼尖、头发、衣袖、书页和投影。 - 检查同一角色的：头侧翼与背翼数量/朝向、眼睛颜色、发型分缝、衣领、配饰、手指、身高比例。 - 图片内不要生成重要正文。若必须有字，提示词中精确引用短文本，最后仍逐字校对；生产级排版应回到 HTML/CSS 或设计工具。 - 导出语义明确的文件名，并保留母版、提示词、模型、质量、尺寸和生成日期，方便回归。 ## 三套可复用提示词 下面的方括号是待替换变量。ChatGPT 中直接上传参考图；API 中把它作为输入图像。若使用支持透明参数的 API，除提示词外还要真正设置 `background=\"transparent\"` 与 `output_format=\"png\"` 或 `\"webp\"`。 ### 1. 透明角色主素材：从现有立绘提取网页可用全身角色 适用：侧边悬浮馆员、首页迎宾角色、空状态插画。 ```text 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 ``` ### 2. 一致性表情/动作变体：只改一个变量 适用：加载、无结果、欢迎、错误、解锁等状态。每次只替换 `[目标状态]` 与动作，不重写角色锚点。 ```text 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 ``` 推荐生成顺序：`中性母版 → 欢迎 → 思考 → 空结果 → 轻微警告`。每次都从中性母版编辑，而不是从上一张变体继续编辑。 ### 3. 深紫暖白图书馆 Hero：角色与网页留白协同 适用：首页宽屏 Hero 背景。建议把角色与背景分层生成；若直接合成，则把文字留白写清楚，真正标题仍由 HTML/CSS 渲染。 ```text 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 ``` 若首轮背景很好但角色漂移，下一轮不要整张重画；改为分别生成“透明角色层”和“无人物背景层”，在网页中用 CSS 定位叠放。这比反复要求模型同时修角色和复杂场景更容易验收。 ## 第三方与社区技巧：如何采用 ### 已核实第三方工具 - **Adobe Firefly/Photoshop：推荐给需要图层、局部精修和设计交付的人。** 官方集成证据充分；但需在实际 Adobe 账户中确认区域和功能入口。 - **Clipdrop Remove Background：仅作为抠图兜底。** 官方文档只证明背景移除端点与格式，不证明它对“小恶魔翼尖/发丝”一定优于 GPT 原生透明；应拿 5–10 张本项目图片做盲测再决定是否批量用。 ### 社区技巧（可试，但不是官方保证） OpenAI Community 有一篇 2026-04-27 的单角色动漫模板帖，核心做法是固定“头发 → 眼睛 → 性格/表情 → 体型 → 服装 → 姿势 → 构图”的描述顺序，并显式写 `single character, no reference sheet, no multiple panels`。该帖只有 2 个帖子、2 个赞，属于单个用户的小样本经验。它与 OpenAI 官方“结构固定、约束明确”的建议方向一致，因此可作为提示词组织法测试，但不能据此声称角色一致性已被解决。 ### 未验证项 - 搜索中出现的“完美角色锁定”“所有帧完全一致”“透明边缘百分百干净”等说法，没有官方保证或量化基准，不采纳。 - 未对第三方工具做真实图片生成/抠图测试；本报告验证的是文档与公开页面，而不是本项目图片上的效果。 - 未验证用户账户是否已获得某个模型、Adobe 区域功能或对应额度；使用前以实际产品界面/API model list 为准。 ## 来源 1. OpenAI Docs — Image generation API guide：<https://developers.openai.com/api/docs/guides/image-generation> 2. OpenAI Docs — GPT Image Generation Models Prompting Guide：<https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide> 3. ChatGPT Docs — Image generation：<https://learn.chatgpt.com/docs/image-generation> 4. Adobe Help — Use non-Adobe generative AI models in Adobe products：<https://helpx.adobe.com/creative-cloud/apps/generative-ai/non-adobe-models-in-adobe-products.html> 5. Clipdrop APIs — Remove Background：<https://clipdrop.co/apis/docs/remove-background> 6. OpenAI Community — Stable Single-Character Anime Prompt Template：<https://community.openai.com/t/stable-single-character-anime-prompt-template-avoids-multi-panel-issues/1379868> 完整核对证据见 `sources.json`。 imGen · 单文件 HTML，图片内嵌，无外部字体或脚本依赖。来源：research-reviewed.md、sources.json、review.json；本页未产生新的生图调用。"
+        },
+        {
+          "file": "artifacts/review.txt",
+          "text": "独立审查员：/root/review_daily_reminder 写前结论：通过。四份仅新增同一条工作时提醒入口，LF、原文哈希及候选哈希核对通过。未同意不派工或搜索。 落盘：四份原文写前哈希未变；落盘后等于获批候选。 落盘复核结论：通过。审查员逐份确认 live 等于获批候选，状态未虚构 last_requested_at。延期字段仅限制提醒。Windows 实机与真实日报端到端尚未验证。"
+        },
+        {
+          "file": "artifacts/validation.txt",
+          "text": "13 项 unittest 通过：月刊追加/幂等/跨月/附件摘要校验、增量窗口/覆盖优先级、日期标题去重、七天提醒/冷却/延期、dry-run 无写入、搜索失败请求记录、成功生成入库、构建失败可恢复、临时私有构建。 两个 Skill 通过 quick_validate；使用 py310 加载系统已有 PyYAML，无安装或升级依赖。 git diff --check 通过。未提交或推送共享 Skill 仓库。 persona-sync status 21/21 一致；facts 唯一 WARN 为已有历史 Skill 数量记录与当前探针比较，未扩大改动。"
+        },
+        {
+          "file": "artifacts/visibility-final-validation.md",
+          "text": "# 馆藏可见范围验收 25 项 muQ 测试、14 项 ai-daily 测试通过。覆盖公开正文与附件、原始提示词与本机路径索引隔离、改私有移除公开文件、上传排除项、管理身份/来源验证、旧版本拒绝、月刊显式私有优先。 浏览器使用临时馆藏，验证匿名正文/HTML附件、馆主通过键盘公开再改私有、退出后只显示公开条目。1280×900与390×844无横向溢出，截图为临时示例。 全局规则独立审查 /root/review_daily_reminder 写前与落盘均通过，persona-sync 21/21。生产本机服务已重载。线上发布单独验收。 生产本机未解锁访问9月月刊：正文显示，附件入口可见，无解锁提示；管理API匿名返回401。已公开两月刊、4份HTML；公开目录无prompt_records/prompts/session，四个公开附件SHA256与原件一致。 线上验收：koa-ol.com 两个月刊public_content=true，4份HTML无需cookie或Authorization即可下载，SHA256匹配。线上馆主管理链接指向127.0.0.1:6767相同条目；未对其他私有条目更改可见性。"
+        },
+        {
+          "file": "artifacts/visibility-validation-20260910.md",
+          "text": "# 馆藏可见范围验收 25 项 muQ 测试、14 项 ai-daily 测试通过。覆盖公开正文与附件、原始提示词与本机路径索引隔离、改私有移除公开文件、上传排除项、管理身份/来源验证、旧版本拒绝、月刊显式私有优先。 浏览器使用临时馆藏，验证匿名正文/HTML附件、馆主通过键盘公开再改私有、退出后只显示公开条目。1280×900与390×844无横向溢出，截图为临时示例。 全局规则独立审查 /root/review_daily_reminder 写前与落盘均通过，persona-sync 21/21。生产本机服务已重载。线上发布单独验收。"
+        }
+      ]
+    },
+    {
+      "id": "codex-714f66826a43b6acd589dcb5",
+      "kind": "journal",
+      "collection": "",
+      "title": "imGen 生图工作室与 muQ 小恶魔馆员",
+      "summary": "建立个人生图 Skill，研究 muQ 配色和小恶魔资料，按用户要求测试朋友脚本与密码本两条路径，成功生成馆员立绘。 已将馆员接入线上图书馆，并通过 MA3 的真实 tmux 执行器开展 GPT 生图工具与提示词调研。",
+      "date": "2026-09-10",
+      "updated": "2026-09-12T16:57:41.417752+00:00",
+      "status": "done",
+      "cover": "covers/codex-714f66826a43b6acd589dcb5-3bf41679dd1f.png",
+      "cover_kind": "screenshot",
+      "public": true,
+      "locked": false,
+      "catalogue_order": 8,
+      "tags": [],
+      "work": "创建共享 imgen-studio Skill、任务目录、提示词；生成 PNG 原图、WebP 网页版及头像裁切版。 页面采用馆员肖像与馆藏卡并排；1440/390/320px 浏览器检查通过，搜索、登录入口和 Escape 关闭正常。 MA3 已 claim、heartbeat、ack 两条消息并 submit；结构验收通过，原报告角色细节有误，未标 verified；中控在 imGen 交付修订版。",
+      "problems": "朋友脚本返回 HTTP 401 后停止。内置 CLI 先遇参数适用范围和 socks 代理初始化问题，修正调用后成功。图片为暖白背景，非透明。 MA3 模板遗留“不联网”提示与本次任务冲突，已记录补充授权；搜索首次缺少凭据路径，执行器自行按 Linux 前缀修正。",
+      "decisions": "两条路径实际使用同一第三方服务、不同凭据。成功路径使用随附 CLI 和 model-library 凭据，gpt-image-2、1024×1536、high。原图保留不覆盖；后续获用户授权，将网页素材接入 muQ/web 源文件并发布。",
+      "outputs": "/mnt/e/PG/imGen/2026-09-10-muq-koakuma；线上 https://koa-ol.com/library/；页面发布提交 af1cf56。",
+      "next": "馆员已上线；后续生图可参考修订报告中的三套提示词。MA3 原报告保留 submitted 状态及语义审阅备注。",
+      "current_state": "",
+      "sections": [],
+      "resources": [
+        {
+          "kind": "link",
+          "url": "https://koa-ol.com/library/",
+          "title": "小恶魔馆员已上线",
+          "description": "完整立绘与馆藏卡并排；线上图片校验与源素材一致。",
+          "featured": true
+        },
+        {
+          "kind": "file",
+          "file": "artifacts/library-desktop.png",
+          "title": "桌面端页面验收截图",
+          "featured": true
+        },
+        {
+          "kind": "file",
+          "file": "artifacts/library-mobile.png",
+          "title": "手机端页面验收截图"
+        },
+        {
+          "kind": "file",
+          "file": "artifacts/research-reviewed.md",
+          "title": "GPT 生图工具与提示词（中控修订）",
+          "featured": true
+        }
+      ],
+      "public_content": true,
+      "files": [
+        {
+          "name": "artifacts/koakuma-vault-original.png",
+          "url": "public-files/codex-714f66826a43b6acd589dcb5/a78bb87fec94449b1d4e97fdc85eb1b427208b1f6dcebe8504010716af16c025.bin",
+          "bytes": 1430987,
+          "sha256": "a78bb87fec94449b1d4e97fdc85eb1b427208b1f6dcebe8504010716af16c025",
+          "thumbnail": {
+            "url": "public-files/codex-714f66826a43b6acd589dcb5/a78fc0fe320235b8290b12b200ddfee3cc57e658ad28e527b765e53b3afbdd34.bin",
+            "bytes": 7763,
+            "sha256": "a78fc0fe320235b8290b12b200ddfee3cc57e658ad28e527b765e53b3afbdd34"
+          }
+        },
+        {
+          "name": "artifacts/library-desktop.png",
+          "url": "public-files/codex-714f66826a43b6acd589dcb5/a715538aad59625d4a2f2c775d8d27b6161cec61e8a737c8936d7d9a20a2061a.bin",
+          "bytes": 317454,
+          "sha256": "a715538aad59625d4a2f2c775d8d27b6161cec61e8a737c8936d7d9a20a2061a",
+          "thumbnail": {
+            "url": "public-files/codex-714f66826a43b6acd589dcb5/a2d0a68588165b4b1b05c9f06eb7df93654db1f34f09e2218c5cdf56660b37ba.bin",
+            "bytes": 5270,
+            "sha256": "a2d0a68588165b4b1b05c9f06eb7df93654db1f34f09e2218c5cdf56660b37ba"
+          }
+        },
+        {
+          "name": "artifacts/library-mobile.png",
+          "url": "public-files/codex-714f66826a43b6acd589dcb5/b59989c24d158190d3eae182bae595ec8de78c1dd633a5c78566ceb26b7ad871.bin",
+          "bytes": 211270,
+          "sha256": "b59989c24d158190d3eae182bae595ec8de78c1dd633a5c78566ceb26b7ad871",
+          "thumbnail": {
+            "url": "public-files/codex-714f66826a43b6acd589dcb5/6f887fcc596b650a319bc07ada4a670ce1fb9549d05ef35e4a4dc8c42f530bb0.bin",
+            "bytes": 2789,
+            "sha256": "6f887fcc596b650a319bc07ada4a670ce1fb9549d05ef35e4a4dc8c42f530bb0"
+          }
+        },
+        {
+          "name": "artifacts/prompt.txt",
+          "url": "public-files/codex-714f66826a43b6acd589dcb5/3a043ad0cf2a061386bd66d2078563df025dfad82ae3bc3f2d16046bba885699.bin",
+          "bytes": 1742,
+          "sha256": "3a043ad0cf2a061386bd66d2078563df025dfad82ae3bc3f2d16046bba885699"
+        },
+        {
+          "name": "artifacts/research-reviewed.md",
+          "url": "public-files/codex-714f66826a43b6acd589dcb5/c476ad1af8d0ff7fd256be86db1983ca6e7e2f0d90da7845fbb175c791693589.bin",
+          "bytes": 12475,
+          "sha256": "c476ad1af8d0ff7fd256be86db1983ca6e7e2f0d90da7845fbb175c791693589",
+          "reading": {
+            "url": "public-files/codex-714f66826a43b6acd589dcb5/fd392b40db923af037f67f336b965f83b0c68869499cbc39a48c961d40b1443e.bin",
+            "bytes": 16057,
+            "sha256": "fd392b40db923af037f67f336b965f83b0c68869499cbc39a48c961d40b1443e"
+          }
+        }
+      ],
+      "omitted_files": [],
+      "search_index": [
+        {
+          "file": "artifacts/prompt.txt",
+          "text": "Use case: stylized-concept Asset type: standalone librarian character illustration for the muQ online library. Primary request: a tasteful Touhou Project Koakuma fan-art librarian, recognizable as Koakuma, with long deep auburn-red hair, red-brown eyes and small black bat wings at the sides of her head. A modest pair of black bat wings on her back, smaller than her body and fully within the frame. Young adult appearance, warm intelligent expression, gentle welcoming smile. White collared blouse, dark plum-black sleeveless long dress / waistcoat and skirt, restrained burgundy necktie. Modest, fully clothed. Pose: standing naturally in a gentle three-quarter view toward the viewer, holding one closed antique book securely against her torso with both hands. Clear, anatomically coherent hands. Entire figure visible, including hair, wings, skirt and shoes, with comfortable margins. Style: refined Japanese anime character illustration, delicate confident linework, softly painted cel shading, restrained detail that remains legible at small website sizes. Elegant and approachable, a quiet library assistant. Palette: auburn hair as the warm accent; dark plum #292332 and #665173, ivory #f5f1eb, muted gold #dfcba2 for subtle book ornament. Soft diffuse lighting with readable dark clothing contours. Composition: one character only, portrait canvas, centered silhouette. Plain uniform background for easy extraction; no room, no furniture, no floor shadow, no effects outside the silhouette. Text: none. Avoid: horns, pointed tail, angel wings, large fantasy weapons, maid headdress, purple hair, extra limbs or fingers, detached objects, sexualized costume, chibi proportions, typography, logos, watermark, border, character sheet."
+        },
+        {
+          "file": "artifacts/research-reviewed.md",
+          "text": "# 当前 GPT/OpenAI 生图工具与角色提示词调研 核对日期：2026-09-10（UTC+8） 中控修订版：修正原报告把小恶魔写成长角角色的错误，匹配页面实际配色，并补充透明输入与代理能力边界。原始 MA3 产物未改动。小恶魔身份锚点：深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本，无角无尾。 实际执行边界：官方文档描述的透明 preview、新模型和参数，不代表本机随附 CLI 或第三方代理已支持；本次已实测成功的路径是 gpt-image-2 暖白背景输出。应先核对所选接口和 CLI 的当前能力，不能仅凭文档替换已验证流程。页面另用梅紫 #665173、浅金 #dfcba2。 ## 结论先行 对于已有“小恶魔馆员”立绘、目标是深紫与暖白个人图书馆网页素材的场景，最稳妥的路线不是重新“抽卡”，而是把现有立绘当作唯一的角色母版，持续做参考图编辑： 1. **少量手工素材：优先 ChatGPT 图像编辑。** 上传母版，用自然语言逐次只改一个变量；它最适合试造型、表情、姿势和构图。 2. **批量、透明背景或需要参数可复现：优先 GPT Image API。** 单次生成/编辑用 Image API；需要保留对话上下文、多轮迭代时用 Responses API。当前官方 Image API 指南列出的新工作流模型是 `gpt-image-2.5-sunburst`（偏编辑精度/高要求质量）和 `gpt-image-2.5-flare`（偏速度/日常生成）。必须以账号中实际可用模型为准，不从产品名推定权限。 3. **设计师式精修：Adobe Firefly/Photoshop 是已核实的第三方集成。** Adobe 官方页面明确列出 GPT Image 2、GPT Image 2.5 Flare 和 Sunburst；可在 Firefly 的 Text to image、Prompt to Edit Image、Boards 等流程中使用，区域可用性可能不同。 4. **透明抠图兜底：Clipdrop 只作后处理。** 它有独立的 Remove Background API，能接收 PNG/JPG/WebP 并返回 PNG/WebP/JPEG；这不是 OpenAI 集成。GPT Image 已能原生输出透明背景时，应先用原生透明，边缘不合格再后处理。 ## 能力与证据边界 | 类别 | 已核实能力 | 对本项目的意义 | 边界 | |---|---|---|---| | ChatGPT / Codex 图像生成 | 官方文档支持上传参考图生成或编辑；建议明确“改什么、什么保持不变”，一次做小范围修改 | 无需写代码，适合围绕现有馆员立绘迭代表情、姿势和构图 | ChatGPT Web 的可用性和额度取决于套餐与工作区；Codex 内置页面标明其内置图像生成使用 `gpt-image-2`，不可把 API 新模型名自动套到所有界面 | | GPT Image API | Image API 支持生成与编辑；Responses API 增加多轮编辑与上下文；可配置尺寸、质量、格式等 | 可批量生成表情包、空状态图、透明角色切图，并保存参数与提示词 | 组织可能需要验证；模型访问、延迟、成本须以账户和实测为准 | | 透明背景 | OpenAI 提示指南明确：`gpt-image-2` 的透明背景为 preview，需 `background=\"transparent\"` 且输出 PNG/WebP，JPEG 无 Alpha | 馆员立绘可直接叠在深紫网页背景上 | “生成一张棋盘格背景”不等于真的透明；交付前必须检查 Alpha 通道和浅色/深色底边缘 | | 角色一致性 | 官方建议明确不变量、用参考图、每轮重复 preserve 清单并小步迭代；API 指南也承认跨多次生成的角色/品牌元素仍可能漂移 | 应维护一个母版和固定角色描述，不要每次从纯文本重生 | 不存在官方保证的“角色锁定”；脸、翼、瞳色、服装纹样、比例仍需人工验收 | | Adobe Firefly | Adobe 官方列出 OpenAI GPT Image 合作模型及可用功能 | 适合生成后继续布局、局部编辑和设计交付 | 属第三方产品；模型、地区、积分和商用条款要按 Adobe 当前界面确认 | | Clipdrop | 官方 Remove Background API 可移除背景，默认可返回 PNG，并支持 WebP/JPEG Accept | 原生透明边缘失败时作为批量兜底 | 只是通用后处理，会误伤发丝、翼尖、半透明阴影；不增强角色一致性 | ## 推荐工作流 ### A. 先建立“角色母版包” - 保留现有原图不动，选一张正面或 3/4 视角、五官和服装清楚的图作为 `master`。 - 写一段不随场景变化的角色锚点：头侧小型蝙蝠翼与背部蝙蝠翼的形状与颜色、瞳色、发型、耳朵、服装剪影、书本/钥匙等标志物、身材比例、线条和上色风格。 - 颜色用语与色值并用，例如“深紫 `#292332`、暖白 `#f5f1eb`”；色值是目标提示，不是像素级保证。 - 每张衍生图都重新附上同一母版。不要把第 8 张衍生图继续当第 9 张的唯一参考，以减少逐代误差；这是基于编辑漂移限制给出的工程建议，并非官方保证。 ### B. 先低成本探索，再高质量定稿 - 用较低质量或 ChatGPT 中的小步修改探索姿势和留白。 - 确认构图后再用 medium/high 做身份敏感的角色图和细小纹理；OpenAI 官方提示指南也建议对身份敏感编辑、小字和高分辨率输出比较 medium/high。 - 一轮只修改一项，例如先改姿势，再改表情，最后处理灯光；每轮重复“保持”清单。 ### C. 网页交付前验收 - 在深紫、暖白、黑、白四种底色上检查 Alpha 边缘，尤其是翼尖、头发、衣袖、书页和投影。 - 检查同一角色的：头侧翼与背翼数量/朝向、眼睛颜色、发型分缝、衣领、配饰、手指、身高比例。 - 图片内不要生成重要正文。若必须有字，提示词中精确引用短文本，最后仍逐字校对；生产级排版应回到 HTML/CSS 或设计工具。 - 导出语义明确的文件名，并保留母版、提示词、模型、质量、尺寸和生成日期，方便回归。 ## 三套可复用提示词 下面的方括号是待替换变量。ChatGPT 中直接上传参考图；API 中把它作为输入图像。若使用支持透明参数的 API，除提示词外还要真正设置 `background=\"transparent\"` 与 `output_format=\"png\"` 或 `\"webp\"`。 ### 1. 透明角色主素材：从现有立绘提取网页可用全身角色 适用：侧边悬浮馆员、首页迎宾角色、空状态插画。 ```text 用途：为个人图书馆网页制作可复用的透明背景角色素材。 参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。 画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。 背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。 ``` ### 2. 一致性表情/动作变体：只改一个变量 适用：加载、无结果、欢迎、错误、解锁等状态。每次只替换 `[目标状态]` 与动作，不重写角色锚点。 ```text 编辑图像 1，不要重新设计角色。 只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。 保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。 ``` 推荐生成顺序：`中性母版 → 欢迎 → 思考 → 空结果 → 轻微警告`。每次都从中性母版编辑，而不是从上一张变体继续编辑。 ### 3. 深紫暖白图书馆 Hero：角色与网页留白协同 适用：首页宽屏 Hero 背景。建议把角色与背景分层生成；若直接合成，则把文字留白写清楚，真正标题仍由 HTML/CSS 渲染。 ```text 用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。 参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。 场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。 构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。 ``` 若首轮背景很好但角色漂移，下一轮不要整张重画；改为分别生成“透明角色层”和“无人物背景层”，在网页中用 CSS 定位叠放。这比反复要求模型同时修角色和复杂场景更容易验收。 ## 第三方与社区技巧：如何采用 ### 已核实第三方工具 - **Adobe Firefly/Photoshop：推荐给需要图层、局部精修和设计交付的人。** 官方集成证据充分；但需在实际 Adobe 账户中确认区域和功能入口。 - **Clipdrop Remove Background：仅作为抠图兜底。** 官方文档只证明背景移除端点与格式，不证明它对“小恶魔翼尖/发丝”一定优于 GPT 原生透明；应拿 5–10 张本项目图片做盲测再决定是否批量用。 ### 社区技巧（可试，但不是官方保证） OpenAI Community 有一篇 2026-04-27 的单角色动漫模板帖，核心做法是固定“头发 → 眼睛 → 性格/表情 → 体型 → 服装 → 姿势 → 构图”的描述顺序，并显式写 `single character, no reference sheet, no multiple panels`。该帖只有 2 个帖子、2 个赞，属于单个用户的小样本经验。它与 OpenAI 官方“结构固定、约束明确”的建议方向一致，因此可作为提示词组织法测试，但不能据此声称角色一致性已被解决。 ### 未验证项 - 搜索中出现的“完美角色锁定”“所有帧完全一致”“透明边缘百分百干净”等说法，没有官方保证或量化基准，不采纳。 - 未对第三方工具做真实图片生成/抠图测试；本报告验证的是文档与公开页面，而不是本项目图片上的效果。 - 未验证用户账户是否已获得某个模型、Adobe 区域功能或对应额度；使用前以实际产品界面/API model list 为准。 ## 来源 1. OpenAI Docs — Image generation API guide：<https://developers.openai.com/api/docs/guides/image-generation> 2. OpenAI Docs — GPT Image Generation Models Prompting Guide：<https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide> 3. ChatGPT Docs — Image generation：<https://learn.chatgpt.com/docs/image-generation> 4. Adobe Help — Use non-Adobe generative AI models in Adobe products：<https://helpx.adobe.com/creative-cloud/apps/generative-ai/non-adobe-models-in-adobe-products.html> 5. Clipdrop APIs — Remove Background：<https://clipdrop.co/apis/docs/remove-background> 6. OpenAI Community — Stable Single-Character Anime Prompt Template：<https://community.openai.com/t/stable-single-character-anime-prompt-template-avoids-multi-panel-issues/1379868> 完整核对证据见 `sources.json`。"
+        }
+      ]
+    },
+    {
       "id": "codex-1ec6e6e4e98f484b8a7bf0da",
       "kind": "journal",
       "collection": "",
@@ -2528,7 +2341,7 @@
       "cover_kind": "overview",
       "public": true,
       "locked": false,
-      "catalogue_order": 10,
+      "catalogue_order": 9,
       "tags": [],
       "work": "1. 核对 /mnt/e/PG/MA2 的历史资料与相关会话，区分已运行能力、规划和 Linux 迁移障碍，形成复盘文档。\n2. 按用户要求从 Linux + tmux 重新设计，调研 AgentMux、Agent of Empires 等现有项目并制作 HTML 方案；取用旧项目经验，不照搬旧框架。\n3. 第一版由当前会话担任中控，启动可见 GNOME Terminal / tmux 内的真实 Codex gpt-5.6-sol，完成冒泡排序 Python、HTML 展示、浏览器打开、claim/submit 与独立验收。\n4. v0.2 实现通用任务定义、独立运行目录、attempt、消息保存/投递/ack、validate/accept、观察与人工接管。算法、CSV 修复、文档整理三项真实任务均 verified；文档任务曾在限流后由中控恢复，两个消息均有真实 ack。\n5. 结合 jar.png 与朋友的个人 AI 基建 HTML，明确项目/实例/任务区分、持久收件箱、独立后台与薄 Skill/MCP 的架构；用户明确不做手机中继。\n6. v0.3 实现 Python 标准库后台、HTTP/SSE、网页派工及产物验收、真实终端入口、Codex 会话续接、异步幂等操作；配置用户服务、Linux Codex MCP 和共享 ma3-control Skill。\n7. 解释私有图书馆解锁方式，更新四份全局指令；随后按用户要求新增 global-instruction-review Skill，真实独立审查员完成候选审查与落盘复核。\n8. 2026-09-11 按新版 muQ 结构整理同一日记，制作自包含日常使用 HTML：算法、CSV 修复、文档整理、网页展示、补充消息、Codex 续接六场景。\n9. 按更新后的 muQ 门面规范整合项目介绍、已交付成果、六个日常场景与下一步。修正原指南宽度变化但高度固定导致的图片拉伸，并扩大字号与段落间距。\n10. 2026-09-11 接手准备：实查服务 active/enabled、七任务均 exited、历史任务状态保留，确认 MA3 尚无 Git 仓库。编写 HANDOFF.md 并在 README 添加首读入口，纠正 MCP/Skill 必须新会话的绝对说法。\n11. 用户创建 GitHub MA3 后，核实仓库公开且为空，以明确文件清单提交源码、模板、测试和公开文档；忽略会话、运行状态、原始截图与私人档案。保持远程 HTTPS，通过现有单次 SSH CONNECT 配置推送。",
       "problems": "历史 Windows 前提不能直接用于 Linux：环境继承、进程管理、路径与恢复均需重验。第一版发现页面在 1024px 溢出与浏览器 MCP 调用卡住，已介入并复测修正；codex queue 返回不代表已消费。v0.2 发现回执过期、429 与一次终端投递错误，保留证据后以固定 pane 缓冲区恢复。v0.3 第二任务 task-20260910-162411-972bcb 已从原对话取回记忆标记并生成产物，但终端随后出现 429 Too Many Requests，状态仍为 claimed / waiting_input，没有 submit 或 accept；中控未自动重投或换模型。新登录自动启动虽已 enable，尚未真实注销/重启验证。Claude 仅有适配，无真实执行和会话续接验收。",
@@ -3348,7 +3161,7 @@
       "cover_kind": "overview",
       "public": true,
       "locked": false,
-      "catalogue_order": 11,
+      "catalogue_order": 10,
       "tags": [],
       "work": "2026-09-04｜2026-09-03 至 2026-09-04｜6 条｜ai-daily-2026-09-04-7a95d30437fee497.html",
       "problems": "",
@@ -3396,7 +3209,7 @@
       "cover_kind": "overview",
       "public": true,
       "locked": false,
-      "catalogue_order": 12,
+      "catalogue_order": 11,
       "tags": [],
       "work": "2026-08-27｜2026-08-21 至 2026-08-27｜9 条｜ai-daily-2026-08-27-3fd8ba332460d577.html\n2026-08-27｜2026-08-21 至 2026-08-27｜8 条｜ai-daily-2026-08-27-fa0ef066d66a04f0.html\n2026-08-31｜2026-08-25 至 2026-08-31｜8 条｜ai-daily-2026-08-31-707345bff06ba5d0.html",
       "problems": "",
