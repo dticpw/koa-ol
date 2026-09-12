@@ -9,12 +9,12 @@ function fileIdentity(f,title){
  else if(title&&name.includes('/'))box.append(create('code','file-real-name',name));
  return box;
 }
-function fileRow(e,f,title){
- const row=create('div','file-row'),a=create('a','file-main');a.href=href(e.id,f.name);a.append(fileIdentity(f,title));row.append(a);
- const meta=create('div','file-meta');meta.append(create('span','',sizeLabel(f.bytes)));
- if(f.source_modified){const time=create('time','',new Date(f.source_modified).toLocaleString('zh-CN'));time.dateTime=f.source_modified;time.title='源文件修改时间（导入时记录）';meta.append(time);}
- if(f.missing_dependencies)meta.append(create('span','',`有 ${f.missing_dependencies} 项依赖未随文件提供`));
- const b=create('button','file-save','下载');b.onclick=()=>busy(b,fileDownload(e,f));b.setAttribute('aria-label','下载 '+f.name);meta.append(b);row.append(meta);return row;
+function fileRow(e,f,title,{outcome=false}={}){
+ const row=create('div','file-row file-compact'+(outcome?' file-outcome':'')),a=create('a','file-main');a.href=href(e.id,f.name);a.append(create('strong','',title||f.name.replace(/^artifacts\//,'')));
+ const format=create('span','file-format',fileFormat(f.name)),size=create('span','file-size',sizeLabel(f.bytes)),b=create('button','file-save','下载');
+ b.onclick=()=>busy(b,fileDownload(e,f));b.setAttribute('aria-label','下载 '+(title||f.name));row.append(a,format,size,b);
+ if(f.missing_dependencies)row.append(create('span','file-notice',`有 ${f.missing_dependencies} 项依赖未随文件提供`));
+ return row;
 }
 async function downloadDirectory(e,files,prefix){
  const epoch=state.epoch,out=[];
@@ -39,7 +39,7 @@ function mountFileBrowser(e,host,{internal=false}={}){
    const resources=(e.resources||[]).filter(r=>r.kind==='file'||r.kind==='link'&&r.group==='files');
    const ordered=[...resources.filter(r=>r.kind==='file').map(r=>({r,f:allowed.find(f=>f.name===r.file)})).filter(x=>x.f),...allowed.filter(f=>!resources.some(r=>r.file===f.name)).map(f=>({f,r:{}}))];
    const groups=new Map();for(const x of ordered){const label=x.r.collection||'';if(!groups.has(label))groups.set(label,[]);groups.get(label).push(x);}
-   for(const [label,items] of groups){if(label)body.append(create('h3','file-group-title',label));for(const {r,f} of items)body.append(fileRow(e,f,r.title));}
+   for(const [label,items] of groups){if(label)body.append(create('h3','file-group-title',label));for(const {r,f} of items)body.append(fileRow(e,f,r.title,{outcome:true}));}
    for(const r of resources.filter(r=>r.kind==='link'))body.append(link(r.title,r.url));
    if(!ordered.length&&!resources.some(r=>r.kind==='link'))body.append(create('p','reader-meta','此条目暂无可下载附件。'));
    const omitted=(e.omitted_files||[]).filter(f=>internal||f.name.startsWith('artifacts/'));
