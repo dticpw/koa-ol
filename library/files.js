@@ -28,7 +28,7 @@ async function downloadDirectory(e,files,prefix){
 }
 function mountFileBrowser(e,host,{internal=false}={}){
  const allowed=(e.files||[]).filter(f=>safeArchiveName(f.name)&&(internal||f.name.startsWith('artifacts/')));
- const root=internal?'':'artifacts/';let prefix=root,mode='outcomes';
+ const root=internal?'':'artifacts/';let prefix=root,mode='outcomes';const wanted=params.get('dir');if(wanted&&wanted.startsWith(root)&&allowed.some(f=>f.name.startsWith(wanted))){prefix=wanted;mode='directory';}
  const panel=create('div','file-browser'),controls=create('div','file-controls'),body=create('div','file-browser-body');host.append(panel);panel.append(controls,body);
  const results=create('button','','成果视图'),tree=create('button','','目录视图');controls.append(results,tree);
  results.onclick=()=>{mode='outcomes';draw();};tree.onclick=()=>{mode='directory';draw();};
@@ -46,8 +46,8 @@ function mountFileBrowser(e,host,{internal=false}={}){
    for(const f of omitted)body.append(create('p','reader-meta',f.name+' · 未上传 · '+f.reason));
    return;
   }
-  const nav=create('nav','file-breadcrumb');nav.setAttribute('aria-label','文件目录');const home=create('button','','全部文件');home.onclick=()=>navigate(root);nav.append(home);
-  let path=root;for(const part of prefix.slice(root.length).split('/').filter(Boolean)){path+=part+'/';const dest=path,b=create('button','',part);b.onclick=()=>navigate(dest);nav.append(create('span','','/'),b);}body.append(nav);
+  const nav=create('nav','file-breadcrumb');nav.setAttribute('aria-label','文件目录');const home=create('button','','全部文件');home.onclick=()=>navigate(root);if(prefix===root)home.setAttribute('aria-current','location');nav.append(home);
+  let path=root;for(const part of prefix.slice(root.length).split('/').filter(Boolean)){path+=part+'/';const dest=path,b=create('button','',part);b.onclick=()=>navigate(dest);if(dest===prefix)b.setAttribute('aria-current','location');nav.append(create('span','','/'),b);}body.append(nav);
   const actions=create('div','reader-actions');if(prefix!==root){const up=create('button','','返回上级');up.onclick=()=>navigate(prefix.slice(0,-1).replace(/[^/]+$/,''));actions.append(up);}
   const descendants=allowed.filter(f=>f.name.startsWith(prefix));const zip=create('button','','下载当前目录 ZIP');zip.disabled=!descendants.length;zip.onclick=()=>busy(zip,()=>downloadDirectory(e,descendants,prefix));actions.append(zip);body.append(actions,create('p','reader-meta','仅展示已归档且当前可下载的文件；项目数为直接子项数。'));
   const folders=new Map(),direct=[];
