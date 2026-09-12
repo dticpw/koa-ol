@@ -122,13 +122,14 @@ function drawTrail(dt){
   const lifetime=reduced?.3:1.1;
   if(!paused){for(const point of trail)point.age+=dt;trail=trail.filter(point=>point.age<lifetime);}
   if(trail.length<2)return;
-  ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineJoin='round';
+  // Wide translucent outer stroke + bright core; no per-segment shadow rasterization.
+  ctx.save();ctx.shadowBlur=0;ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineJoin='round';
   for(let i=1;i<trail.length;i++){
     const a=trail[i-1],b=trail[i];
     const fade=Math.pow(Math.max(0,1-b.age/lifetime),1.4);
     const width=(2+6*b.intensity)*fade;
     const segment=(color,w,alpha)=>{ctx.strokeStyle=color;ctx.globalAlpha=alpha;ctx.lineWidth=Math.max(.2,w);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();};
-    if(!reduced){ctx.shadowColor='#8ab8ff';ctx.shadowBlur=12;segment('#a79cff',width*2.3,fade*.15);ctx.shadowBlur=0;}
+    if(!reduced)segment('#a79cff',width*2.3,fade*.15);
     segment('#69edcf',width,fade*.46);
     segment('#e3fff6',width*.28,fade*.8);
   }
