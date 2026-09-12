@@ -1,0 +1,69 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VALIDATION.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>验证说明</h1>
+<h2>2026-09-12 第3阶段真实模型补验通过</h2>
+<p>新建整数稳定去重任务，使用工作台默认 gpt-5.6-sol，完成真实 claim、waiting_input、网页保存消息、核对空闲后投递、执行器ack、生成两份产物并submit。网页运行预先编写的156组独立边界/随机检查，退出码0；检查通过后仍为submitted，中控审阅并通过网页accept后为verified，当前哈希证据匹配。刷新后状态仍正确，网页产物预览通过。失败/超时/证据过期沿用此前隔离验证，不人为破坏本次产物。</p>
+<p>本机任务 <code>task-20260912-160801-81175f</code>；原7项任务的attempt及持久状态未变。执行终端保留空闲供查看。8张截图和验收记录保存在本机专用产物目录。本轮没有产品源码修改，未提交或推送。</p>
+<h2>2026-09-12 第 5 阶段：会话日常管理</h2>
+<p>模型会话支持 MA3 别名和置顶，保存在 <code>.ma3/session-preferences.json</code>，不写 Codex session_index 或 rollout。显示原始标题，别名留空恢复原名；按当前目录先置顶再按更新时间排序，搜索同时匹配别名、原名、会话 ID。已恢复终端同步显示别名，归档窗格附独立编号。普通 Bash 的命名/置顶不在本轮范围。</p>
+<p>退出终端清理只对恢复台账中可确认归属的 MA3 单窗口单窗格开放。请求携带终端身份和明确确认，后端与恢复流程使用同一锁；tmux 原子条件再次检查死窗格、名称、server PID和创建时间，只 kill-pane，不 kill-session。活跃、复杂布局和身份变化的目标拒绝清理。重复请求复用结果。清理移除保留画面，但不删除 Codex 对话记录、别名或置顶；可再次显式恢复。</p>
+<p>71 项 Python、6 项前端测试通过，覆盖偏好重建后持久、原记录不改、清理幂等、活跃/多窗格拒绝、检查后被恢复的竞争条件。独立替身CLI工作台真实浏览器验证别名/置顶/刷新/原名与别名搜索/清理/再次恢复；五种宽度无横向溢出。未启动真实模型，未清理任何原有终端。</p>
+<p>阶段截图8张及说明存放 <code>/mnt/e/PG/agent-artifacts/ma3-session-management-20260912/</code>，明确区分正式现场与测试会话。替身服务和测试tmux已关闭。下一步第6阶段先技术验证结构化对话来源；第3阶段真实模型任务验收仍未做。</p>
+<h2>2026-09-12 提醒收纳与额度栏</h2>
+<p>右侧常驻栏改为顶部“待关注 · 数量”，点击打开对话框，Esc/关闭可收起。进入提醒对应任务时自动关闭抽屉，查看操作记录保留抽屉。中央工作区扩为两栏布局，既有提醒处理状态不变。</p>
+<p>后台 QuotaPoller 每1800秒查询额度接口，网页只读取本机缓存。下次查询时间与最近成功数据落盘，服务重启不会立即重复查询；失败保留旧数据并标记，错误信息不包含接口地址。地址保存在被Git忽略的 <code>.ma3/quota-source.json</code>，不下发浏览器。服务停止期间不轮询。</p>
+<p>字段实测：d7_used=38；d7_reset是明确的重置时间戳，updated=数据更新时间，两者不满足updated加7天。重置倒计时使用d7_reset，周期进度按 [d7_reset-7天,d7_reset] 计算，范围0–100%。缺失重置时间时不猜测，到期后等接口更新，不擅自推进新周期。鼠标停在额度区可查看数据更新/查询时间和预计重置时间。</p>
+<p>验证：67项Python、6项前端测试通过；包含模拟时钟推进30分钟、重启缓存、失败保留旧值、无密钥错误回显和周期边界。真实接口已成功查询；尚未等待真实30分钟周期，定时行为由模拟时钟测试验证。五种页面宽度、提醒开关与Esc通过。</p>
+<h2>2026-09-12 第 4 阶段：需要你处理</h2>
+<p>统一工作台右侧按需要决定、执行与操作异常、等待验收分类。任务事项从当前状态生成，不重复展示历史阶段提醒；同一对象、同一原因的操作失败合并。原始通知保留在后台与操作记录中，旧任务页仍沿用原通知接口。</p>
+<p>已知悉、忽略提醒、重新提醒独立存入 <code>.ma3/workspace.json</code> 的 attention_items。它们不改变任务、回执、验收或进程状态。心跳更新不重新提醒；问题不再触发后再次出现、同类操作新一次失败会重新开启提醒。请求绑定提醒版本，拒绝处理已变化的旧版本。</p>
+<p>65 项 Python、5 项前端测试通过。覆盖归并、忽略后心跳、再次出现、旧版本拒绝、重启持久化且不改任务状态。浏览器使用模拟请求验证已知悉/忽略/重新提醒与刷新；真实现场只读导航，显示3项待处理。五种宽度无横向溢出。运行记录备份和截图在 <code>/mnt/e/PG/agent-artifacts/ma3-attention-20260912/</code>。本轮未启动模型、未处理历史任务。下一阶段是会话名称、置顶与安全清理。</p>
+<h2>2026-09-12 第 3 阶段：交付与证据</h2>
+<p>任务详情增加阶段进度和产物/消息入口。“交付与验收”分别显示检查结果、中控确认、每项命令的退出码、超时/失败原因及输出；原始证据折叠保留。消息显示保存、尝试投递和执行器确认的各自时间。</p>
+<p>后台 detail 只读核对当前产物哈希、任务约定及执行尝试与历史验收证据。证据不匹配时明确提示、禁用确认按钮，不改写历史任务状态。真正 accept 仍由后台再次核验，网页核对不是独立检查命令执行。</p>
+<p>59 项 Python、5 项前端测试通过；含真实隔离提交/检查/确认流程、验收后文件改变/丢失和其他 attempt 证据。浏览器使用模拟响应验证失败、超时、过期证据和消息三态，实际历史记录只读查看；五种宽度无横向溢出。未启动真实模型或验收历史任务，原方案要求的真实模型小任务验收仍待做。</p>
+<p>下一步见 <a href="WORKBENCH_PLAN.md">阶段计划</a>。</p>
+<h2>2026-09-12 已退出恢复终端修复</h2>
+<p>修复 tmux 保留死窗格被误判为可继续输入：历史目录将其标记为 exited；外部 writer 状态优先于已退出窗格。统一页提供“查看保留画面（只读）”与“重新恢复”，兼容页只读查看并引导回统一页恢复。后台拒绝对已退出恢复终端 attach；已连接后进程退出也会结束网页输入连接。</p>
+<p>重新恢复需显式 restart_exited 与当前 terminal ID；后台复核 writer、目录和 CLI 后，将旧死窗格改为 archived 名称保留，再创建新恢复终端。已有请求不重放，活跃恢复终端复用。保留画面最多读取 tmux 当前保存的 5000 行，不等于完整模型对话备份。</p>
+<p>验证：原56项Python测试通过，随后新增“tmux仍在但模型退出”的测试，历史模块9项通过（总计57项）；2项前端测试通过。真实daily4仅只读查看和打开后关闭恢复确认框，未启动模型。网页测试确认外部占用时禁止恢复。</p>
+<h2>2026-09-12 统一工作台第一轮</h2>
+<p>完成计划第 1、2 阶段：统一入口、按对象查看和操作、独立终端连接及任务草稿。未实施第 3–6 阶段。</p>
+<ul>
+<li>53 项 Python 测试通过，使用临时目录、替身 CLI 和隔离 tmux，不调用模型。</li>
+<li>新增 <code>node --test test_terminal_view.mjs</code> 两项测试：初始协议应答完成前禁止键盘输入；切换后排队输入仍绑定原 token。</li>
+<li>真实浏览器配合两个普通 Bash 验证：A 未回车切 B，B 执行后回 A 继续；两边输出隔离；断开重连保留变量；切任务详情不关闭终端。</li>
+<li>发现并修复重连初始协议应答混入快速输入；修复后连续两次立即输入通过。</li>
+<li>任务草稿切换保留，其他任务草稿为空，未保存或投递测试消息；已有产物原文预览通过。</li>
+<li>滚轮进入 tmux copy-mode，scroll_position 增加，Esc 后 pane_in_mode=0。</li>
+<li>1440、1024、768、390、360px 无横向溢出；桌面截图与回滚备份在本机专用产物目录。实体手机输入法未验证。</li>
+<li>旧任务页与旧终端页继续保留；没有启动真实模型，没有重投、取消或验收历史任务。</li>
+</ul>
+<h2>自动化测试</h2>
+<p>在项目根目录，用本机 Python 3.10 环境运行：</p>
+<pre><code class="language-bash">/home/dticpw/conda/envs/py310/bin/python -m unittest -q test_workbench test_orchestrator test_protocol test_terminal_bridge test_codex_history
+</code></pre>
+<p>测试使用临时目录，覆盖任务协议、工作台 HTTP/MCP、队列与验收等行为，不启动真实模型。新机器应先调整源码中的开发机解释器路径。</p>
+<h2>历史实测范围</h2>
+<ul>
+<li>首版：可见终端执行冒泡排序 Python，生成 HTML 并在浏览器打开；算法与稳定性独立检查通过。</li>
+<li>v0.2：算法、CSV 修复、文档整理三类任务通过验收。</li>
+<li>v0.3：44 项测试通过，网页在 1440/1024/768/390/360px 检查通过；真实网页派工、后台重启保留执行器和网页重连已验证。</li>
+<li>Codex 上下文恢复及记忆标记已验证，但后续遇 429，未完成整项提交与验收；不能称完整恢复闭环通过。</li>
+<li>Claude 实际执行和重新登录自动启动仍缺独立验收证据。</li>
+</ul>
+<p>历史原始运行日志、会话、截图与验收产物保留在维护者本机，没有上传至公开仓库。上述历史结果不是对所有机器或当前模型服务状态的保证。</p>
+<h2>2026-09-12 交互终端增量</h2>
+<p>48 项测试通过。新增测试使用隔离 tmux socket 和普通 Bash，覆盖 HTTP 跨站边界、新建幂等、中文、输入去重、尺寸变化、断开保留 shell、重新连接与 Ctrl+C。浏览器验证新建、中文输入输出、重连保留变量、Ctrl+C，以及 1440/768/390px 无整页横向溢出。未启动真实模型；未验证手机实体输入法或自定义 tmux socket。</p>
+<h2>2026-09-12 历史会话增量</h2>
+<p>53 项测试通过。新增历史目录筛选、索引标题、不返回对话正文、主会话过滤、writer lock 阻止重复恢复、失效目录、真实 tmux 与替身 CLI 的精确恢复参数、并发/重复请求只启动一次、退出后保留输出。浏览器核对真实 17 条 <code>~/codex</code> 主会话、两条外部运行中禁用按钮、搜索与空列表、1440/768/390px 布局。没有为了测试恢复用户真实历史会话；真实模型恢复与目录信任交互仍待用户按需使用验证。</p>
+<h2>2026-09-12 滚轮修复</h2>
+<p>历史恢复与网页 attach 启用目标 tmux session 的 mouse；不改全局选项。此前 tmux 备用屏幕未报告鼠标时，xterm 将滚轮转换为方向键，触发 CLI 输入历史。53 项测试通过；独立探针中浏览器滚轮从第 114 行滚到 109 行，随后回滚，程序收到的输入字节数未因滚轮增加；copy-mode 下 Esc 返回实时画面。对用户 daily4 只修改目标 mouse 选项，没有向其输入命令或重新恢复。滚动只能查看仍在终端缓冲中的输出，不等于完整历史对话日志。</p>
+<h2>2026-09-12 第 6 阶段：实验性只读对话时间线</h2>
+<p>模型会话增加“对话记录 · 实验”：直接读取该主会话的本机已落盘 Codex 日志，外部运行中的会话也能查看，不调用 resume 或启动模型。用户和 Agent 消息分卡展示，已记录的结构化工具结果可展开；支持读取更早、刷新及可选跟随最新，默认不自动滚动。切换会话和页面隐藏时停止对应轮询。</p>
+<p>消息固定取 response_item，工具固定取 item_completed 的命令、MCP、文件变更及看图事件，避免镜像重复；过滤环境指令与内部推理。压缩仅显示通知，不重放摘要。采用文件身份及字节游标处理增量、半行与文件替换；截图导致的超大行按块跳过并提示，回溯边界最多搜索32MiB。单条日志超过2MiB略过，展示文本超过24000字符截断；图片仅显示占位，不直接读取图片路径。旧客户端格式的工具覆盖有限，这不是完整日志导出，也不是逐字流式聊天或网页输入框。</p>
+<p>81项Python与6项前端测试通过。独立浏览器验证增量去重、会话隔离、HTML按文字显示、工具展开及五种宽度无横向溢出。正式服务重启后用当前外部运行中的会话只读复验，更早分页达到40条且ID唯一，其中11条消息；没有启动真实模型或处理历史任务。截图及说明保存在维护者本机专用产物目录。</p>
+<p>第6阶段技术验证和实验视图已部署；第3阶段真实模型小任务验收仍待做。源码尚未提交或推送。</p></main></html>

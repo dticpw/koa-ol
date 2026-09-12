@@ -1,0 +1,470 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>调研总结与MA3路线.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>多 Agent 历史调研复盘与 MA3 路线</h1>
+<p>整理日期：2026-09-08。工作目录：<code>/home/dticpw/PG_linux/MA3</code>。</p>
+<p>本报告回溯 Windows 侧 Codex、Claude Code 的交流，核对 MA2 源码、Git 状态和运行产物，给出 Linux 环境下的下一步建议。本次只创建工作目录和本文，未迁移源码、安装依赖、启动付费 Agent 实验、修改旧仓库或全局人格文档。</p>
+<h2>1. 先纠正上一轮总结</h2>
+<p>上一轮主要查到 <code>E:\PG\multi_agents2</code> 的工具选型记录，遗漏了 <code>E:\PG\MA2</code> 的实现与 Claude Code 后续实验。因此，“当时尚未形成经过本机验收的系统”过于宽泛，必须更正：</p>
+<p><strong>MA2 已经在 Windows 上完成并验证了 Claude headless 多 Agent 的执行、并行工作区隔离、判定与重试、结果汇总四个阶段。没有完成的是用户要求的逐路实时观察、通用轮转/交接、跨 CLI 适配，以及完整的恢复能力。</strong></p>
+<p>Windows 缺少原生 tmux 限制了特定的终端交互路线，但没有阻止 MA2 的 headless 实现。现在切换到 Linux，获得的是更方便的终端会话与进程管理条件，不是第一次获得多 Agent 的可能性。</p>
+<p>这次也修正“下一步从三个裸 CLI 窗格重新开始”的建议：可以用 tmux 做体验实验，但工程主线应继承 MA2 已验证的结构化控制与结果协议。</p>
+<h2>2. 三个项目不能混为一谈</h2>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>定位</th>
+<th>本次处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/mnt/e/PG/multi_agents</code></td>
+<td>2026 年 4 月的 Qwen 多 Agent 项目；历史记录称已有多轮循环及依赖处理</td>
+<td>只依据后续会话识别其角色，未读取敏感配置或重新审计源码</td>
+</tr>
+<tr>
+<td><code>/mnt/e/PG/multi_agents2</code></td>
+<td>Codex 与 Claude 的工具选型、架构讨论、比较 HTML</td>
+<td>上一轮已读，作为早期需求基线</td>
+</tr>
+<tr>
+<td><code>/mnt/e/PG/MA2</code></td>
+<td>实际编排器、测试、运行记录、交接文档及下棋实验</td>
+<td>本轮重点核对</td>
+</tr>
+<tr>
+<td><code>/home/dticpw/PG_linux/MA3</code></td>
+<td>Linux 侧的新工作目录</td>
+<td>本次创建，目前只有本文</td>
+</tr>
+</tbody>
+</table>
+<p>尤其注意两个 <code>handoff.md</code>：<code>multi_agents2/handoff.md</code> 是早期 Windows 方案；<code>MA2/docs/handoff.md</code> 是四阶段实现完成后的交接。以后以实现与后续证据为准，不能只读前一份。</p>
+<p>MA3 按用户明确要求位于 ext4 的 <code>/home</code>，适合 Linux 项目、Git worktree 和将来的运行环境。Windows 不能直接读取本文；需要交给 Windows 时再导出到 NTFS，共享 Skill 源码继续留在原共享位置。</p>
+<h2>3. 原始目标及路线演进</h2>
+<p>用户希望一个协调者调度多个 Agent，可以混用 Codex、Claude Code 等 CLI；人能看到每个 Agent 的工作过程；任务能够交接、复核，产物可以汇总和追踪。</p>
+<p>最初的 AI 日报是并行调研场景，后续明确了两个更有约束力的场景：</p>
+<ol>
+<li><strong>写代码 → 审代码 → 必要时返工</strong>：审查者必须拿到实施者的真实产物；用户要实时看到各路工作。</li>
+<li><strong>两个选手下棋，由裁判逐手监督和记录</strong>：需要轮转、共享棋盘、合法性验证和可回放记录。后来实际实验是国际象棋，不是中国象棋。</li>
+</ol>
+<h3>Codex 侧的贡献</h3>
+<ul>
+<li>区分原生 Subagent 委派与跨厂商独立 CLI 编排。</li>
+<li>提出先验证 Reader / Worker / Reviewer 闭环，再建立统一 Adapter。</li>
+<li>早期推荐 WezTerm + PowerShell + JSON 文件，用窗格保证可见性，用文件回收正式结果。</li>
+<li>比较 Prowl、Emdash、Orca、Agent View；强调 Windows 原生支持是当时的硬门槛。</li>
+<li>后期讨论 Codex SDK / App Server：直接使用结构化线程、任务与事件接口，减少按键注入和终端文本解析。</li>
+</ul>
+<h3>Claude Code 侧的贡献</h3>
+<ul>
+<li>将 <code>claude -p</code> 看作 stdin/stdout 普通子进程，把 PTY 从控制面中拿掉。</li>
+<li>实现 MA2 四个阶段，并用真实 Claude 运行验证。</li>
+<li>提出并落实 <code>status</code> 与 <code>verdict</code> 分离、按 attempt 留存证据、机械汇总兜底等工程约定。</li>
+<li>将下一步从“安装 Herdr”调整为“先做 MA2 只读观察面板”：事件数据已经存在，缺的是面向人的渲染。</li>
+<li>进一步讨论轮转、下棋实验、tmux 双通道和 Herdr Windows 限制。</li>
+</ul>
+<p>这两路交流逐渐趋于同一原则：<strong>编排器持有任务状态和验收依据；厂商适配器处理 CLI 差异；人类界面消费事件和产物。</strong></p>
+<h2>4. MA2 已经做到什么</h2>
+<p>实现形状：</p>
+<pre><code class="language-text">prepare（串行建工作区）
+  → dispatch（并行执行，含有限重试）
+  → collect（串行提交、收集差异、按需回收）
+  → aggregate（机械汇总 + 可选模型综合）
+</code></pre>
+<p>核心代码只使用 Python 标准库。独立的下棋实验使用了 <code>python-chess</code>，所以“零第三方依赖”仅适用于 MA2 核心。</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>证据与边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单 Agent 执行</td>
+<td><code>runner.py</code> 启动 Claude，stdin 传 prompt，stdout 收 JSONL，stderr 独立抽干</td>
+</tr>
+<tr>
+<td>事件与状态</td>
+<td>原始事件逐行写盘并 flush，再解析；状态快照原子更新；提供 <code>on_update</code> 回调</td>
+</tr>
+<tr>
+<td>并行</td>
+<td><code>ThreadPoolExecutor</code>；旧 parallel3 运行中三个 Claude 实例均完成</td>
+</tr>
+<tr>
+<td>文件隔离</td>
+<td>三个 worktree 分别写同名 <code>NOTES.md</code>；保留分支可定位成果</td>
+</tr>
+<tr>
+<td>判定与重试</td>
+<td>权限拒绝不重试；超时等按策略重试；各次尝试独立保存事件</td>
+</tr>
+<tr>
+<td>产物保全</td>
+<td>collect 将改动提交到任务分支，避免回收工作区时丢失未提交成果</td>
+</tr>
+<tr>
+<td>汇总</td>
+<td>无条件机械报告；可选模型综合；综合失败不抹掉其他成果</td>
+</tr>
+<tr>
+<td>离线测试</td>
+<td>历史记录为 186 tests / 69.811s / OK；本次 AST 静态统计也为 186 个测试方法</td>
+</tr>
+</tbody>
+</table>
+<p><strong>本次未重跑该测试套件。186 是历史 Windows 通过记录与当前静态数量，不是 Linux 通过结果。</strong></p>
+<h3>本次直接核对的运行结果</h3>
+<table>
+<thead>
+<tr>
+<th>运行</th>
+<th>本次读到的事实</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>20260828-215424-parallel3-35788d</code></td>
+<td>conpty / jobobject / junction 三份结果均 <code>completed</code>、退出码 0；事件报告耗时约 11.3 / 9.3 / 8.5 秒</td>
+</tr>
+<tr>
+<td><code>20260828-230202-retry-3643e2</code></td>
+<td>denial 为 <code>completed</code> 但 <code>verdict.ok=false</code>，原因 <code>permission_denied</code>，只尝试一次；timeout 尝试两次，墙钟累计 16999ms，<code>cost_is_complete=false</code></td>
+</tr>
+<tr>
+<td><code>20260828-233500-aggregate-0b99bf</code></td>
+<td>三个研究者及 aggregator 均通过 verdict；<code>final.md</code> 留存；四份结果报告费用合计约 $1.2996，其中综合约 $0.1528</td>
+</tr>
+</tbody>
+</table>
+<p>费用来自当时 CLI 结果字段，不是本次服务商账单核对，也不能据此推算现在同类任务的价格。</p>
+<h2>5. 最值得保留的工程发现</h2>
+<h3>5.1 进程结束、Agent 声称完成、任务验收通过是三件事</h3>
+<p>权限被拦的 Claude 仍可能正常结束并输出解释。因此 <code>status=completed</code> 不等于成功。MA2 用 <code>verdict</code> 单独记录任务判定，保存这两个事实。</p>
+<p>但现有 verdict 主要检查权限、回答是否为空、是否改动文件，仍不等于业务正确性证明。MA3 需要把测试、审查和场景验收接进来。</p>
+<h3>5.2 超时必须真的结束工作负载</h3>
+<p>Windows 历史实验发现：杀掉 <code>.cmd</code> 包装器后，Node 子进程仍持有 stdout，8 秒超时的任务继续跑了约 6 分 40 秒。后来改用 <code>taskkill /F /T</code>。</p>
+<p>迁移 Linux 不能沿用旧 README 的“POSIX 不会遇到”说法。POSIX 上杀父进程也不会自动杀所有后代；详见第 9 节。</p>
+<h3>5.3 运行记录和产物必须先于清理</h3>
+<ul>
+<li>脏 worktree 被强制移除，会丢掉未提交成果；分支仍存在也救不回来。</li>
+<li>重试时回退到创建 worktree 时的旧 SHA，可能抹掉 Agent 已提交的历史；应明确区分丢弃未提交改动与回退分支。</li>
+<li>失败尝试的日志最值得保留，不能被下一次覆盖。</li>
+</ul>
+<p>MA3 应在专属工作区继承这些规则。自动提交、重置、清理不能扩散到用户正在编辑的目录。</p>
+<h3>5.4 模型综合不是默认必需项</h3>
+<p>机械层负责“谁做了什么、结果在哪、失败原因是什么”；模型层才负责冲突、证据与取舍。旧实验中模型综合确实做了超出拼接的工作，但一次实验不足以证明它总划算。</p>
+<p>互不相关的三个任务可能只需机械汇总；存在交叉证据与冲突时，再启用综合 Agent。</p>
+<h3>5.5 全局人格会影响 Worker 输出</h3>
+<p>历史对照中，“行动轨迹”混进 Worker 回答；仅加 headless 条件豁免未稳定奏效，显式任务约束或删除相关全局段落更有效。</p>
+<p>应保留“不能信任正文天然符合契约”这一经验，但不能把几次实验泛化为“所有 headless 条件规则必然无效”，也不能证明模型一定不知道运行模式。</p>
+<p>还要区分：这是 <code>result</code> 内回答正文受到格式污染，<strong>不意味着外层 JSONL 传输格式损坏</strong>。MA3 应验证结果 schema、保存原始输出、明确 Worker 输入契约，而不是为了实验再次删除全局偏好。</p>
+<h2>6. 交接文档之后还发生过一次真实下棋实验</h2>
+<p><code>docs/handoff.md</code> 写好之后，用户要求“两个 subagent 下五个回合”。只读交接文件会漏掉这段。</p>
+<p>留下的棋谱：</p>
+<pre><code class="language-text">1. e4   c5
+2. Nf3  d6
+3. d4   cxd4
+4. Nxd4 Nf6
+5. Nc3  a6
+</code></pre>
+<p><code>experiments/chess-subagent/game.json</code> 保存 10 手和 10 条 legal 判定；<code>referee.py</code> 使用 python-chess 解析 SAN、规范化走法并维护棋盘。旧会话还记录在开局单独测试过非法走法，确认拒绝且不推进局面。本次核对文件与会话，未重新运行裁判。</p>
+<p>执行过程的重要限制：</p>
+<ul>
+<li>开始复用白黑两个子 Agent，通过主会话传递新局面。</li>
+<li>旧会话记录在压缩后无法从 ListAgents 找回原选手，后四手改为新建 Agent、注入 FEN 和棋谱。</li>
+<li>因此完成的是五回合的调度与裁定闭环，<strong>没有证明两个持久 Agent 能跨压缩连续复用</strong>。</li>
+<li>用户看到的主要是协调者的工具流水，没有获得两路独立实时工作面板。</li>
+<li>单手延迟出现明显抖动；不能用这盘熟悉的开局证明复杂局面的棋力或普遍合法性。</li>
+</ul>
+<p>对旧解读的修正：</p>
+<ol>
+<li>通过主协调者通信，仍然是有效的多 Agent 架构。直接点对点消息不是多 Agent 的必要条件，不能因此贬为“一个 Agent 角色扮演”。</li>
+<li>历史一次“压缩后句柄不可用”是待复核的版本/运行时现象，不能写成所有 Claude/Codex 子 Agent 压缩必消失的定律。</li>
+<li>FEN 足以表达大量当前局面信息，但不保存完整历史、策略记忆以及所有依赖历史的判断；本实验还传了棋谱，不能据此说重启“任何信息都不损失”。</li>
+<li>旧回答把约 4.6 万 subagent token 说成推理过程，没有充分依据。输入上下文、缓存和输出不能混为隐藏推理；MA3 只承诺展示实际公开的消息、工具事件和状态。</li>
+</ol>
+<p>MA3 可复用的结论是：<strong>棋盘和裁定保存在独立、可验证的记录里，比依赖某个选手永远在线更可靠。</strong></p>
+<h2>7. tmux 与外部工具：历史判断及其适用范围</h2>
+<p>以下第三方功能描述主要来自 2026-08-28/29 的历史调研。本轮没有重新联网验证其当前版本，也没有安装 Herdr。</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>历史定位</th>
+<th>对 MA3 的意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WezTerm</td>
+<td>Windows 早期可见窗格方案</td>
+<td>Linux 已有 tmux，无需再为模拟 tmux 增加底座</td>
+</tr>
+<tr>
+<td>Herdr</td>
+<td>终端、进程、状态侧栏及程序化接口</td>
+<td>保留候选，待证明原生 tmux/结构化观察确有缺口再投入</td>
+</tr>
+<tr>
+<td>Orca</td>
+<td>较完整工作台与编排功能</td>
+<td>不照搬旧排名；外部控制、结果接口、工作流锁定要重新核验</td>
+</tr>
+<tr>
+<td>Emdash</td>
+<td>worktree 与审查体验</td>
+<td>旧记录对外部 API 有“未确认”和“没有”两种说法，不能当成当前事实</td>
+</tr>
+<tr>
+<td>Prowl</td>
+<td>macOS 原生工作台</td>
+<td>Linux 也不是 macOS，不能因离开 Windows 就自动成为可用方案</td>
+</tr>
+<tr>
+<td>Agent View</td>
+<td>多个同名项目</td>
+<td>旧 Markdown 指 frayo44/agent-view，另一 HTML 指 Claude 内置视图，比较前必须重新消歧</td>
+</tr>
+<tr>
+<td>tmux</td>
+<td>会话、窗格、PTY、detach/attach</td>
+<td>本机已安装，可以直接成为观察与人工操作入口</td>
+</tr>
+</tbody>
+</table>
+<p>Claude 后续曾继续研究 Herdr 安装和 Windows 差异，最终仍停留在安装位置待定与文档比较。未找到本机安装验收记录。旧会话指出其 Windows 远程目标、在线更新交接、IME/光标等限制，还特别提示 Claude 状态可能依赖屏幕推断。这意味着“提供 agent.wait 接口”不自动证明它能准确判断业务完成。</p>
+<p>另一个应修正的概念：平台或工作流数据模型锁定，与模型厂商锁定不同。不能只因工具使用自己的 Runs/Tasks 结构就断言它绑定某一家大模型。</p>
+<h3>tmux 的五类机制</h3>
+<table>
+<thead>
+<tr>
+<th>机制</th>
+<th>提供什么</th>
+<th>不保证什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>send-keys</code></td>
+<td>向指定 pane 发送输入</td>
+<td>任务已接收、开始或完成</td>
+</tr>
+<tr>
+<td><code>capture-pane</code></td>
+<td>获取终端缓冲区文本</td>
+<td>无损、稳定的结果 schema</td>
+</tr>
+<tr>
+<td><code>pipe-pane</code></td>
+<td>输出字节流</td>
+<td>Agent 业务语义</td>
+</tr>
+<tr>
+<td><code>wait-for</code></td>
+<td>显式通知与等待</td>
+<td>不合作的程序自动产生正确完成信号</td>
+</tr>
+<tr>
+<td>control mode</td>
+<td>窗格输出与生命周期的控制协议</td>
+<td>输出已变成可验收的任务结果</td>
+</tr>
+</tbody>
+</table>
+<p>tmux 是终端多路复用器，会为窗格管理 PTY；它本身不是 Agent。detach 在服务器进程仍存活时保留会话，不是断电或重启后的任务恢复。</p>
+<p>旧讨论提出“双通道”是正确方向，但示例 <code>... &gt; events.jsonl</code> 会把输出重定向到文件，<strong>不会同时在原 pane 显示工作过程</strong>。若要双通道，必须另加安全的事件观察器/渲染器，或显式复制输出，不能把重定向本身当成可见性已经完成。</p>
+<p>更合适的 MA3 结构是：</p>
+<pre><code class="language-text">用户 / 协调者
+       ↓
+任务状态机、验收、重试与产物管理
+       ↓
+Claude Adapter / Codex Adapter
+       ↓
+真实 Agent 运行时
+       ↓
+原始事件 + 统一事件 + 结果与版本引用
+       ├── 程序：判定、交接、恢复
+       └── 人：tmux 中的观察器，或未来的 Web 界面
+</code></pre>
+<p>这不是说所有终端方案必须抓屏。tmux 完全可以承载提供结构化输出的程序；关键在于选什么作为结果和状态的权威来源。</p>
+<h2>8. MA2 目前尚未实现的能力</h2>
+<table>
+<thead>
+<tr>
+<th>缺口</th>
+<th>当前判断</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>逐路实时观察面板</td>
+<td>有 JSONL、快照和回调，未找到对应渲染模块；旧 HTML 是静态路线报告</td>
+</tr>
+<tr>
+<td>多轮业务交接</td>
+<td>主要是独立任务 fan-out 后汇总；已有重试循环不等于任意 A→B→A 轮转</td>
+</tr>
+<tr>
+<td>Codex 适配</td>
+<td>launcher 可替换，但参数构造和事件归约仍写死 Claude 协议</td>
+</tr>
+<tr>
+<td>持久会话管理</td>
+<td>保存 session ID 不等于实现 resume、活跃任务 steer 或跨重启恢复</td>
+</tr>
+<tr>
+<td>人类介入</td>
+<td>看日志、暂停/取消、向活跃任务补充输入、接管完整 TUI 是不同能力，不能互相代称</td>
+</tr>
+<tr>
+<td>安全隔离</td>
+<td>worktree 隔离文件布局，不阻止 Agent 访问其他目录；环境白名单不构成文件访问沙箱</td>
+</tr>
+<tr>
+<td>业务验收</td>
+<td>通用 verdict 不代替代码测试、审查标准或棋类规则</td>
+</tr>
+</tbody>
+</table>
+<p>观察面板是用户明确的交付要求。README 称它“可选”，只能理解为控制面架构可不依赖 UI，不能据此把用户的观察需求从完成条件里删除。</p>
+<h2>9. Linux 迁移：这次源码审阅新增的发现</h2>
+<p>本机只读检查确认 Python 3.10.13、tmux 3.2a；Codex、Claude 的入口均位于 <code>/home/dticpw/.nvm/versions/node/v22.23.2/bin/</code>。只确认解释器与入口存在，未验证 Agent 认证、模型调用或并发运行。</p>
+<h3>9.1 环境白名单是 Windows 专用的</h3>
+<p><code>runner.py</code> 的 <code>ENV_ALLOWLIST</code> 主要是 <code>SystemRoot</code>、<code>USERPROFILE</code>、<code>APPDATA</code> 等，没有 <code>HOME</code>、XDG 路径、locale、Linux 代理等项。</p>
+<p>这不证明现有程序一定启动失败，但表明不能直接照搬“15 个变量就够用”的 Windows 结论。MA3 应显式检查 Linux 启动环境，按实际需要保留配置发现和网络所需项，日志不输出秘密；nvm 下的可执行路径也需明确。</p>
+<h3>9.2 Linux 进程树清理尚未正确表达</h3>
+<p><code>terminate_tree()</code> 的非 Windows 分支只有 <code>proc.kill()</code>；<code>Popen()</code> 没有建立独立会话/进程组。孙进程仍可能存活并持有管道。</p>
+<p>下一步需要验证独立 session/process group、针对所拥有进程组的终止、宽限与最终回收，覆盖“父进程先退出”“孙进程继续持有 stdout”等路径。不能向调用者所在进程组盲目发信号，也不能声称进程组能覆盖主动脱离的新会话后代。</p>
+<p>因此本次没有把老套件完整跑一遍并宣称迁移通过；尤其应先隔离处理 <code>hang-tree</code> 测试，避免长时间遗留子进程。</p>
+<h3>9.3 换可执行文件不等于换 Agent 厂商</h3>
+<p><code>resolve_launcher()</code> 只有 Claude 原生分支；<code>build_argv()</code> 固定追加 <code>-p --output-format stream-json --verbose</code>；<code>events.py</code> 识别 Claude 的 system/assistant/user/result。</p>
+<p>Codex 必须有自己的启动、事件、结束及错误映射。MA3 不要求厂商原始 schema 相同，而要求它们映射到同一套任务契约，并保留原始事件以便追查。</p>
+<h3>9.4 路径、编码与恢复也需重新验证</h3>
+<ul>
+<li>旧 plans 和 run 记录包含 Windows 路径，历史结果保留原样，新任务使用 Linux 路径。</li>
+<li><code>errors="replace"</code> 可能掩盖非 UTF-8 数据损坏，应可诊断，不能静默当成原始证据完整。</li>
+<li>保存 JSON 状态只能证明可读取历史；没有恢复流程就不能声称可自动续跑。</li>
+<li>原子重命名减少半文件读取，不等于所有断电情境下完整事务持久性。</li>
+</ul>
+<h2>10. 我的建议：MA3 的实施顺序</h2>
+<p>MA3 应继承 MA2 已验证的控制逻辑，逐步补足 Linux、跨 CLI、观察和轮转。现在不必先选一个大型工作台，也不必预先锁定 Python 或 TypeScript 重写。</p>
+<h3>第一步：保留基线，完成 Linux 运行契约</h3>
+<p>以后需要迁移时，先记录 MA2 提交与未跟踪材料，再在 MA3 建立独立基线；不直接在 NTFS 旧工作区试清理或重试。</p>
+<p>验收：离线执行能收齐 stdout/stderr，正常/异常/超时都可回收，孙进程不遗留；状态和失败尝试可追踪。按差异运行有意义的测试，不把“测试数量只能涨”当质量指标。</p>
+<h3>第二步：结构化观察器 + tmux</h3>
+<p>先利用旧 JSONL 回放，展示每个 Agent 的状态、最近消息、工具动作、失败与重试；再接实时运行。tmux 负责分屏与 detach/attach。</p>
+<p>验收：三个任务可分别观察；不能只显示 running/done；只读观察器断开、重连不影响任务；明确区分没有事件、正常工作、等待输入与异常；用户能判断可见细节是否达到需求。</p>
+<p>如果用户要求进入原生交互 TUI，需另立可交互运行模式。headless 观察窗格不会因放进 tmux 就自动具备同一 Agent 的交互输入能力。</p>
+<h3>第三步：补 Codex Adapter，证明异构</h3>
+<p>先核验当前 CLI 的结构化非交互能力；需要长期线程、转向和更丰富事件时再评估 App Server。不要同时维护两个功能重叠的 Codex 通道。</p>
+<p>验收：同一任务契约可以分别由真实 Claude、Codex 执行；正确映射结束、错误、费用未知、输出格式和产物；不只验证 CLI 能启动。</p>
+<h3>第四步：代码编写—复核—返工</h3>
+<p>协调者保存原始验收标准，实施者产出确定的 commit/patch；审查者针对该版本复核，问题有稳定 ID，返工次数和预算有限。主协调者消息中转足够，不必先实现点对点聊天总线。</p>
+<p>验收：能追溯“审查的是哪个版本”“哪条问题被修复”；编排器重启后能判断已完成、待恢复与不可恢复任务，不能重复执行已完成的副作用。</p>
+<h3>第五步：轮转场景与单/多 Agent 对照</h3>
+<p>下棋用代码规则引擎维护状态、历史和合法性，LLM 选择走法或解释。保留完整棋谱，不只保存当前 FEN。</p>
+<p>对代码与调研任务使用同一验收标准比较：完成时间、成本、正确率/遗漏、返工与人工介入次数。并行任务可测速度；串行审查主要测质量，不能天然承诺更快。</p>
+<p>完成这些之后，才能依据具体缺口决定 Herdr、Web Dashboard 或更完整工作流协议的投入。</p>
+<h2>11. 当前官方 Codex 接口核对范围</h2>
+<p>本会话上一轮使用 OpenAI Docs 搜索并读取了：</p>
+<ul>
+<li><a href="https://learn.chatgpt.com/docs/app-server">Codex App Server</a>：提供 thread start/resume、turn start/steer/interrupt、消息与工具事件等；文档仍有实验性接口/传输边界，需按本机版本核对。</li>
+<li><a href="https://learn.chatgpt.com/docs/mcp-server">Use Codex with the Agents SDK / MCP Server</a>：页面明确 <code>codex mcp-server</code> 已弃用，指向 App Server。</li>
+</ul>
+<p>这些只支持“优先评估结构化 Codex 接口”的方向，不证明当前 MA2 已接入，也不证明所有账户、版本与 provider 的能力一致。本文未重新核验 Claude Workflow、Herdr 等旧第三方功能列表，不将其作为今天的安装承诺。</p>
+<h2>12. 本次基线核对与来源索引</h2>
+<h3>Git 与文件状态</h3>
+<ul>
+<li>MA2 当前 HEAD：<code>190b7ad</code>，提交说明为 README 补充全局指令污染对照实验。</li>
+<li>前序提交包含 <code>33c8b44</code> 单 Agent、<code>3f73303</code> 并行隔离、<code>9e35757</code> 测试、<code>0ea8b6e</code> 判定重试、<code>b7d0fc3</code> 汇总。</li>
+<li>本次 <code>git status</code> 并不干净：<code>ma2/aggregate.py</code>、<code>ma2/orchestrator.py</code> 显示修改，<code>docs/</code>、<code>experiments/</code> 未跟踪。</li>
+<li>两个代码文件的 <code>git diff --ignore-cr-at-eol</code> 为空，因此当前可见差异属于行尾差异；本次未规范化或丢弃。</li>
+<li>旧交接里的“工作区干净”只代表当时快照；未跟踪文档与实验不可在迁移时遗漏。本次没有联网核对远程最新提交。</li>
+</ul>
+<h3>本地证据</h3>
+<table>
+<thead>
+<tr>
+<th>来源</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/mnt/e/PG/MA2/README.md">MA2 README</a></td>
+<td>四阶段、13 条实证发现、运行方式</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/MA2/docs/handoff.md">MA2 交接</a></td>
+<td>不变量、待办与后续优先级</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/MA2/docs/session-2026-08-29.md">Claude 会话整理</a></td>
+<td>路线翻转、tmux 解剖、输出污染实验</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/MA2/ma2/runner.py">Runner</a></td>
+<td>环境、进程、参数、事件落盘</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/MA2/ma2/events.py">事件归约</a></td>
+<td>Claude schema、状态与结果字段</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/MA2/ma2/orchestrator.py">编排器</a></td>
+<td>并行、重试、收集阶段</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/MA2/experiments/chess-subagent/game.json">国际象棋记录</a></td>
+<td>五回合十手与裁定</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/MA2/experiments/chess-subagent/referee.py">裁判源码</a></td>
+<td>python-chess、SAN、非法走法处理</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/MA2/runs/20260828-233500-aggregate-0b99bf/final.md">真实综合报告</a></td>
+<td>历史端到端产物</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/multi_agents2/handoff.md">早期需求</a></td>
+<td>Windows 方案基线</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/multi_agents2/product-facts.md">旧工具事实表</a></td>
+<td>评分口径和名称消歧</td>
+</tr>
+<tr>
+<td><a href="/mnt/e/PG/multi_agents2/agent-orchestration-comparison.html">旧综合矩阵</a></td>
+<td>Herdr 等工具比较及版本间冲突</td>
+</tr>
+</tbody>
+</table>
+<h3>原始会话定位</h3>
+<ul>
+<li>Claude 主记录：<code>/mnt/c/Users/DTICPW/.claude/projects/C--Users-DTICPW-Desktop-cloud/c60160d1-afd9-4c54-a578-8d151e705991.jsonl</code>。</li>
+<li>第 280 行附近：用户授权开始 MA2 实现。</li>
+<li>第 1946–2011 行：代码复核与下棋场景、观察面板优先级、tmux。</li>
+<li>第 2135–2312 行：五回合实验、句柄复用失败与新建选手。</li>
+<li>第 2315–2410 行：Herdr 安装咨询、Windows 功能差异与状态判断边界。</li>
+<li>Claude 实验子会话还分布在 <code>.claude/projects/E--PG-MA2-runs-*/</code>，主记录下也留有下棋 subagents 记录。</li>
+<li>Codex 架构讨论：<code>/mnt/c/Users/DTICPW/.codex/sessions/2026/08/26/rollout-2026-08-26T12-38-40-01a03c5c-f575-7e13-bec3-cea0c4975638.jsonl</code>。</li>
+<li>Codex SDK 后续：<code>/mnt/c/Users/DTICPW/.codex/sessions/2026/08/28/rollout-2026-08-28T16-28-21-01a03c5c-f575-7e13-bec3-cea0c4975638_01a0477b-f81b-7e20-872a-9d30d1020a42.jsonl</code>，第 242 行附近。</li>
+<li>Codex 读取 MA2 路线 HTML：<code>/mnt/c/Users/DTICPW/.codex/sessions/2026/08/29/rollout-2026-08-29T13-54-04-01a04c15-13bf-76e1-bf70-b356e6e7dc72.jsonl</code>。</li>
+</ul>
+<p>原始会话应按需查询，不整份复制到 MA3：它们包含不相关任务与配置上下文。Windows 历史时间戳存在已知时钟偏移，本文日期主要用于定位记录，不据此推导精确跨系统时序。</p>
+<h3>可信度口径</h3>
+<ul>
+<li><strong>本次只读核对</strong>：文件存在、源码行为、测试方法数量、Git 状态、选定运行结果、棋谱。</li>
+<li><strong>历史实测记录</strong>：Windows 186 tests OK、真实 Claude 执行、非法棋步对照、输出污染实验。</li>
+<li><strong>历史文档调研</strong>：Herdr/Orca/Emdash/Prowl/Agent View 功能及平台描述。</li>
+<li><strong>本次判断与建议</strong>：Linux 迁移缺口、MA3 分层与实施顺序，尚未经新实现验证。</li>
+</ul>
+<p>后续实验应继续使用这四类标注，避免将设计、旧版本记录或一次成功升级成普遍能力。</p></main></html>

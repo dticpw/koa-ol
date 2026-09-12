@@ -1,0 +1,13 @@
+# muQ 合并为 E 盘唯一工作目录 · 2026-09-12
+
+用户确认只保留 E 盘 muQ。原 `/home/dticpw/PG_linux/muQ` 是早期源码提交副本，与 E 盘实际运行目录需手动同步；这项维护负担没有必要继续保留。
+
+迁移前确认：Linux 仓库干净，HEAD 为 f9f1324，73 个已跟踪文件与 E 盘逐字节一致；没有对象 alternates、额外 worktree 或依赖旧路径的 core.worktree 配置。将完整 `.git` 复制到 E 盘，保留分支、远程、提交历史及 reflog，设置仓库本地 core.fileMode=false。未重新初始化仓库，未覆盖运行源码或搬动馆藏。
+
+新增忽略规则排除历史 HANDOFF 会话材料；既有 data、covers、exports、backups、reports 等仍被排除。更新项目 README、AGENTS、仓库指南、维护指南、个人工作区索引及 muq-journal 入口，当前入口统一为 E 盘。
+
+源码回退快照：`/mnt/e/PG/agent-artifacts/muq-single-worktree-20260912/linux-muq-before-consolidation.tar.gz`。压缩包包含迁移前 Linux 目录及完整 Git 元数据，已逐文件与原目录比对；它是一次性历史备份，不是第二套工作区，也不包含真实馆藏。完整馆藏未被此次迁移移动，已有数据文件用独立 SHA256 清单核对。
+
+验收包括 Git fsck、已跟踪范围及忽略规则、测试、现有本机服务响应和馆藏哈希。通过后移除原 Linux 工作副本；保留以上压缩快照供短期回退。需要取回旧源码时解压到新的临时位置检查，不直接覆盖 E 盘当前源码或 data。
+
+网站源程序与内容未因 Git 位置变化自动部署。源码提交、馆藏记录和网站发布仍按各自职责核验；当前维护规则以 repository.md 为准。

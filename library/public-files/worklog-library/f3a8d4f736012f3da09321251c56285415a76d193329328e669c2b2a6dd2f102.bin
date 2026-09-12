@@ -1,0 +1,71 @@
+# 文件成果与真实目录归档
+
+用于选择文件、组织资源、保留多文件作品及验收下载；会话身份、原话采集、可见范围和发布授权沿用 SKILL.md。实现与命令细节以共享项目 `docs/content-and-files.md` 为准（Linux `/mnt/e/PG/muQ`，Windows `E:/PG/muQ`）。
+
+## 选择导入方式
+
+| 需求 | 方式 | 范围 |
+| --- | --- | --- |
+| 单份报告、图片或文件 | `sync --artifact <文件>` | 复制入库；超限自动转为索引 |
+| 随会话归档多文件网页等作品 | `sync --directory <目录>` | 保留源目录名与内部层级；超限文件仅登记索引 |
+| 现有条目需完整保存选中目录的本地原件 | `import-directory <ID> <目录> --prefix <版本目录名> --revision <当前版本>` | 全部复制到新版本；构建时仍按阈值和 publish:false 筛选 |
+| 原件很大或只需知道位置 | `sync --reference-file <文件>` | 仅保存路径、大小及 SHA256，不构成备份 |
+
+先选择与任务有关的成果范围，避免把项目根目录中的密码本、环境、依赖缓存、Git 数据和无关临时文件整包导入。目录导入不会替你排除这些文件；需要精选时先在任务产物目录准备保持相对关系的成果目录。
+
+`sync` 沿用既有一会话一日记；若先 sync 再 import-directory，读取这次 sync 返回的新 revision。对已有条目先 `info ID --brief`，需要合并总结与 resources 时读取完整当前条目。导入创建新版本，不自动更新网站或改变可见范围。
+
+目录默认挂在 `artifacts/<源目录名>/`；`import-directory --prefix work-v2` 则挂在 `artifacts/work-v2/`。同路径拒绝覆盖，更新作品使用新的版本目录名，保留历史。同名不同目录可以共存；绝对路径、..、符号链接及跨系统大小写/Unicode 名称冲突会被拒绝，不能通过关掉校验绕过。
+
+历史平铺附件没有原目录证据时保持平铺；不要根据文件名猜层级或用虚拟分组假装原目录。需要恢复目录时从明确的原始来源导入新版本。
+
+## 命名与成果组织
+
+- `resources[].title` 解释用途，`file` 使用真实归档相对路径。保留真实文件名和后缀，不为界面简洁改掉实际下载名。
+- 展示采用可读标题、真实文件名、格式和大小；标题与文件名相同则避免重复。长中文、空格、多点后缀应完整可辨，窄屏可换行。
+- 用 `resources[].collection` 表达明确的成果组合，例如同一作品的原图、生成提示词、生成记录。无可靠组合关系时保持平铺，不靠名称猜配对。
+- `collection` 是阅读分组；`group: files` 是把跨来源 link 放进主题文件区；`presentation: frontpage` 指定 HTML 门面，三者不要混用。
+- 图片等比展示，不拉伸或裁切关键内容。生成提示词附件可以是图像成果；它与真实用户会话原话不同，后者始终私有。
+
+示例：源目录 `illustration-v2` 内有原图和生成提示词，两份作为同一组展示。
+
+```json
+{
+  "resources": [
+    {"kind": "file", "file": "artifacts/illustration-v2/original.png", "title": "作品原图", "collection": "插画作品", "featured": true},
+    {"kind": "file", "file": "artifacts/illustration-v2/generation-prompt.txt", "title": "生成提示词", "collection": "插画作品"}
+  ]
+}
+```
+
+`resources` 列表更新会替换整份列表，必须合并保留已有有效成果；示例不能直接覆盖真实条目。要让目录内容可作完整作品预览，保留 HTML、CSS、经典 JS、图片和字体之间的相对关系。
+
+## 调用示例
+
+以下从本 Skill 根目录执行；`scripts/muq.py` 是跨系统调用器，支持 sync、import-directory、build、publish。把示例 ID、路径和 revision 替换为现场值。
+
+```sh
+# Linux：同步真实会话，复制所选目录；超限文件转为索引。
+AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md /home/dticpw/conda/envs/py310/bin/python scripts/muq.py sync --provider codex --summary /path/to/summary.json --directory /path/to/illustration-v2
+
+# Linux：给现有条目完整保存本地目录；不自动构建或发布。
+/home/dticpw/conda/envs/py310/bin/python scripts/muq.py import-directory ENTRY_ID /path/to/website --prefix website-v2 --revision CURRENT_REVISION
+```
+
+Windows 使用 `D:/python/anaconda/envs/th123/python.exe scripts/muq.py`，文件路径换成 Windows 形式；默认凭据路径由 Windows 密码本入口解析。`--provider` 按真实客户端选择，Claude 还须明确 session-id 或 transcript，不能套用示例的 Codex 身份。
+
+## 权限、依赖与验收
+
+公开/馆主共用阅读模型和文件规划。未知字段不会自动公开；需要新阅读字段时先按项目实现声明用途及权限，不用复制完整 Store 对象绕过投影。普通档案默认私有、AI 月刊默认公开、馆主逐条选择优先；主题公开不连带公开来源日记、原话、本机路径或未获准附件。完全私有条目不为锁定封面而自动暴露存在、标题或数量。
+
+目录视图只来自当前视角获准的归档文件，不是本机文件系统浏览。源修改时间仅在导入时有记录才显示，不拿入库时间替代；目录项数为直接子项。未上传、本地仅索引、缺失依赖须如实标注。
+
+静态/隔离 HTML 只重建已获准附件，保持 sandbox；不得添加 allow-same-origin 或为预览放开联网。外部 CDN、动态模块、CSS @import、fetch 和后端程序不保证可运行，依赖提示也不是任意程序完整性的证明。
+
+交付时打开真实条目，按涉及的能力核对：
+
+1. 成果标题、真实文件名、格式、分组和原图比例；桌面及窄屏能读清，必要时检查 1440/820/390 宽度。
+2. 有目录时核对层级、面包屑、返回上级与键盘操作；平铺成果不伪造目录。
+3. 实际预览和下载至少一份代表文件；多文件作品检查依赖，下载目录 ZIP 并比对相对路径及字节或 SHA256，特别是中文和同名不同目录。
+4. 核对公开/解锁视角及未上传说明。目录 ZIP 含下载清单（MUQ-DOWNLOAD-MANIFEST.json，冲突时改名），整条网页 ZIP 含 WEB-MANIFEST.json；只称包含当前已上传清单，不称原项目完整备份。
+5. 分别报告入库、本地构建、源码提交与网站发布；原图/索引未上传或浏览器未验收时明确边界。

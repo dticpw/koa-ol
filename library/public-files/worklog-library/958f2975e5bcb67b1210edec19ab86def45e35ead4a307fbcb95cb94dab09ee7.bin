@@ -1,0 +1,21 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>muQ · 日常使用指南</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>muQ 日常使用指南</h1>
+<p>muQ 是阅读成果、验收项目和交接工作的个人图书馆。长期主题告诉你项目现在是什么状态；来源日记保存各场会话当时发生的事。两者互相链接，项目更新不覆盖原始会话历史。</p>
+<h2>找到项目与成果</h2>
+<p>从个人主页进入图书馆，按标题、标签或正文关键词查找。进入主题后，先读摘要与截图，再查看当前状态和操作入口。长正文用目录定位；网页、文件、历史来源在页末以长条入口展示。文件标题应直接说明它是什么，旧版材料应标明阶段。</p>
+<p>普通馆藏默认只供馆主阅读。馆主入口可选择此浏览器记住 30 天；只在自己的设备使用。退出并忘记此设备会清除记忆。原始提示词仅在馆主解锁后可见，默认展开，仍可手动收起。</p>
+<h2>让 Agent 归档</h2>
+<p>阶段完成或需要交接时，可以说：“用 muq-journal 归档本次工作；更新相关长期主题的当前状态，保留真实会话来源。”</p>
+<p>Agent 必须定位真实会话日志，续聊更新同一个日记 ID，不能凭记忆补写提示词。长期主题只总结与本项目相关的工作；混合会话中的其他任务不被搬进主题。Skill 是按需调用，不是持续监听服务。</p>
+<h2>验收与查证</h2>
+<p>当前状态应区分已上线、本地完成、未验证和候选计划。门面展示必要结论与证据，不要求你先打开一堆附件才能明白项目。需要查证时，打开使用文档、验收报告或来源日记；旧报告中的“未发布”只代表当时进度。</p>
+<p>HTML、图片和排版后的 Markdown 可在网页阅读。HTML 默认静态预览，复杂脚本可按需尝试隔离交互；后端服务、外部模块和联网应用不保证在阅读器运行。源站或独立演示通过网页标题入口访问。</p>
+<h2>文件、权限与备份</h2>
+<p>超出上传阈值的文件可以只登记本机位置、大小与校验值。索引不是备份，也不是远程可下载文件。网页 ZIP 只包含实际上传的附件及未上传清单；完整原件与历史另用私人恢复包保护。</p>
+<p>AI 日报按自然月维护，默认公开正文与报告附件，馆主显式设置优先。其他项目不套用月刊的公开默认。馆主管理在本机保存、构建后，还需同步网站才能影响线上访问。</p>
+<h2>当前边界</h2>
+<p>这份指南依据 2026-09-11 的源码与已保存验收记录整理。主题整理逐项推进，当前 muQ 主题的新版门面先在本机验收；不能据此认为全库已经迁移或网站已经更新。Windows 启动器仍缺少实机运行验收。</p></main></html>

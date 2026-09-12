@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>muQ · 阅读结构与文件目录使用指南</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>统一阅读内容与文件浏览</h1>
+<p>2026-09-12 实施。公开和馆主仍使用原来的渲染器及 catalogue schema 1 / archive schema 2；读取旧档案不要求批量迁移。</p>
+<h2>阅读与权限</h2>
+<p><code>app/reading_model.py</code> 是阅读字段的单一声明入口。正文、sections、topic 和 resources 由相同函数生成；公开投影只保留明确允许的字段及附件。新增阅读字段须在此处声明并补权限契约测试，未知字段不会自动进入公开数据。原始 Store 和历史版本不被投影改写。</p>
+<p><code>app/file_plan.py</code> 统一枚举附件、检查阈值及 publish:false，生成公开 URL 或加密描述符。资源的 group、presentation、collection 在两种视角中一致。topic 主图与章节图只引用可下载附件；馆主可从未上传清单找到未发布文件信息。来源链接不改变目标日记权限，主题引用采用编辑时明确写入的标题，不自动公开来源日记的真实标题或原话。</p>
+<p>普通条目默认私人，AI 月刊沿用默认公开及逐条显式覆盖；仅公开概览的旧条目仍不公开正文。完全私有的条目不出现在匿名目录。公开目录不输出 session、原话、本机路径及来源内部 revision。</p>
+<h2>文件区</h2>
+<p>成果视图显示可读标题、真实文件名、格式和大小；资源可用 <code>collection</code> 明确指定成果分组，例如“作品一 · 原图与生成提示词”。该字段只是阅读分组，不能冒充原目录。<code>group: files</code> 继续用于主题内的跨来源文件链接，<code>presentation: frontpage</code> 继续用于 HTML 门面。</p>
+<p>目录视图根据当前视角实际可下载的文件生成目录，支持面包屑、返回上级及键盘操作。目录项数统计直接子项。主题入口省略内部 artifacts 包装层；普通日记的归档清单仍可供馆主查看 bundle 内部文件。</p>
+<p>文件修改时间只显示导入时采集的源文件 mtime；旧附件未保存这一字段就不显示。不使用入库或构建时间冒充原文件时间。</p>
+<p>“下载当前目录 ZIP”保持相对路径，包中加入避免重名的 MUQ-DOWNLOAD-MANIFEST.json，列出实际文件、校验值、未上传文件及依赖提示。它不是完整源项目备份；外部链接、仅本机索引和未归档依赖不在包内。</p>
+<h2>导入真实目录</h2>
+<p>新目录导入支持嵌套路径；现有平铺附件保持原样。若旧档案缺少原目录关系，需要从明确的源目录重新导入新版本，不能根据文件名推测恢复。</p>
+<p>Linux 示例：第一条只查看当前 revision；第二条将选定目录完整复制入现有条目的新版本，第三条才构建本地网页。替换示例 ID、路径和 revision 后执行。目录导入本身不公开、不部署网站；大小阈值在构建时继续生效。</p>
+<pre><code class="language-sh">/home/dticpw/conda/envs/py310/bin/python -B /mnt/e/PG/muQ/app/muq.py info ENTRY_ID --brief
+/home/dticpw/conda/envs/py310/bin/python -B /mnt/e/PG/muQ/app/muq.py import-directory ENTRY_ID /absolute/source --prefix work-v2 --revision CURRENT_REVISION
+AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md /home/dticpw/conda/envs/py310/bin/python -B /mnt/e/PG/muQ/app/muq.py build
+</code></pre>
+<p>Windows 使用 <code>D:/python/anaconda/envs/th123/python.exe</code> 与 <code>E:/PG/muQ/app/muq.py</code>，源目录使用相应 Windows 路径；默认 prefix 为源目录名，也可明确指定安全名称。代码不依赖 Linux 路径或额外第三方包。</p>
+<p>会话同步也支持 <code>sync --directory &lt;源目录&gt;</code>，并沿用 sync 的上传阈值策略：超限文件转为本机索引，不复制。需要保留完整目录的所有本地原件时使用上述 <code>import-directory</code>；随后更新日记总结记录成果。<code>app/kb.py put --directory</code> 适合已有结构化更新流程。</p>
+<p>同一路径不可覆盖；重复导入需选择新的 prefix 或新附件名。拒绝绝对路径、..、符号链接、Windows 保留名、大小写/Unicode 规范化冲突与文件/目录冲突。历史版本及 CURRENT 保留原有乐观锁与原子切换。</p>
+<h2>静态网页及依赖</h2>
+<p>相对 CSS、图片、字体和经典 JS 只从当前条目已上传清单重建。隔离 iframe 的附件使用 data URL，避免当前 Chrome 拒绝父页面 Blob URL；不增加 allow-same-origin，不开放联网或任意本机文件读取。</p>
+<p>静态模式去掉作品脚本；启用隔离交互后可以运行经典内联脚本。外部 CDN、动态模块、CSS @import、fetch 和后端应用依旧不保证运行。静态依赖计数只覆盖 HTML src/poster/stylesheet 与 CSS url；它是辅助提示，不是任意程序依赖完整性的证明。</p>
+<h2>验证与回退</h2>
+<p>42 项 Python 测试覆盖旧格式、公开投影字段、私有标记排除、目录同名/冲突、完整性、搜索、分享和备份恢复；Node 分享测试通过。浏览器在临时馆藏验证 1440/820/390 无整页溢出、图片比例、键盘目录导航、公开门面 CSS/图片、隔离脚本、解锁与跨标签页退出。实际浏览器下载的 9 个源文件已逐字节匹配，ZIP 保留中文路径及同名不同目录。</p>
+<p>代码升级不批量修改真实馆藏。若尚未导入新目录，源码可以直接回退后重建；若已有嵌套目录条目，不应盲目换回仅支持平铺附件的旧 Store，须先保留完整 data 备份并使用兼容读取版本。源码提交与站点部署独立；本次部署状态以会话交付记录为准。</p></main></html>

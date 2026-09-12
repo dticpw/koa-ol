@@ -1,0 +1,111 @@
+# 日记与项目文库
+
+把每天做过的事、项目中的问题、决策和产出保存在可以搜索、回看、导出的本地档案里。
+
+第一版：本机网页 + Python 标准库 CLI；日记和项目使用同一套存储。参考 `/home/dticpw/Downloads/文库.html` 的组织方式，未复制参考站的项目内容或插画。
+
+## 打开
+
+Linux 在终端执行下面这一行，启动本机服务，终端需保持打开；`Ctrl+C` 停止：
+
+```sh
+sh /mnt/d/Linux_share/worklog/start-linux.sh
+```
+
+浏览器访问 <http://127.0.0.1:6767>。如果已经启动，直接访问，不必重复运行。端口被占用时可在启动命令末尾加 `--port 6768`，并使用对应地址。服务不是开机自启。
+
+Windows 双击 `D:\Linux_share\worklog\start-windows.cmd`，随后访问相同网址。默认解释器为 `D:\python\anaconda\envs\th123\python.exe`；可用 `WORKLOG_PYTHON` 覆盖。代码面向 Python 3.10+，Windows 启动脚本与文件写入尚未在 Windows 实机验证。
+
+全部源码和数据位于同一 NTFS 目录，两系统看到同一份文件。无需安装包、Node、数据库服务或浏览器插件。此目录没有初始化 Git 仓库。
+
+## 怎么记录
+
+- **日记**：每次任务结束留一条，多个任务可在同一天留下多条；界面按月份浏览，记录自身保留日期。用 `project` 关联项目固定 ID。
+- **项目文库**：一个项目一个固定 slug，例如 `multimodal-rag`。复用 ID 更新当前档案，每次更新生成新版本，旧版不会被覆盖。
+- **问题**：写清现象、当前状态和影响；已解决的问题在“处理与决策”记录办法与验证，不删除原始记录。
+- **产出**：正文可记路径、提交或链接；需要长期保存的文件通过 CLI `--artifact` 复制入库。仅写原文件路径不会自动备份文件。
+- **用户原话**：只保存确实可见的原文，与 AI 整理的字段分开。当前没有完整会话导入器，未收录就留空，不能声称“已保存全部 prompts”。不同轮次的原文可另存为独立 `.txt` 附件，避免人为合并改变原文。
+- **归档**：状态改为“已归档”，仍然保留并可搜索。未实现删除按钮。
+
+网页支持新建、编辑、状态筛选、搜索、项目与日记双向关联、版本选择、完整 ZIP 下载。表单失焦不会自动保存，关闭未保存的编辑会提醒。
+
+搜索覆盖当前版本的 JSON 正文、用户原话、附件名称，以及 2 MB 以内的 UTF-8 文本附件（`.md/.txt/.html/.csv/.json/.py/.js/.css`）。采用大小写不敏感的子串搜索，支持中文；不包含 PDF/图片 OCR、语义搜索或历史版本全文搜索。
+
+## 给 Agent 的 CLI
+
+Linux 入口为 `sh /mnt/d/Linux_share/worklog/kb.sh`，下文简称 `kb`。Windows 使用默认环境解释器执行 `D:\Linux_share\worklog\app\kb.py`，参数相同。
+
+```text
+kb ls
+kb ls --kind journal
+kb search "检索关键词"
+kb get worklog-library
+kb history worklog-library
+kb get worklog-library --revision <版本ID>
+kb put /path/to/entry.json --artifact /path/to/report.html
+kb export worklog-library /path/to/new-export-directory
+```
+
+`ls/search/get/history` 只读，输出 JSON。`put` 写入新版本并复制附件；已有附件同名时拒绝写入，请给新版附件另起文件名。`export` 复制完整 bundle 到一个尚不存在的目录，原档案不变。
+
+创建项目的 JSON 示例（示例尚未入库）：
+
+```json
+{
+  "id": "example-project",
+  "kind": "project",
+  "revision": "",
+  "title": "示例项目",
+  "date": "2026-09-10",
+  "status": "active",
+  "summary": "为什么做这个项目",
+  "work": "已经完成的事情",
+  "problems": "问题与当前状态",
+  "decisions": "处理方式、依据与验证结果",
+  "outputs": "产出路径与证据",
+  "next": "下一步",
+  "prompts": ""
+}
+```
+
+创建日记时，`kind` 改为 `journal`，使用独立 ID，增加 `"project": "example-project"`。`status` 可选 `active` / `done` / `archived`。
+
+更新前先 `get`，保留其中的 `revision` 再 `put`，可阻止过期内容覆盖新版本。`put` 合并提供的字段，省略字段保留旧值；提供空字符串会清空该字段，但旧版仍可查。创建时 `revision: ""` 可防止不小心复用已有 ID。省略 `revision` 则不做版本冲突校验，仅供确定当前状态的操作使用。
+
+Agent 每次结束任务的建议顺序：先读项目当前档案 → 写清本次事实与证据 → 保存日记并关联项目 → 按需更新项目状态与过程 → 复制本次重要产出 → `get` 核对写入结果。具体规则见 `RECORDING.md`。尚未安装全局 hook 或修改任何 Agent 全局指令，因此不会自动在其他会话触发。
+
+## 文件与版本
+
+```text
+worklog/
+  app/                   应用与 CLI
+  data/entries/<id>/
+    CURRENT              当前版本 ID
+    revisions/<version>/
+      entry.json         该版本的权威结构化记录
+      index.html         可离线打开的流程页
+      PROCESS.md         过程记录的 Markdown 导出
+      PROMPTS.txt        原话文本，按输入保留
+      artifacts/         复制入库的附件
+  tests/                 独立临时目录中的存储测试
+```
+
+`entry.json` 是权威数据；HTML/Markdown 是保存时生成的视图，不要直接修改生成文件。用网页或 CLI 修改。每次保存完成新 bundle 后，以原子替换切换 `CURRENT`，不会让正常读操作看到半写入的当前版本。全局目录锁防止网页和 CLI 同时写入；写入异常退出可能留下 `.write-lock`，须先确认没有运行中的写入操作再移除空锁目录。这里没有断电级事务或磁盘快照保证。
+
+每版保存完整附件，因此历史版本会占用额外空间。大模型权重、依赖目录、整份代码仓库宜保留路径与提交号；需要独立存档时再选定文件复制。
+
+## 备份与边界
+
+当前数据只在 D 盘这一处，没有远程副本。停止写入后，把整个 `worklog` 目录复制到另一个物理磁盘作为备份；恢复时停服务再还原目录。`data` 是恢复记录的必要部分，单独备份网页代码不够。
+
+服务只监听 `127.0.0.1`，校验 Host 和写请求 Origin；当前没有账号体系，不适合直接绑定公网。没有实现 `pub`、公开分享、自动会话采集、自动每日总结、自动备份或 PDF 全文提取。ZIP 与离线流程页可以本地交付；对外分享前另行选择内容。
+
+## 验证
+
+Linux 存储回归测试（使用临时目录，不修改正式记录）：
+
+```sh
+/home/dticpw/conda/envs/py310/bin/python -B -m unittest discover -s /mnt/d/Linux_share/worklog/tests -v
+```
+
+覆盖版本与原文保存、冲突检测、附件复制和检索、项目关联与输入验证、失败写入保持当前版本、同时写入拦截。

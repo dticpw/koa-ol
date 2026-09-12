@@ -1,0 +1,152 @@
+# muQ 交接文档 · 2026-09-11
+
+供新的 Codex / Claude 会话接手。本文是交接快照，继续操作前重新核对 Git、Store 当前版本和实际服务状态。日期按北京时间理解；元数据中的时间带 `Z` / `+00:00` 表示 UTC。
+
+## 先读这段
+
+muQ 已从“一会话一日记”的图书馆，开始演进为“长期主题展示当前状态，真实会话保存来源与原话”。用户常在图书馆阅读和验收项目，门面质量直接影响协作效率。
+
+**muQ 与“个人主页建造”的新版长期主题都已发布并在线验证，不再只是本地对照稿。** 网站提交 `8c7e6b999f3d7419ab676cb48d65af5cb1d2fc81`。个人主页正文现有 4 张真实界面截图，muQ 主题有 12 个文件入口。两个主题完整内容均需馆主解锁。
+
+当前没有明确要求立刻继续某项开发；用户要求结束长会话并交接。下一会话先了解用户反馈和本次任务，再选取下文待办。不要自动执行全库迁移、公开资料或重跑旧的主题生成脚本。
+
+## 入口与目录职责
+
+| 内容 | 入口 | 职责 |
+| --- | --- | --- |
+| 线上图书馆 | https://koa-ol.com/library/ | 日常访问 |
+| muQ 主题 | https://koa-ol.com/library/entry?id=worklog-library | 项目现状、指南、仓库与历史来源 |
+| 个人主页主题 | https://koa-ol.com/library/entry?id=personal-homepage | 整站介绍、4 张截图、关联主题 |
+| 共享运行目录 | `/mnt/e/PG/muQ` / Windows `E:/PG/muQ` | 程序、真实馆藏、现有启动器与 Skill 的目标 |
+| Linux Git 检出 | `/home/dticpw/PG_linux/muQ` | 私有仓库 https://github.com/dticpw/muQ 的提交副本 |
+| 网站仓库 | `/mnt/f/bak/git_koa-ol` / Windows `F:/bak/git_koa-ol` | https://github.com/dticpw/koa-ol ，Cloudflare Pages 发布来源 |
+| 本机服务 | http://127.0.0.1:6767/library/ | 馆主管理、预览与构建；是否运行须现场检查 |
+| Skill 源码 | `/mnt/c/Users/DTICPW/agent-workflows/skills/muq-journal` | 共享 agentflow 仓库内维护，不复制进 muQ 仓库 |
+
+**共享运行目录与 Linux Git 检出不会自动同步。** 当前仍以共享目录运行及编辑，检出用于审阅后提交。不要用 Git 检出覆盖共享目录，也不要使用带 `--delete` 的整目录同步。Git 检出不含 `data/`；从空检出启动服务看到空库不意味着原馆藏丢失。
+
+源码仓库不收录：真实馆藏、密码本、恢复包、exports、会话总结、临时截图、旧源码 ZIP。`web/` 的页面图片是必要源码资源，已收录。源码仓库不能替代私人数据备份。
+
+## 实测版本与已知差异
+
+交接前只读检查结果：
+
+- muQ 源码仓库 HEAD：`1e39283`，工作区干净；前一提交 `6ec926b` 为主题指南及 reading-v2 布局。均已推送。
+- 站点仓库 HEAD：`8c7e6b9`，本轮已推送且部署生效。
+- 站点仍有无关未跟踪文件：`design-experiments/`、`docs/games-project-handoff.md`、`games/3240bd2c-1ca2-4f93-bc7a-19b84552459d.png`、`games/e5ab6421-6b7c-4fd7-b3ee-729ecd34bc4a.png`。不要混提交或删除；下次仍须重新查状态。
+- 共享运行目录与 muQ Git 检出的已跟踪文件有两处差异：`web/library.js`、`web/reader.js`。前者让非日记但有原话的条目也展示原话；后者补充沙箱门面的锚点消息与外层滚动处理。这些是共享目录已有的其他工作，未混入本会话的源码提交；站点发布使用共享目录，所以源码仓库不能直接视为当前全部站点实现的精确副本。下一会话先审阅并确认归属，再决定如何同步，不能回退共享版本。
+
+| 主题 | 当前 revision | 状态 |
+| --- | --- | --- |
+| `worklog-library` | `83863e037177465ab7686af364adc5be` | active；保留原项目 ID 和历史 |
+| `personal-homepage` | `ba06e662156a4dd49a4b3d6742f52668` | active；新版阅读布局与截图已上线 |
+
+线上已核对：`topic.js` 与本地 SHA256 一致，值为 `68340325d9f882534e9a4c9e3d71ca0920e3cfc32553cd6264475374996ed82c`。详细记录：`/mnt/e/PG/agent-artifacts/muq-homepage-publish/verification.json`。
+
+## 用户已确认的归档与阅读规范
+
+1. 长期入口按项目／主题持续维护。会话日记仍一会话一个固定 ID，续聊补采真实日志；不同会话原话不拼成一篇日记。混合会话只提取与主题相关的结论，其他工作保留在来源中。
+2. 门面顺序：**摘要 → 等比项目截图（如有）→ 当前状态与操作入口 → 目录与正文 → 网页、文件、历史来源**。用户通常先操作，但摘要要服务长久理解。
+3. 门面必须是实际渲染、认真排版的 HTML，不能只有短概述和附件按钮。正文讲清楚优先，允许长页面，不为省版面缩小字或图片。
+4. 不采用左小 Overview、右小截图的默认两列布局。图片原比例展示，避免拉伸和过度裁切；截图尽量无浏览器滚动条白边。截图不得伪造，动态模型应实际渲染后截图。
+5. 长正文要有有效目录。已认可桌面随阅读定位的侧栏目录，手机目录移到正文前、默认展开。主章节要有明显视觉边界：独立编号、加粗标题、浅底色标题带和章间留白。
+6. 网页只显示带链接的网页标题；网页、文件和历史来源使用简洁纵向长条入口。按有用顺序展示成果，现行使用指南优先，旧报告标明阶段。
+7. 原话在馆主视角默认展开，仍可手动收起，权限不改变。新会话的原话归档必须从真实日志采集，不能从本文重建。
+8. 长期项目关联仓库；源码和版本由仓库管理。文件区要盘点有效交付物，不能只沿用上一版稀疏清单。已有来源附件直接链接；大文件按索引策略，不强行上传。
+9. 页面设计使用 `open-design-ui` 的阅读交付模式，数据、身份、权限及入库发布交给 `muq-journal`。配色、排版应可集中调整，不将每条档案写成不可维护的孤立样式。
+
+详细复用规范：共享 Skill `references/reading-layout.md`。Skill 已记录 muQ 和个人主页两个固定主题的维护入口。`muq-maintainer` 管理员 Skill 尚未创建，不要声称已具备全库维护能力。
+
+## 两个主题目前收录什么
+
+### muQ · 大图书馆
+
+五个内容章节：项目范围与能力、日常使用与验收、源码／馆藏／发布、成果与关联工作、后续维护。主图是图书馆真实首页。
+
+文件区 12 个入口：当前主题 HTML 阅读副本、日常使用指南、维护交接指南、设计证据索引、仓库说明、备份恢复说明、5 份来源阶段报告，以及首页截图。阶段报告直接链接原附件；旧附件没有删除。
+
+来源共 6 条：
+
+| 来源 ID | 用途 | primary |
+| --- | --- | --- |
+| `codex-7bdfb3a609cc16f657b9c69a` | 本会话，核心开发与归档演进 | true |
+| `day-2026-09-10-worklog` | 最初原型，保持 archived | true |
+| `codex-4d581ad1e98ee8f22621fa93` | daily 中的月刊、可见范围及馆员背景修整 | false |
+| `codex-714f66826a43b6acd589dcb5` | 小恶魔馆员生成与接入 | false |
+| `codex-8013b0f1f387225dbd548198` | 红魔馆藏书室模型 | false |
+| `codex-7868c500a1d7ef0ddd541fa5` | 个人主页与 Open Design 工作 | false |
+
+`primary=false` 使这一次主题关联不会隐藏混合会话的独立纵览入口。若另一个主题把同来源列为主来源，仍可能由那个主题承接；不要将其理解为全局强制显示。来源日记仍能从日记筛选、搜索、标签或历史入口找到。
+
+### 个人主页建造
+
+早期主题版原已上线，后来的 Open Design 对照稿一度仅在本地。最后一轮已将其应用为 `reading-v2`，并在正文加入 4 张实拍：首屏神社 1440×1000；Chat／Stats、muQ模型、Games 各1440×750。新截图总计约725 KiB。主图紧接摘要，另外3张在“主页界面一览”中纵向展示，均有附件入口。
+
+此主题仍有6个文件入口，包含旧首页截图作为保留成果；其跨来源的完整文件盘点还没有像 muQ 那样系统补齐。不能因为有4张截图就声称个人主页全部历史交付物已整理。
+
+## 架构与修改入口
+
+- `app/kb.py`：Store、固定身份、CURRENT、不可变版本、revision 乐观锁。真实 `data/` 不能做测试夹具，不手改历史 JSON。
+- `app/sessions.py`：真实会话日志定位与提示词采集；`app/protected_prompts.py`：含馆主口令的原话保护。
+- `app/curation.py`：资源结构、附件阈值与本机索引；`app/publishing.py`：网站构建与加密导出。
+- `app/topic_pages.py`：topic schema 校验、主题 HTML 派生。`reading_document` 使用共享样式，正文图片可通过 `section_images` 提供自包含数据；不复制来源原话。
+- `web/topic.js` / `topic.css`：原生 DOM 主题门面、按主题启用 reading-v2、随读目录、章节图。`disposeTopicReading` 在切换／退出时清除监听与布局标记。
+- `web/library.js`：馆藏筛选、解锁、主题路由；`web/reader.js`：附件隔离阅读；`web/theme.css`：主题 token。
+- `scripts/publish.py`：构建并按授权推送站点。不是 muQ 源码仓库的 push 工具。
+
+结构字段：`entry.topic` schema 1；`topic.layout='reading-v2'`；`topic.image` 是摘要后主图；`topic.sections[].images` 为章节图数组，最多20张／章，包含 file、width、height、alt、caption；`sources` 保存来源 ID、日期与参考 revision。`resources` 按顺序展示，`kind='link', group='files'` 把来源附件链接放进文件区。
+
+**来源 revision 是整理时的依据快照；当前网页来源链接及原话读取当前来源条目，不是锁定该 revision 的历史浏览器。** 后续更新主题时重新读来源，不假设快照后来源不会变化。
+
+`homepage_pilot.py` 仅支持最初 personal-homepage 试点，且会重设资源清单。任务目录里的 `curate.py`、`prepare.py` 也是一次性脚本，含当时版本和内容，不是通用管理器。不要直接重跑。需要修改时读当前 Store，准备最小字段更新和新附件，带当前 revision 调用 Store.put，保留既有资源与历史。
+
+## 权限、运行、归档与发布
+
+普通新条目默认私人；AI月刊默认公开正文与报告附件，馆主显式选择优先。旧条目的字段可能为缺省，必须核对实际可见行为，不用批量补 public 字段来“统一”。两个长期主题当前完整正文仅馆主可见。本会话日记沿用公开概览、私人正文与原话的历史设置。
+
+馆主口令通过 `credential-vault` 的 `muq-library` 条目获取，不写进聊天、交接文档、Skill、源码或普通日志。Linux 非交互 shell 必须显式设置 `AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md`。用户操作入口：本机图书馆 → 馆主入口 → 使用本机密码本解锁。服务不在时运行：
+
+```sh
+sh /mnt/e/PG/muQ/start-linux.sh
+```
+
+它启动127.0.0.1:6767本地服务；终端关闭会停止，不是常驻服务承诺。
+
+Linux 默认解释器 `/home/dticpw/conda/envs/py310/bin/python`；Windows默认 `D:/python/anaconda/envs/th123/python.exe`。不要擅装浏览器或修改解释器全局依赖。
+
+常用检查与构建（从共享运行目录执行；后两条会写构建产物，publish还会提交推送网站）：
+
+```sh
+/home/dticpw/conda/envs/py310/bin/python -m unittest discover -s tests
+/home/dticpw/.nvm/versions/node/v22.23.2/bin/node --test tests/test_sharing.mjs
+AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md /home/dticpw/conda/envs/py310/bin/python app/muq.py build
+AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md /home/dticpw/conda/envs/py310/bin/python scripts/publish.py --push
+```
+
+新会话归档读取共享 Skill，确认**自己的真实会话 ID**，用 sync 写自己的日记；不要沿用本会话ID。本会话 ID 为 `01a08a3b-e301-75d0-ac53-560707e6ee71`，日记为 `codex-7bdfb3a609cc16f657b9c69a`，始于2026-09-10。最近一次线上发布包含26条原话；本次交接会再补本地快照，线上不会因此自动更新。
+
+保留 Git HTTPS remote；Linux现有insteadOf在连接时走SSH。发布工具沿用继承代理作单次CONNECT，不改全局代理。发布前检查站点暂存区和main状态；不能强推或夹带无关文件。推送后等待Cloudflare生效，再核对线上脚本／档案版本、解锁、图片和附件。曾出现推送成功而线上仍短暂返回旧脚本的窗口。
+
+## 验证与后续优先事项
+
+已完成：36项Python测试；Node分享测试；本地桌面／手机无溢出、图片比例正确、目录高亮；muQ来源保护、混合会话入口、原话默认展开与退出清除；线上两个主题、4张主页图、muQ使用指南真实打开。该结论对应上述发布，不替代未来改动后的验证。Windows启动与手机真机触摸仍未独立验收。
+
+后续建议顺序，按用户新任务选择：
+
+1. 审阅共享运行目录和源码仓库的两处差异，解决“仓库不完全代表运行源码”的维护问题。
+2. 收集用户对已上线两个主题的阅读反馈；补齐个人主页主题跨来源的有效成果文件清单。
+3. 把一次性主题整理经验收敛为通用维护流程／工具，必要时再创建管理员Skill。需明确身份、来源版本、合并、附件去重、权限、预览、应用、回滚和验收规则。
+4. 逐主题整理其他馆藏，勿依据标签直接整篇合并混合会话。完善模板后再考虑全库视觉调整。
+5. 核实Windows实机启动、备份恢复与大型原件管理；不把源码Git推送当成完整备份。
+
+## 材料与旧文档的时效
+
+- `docs/muq-user-guide.md`、`docs/muq-maintenance-guide.md`、`docs/muq-design-and-evidence.md`：当前可维护文档源。
+- `README.md`、`DESIGN.md`、`RECOVERY.md`、`docs/repository.md`：实现、阅读契约、恢复及仓库边界。
+- `docs/muq-topic.md`、`docs/topic-pilot.md` 有早期阶段描述，如“尚未发布”或“仅试点”。此类时态已被本次线上验收取代，勿据此否定新版本；也不要改写已归档旧附件。
+- `/mnt/e/PG/agent-artifacts/muq-homepage-pilot/`：早期个人主页主题材料。
+- `/mnt/e/PG/agent-artifacts/muq-opendesign-review/`：最初独立阅读对照稿及生成脚本；临时6776端口不作为长期入口。
+- `/mnt/e/PG/agent-artifacts/muq-topic-curation/`：muQ来源快照、候选、一次性整理脚本与截图。
+- `/mnt/e/PG/agent-artifacts/muq-homepage-publish/`：最终4张截图、两个主题候选、阅读副本、线上截图和 `verification.json`。
+
+本文在共享项目目录交付；未因写交接文档自动提交源码或再次部署网站。开始下一项任务时先读取最新实际状态。

@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>stream-verification.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>Chat 等待反馈与本机历史验收</h1>
+<p>部署提交：39d478f8ab840be941a3373beba7227bc7dc8273，Cloudflare production 成功。</p>
+<ul>
+<li>23 项后端测试通过：三模型路由、搜索隔离、SSE 分块与中文解码、真实阶段事件、引用、usage、流中断、incomplete 与取消。</li>
+<li>浏览器检查通过：首字前计时、逐段文字、代码块与引用、停止保留片段、重试不重复问题、刷新恢复历史与重试、附件持久化、历史切换/删除、存储失败提示。</li>
+<li>1440/900/390/360 像素宽度无页面或工具栏溢出，未捕获页面脚本异常。</li>
+<li>已修复停止后立即刷新可能早于 IndexedDB 提交完成的问题；完成保存后才恢复交互。</li>
+<li>线上 GPT 搜索：总耗时约 13.8 秒，首字约 11.9 秒，有真实检索状态与 1 条可点击来源。</li>
+<li>线上 Qwen：HTTP 200，多次流式分块，首个状态块约 80ms，完整回复约 1.6 秒。</li>
+<li>线上 Stats 最近记录：GPT、DeepSeek、Qwen 均 success 且有非零输入输出 token。</li>
+</ul>
+<p>边界：本机历史不跨浏览器或设备同步。取消向上游连接发出中止信号，不保证上游即时停止计费；若未返回最终 usage，只能记录当时已知用量。此次没有发布 muQ 线上图书馆，档案保持本地私有。</p></main></html>

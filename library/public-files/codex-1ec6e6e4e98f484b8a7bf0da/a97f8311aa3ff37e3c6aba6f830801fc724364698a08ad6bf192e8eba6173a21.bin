@@ -1,0 +1,161 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HANDOFF-20260911-github.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>MA3 接手说明</h1>
+<p>最后核对：2026-09-11 03:18–03:20 UTC（北京时间 11:18–11:20）。这是运行现场快照，不是永久运行事实。仓库状态已在本次首次推送后更新。</p>
+<h2>先读这段</h2>
+<p>MA3 是 Linux 本机、中控在场的 Agent 工作台，目前交付到 v0.3：中控理解需求并验收，独立 Python 后台保存状态，tmux 承载真实交互 CLI，网页观察和操作。用户希望看见执行过程并获得可验证产物；不做手机中继或公网控制入口。</p>
+<p>本次交接已经完成日常使用指南、muQ 条目门面及排版修正。下一会话应先核对现场，再与用户确定继续哪个开发目标；不要把本文件中的建议自动当作启动模型、取消旧任务或合并项目代码的授权。</p>
+<p>接手顺序：</p>
+<ol>
+<li>读本文、<a href="README.md">README</a>，检查下面的只读现场。</li>
+<li>需要派工、续接或验收时加载共享 <code>ma3-control</code> Skill；普通文档接手不必启动执行 Agent。</li>
+<li>按需读 <a href="V0.3接口与运行.md">v0.3 接口</a>、<a href="V0.2施工与协议.md">v0.2 协议</a>，历史依据去 muQ 和验收报告查。</li>
+<li>开始修改前检查 Git 状态并保护运行记录；源码现已推送，运行数据仍不在 Git 中。</li>
+</ol>
+<h2>现场与只读核对</h2>
+<ul>
+<li>项目：<code>/home/dticpw/PG_linux/MA3</code>，ext4，Windows 不能读取。</li>
+<li>服务：<code>ma3-workbench.service</code> 此次为 <strong>active / enabled</strong>；HTTP 快照成功，<code>read_errors=[]</code>。后台报告启动时间为 <code>2026-09-11T00:50:35.866930+00:00</code>，这不能独立证明“真实重新登录自动启动”验收通过。</li>
+<li>工作台：<code>http://127.0.0.1:8763</code>，只监听本机。</li>
+<li><strong>已建立 Git 仓库并推送至公开的 <code>https://github.com/dticpw/MA3.git</code>。</strong> 初始提交 <code>aa85a5d</code>，分支 main，35 个文件。源码、模板、测试和公开说明已上传；本文件、运行记录、截图与私人归档被忽略，不是远程备份内容。</li>
+<li><code>tmux -L ma3 list-sessions</code> 报 ma3 socket 不存在；快照中七项任务均 <code>runtime=exited</code>、<code>alive=false</code>。默认 tmux socket 与 MA3 的具名 socket 不是同一个。</li>
+</ul>
+<p>以下命令只读，不启动模型、不改变任务：</p>
+<pre><code class="language-bash"># 查看服务进程与配置状态。
+systemctl --user status ma3-workbench.service --no-pager
+# 查看任务、实例、回执与进程状态；注意输出可能含私人任务内容。
+/home/dticpw/conda/envs/py310/bin/python /home/dticpw/PG_linux/MA3/workbench_client.py snapshot
+# 查看 MA3 自己的 tmux server，失败时结合 snapshot 判断。
+tmux -L ma3 list-sessions
+# 核对版本管理状态与后续会话改动。
+git -C /home/dticpw/PG_linux/MA3 status --short
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>任务</th>
+<th>持久状态</th>
+<th>本次进程状态 / 接手含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bubble-20260909-080709-b1d4</code></td>
+<td>verified</td>
+<td>exited；首版历史验收</td>
+</tr>
+<tr>
+<td><code>task-20260909-083928-114c96</code></td>
+<td>verified</td>
+<td>exited；算法</td>
+</tr>
+<tr>
+<td><code>task-20260909-084154-4f922a</code></td>
+<td>verified</td>
+<td>exited；CSV 修复</td>
+</tr>
+<tr>
+<td><code>task-20260909-084652-ee1658</code></td>
+<td>verified</td>
+<td>exited；文档整理</td>
+</tr>
+<tr>
+<td><code>task-20260910-162054-58566e</code></td>
+<td>verified</td>
+<td>exited；v0.3 网页派工</td>
+</tr>
+<tr>
+<td><code>task-20260910-162411-972bcb</code></td>
+<td>claimed</td>
+<td>exited；历史上下文恢复后遇 429，未提交，不可记为完整验收</td>
+</tr>
+<tr>
+<td><code>task-20260910-223455-999cb6</code></td>
+<td>submitted</td>
+<td>exited；另一次 GPT 生图工具调研任务，本次未验收、未处置，先确认其归属</td>
+</tr>
+</tbody>
+</table>
+<p>重点：旧报告里的 waiting_input 是当时观察，<strong>现在不能据此 deliver</strong>。先读目标 <code>detail</code>、<code>state.json</code>、<code>launch.json</code> 和终端记录；历史 <code>terminal.txt</code> 不证明当前输入框空闲。只取需要的片段，不把其他任务原文全量输出。</p>
+<h2>代码与状态入口</h2>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ma3.py</code> / <code>orchestrator.py</code></td>
+<td>CLI、任务协议、真实执行器、回执与独立验收</td>
+</tr>
+<tr>
+<td><code>workbench.py</code></td>
+<td>项目/实例映射、后台操作队列、恢复与通知</td>
+</tr>
+<tr>
+<td><code>workbench_server.py</code> / <code>workbench_client.py</code></td>
+<td>本机 HTTP/SSE 服务及备用客户端</td>
+</tr>
+<tr>
+<td><code>ma3_mcp.py</code> / <code>web/</code></td>
+<td>MCP 薄接口与网页</td>
+</tr>
+<tr>
+<td><code>tasks/</code></td>
+<td>算法、修复、文档等任务定义和样例</td>
+</tr>
+<tr>
+<td><code>runs/</code> + <code>.ma3/workspace.json</code></td>
+<td>任务、attempt、产物和证据；映射与操作记录，须一起保护</td>
+</tr>
+<tr>
+<td><code>deploy/ma3-workbench.service</code></td>
+<td>服务源码，已安装到 <code>~/.config/systemd/user/</code></td>
+</tr>
+<tr>
+<td><code>preview/front-20260911/online-entry-verification.json</code></td>
+<td>本次 muQ 线上门面浏览器验证</td>
+</tr>
+</tbody>
+</table>
+<p>Python 固定使用 <code>/home/dticpw/conda/envs/py310/bin/python</code>。不要假定非交互 shell 加载 <code>.bashrc</code>、nvm 或凭据环境变量。</p>
+<p>Linux Codex 曾注册 <code>ma3</code> MCP；接手时以当前客户端发现结果为准。不能把 Skill 可见外推为 MCP 已连接，更不能外推 Windows / Claude 已配置。支持刷新时先刷新，否则重开会话；暂不可用时直接用上述客户端，不启动第二个后台。</p>
+<h2>已验证与能力边界</h2>
+<ul>
+<li>首版可见终端 → 冒泡排序 Python → HTML → 浏览器打开闭环已通过；v0.2 三类真实任务均 verified。</li>
+<li>v0.3 历史记录为 44 项测试通过，五种宽度浏览器检查通过；真实网页派工、重启后台后执行器存活和网页重连已验证。详见 <a href="V0.3验收报告.md">验收报告</a>。本次只写交接，没有重新运行 MA3 的模型任务或这 44 项测试。</li>
+<li>同一 Codex 上下文恢复与记忆标记验证过；整项后续任务因 429 未提交。不能把上下文恢复等同于完整续接闭环。</li>
+<li>Claude 仅保留启动适配，没有真实模型验收或会话续接；图形登录自启尚缺明确的登录验收记录。</li>
+<li>项目登记只是分组。任务仍在 <code>runs/&lt;run_id&gt;/work</code> 中，不会自动修改原仓库。尚无 worktree、任务 DAG、自动作者/审查员协作、合并返工或网页中控聊天。</li>
+<li><code>saved</code>、<code>delivered</code>、<code>ack</code> 不同；<code>submitted</code>、<code>verified</code> 不同；操作 job 的 done 不等于验收通过。验收绑定 attempt 和产物哈希。</li>
+<li><code>KillMode=process</code> 有意保留后台停止时的执行器；操作系统重启仍会结束进程。不能因为允许后台重启就推断任务可无人值守恢复。</li>
+</ul>
+<h2>建议下一步（不是本轮已经实施）</h2>
+<ol>
+<li><strong>源码基线已建立，继续保护运行数据。</strong> <code>aa85a5d</code> 已推送公开仓库；从暂存文件导出的独立副本也通过 44 项测试。根 README 是公开入口，原本机 README 保存在 <code>archive/README_local-20260911.md</code>。公开交接为 <code>docs/HANDOFF.md</code>，本文件仍是本机最新现场入口。<code>runs/</code> 与 <code>.ma3/</code> 另行备份；不使用 <code>git add -f</code> 把私人资料加入公开仓库。</li>
+<li><strong>明确历史未完任务的处置。</strong> 对 <code>162411</code> 先核实保存的会话 ID、产物与状态。当前终端已退出，不能沿用“投递一次继续消息”的旧方案；按实际接口限制提出恢复/取消后新建方案，请用户确认目标后执行。验收：真实回执、独立 validate/accept、旧记录保留，不重复执行同一会话。不要手改状态绕过恢复条件。<code>223455</code> 先确认是否属于其他会话，勿顺手接管。</li>
+<li><strong>补登录自启证据。</strong> 用户下次正常重新登录时核对服务和日志；无需为此擅自注销或重启电脑。</li>
+<li><strong>选一个真实小项目做仓库接入。</strong> 先确定仓库、交付与回滚方案，再设计 worktree、独立审阅和返工；验收应包含隔离修改、独立审查、可追溯采纳，不能只靠终端在跑。</li>
+</ol>
+<p>需要和用户商讨：真实项目选择、如何处理遗留任务、是否扩展新模型/协作角色、是否改变部署或公开范围。一般只读核对、文档维护和已授权的修复可继续执行。</p>
+<h2>本次 muQ 交付与跨项目改动</h2>
+<ul>
+<li><a href="https://koa-ol.com/library/entry?id=codex-1ec6e6e4e98f484b8a7bf0da">线上条目</a>，仅馆主可见；会话始于 2026-09-08，状态仍 active。</li>
+<li><a href="MA3门面与使用指南-20260911-v2.html">当前门面与使用指南</a> 是正式入口源；无 <code>-v2</code> 的门面为早期版本。<code>MA3日常使用场景.html</code> 本机排版已修正，馆藏旧同名附件保留历史，不覆盖。</li>
+<li>门面整合项目目标、已交付成果、六类日常场景与边界；图像 <code>height:auto</code> 等比，单列、大字号与留白。线上五种宽度、筛选、复制失败回退、锁定清除私有内容均通过。</li>
+<li>muQ 源码在 <code>/mnt/e/PG/muQ</code>，本次检查该目录也不是 Git 仓库。为让门面直接呈现在条目首页，本会话改过 <code>web/library.js</code>、<code>web/reader.js</code>、<code>web/library.css</code>、<code>app/curation.py</code>、<code>tests/test_curation.py</code>、<code>RECOVERY.md</code>；muQ 30 项测试通过。这些不属于 MA3 后台代码。</li>
+<li>资源标记 <code>presentation: frontpage</code> 触发自动展示。静态模式删除原脚本，只允许 nonce 授权的高度报告脚本；iframe 不给 <code>allow-same-origin</code>，不开放联网。交互需用户显式启用。维护时保留权限边界，详见 muQ <code>RECOVERY.md</code>。</li>
+<li>上一轮门面发布提交为站点仓库的 <code>a1f0fdf</code>；这是生成的网站文件，不是 MA3/muQ 源码备份。交接附件发布会产生后续提交，现场重查 HEAD。</li>
+<li>站点仓库 <code>/mnt/f/bak/git_koa-ol</code> 有其他工作：已修改 <code>assets/home/library.css</code>、<code>index.html</code>；未跟踪 <code>assets/home/library-poster.webp</code>、<code>assets/home/library.js</code>、<code>docs/games-project-handoff.md</code>、<code>games/</code> 下两张图片、<code>library-scene/</code>。不要清理或混入归档提交。只发布 <code>library/</code> 和获准的 muQ 专属路径，保持远程 HTTPS。</li>
+<li>共享 Skill 仓库此次 <code>skills/ma3-control/</code> 仍为未跟踪；本轮不顺手提交。</li>
+</ul>
+<h2>交接与归档维护规则</h2>
+<p>本文维护最新接手状态，历史过程留在报告和 muQ；每次交接更新日期、现场和下一步。原图、门面与归档附件不代替源码/运行数据备份。</p>
+<p>同一会话续聊按 <code>muq-journal</code> 更新原日记；<strong>新会话须使用自己的真实会话 ID 归档</strong>，可链接本条目，不冒用本会话 ID 混写提示词。本会话 ID：<code>01a08155-d830-7991-ab56-5f886bcb50f6</code>，仅用于定位历史。</p>
+<p>全局指令修改多份或大量重写单份时，必须加载 <code>global-instruction-review</code>，另开真实独立审查员，先审候选再写入并复核。本规则不意味着普通项目文件修改一律要开多 Agent。</p>
+<p>馆主口令不写入本文。需要解锁时按凭据 Skill 和本机馆主入口处理。向用户交付时区分本地记录、构建、推送、线上已更新；不把其中一步称为全部完成。</p></main></html>

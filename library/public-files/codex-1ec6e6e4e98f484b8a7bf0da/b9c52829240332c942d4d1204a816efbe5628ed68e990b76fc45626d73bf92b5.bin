@@ -1,0 +1,95 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V0.2验收报告.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>MA3 V0.2 验收报告</h1>
+<p>完成日期：2026-09-09。<strong>通用单 Agent 工作流验收通过，三类真实 CLI 任务均已 verified。</strong></p>
+<h2>已交付能力</h2>
+<ul>
+<li>任务 JSON 定义：支持指令、声明产物、初始文件、独立验收命令；不再写死冒泡排序。</li>
+<li>每次运行独立目录、run_id、attempt，任务及验收脚本保存快照和 SHA256。</li>
+<li>任务状态与运行状态分开；记录状态来源、等待原因、CLI 退出和最近回执。</li>
+<li>消息先持久化，再投递；明确 ack 后才算收到。未确认消息阻止 submit，失败投递不自动重发。</li>
+<li>独立 validate / accept：收集真实退出码与超时结果，绑定验收对象哈希，不用 Agent 自报替代验收。</li>
+<li>inspect / watch / capture / attach / note / stop 支持观察与人工接管；stop 只影响指定会话。</li>
+<li>Codex 与 Claude 启动参数适配，显式选择模型；本轮真实测试仅覆盖 Codex gpt-5.6-sol medium。</li>
+</ul>
+<h2>三项真实运行</h2>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>验收内容</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>算法编写</td>
+<td>二分查找首个匹配位置；3,540 个用例；百万长度序列实际读取 21 次</td>
+<td>通过</td>
+</tr>
+<tr>
+<td>代码修复</td>
+<td>标准 CSV、Decimal 金额；6 类合法输入与 10 类非法输入</td>
+<td>通过；原缺陷版本已先测出失败</td>
+</tr>
+<tr>
+<td>文档整理</td>
+<td>2 条决定、4 项行动、2 项待确认；空缺负责人/日期为 null；源记录不变</td>
+<td>通过；中控另行核对 Markdown 和 JSON 语义</td>
+</tr>
+</tbody>
+</table>
+<p>三项都由可见 tmux 中真实 Codex 完成，分别领取和提交，未交叉修改任务产物。CSV 初始代码和会议记录是为本次验证准备的示例材料，不是用户的真实生产项目或会议。</p>
+<h3>算法运行</h3>
+<p><code>task-20260909-083928-114c96</code></p>
+<ul>
+<li><a href="runs/task-20260909-083928-114c96/work/search.py">算法源码</a></li>
+<li><a href="runs/task-20260909-083928-114c96/acceptance.json">验收证据</a></li>
+<li><a href="runs/task-20260909-083928-114c96/state.json">状态及事件</a></li>
+<li><a href="runs/task-20260909-083928-114c96/terminal.txt">终端记录</a></li>
+</ul>
+<h3>修复运行</h3>
+<p><code>task-20260909-084154-4f922a</code></p>
+<ul>
+<li><a href="runs/task-20260909-084154-4f922a/work/csv_summary.py">修复后源码</a></li>
+<li><a href="tasks/repair/seed/csv_summary.py">原始缺陷代码</a></li>
+<li><a href="runs/task-20260909-084154-4f922a/acceptance.json">验收证据</a></li>
+<li><a href="runs/task-20260909-084154-4f922a/observation-stale.json">回执过期观察</a></li>
+<li><a href="runs/task-20260909-084154-4f922a/terminal.txt">终端记录</a></li>
+</ul>
+<h3>文档与消息运行</h3>
+<p><code>task-20260909-084652-ee1658</code></p>
+<ul>
+<li><a href="runs/task-20260909-084652-ee1658/work/handoff.md">交接 Markdown</a></li>
+<li><a href="runs/task-20260909-084652-ee1658/work/handoff.json">结构化行动项</a></li>
+<li><a href="runs/task-20260909-084652-ee1658/acceptance.json">验收证据</a></li>
+<li><a href="runs/task-20260909-084652-ee1658/state.json">消息、确认及人工介入事件</a></li>
+<li><a href="runs/task-20260909-084652-ee1658/terminal.txt">终端记录</a></li>
+</ul>
+<h2>真实遇到的情况</h2>
+<ol>
+<li>三个新目录均出现信任提示，由中控核对后各确认一次，没有编写自动按回车逻辑。</li>
+<li>CSV Agent 执行较久，未定期报告 heartbeat；超过回执阈值时 inspect 标记进度未知，保留 claimed，既不误报成功也不自动重发。中控查看真实输出后继续观察。</li>
+<li>文档 Agent 主动报告 waiting_input；第一条消息 <code>msg-a2f4a19fd685</code> 经投递后收到 ack，状态回到 running。</li>
+<li>CLI 提示额度接近限制并建议切换模型。中控保持指定 Sol，不切换模型、不关闭未来提醒。之后模型确实出现 429，已写文件但没有 submit；系统没有因此假定完成。</li>
+<li>用户数小时后要求继续，中控沿用原任务、attempt 和模型发出恢复消息 <code>msg-c1b803663e50</code>。首次逐字投递返回 <code>not in a mode</code>，控制器阻止盲重试；中控检查空输入框和实际进程后，用固定 pane 的缓冲区方式投递同一个消息编号，收到真实 ack。</li>
+<li>子 Agent 执行实际检查后自行 submit；中控完成独立验证与语义核对后 accept。两个消息都已确认，没有伪造或代填子 Agent 回执。</li>
+</ol>
+<p>终端投递错误未稳定复现，尚不能断言具体根因。恢复时成功使用的缓冲区方式已纳入默认 deliver：检查 pane 未处于复制模式，固定 pane ID，带粘贴边界投递并清理临时缓冲区。</p>
+<h2>控制器与传输测试</h2>
+<p><strong>33 项单元/故障测试通过</strong>，覆盖并发重复领取、错任务与旧 attempt、消息幂等、未确认消息阻止提交、投递失败不重发、复制模式阻断、符号链接/路径越界、验收器修改、产物变化、验证超时、CLI 退出及限定会话停止。</p>
+<p>新 deliver 另通过真实 tmux + cat 传输探针，验证多行中文粘贴、固定 pane、清理缓冲区，以及“投递完成不等于 ack”；该探针未调用模型，临时会话已清理。</p>
+<ul>
+<li><a href="v02-verification.json">总验收数据</a></li>
+<li><a href="transport-verification.json">真实 tmux 传输数据</a></li>
+<li><a href="test_orchestrator.py">控制器测试</a></li>
+<li><a href="test_protocol.py">保留的 V0 测试</a></li>
+</ul>
+<p>最终产物与提交/验收哈希一致，新增文本使用 LF。保留既有冒泡排序产物与会话。未安装依赖、未修改 MA2、未提交或推送 Git；CLI 自身可以记录目录信任与会话历史。</p>
+<h2>边界与后续</h2>
+<p>本版可作为中控在场的通用单 Agent 工作流使用。消息与错误的处理仍需中控判断，不能称为无人值守恢复系统。没有自动判断所有 GUI 弹窗、自动换模型、自动返工或多写者合并。Claude 只完成适配与参数测试，尚未真实调用验收。</p>
+<p>服务限流和用户恢复之间的数小时等待计入运行时间，本轮不用于性能比较；未获取可核对的用量/费用数据，不推算成本。</p>
+<p>下一阶段可在一个真实小项目上加入执行/审查分工及 worktree，但本轮没有提前实施。使用方式见 <a href="README.md">README</a>，协议细节见 <a href="V0.2施工与协议.md">V0.2 施工与协议</a>。</p></main></html>

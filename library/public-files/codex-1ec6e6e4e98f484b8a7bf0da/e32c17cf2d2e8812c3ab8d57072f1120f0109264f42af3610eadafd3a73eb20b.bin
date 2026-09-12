@@ -1,0 +1,567 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>术语手册.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>MA3 术语手册</h1>
+<p>维护日期：2026-09-12。适用范围：MA3 v0.3 及本机网页终端、历史会话功能增量。</p>
+<p>这份手册用于用户与 Agent 对齐描述。以 MA3 的实际实现为准，不要求记住所有技术名词；遇到歧义时，先指明对象和想做的动作，再补充术语。功能状态发生变化时同步更新本文，不能把计划中的能力写成已实现。</p>
+<p>使用步骤见 <a href="USAGE.md">日常使用</a>，验证边界见 <a href="VALIDATION.md">验证说明</a>。</p>
+<h2>先区分这六件事</h2>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>在 MA3 中指什么</th>
+<th>一个判断方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agent</td>
+<td>能调用工具、处理需求的 AI 工作角色，由模型与客户端运行环境共同支撑</td>
+<td>它能理解需求并决定下一步做什么</td>
+</tr>
+<tr>
+<td>模型会话／对话</td>
+<td>一段有独立 ID、消息记录和上下文的对话</td>
+<td>历史列表中的一条聊天属于这一层</td>
+</tr>
+<tr>
+<td>终端</td>
+<td>显示程序输出、接收键盘输入的界面或连接入口</td>
+<td>同一程序可以同时被桌面终端和网页终端显示</td>
+</tr>
+<tr>
+<td>进程</td>
+<td>操作系统中正在运行的程序</td>
+<td>可以存活、退出或被中断；关闭显示窗口不一定结束它</td>
+</tr>
+<tr>
+<td>MA3 任务</td>
+<td>有明确要求、产物与验收方式的一项登记工作</td>
+<td>在任务工作台里有任务状态和 <code>run_id</code></td>
+</tr>
+<tr>
+<td>MA3 实例</td>
+<td>工作台中把一个或多个相关任务组织起来的记录</td>
+<td>同一实例可以保存先后完成的多个任务</td>
+</tr>
+</tbody>
+</table>
+<p>一个 Agent 可以先后处理多项任务；一个模型会话可以被多次恢复；一个 tmux 会话可以被多个终端连接。不能仅按网页标签、窗口或进程数量计算 Agent 数量。</p>
+<h2>人、模型与角色</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>约定含义</th>
+<th>容易混淆的地方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户／操作者</td>
+<td>提出需求、决定授权范围并使用成果的人</td>
+<td>点“确认通过”是作出验收决定，不只是关闭提示</td>
+</tr>
+<tr>
+<td>模型（model）</td>
+<td>生成回答、参与推理的模型服务</td>
+<td>同一模型可以服务多个不同 Agent；换模型不等于新建会话</td>
+</tr>
+<tr>
+<td>Agent 客户端／执行器（executor）</td>
+<td>承载模型对话和工具调用的软件，例如 MA3 的 <code>codex</code> 执行器</td>
+<td>客户端不是模型本身；tmux 也不是执行模型的 AI</td>
+</tr>
+<tr>
+<td>中控／控制 Agent（controller）</td>
+<td>理解目标、准备任务、观察执行并独立验收的 Agent 角色</td>
+<td>当前由交互中的 Agent 担任，不是后台服务里常驻的一颗“大脑”</td>
+</tr>
+<tr>
+<td>执行 Agent（worker）</td>
+<td>接收任务、使用工具做工作、报告进展并提交产物的 Agent</td>
+<td>“我完成了”是提交说明，不替代中控验收</td>
+</tr>
+<tr>
+<td>审查员／评审 Agent（reviewer）</td>
+<td>独立检查成果或方案的角色</td>
+<td>MA3 尚未自动创建作者与审查员组合；“独立验收”不必然意味着又启动了一个模型</td>
+</tr>
+<tr>
+<td>内置子 Agent（subagent）</td>
+<td>由 Agent 客户端自身的委派机制创建的子工作单元</td>
+<td>不等于 MA3 创建的独立执行 CLI，也不会自动变成 MA3 任务条目</td>
+</tr>
+<tr>
+<td>多 Agent 系统</td>
+<td>多个 Agent 分工、交换信息并共同完成工作的系统</td>
+<td>多开终端只说明有多个入口；多个 Agent 各做各的，也不自动构成协作</td>
+</tr>
+</tbody>
+</table>
+<p>讨论“开一个 Agent”时，最好补充：由 MA3 派工，还是使用客户端内置子 Agent；做什么工作，如何验收。不要默认把两种委派机制混用。</p>
+<h2>终端与会话的不同层次</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+<th>当前使用方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>桌面终端</td>
+<td>GNOME Terminal 等终端应用；可类比 Windows Terminal</td>
+<td>一个窗口或标签页通常显示一个 shell 或 tmux 客户端</td>
+</tr>
+<tr>
+<td>网页终端</td>
+<td>浏览器中的终端显示与输入组件</td>
+<td>MA3 使用 xterm.js，通过本机后台连接 tmux；命令仍在本机执行</td>
+</tr>
+<tr>
+<td>Shell</td>
+<td>解释命令的程序，例如 Bash；可类比 PowerShell，但语法不同</td>
+<td>新建网页终端默认启动 Bash，再由用户运行命令或启动 Agent</td>
+</tr>
+<tr>
+<td>CLI</td>
+<td>程序的命令行界面</td>
+<td>在 shell 中运行 Codex CLI 后，输入通常交给 Codex，而不再由 Bash 直接解释</td>
+</tr>
+<tr>
+<td>TUI</td>
+<td>命令行程序在终端内绘制的交互界面</td>
+<td>光标、输入框、状态栏都可以由 TUI 绘制，不意味着它是独立桌面 App</td>
+</tr>
+<tr>
+<td>PTY／伪终端</td>
+<td>操作系统提供的终端输入输出通道</td>
+<td>MA3 后台用它连接 tmux 客户端，让程序按真实终端方式处理输入和尺寸</td>
+</tr>
+<tr>
+<td>tmux 服务（server）</td>
+<td>管理一组 tmux 会话的后台进程</td>
+<td><code>ma3</code> 与 <code>default</code> 是不同服务的 socket 名称；不是模型名</td>
+</tr>
+<tr>
+<td>tmux 会话（session）</td>
+<td>tmux 管理的一组窗口和窗格</td>
+<td>可持续承载程序，允许客户端断开后重新连接；不等于模型对话</td>
+</tr>
+<tr>
+<td>tmux 窗口／窗格（window／pane）</td>
+<td>tmux 内部的显示层级；一个窗口可分成多个窗格</td>
+<td>“tmux 窗口”不等于桌面弹出的 GNOME Terminal 窗口</td>
+</tr>
+<tr>
+<td>tmux 客户端（client）</td>
+<td>连接 tmux 服务、显示某个会话的进程</td>
+<td>桌面与网页各连接一次，可同时看同一个执行进程，不会多出一个模型会话</td>
+</tr>
+<tr>
+<td>终端缓冲／回滚历史（scrollback）</td>
+<td>终端或 tmux 保留的旧输出</td>
+<td>有容量限制，不等于完整模型对话日志；网页滚轮查看的通常是这一层</td>
+</tr>
+<tr>
+<td>历史查看／复制模式（copy-mode）</td>
+<td>tmux 暂时让键盘和鼠标用于浏览、选择历史输出的模式</td>
+<td>滚轮向上进入；按 Esc 返回实时输入。应用接管鼠标时可能采用自己的规则</td>
+</tr>
+</tbody>
+</table>
+<p>“终端里的会话”仍然可能指 tmux 会话或模型会话。涉及恢复、关闭、数量时，应明确是哪一种。</p>
+<h2>MA3 的界面与数据对象</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义与边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工作台／任务工作台</td>
+<td>首页的项目、实例、任务、回执和交付操作界面。它承担监视与操作，不会自行理解自然语言并决定派工</td>
+</tr>
+<tr>
+<td>交互终端页</td>
+<td><code>/terminal.html</code>。能直接使用终端，并查看“历史会话”和“运行终端”两个列表</td>
+</tr>
+<tr>
+<td>历史会话列表</td>
+<td>从本机 Codex 记录读取的主会话目录。按保存的工作目录分组，提供标题、时间、运行状态和显式恢复入口</td>
+</tr>
+<tr>
+<td>运行终端列表</td>
+<td><code>ma3</code>／<code>default</code> tmux 服务中当前存在的会话。某些会话可能只剩退出后的窗格，存在不等于模型仍在运行</td>
+</tr>
+<tr>
+<td>项目（project）</td>
+<td>MA3 对已有目录的登记与任务分组。登记不会复制仓库、切换所有终端目录或合并代码</td>
+</tr>
+<tr>
+<td>工作目录（cwd）</td>
+<td>某个进程当前处理相对路径的基准目录。多个模型会话可以共享同一目录；目录不等于会话</td>
+</tr>
+<tr>
+<td>网页日常工作目录</td>
+<td>当前默认 <code>MA3/web-work/</code>，供新建普通终端使用。维护已有项目时可直接填写该项目目录</td>
+</tr>
+<tr>
+<td>任务定义／规格（spec）</td>
+<td>对任务说明、声明产物和独立检查方式的结构化描述，通常由任务 JSON 提供</td>
+</tr>
+<tr>
+<td>任务运行记录（run）</td>
+<td>某项任务在 MA3 中的具体记录，使用 <code>run_id</code> 标识，保存于 <code>runs/&lt;run_id&gt;/</code></td>
+</tr>
+<tr>
+<td>执行尝试（attempt）</td>
+<td>任务协议中区分本次执行的标识。回执、产物和验收必须对应正确 attempt，不能沿用旧回执</td>
+</tr>
+<tr>
+<td>实例（instance）</td>
+<td>把相关任务组织起来的持久记录。网页历史聊天、普通 shell 与运行进程不会自动成为这样的实例</td>
+</tr>
+<tr>
+<td>操作（action）／操作记录（job）</td>
+<td>一次后台请求及其执行记录，例如“创建任务”或“运行验收”。job 完成只说明操作结束</td>
+</tr>
+<tr>
+<td>请求编号（request_id）／幂等</td>
+<td>用请求编号识别重复的同一操作，避免网络重试再次执行。不是“任何任务都能安全重跑”的保证</td>
+</tr>
+<tr>
+<td>产物（artifact）</td>
+<td>工作生成并交付的文件。MA3 任务声明的产物可在任务页查看；普通 shell 写出的文件不会自动登记成任务产物</td>
+</tr>
+<tr>
+<td>运行记录</td>
+<td><code>.ma3/</code> 与 <code>runs/</code> 中的状态、操作、回执和证据。与源码 Git 历史不同，需要单独保护</td>
+</tr>
+</tbody>
+</table>
+<p>标识符出现时，可按下面这张表判断对象：</p>
+<table>
+<thead>
+<tr>
+<th>标识</th>
+<th>对象</th>
+<th>不要拿来代替什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型会话 ID</td>
+<td>一段 Codex 历史对话</td>
+<td>不是 <code>run_id</code>，也不是 tmux 会话名</td>
+</tr>
+<tr>
+<td>tmux 服务名 + 会话 ID／名称</td>
+<td>运行终端连接目标</td>
+<td>单独的 <code>$0</code> 等编号不能跨服务唯一定位</td>
+</tr>
+<tr>
+<td><code>run_id</code></td>
+<td>MA3 任务运行记录</td>
+<td>不是整个项目或模型会话</td>
+</tr>
+<tr>
+<td><code>attempt</code></td>
+<td>当前执行尝试</td>
+<td>不是后续任务可复用的提交凭据</td>
+</tr>
+<tr>
+<td><code>instance_id</code></td>
+<td>工作台实例</td>
+<td>不是操作系统 PID</td>
+</tr>
+<tr>
+<td>PID</td>
+<td>某个存活期间的操作系统进程</td>
+<td>进程退出后可能复用，不能长期标识历史对话</td>
+</tr>
+<tr>
+<td><code>request_id</code>／job ID</td>
+<td>一次后台操作请求及其记录</td>
+<td>不是任务验收编号</td>
+</tr>
+</tbody>
+</table>
+<h2>连接、恢复与重新执行</h2>
+<table>
+<thead>
+<tr>
+<th>动作</th>
+<th>发生什么</th>
+<th>推荐说法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>连接／重新连接（attach／reconnect）</td>
+<td>打开到已有 tmux 会话的显示与输入连接；原进程继续工作</td>
+<td>“连接左栏那个正在运行的终端”</td>
+</tr>
+<tr>
+<td>断开（detach）</td>
+<td>关闭连接，保留 tmux 会话中的进程</td>
+<td>“只断开网页，保留会话运行”</td>
+</tr>
+<tr>
+<td>新建终端</td>
+<td>在指定目录建立 tmux 会话并启动普通 shell</td>
+<td>“在这个目录新建一个 Bash 终端”</td>
+</tr>
+<tr>
+<td>恢复历史对话（resume）</td>
+<td>启动新的 Codex CLI 进程，按原模型会话 ID 载入对话记录</td>
+<td>“恢复这个历史会话，在原目录继续聊”</td>
+</tr>
+<tr>
+<td>MA3 后续任务续接</td>
+<td>在既有实例下新建任务记录与 attempt，并复用保存的 Codex 对话上下文</td>
+<td>“沿用这个实例的上下文，新建下一项任务”</td>
+</tr>
+<tr>
+<td>重新执行／重投／重试</td>
+<td>再次尝试某项工作或操作；可能产生新调用和重复副作用</td>
+<td>说明“重试哪个操作”或“重跑哪项任务”，不要笼统说“恢复一下”</td>
+</tr>
+<tr>
+<td>退出程序</td>
+<td>结束当前 CLI 或 shell 进程</td>
+<td>说明“退出 Codex”还是“退出 Bash”；输入 <code>exit</code> 只有交给 shell 时才具有 shell 退出含义</td>
+</tr>
+<tr>
+<td>结束 tmux 会话</td>
+<td>关闭其中的终端及程序</td>
+<td>“结束这个 tmux 会话”，影响大于关闭浏览器标签</td>
+</tr>
+<tr>
+<td>归档</td>
+<td>保存、整理记录或改变其展示状态，具体取决于目标系统</td>
+<td>“归档到 muQ”与“归档 Codex 会话”是两种操作；都不等于删除</td>
+</tr>
+</tbody>
+</table>
+<p>恢复成功说明历史对话可继续使用，不代表某项 MA3 未完成任务已经提交或通过验收。普通历史恢复与 MA3 协议续接的验收边界分别记录。</p>
+<h2>回执、状态与验收</h2>
+<table>
+<thead>
+<tr>
+<th>术语／状态</th>
+<th>实际含义</th>
+<th>不能据此推断</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>claim</code>／<code>claimed</code></td>
+<td>执行 Agent 已领取任务</td>
+<td>进程此刻仍在线，或者任务已经完成</td>
+</tr>
+<tr>
+<td><code>heartbeat</code></td>
+<td>执行 Agent 报告的进度或状态更新</td>
+<td>独立验证过其正确性；旧心跳也不证明当前存活</td>
+</tr>
+<tr>
+<td>消息已保存（saved）</td>
+<td>中控要求已经写入记录</td>
+<td>已经发送到执行器输入框</td>
+</tr>
+<tr>
+<td>消息已投递（delivered）</td>
+<td>已把消息送入目标终端</td>
+<td>Agent 已理解、处理或完成要求</td>
+</tr>
+<tr>
+<td><code>ack</code></td>
+<td>执行 Agent 确认收到了对应消息</td>
+<td>消息要求已完成</td>
+</tr>
+<tr>
+<td><code>submit</code>／<code>submitted</code></td>
+<td>执行 Agent 提交产物，等待独立验收</td>
+<td>已验收通过</td>
+</tr>
+<tr>
+<td><code>validate</code></td>
+<td>运行独立检查，记录结果与产物哈希等证据</td>
+<td>结构检查通过就代表内容、视觉或语义正确</td>
+</tr>
+<tr>
+<td><code>accept</code>／<code>verified</code></td>
+<td>中控确认验收通过，且对应证据仍有效</td>
+<td>执行终端一定还在线</td>
+</tr>
+<tr>
+<td><code>validation_failed</code></td>
+<td>任务验收未通过</td>
+<td>已自动返工或重新派工</td>
+</tr>
+<tr>
+<td><code>cancelled</code></td>
+<td>任务被明确取消</td>
+<td>单纯关网页或进程崩溃必然产生此状态</td>
+</tr>
+<tr>
+<td><code>runtime</code>／存活状态</td>
+<td>对进程运行情况的观察或报告，如在线、退出、未知</td>
+<td>与任务持久状态是同一个维度</td>
+</tr>
+<tr>
+<td>job 的 <code>done</code></td>
+<td>一次后台操作已结束</td>
+<td>其业务结果一定成功；仍须看返回结果，例如 <code>passed</code></td>
+</tr>
+</tbody>
+</table>
+<p>讨论状态时，优先同时说明两件事，例如：<strong>“任务已提交，终端已退出，尚未验收。”</strong></p>
+<h2>多 Agent 系统与部署术语</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>约定含义</th>
+<th>MA3 当前边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>派工／委派（dispatch／delegate）</td>
+<td>把明确工作交给执行 Agent</td>
+<td>通过 MA3 创建任务，才能自动进入其任务记录流程</td>
+</tr>
+<tr>
+<td>编排（orchestration）</td>
+<td>安排任务顺序、分工、交接、失败处理与验收</td>
+<td>当前主要由中控在场决策；后台提供操作机制，不等于完全自主编排</td>
+</tr>
+<tr>
+<td>并发</td>
+<td>多项工作在一段时间内同时处于进行中</td>
+<td>不保证各自一直在执行，也不保证有协作关系</td>
+</tr>
+<tr>
+<td>并行</td>
+<td>多项工作在同一时刻实际执行</td>
+<td>不保证更快；共享文件或依赖关系可能造成冲突</td>
+</tr>
+<tr>
+<td>协作</td>
+<td>Agent 之间有明确的信息交接和共同目标</td>
+<td>多开窗口、多建会话都不足以证明协作已发生</td>
+</tr>
+<tr>
+<td>工作台后台／服务（daemon／service）</td>
+<td>本机 Python 服务，处理请求、保存状态、观察任务</td>
+<td>不是 AI Agent；无须对每次状态刷新调用模型</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>Agent 客户端调用外部工具的协议与接口</td>
+<td>不是模型，也不自动代表另一个 Agent。MA3 MCP 请求同一个本机后台</td>
+</tr>
+<tr>
+<td>HTTP API</td>
+<td>网页或本地程序请求后台的接口</td>
+<td>本机网页通过它获取列表、发送输入或提交操作</td>
+</tr>
+<tr>
+<td>SSE／轮询</td>
+<td>获取更新的不同方式：服务推送事件／客户端定期请求</td>
+<td>MA3 任务页使用 SSE；交互终端当前用输出轮询和输入 POST</td>
+</tr>
+<tr>
+<td>本地网页应用</td>
+<td>浏览器作为界面，本机服务负责执行</td>
+<td>页面不能脱离本机后台独立控制终端；<code>127.0.0.1</code> 指浏览器所在的那台机器</td>
+</tr>
+<tr>
+<td>PWA／桌面 App</td>
+<td>不同的安装、窗口与系统集成形式</td>
+<td>包装界面不会自动增加会话接管、派工或验收能力</td>
+</tr>
+<tr>
+<td>无人值守／自主运行</td>
+<td>人离开后仍能按明确规则推进、处理异常并完成交付</td>
+<td>关闭网页后进程继续，不足以证明具备完整无人值守能力</td>
+</tr>
+<tr>
+<td>worktree／工作副本</td>
+<td>Git 的独立工作目录，可用于隔离代码修改</td>
+<td>MA3 尚未自动提供仓库 worktree 流程</td>
+</tr>
+<tr>
+<td>沙箱／权限隔离</td>
+<td>限制进程可访问资源或执行动作的机制</td>
+<td>单独的工作目录、tmux 或网页窗口都不是操作系统沙箱</td>
+</tr>
+<tr>
+<td>DAG／任务依赖图</td>
+<td>说明哪些任务必须等待哪些结果的有向无环图</td>
+<td>MA3 尚未实现自动任务 DAG 调度</td>
+</tr>
+</tbody>
+</table>
+<h2>对话中可以直接这样说</h2>
+<table>
+<thead>
+<tr>
+<th>容易产生歧义的表达</th>
+<th>更明确的表达</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“把这个终端恢复一下”</td>
+<td>“连接仍在运行的 tmux”，或“按会话 ID 恢复已退出的 Codex 对话”</td>
+</tr>
+<tr>
+<td>“把这个窗口关了”</td>
+<td>“只关闭网页连接，保留进程”，或“结束这个执行会话及其中的程序”</td>
+</tr>
+<tr>
+<td>“开两个 Agent”</td>
+<td>“通过 MA3 派两个独立任务，分别交付……”，或“用客户端内置子 Agent 分工……”</td>
+</tr>
+<tr>
+<td>“继续上次任务”</td>
+<td>“继续聊天”，或“新建后续任务并沿用对话”，或“处理尚未提交的那个 run”</td>
+</tr>
+<tr>
+<td>“这个任务完成了”</td>
+<td>“执行器已提交，待中控验收”，或“中控已验收通过”</td>
+</tr>
+<tr>
+<td>“把项目加进去”</td>
+<td>“登记项目分组”，或“在项目目录新建终端”，或“把代码接入独立工作副本流程”</td>
+</tr>
+<tr>
+<td>“左边那个会话”</td>
+<td>“历史会话里的某标题”，或“运行终端里的某条目”，或“任务工作台的某实例”</td>
+</tr>
+<tr>
+<td>“后台 Agent 在干什么”</td>
+<td>“中控 Agent 在做什么”“执行 Agent 在做什么”，或“Python 后台正在处理什么操作”</td>
+</tr>
+</tbody>
+</table>
+<p>一个完整例子：<strong>“在网页恢复历史对话 A，让 A 作为中控，通过 MA3 创建任务 B。执行 Agent 在 B 的独立目录写产物；我从运行终端观察，最后由 A 独立验收。”</strong></p>
+<p>这个例子里，有一段中控对话、一段执行对话、一项 MA3 任务；即使桌面和网页同时显示执行终端，也不会因此增加一个执行 Agent。</p>
+<h2>维护约定</h2>
+<ol>
+<li>新概念第一次出现时，用一句话解释，并注明属于角色、界面、进程、记录还是动作。</li>
+<li>同一术语在不同系统里含义不同，应加前缀，如“模型会话”“tmux 会话”“MA3 实例”。</li>
+<li>本文未定义或现场存在歧义时，先指出具体对象，不擅自把“关闭”解释成杀进程、把“继续”解释成重新派工。</li>
+<li>增加功能后更新对应定义和能力边界，历史测试数字放在验证文档，避免术语手册变成运行日志。</li>
+<li>使用泛化例子，不写账号、密钥、私人会话正文或凭据。文档维护不意味着已提交 Git 或发布网站。</li>
+</ol></main></html>

@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>release.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>Chat / Stats 已上线 · 2026-09-11</h1>
+<p>生产部署成功，提交 <code>462fa0415f639facd29bea78d9476b9127bedbc2</code>，部署 ID <code>0b41b863-4f4a-4dfe-b93b-c06feee14baf</code>。</p>
+<ul>
+<li>Chat：https://koa-ol.com/chat/</li>
+<li>Stats：https://koa-ol.com/stats/</li>
+<li>主页入口：https://koa-ol.com/#chat-block</li>
+</ul>
+<h2>线上验收</h2>
+<p>网页 GPT、DeepSeek、Qwen 各一次最小请求均为 HTTP 200、有文字回复。实际返回模型分别为 gpt-5.6-sol、deepseek-flash、qwen-plus，Stats 已记录三者的输入/输出 token 和成功状态。</p>
+<p>外部 <code>/ai/v1/models</code> 只列出 gpt-5.6-sol；该模型真实请求为 HTTP 200，Qwen 请求被返回 400。Stats 的历史 GPT/Claude 记录继续保留，不代表现在仍允许调用旧模型。</p>
+<p>Stats 成功解锁并显示 6 项累计指标、30 天图表、模型分组和旧明细。主页进入 Chat 的原生跨文档过渡已在线上触发，无页面级横向溢出。此前本地完成了桌面、平板、手机与减少动态效果检查。</p>
+<h2>Skill 沉淀</h2>
+<p>共享源码 open-design-ui 增补了入口路由、页面流程以及 references/page-transitions.md。内容包括入口与目标页共同设计、少量共享元素、避免标题缩放重影、保留原生链接和浏览器返回、减少动态效果与不支持时降级、首帧/中段/稳定帧验证。没有固定套用本项目配色、星形或动画时长。</p>
+<p>Skill 格式验证通过；保留共享仓库此前的其他改动，未把它们一起提交。网站仓库仅提交本次 15 个文件；原有未跟踪游戏和设计实验资料保持原样。</p>
+<p>本次没有删除 Cloudflare 旧变量。代码已经不再读取 Claude、CHAT_PASSWORD、DEFAULT_MODEL、AVAILABLE_MODELS；后续清理可按前面的核查清单操作。</p>
+<h2>发布回退入口</h2>
+<p>旧生产部署 <code>a8c36b94-a95d-431a-b90c-54993e8c7080</code> 对应提交 <code>58dea13185862060f8054756663192cd47ba122f</code>。如出现故障，可在 Cloudflare Pages 部署列表选择该旧生产部署回滚。旧变量保留，因此仍具备旧代码所需配置。本次不涉及数据库迁移。</p></main></html>

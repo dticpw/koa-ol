@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>muQ · 源码仓库维护说明</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>muQ 源码仓库</h1>
+<ul>
+<li>GitHub：<a href="https://github.com/dticpw/muQ">https://github.com/dticpw/muQ</a>，私有仓库，默认分支 <code>main</code>。</li>
+<li>Linux Git 检出：<code>/home/dticpw/PG_linux/muQ</code>。</li>
+<li>当前运行与共享编辑目录：<code>E:/PG/muQ</code>（Linux：<code>/mnt/e/PG/muQ</code>）。现有启动器和 Skill 继续使用这里。</li>
+</ul>
+<p>仓库管理 <code>app/</code>、<code>web/</code>、<code>functions/</code>、<code>scripts/</code>、<code>tests/</code>、启动器、依赖声明和维护文档。<code>muq-journal</code> Skill 仍在共享 <code>agentflow</code> 仓库中维护，不复制成第二份 Skill。</p>
+<p>真实馆藏 <code>data/</code>、封面工作目录、<code>exports/</code>、备份、会话总结、截图及历史源码 ZIP 不进入源码仓库。<code>web/</code> 中页面实际使用的图片属于源码资源，正常入库。馆藏和未上传的大文件需要独立备份；源码仓库不能恢复这些私人原件。</p>
+<h2>后续同步</h2>
+<p>当前采用共享目录为运行与编辑来源、Linux 检出为提交副本的方式。两个目录不会自动同步。每次提交前先检查双方变更，再将本次涉及的源码和维护文档复制到 Linux 检出，查看 <code>git diff</code>，测试通过后提交和推送。复制不能使用 <code>--delete</code> 或覆盖未确认的独立改动；源码删除应逐项核对后显式同步。</p>
+<p>不要把 <code>data/</code> 或密码本搬入 Git 检出，也不要从空检出启动服务后误以为馆藏丢失。Windows 看不到 Linux 检出，仍可编辑共享目录；如需在 Windows 直接提交，须另行安排检出与核对流程，不能假定本地副本自动同步。</p>
+<p>源码提交不发布个人网站。线上图书馆仍通过 <code>scripts/publish.py</code> 构建到 <code>koa-ol</code> 仓库并按授权推送；它与本仓库的 <code>git push</code> 是两个不同操作。</p>
+<h2>验证</h2>
+<p>在检出根目录，以当前系统约定的 Python 解释器运行 <code>-m unittest discover -s tests</code>。分享接口另用 Node 执行 <code>--test tests/test_sharing.mjs</code>。测试使用临时目录，不读取或改写真实馆藏。</p></main></html>

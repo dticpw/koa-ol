@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>jarvis-voice-review.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>jarvis-voice 参考条目观察与馆主设备记忆</h1>
+<p>观察日期：2026-09-10。读取档案页与门面页，未运行朋友的本机语音项目。</p>
+<p>来源：
+- https://kb.hth-ai.com/e/jarvis-voice/
+- https://kb.hth-ai.com/e/jarvis-voice/index.html</p>
+<h2>值得借鉴</h2>
+<ol>
+<li>档案页聚合门面、探索报告、音色试听、README、PROCESS 和原始文件；产物有标题、类型、大小，不只显示技术文件名。</li>
+<li>门面先回答“现在能用吗、长什么样、怎么做出来、探索依据”，再展开状态断点、演示、时间线和原始 prompts，并配章节目录。</li>
+<li>明确披露视频中的真实部分与演示脚本部分：语音为合成，PPT 修改与打开由脚本执行，音轨后期合成；没有把它冒充完整实时 Agent 闭环。</li>
+<li>时间线保留用户反馈与修正；实测注明 M4 Air、日期，并保留蓝牙录音、TCC 权限和模拟按键误入用户窗口的原因。</li>
+</ol>
+<h2>可以改进</h2>
+<ul>
+<li>档案页与门面页重复介绍，读者需要先理解两个页面的区别。“打开项目报告 / 观看演示”比“打开门面 index.html”更明确。</li>
+<li>“现在能用：能”虽紧跟语音待测说明，仍容易被扫读成全功能已验收。建议拆成“文字已验证、语音组件实测、用户语音端到端待验收”。</li>
+<li>0.39 秒是 TTS 首包，不是用户开始听见声音的延迟；正文坦诚写明整句合成后播放，指标卡也应该标清这一差异。</li>
+<li>本次浏览档案页时音色试听卡片缩略图显示破图；只能说明这次加载失败，不能据此认定试听功能本身损坏。</li>
+<li>原始 prompts 对追溯很有价值，但长段完整展开会增加阅读负担，适合默认折叠并可展开/搜索。</li>
+</ul>
+<p>对 muQ 最有价值的后续方向：在现有统一档案页顶部增加“当前状态 / 关键成果”区，附件显示用途与预览缩略图；按内容需要支持音视频。无需为每个会话另造一套页面。</p>
+<h2>本轮实施：此浏览器记住 30 天</h2>
+<ul>
+<li>登录框默认勾选设备记忆；不勾选保持临时阅读与 30 分钟闲置退出。</li>
+<li>IndexedDB 保存不可导出的 PBKDF2 CryptoKey 和固定到期时间，不保存明文口令或完整馆藏正文。每次打开重新读取最新密文，使用保存的密钥解密；普通发布改变 salt 也能继续打开。</li>
+<li>30 天从输入口令起算，不随访问滑动续期。记忆有效时不再执行 30 分钟闲置退出；到期、主动退出或当前密文无法用该密钥解开时失效。网络暂时失败保留记忆以便重试。</li>
+<li>“退出并忘记此设备”清除本浏览器记忆，并通知打开的图书馆页退出。浏览器关闭后 IndexedDB 可保留；清站点数据、无痕窗口、换浏览器或切换系统不保证沿用。</li>
+<li>这是纯静态站的本机便利功能，不是服务器强制执行的身份会话，也不是硬件绑定保护。持有该浏览器配置的人能够访问馆藏。需要远程撤销设备或强身份验证时，应另接服务端认证。</li>
+</ul>
+<h2>验收</h2>
+<p>浏览器已验证：30 天到期值、CryptoKey 不可导出、刷新自动恢复、主动退出删除存储、取消勾选不保存、过期清理、错误密钥清理、390px 登录界面无溢出。原有 17 项 Python 测试与 JS 语法校验通过。发布后自动恢复与线上验收结果单独记录于 remember-device-deployment.json。</p></main></html>

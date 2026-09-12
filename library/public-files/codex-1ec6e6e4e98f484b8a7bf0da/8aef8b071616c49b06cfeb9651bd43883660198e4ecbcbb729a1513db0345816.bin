@@ -1,0 +1,157 @@
+{
+  "version": "0.3",
+  "at": "2026-09-10T08:30:58.393549+00:00",
+  "implementation": "available",
+  "test_count": 44,
+  "automated_tests_passed": true,
+  "browser": {
+    "layouts": [
+      {
+        "width": 1440,
+        "scroll": 1440
+      },
+      {
+        "width": 1024,
+        "scroll": 1024
+      },
+      {
+        "width": 768,
+        "scroll": 768
+      },
+      {
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "width": 360,
+        "scroll": 360
+      }
+    ],
+    "errors": [],
+    "checks": [
+      "resumed history maps to one instance",
+      "429 visible",
+      "unsubmitted cannot accept",
+      "live terminal auto-refresh",
+      "raw artifact preview",
+      "project filter",
+      "search",
+      "keyboard focus across updates",
+      "notifications read survives reload"
+    ]
+  },
+  "mcp": {
+    "initialize": true,
+    "tools": [
+      "ma3_overview",
+      "ma3_task",
+      "ma3_terminal",
+      "ma3_job",
+      "ma3_action"
+    ],
+    "overview": true,
+    "action_job": {
+      "id": "v03-mcp-rename-smoke",
+      "action": "rename_instance",
+      "status": "done",
+      "created_at": "2026-09-10T08:22:13.042999+00:00",
+      "started_at": "2026-09-10T08:22:13.044908+00:00",
+      "result": {
+        "instance_id": "instance-task-20260910-162054-58566e"
+      },
+      "ended_at": "2026-09-10T08:22:13.047473+00:00"
+    },
+    "bad_path_is_error": true,
+    "disconnect_preserves_backend": true,
+    "stderr": ""
+  },
+  "restart": {
+    "before_started_at": "2026-09-10T08:19:34.986565+00:00",
+    "after_started_at": "2026-09-10T08:22:38.106738+00:00",
+    "worker_pid": 27829,
+    "worker_survived": true,
+    "browser_reconnected": true
+  },
+  "first_task": {
+    "run_id": "task-20260910-162054-58566e",
+    "status": "verified",
+    "acceptance": {
+      "run_id": "task-20260910-162054-58566e",
+      "attempt": "6ccb07b5f60f4229ad8e070ed4c1c4a7",
+      "at": "2026-09-10T08:24:10.021572+00:00",
+      "passed": true,
+      "artifacts": {
+        "words.py": "8dc5787b4dbd4573aa6c00c8f815f6d4ce576141e2d2d2c6f45398a1f2423259",
+        "result.json": "18d878f84593f9adb5327438be9762b7b4f085e7bd7f931edbf87613e4aa5e7a"
+      },
+      "contract": {
+        "spec_sha256": "55a3f2d8276802aba34cf6d89534530d8eae2eaebfa3e8fd89fd8c5c252aaaa2",
+        "checks": {
+          "check.py": "e36a62b19b7914a7eba1b34e867885fbdf750db362a5bf3583d08c3a0473a7ca"
+        }
+      },
+      "results": [
+        {
+          "command": [
+            "/home/dticpw/conda/envs/py310/bin/python",
+            "/home/dticpw/PG_linux/MA3/runs/task-20260910-162054-58566e/checks/check.py",
+            "/home/dticpw/PG_linux/MA3/runs/task-20260910-162054-58566e/work"
+          ],
+          "returncode": 0,
+          "timed_out": false,
+          "stdout": "{\"passed\": true, \"cases\": 10}\n",
+          "stderr": "",
+          "name": "独立词序与标记检查"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "integrity_error": null,
+      "user_visual_confirmation": "not_recorded"
+    }
+  },
+  "resume": {
+    "run_id": "task-20260910-162411-972bcb",
+    "task_status": "claimed",
+    "resume_session_id": "01a08a68-da5e-7671-ab20-bc096dc33f34",
+    "resume_argv": [
+      "/home/dticpw/.nvm/versions/node/v22.23.2/bin/codex",
+      "resume",
+      "01a08a68-da5e-7671-ab20-bc096dc33f34",
+      "--no-alt-screen",
+      "-m",
+      "gpt-5.6-sol",
+      "-c",
+      "model_reasoning_effort=\"medium\"",
+      "-C",
+      "/home/dticpw/PG_linux/MA3/runs/task-20260910-162411-972bcb/work",
+      "请读取并执行 /home/dticpw/PG_linux/MA3/runs/task-20260910-162411-972bcb/task.md。这是新的任务，请先切换到 /home/dticpw/PG_linux/MA3/runs/task-20260910-162411-972bcb/work；先 claim，完成任务，最后 submit。"
+    ],
+    "context_marker_matches": true,
+    "submit_received": false,
+    "blocker": "429 Too Many Requests",
+    "automatically_retried_by_controller": false,
+    "model_changed": false
+  },
+  "instance_history": {
+    "id": "instance-task-20260910-162054-58566e",
+    "name": "工作台验收实例",
+    "project_id": "ma3",
+    "history": [
+      "task-20260910-162054-58566e",
+      "task-20260910-162411-972bcb"
+    ],
+    "current_run": "task-20260910-162411-972bcb"
+  },
+  "service": {
+    "enabled": "enabled",
+    "active": "active",
+    "loopback_only": true,
+    "fresh_login_tested": false
+  },
+  "limitations": [
+    "续接上下文已恢复，但被 429 阻断，未提交/验收",
+    "Claude 未实测，无 Claude 续接",
+    "项目只分组，不自动编辑已有仓库",
+    "无网页中控聊天/无人值守调度/手机中继/公网入口"
+  ]
+}

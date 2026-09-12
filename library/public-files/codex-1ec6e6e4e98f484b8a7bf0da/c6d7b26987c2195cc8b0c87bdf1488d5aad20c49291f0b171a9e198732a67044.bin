@@ -1,0 +1,128 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>USAGE.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>日常使用</h1>
+<h2>统一工作台（2026-09-12）</h2>
+<p>默认入口 <code>http://127.0.0.1:8763/</code> 已整合模型会话、MA3 任务和运行终端。左侧选择类别和具体条目，中央查看信息、连接终端或查看任务消息与交付。终端顶部始终标明键盘输入对象；任务消息框是另一个独立入口。</p>
+<ul>
+<li>模型会话：默认按 <code>~/codex</code> 浏览历史，选择后显式恢复；浏览列表不启动模型。</li>
+<li>运行终端：连接已存在的 tmux，或用“＋ 新建 → 普通终端”建立 Bash。</li>
+<li>MA3 任务：查看工作动态、消息与回执、交付与验收、终端记录；在线任务可连接交互终端。</li>
+<li>切换保留各终端连接与未回车内容。断开只关闭网页连接，原进程继续运行。单页最多保留 8 个连接。</li>
+<li>任务消息草稿按任务保留在当前页面内存中，刷新或关闭页面会丢失；保存消息不等于投递或确认收到。</li>
+<li>旧入口 <code>/classic.html</code> 和 <code>/terminal.html</code> 保留；<code>/workspace.html?preview=1</code> 可只读预览。</li>
+</ul>
+<p>本轮完成统一入口与对象工作区，不包含通知体系重做、结构化中控聊天或自动 Agent 协作。恢复进程已退出时可查看只读画面，或明确“重新恢复”；旧窗格会保留在运行终端中，清理入口尚未实现。</p>
+<p>概念不确定时先查 <a href="术语手册.md">术语手册</a>，尤其注意模型会话、tmux 会话与 MA3 任务的区别。</p>
+<p>网页现在有两种入口：<strong>交互终端</strong>用于直接操作本机 shell 或其中运行的 Agent；<strong>任务工作台</strong>用于派工、回执与交付验收。网页尚未内置中控聊天。</p>
+<h2>直接在网页使用终端</h2>
+<ol>
+<li>打开工作台，点击右上角“交互终端”，或在地址栏输入 <code>http://127.0.0.1:8763/terminal.html</code>。</li>
+<li>
+<p>已有 tmux 会话：在左侧“连接终端”点击对应条目。列表仅包含本用户的 <code>ma3</code> 和 <code>default</code> 服务。
+默认网页工作目录为 <code>MA3/web-work/</code>，已从 MA3 源码 Git 中忽略。可在其下为不同工作建子目录；维护既有项目时直接填该项目原目录，无须搬入 MA3。开发 MA3 自身时才使用 MA3 根目录。截图、报告和导出等会话产物仍默认放 <code>/mnt/e/PG/agent-artifacts/</code>。</p>
+</li>
+<li>
+<p>没有会话：在“新建终端”填写已有工作目录，点击“新建并连接”。这只启动普通 Bash，不自动调用模型。</p>
+</li>
+<li>点击黑色终端区域，像桌面终端一样输入。可以先输入 <code>pwd</code> 回车，查看当前工作目录；可用 Tab 补全、方向键、中文输入及 Ctrl+C。滚轮在 tmux 历史查看模式中上下浏览，按 Esc 返回实时输入；若应用自身启用鼠标协议，则遵循该应用的滚动行为。网页还提供 Esc、Tab、Ctrl+C 和回车按钮。</li>
+<li>“断开连接”或关闭网页只断开显示与输入，原进程继续运行。再次点选同一条目可连接原会话，shell 变量仍在。输入 <code>exit</code> 会退出当前 shell。</li>
+<li>连接异常时查看状态并手动重新连接。网页不会自动重发输入；新建请求结果不明时先刷新列表核对，避免重复创建。</li>
+</ol>
+<p>普通终端窗口与当前聊天客户端不会自动列出；此功能连接的是 tmux 会话，不是嵌入任意桌面窗口。网页与桌面若连接同一会话，输入会作用于同一进程，请避免两边同时打字。网页里的普通 shell 不自动获得任务协议、交付清单或独立验收；需要这些能力时使用原任务流程。</p>
+<h2>按目录恢复 Codex 历史会话</h2>
+<p>交互终端左侧新增“历史会话 / 运行终端”切换，默认显示 <code>~/codex</code> 的历史主会话。可切换记录中出现过的工作目录、按标题搜索，列表按日志最近更新时间排序。标题来自 Codex 的本地会话索引；目录来自会话元数据。只读浏览不会启动模型，也不读取或公开整段对话正文。</p>
+<ol>
+<li>点击一条历史记录，查看标题、原目录、更新时间、会话 ID 和状态。</li>
+<li>标为“可恢复”的会话，点击“恢复到网页终端”：后台在原目录运行 <code>codex resume &lt;会话ID&gt; -C &lt;原目录&gt;</code>，不附加提示词，不覆盖模型、推理等级或权限参数。目录信任、登录、服务异常等提示在终端处理。</li>
+<li>恢复终端同时出现在“运行终端”。从历史条目再次打开时连接原终端，不重复启动。关闭网页不结束恢复进程。</li>
+<li>“外部运行中”表示本机 writer lock 或打开的日志文件表明该会话仍被其他 Codex 进程使用；在原窗口结束后再刷新。无法读取运行证据时显示“运行状态待确认”，同样禁止恢复。原目录已删除时禁止恢复。</li>
+<li>恢复进程退出时保留终端输出，历史条目标为“恢复进程已退出”，可连接查看；不会自动重试或换模型。此版尚无网页清理退出恢复终端、重试或改名入口。</li>
+</ol>
+<p>仅收录 Linux 当前 Codex 数据目录中的 CLI / VS Code 主会话，默认隐藏子 Agent 和其他非交互记录，不扫描 Windows 会话。已有归档会话不在此列表。此入口恢复对话，不补造 MA3 任务回执或独立验收；手工在外部同时启动仍需留意原客户端的占用提示。</p>
+<p>实现参考：<a href="https://learn.chatgpt.com/docs/developer-commands#codex-resume">Codex resume 官方说明</a>，并已核对本机 <code>codex resume --help</code>。</p>
+<h2>使用任务工作台</h2>
+<p>先在中控聊天提出目标，由中控准备任务定义和独立验收。首页“终端记录”保留历史记录；活跃的任务 tmux 会话也能从新入口连接。</p>
+<h2>六类场景</h2>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>可以对中控这样说</th>
+<th>交付与验收</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>算法练习</td>
+<td>编写词序反转函数，支持中文和任意空白；先准备独立验收再启动可见终端。</td>
+<td>Python 代码、边界用例；参考 <code>tasks/algorithm/</code>、<code>tasks/workbench-smoke/</code></td>
+</tr>
+<tr>
+<td>修复 CSV 脚本</td>
+<td>在副本上修复金额汇总，用 Decimal；先复现缺陷，再覆盖缺字段、非法金额和引号内逗号。</td>
+<td>修复副本与独立检查；参考 <code>tasks/repair/</code></td>
+</tr>
+<tr>
+<td>整理文档</td>
+<td>将指定记录整理成 Markdown 和 JSON；负责人或日期未知时保留未知并注明来源。</td>
+<td>结构与语义检查；参考 <code>tasks/docs/</code>，该实验模板有意等待中控消息</td>
+</tr>
+<tr>
+<td>生成展示</td>
+<td>编写冒泡排序 Python 和自包含 HTML，展示真实源码与排序过程；中控测试后在浏览器打开。</td>
+<td>代码测试、桌面与窄屏浏览器检查</td>
+</tr>
+<tr>
+<td>补充要求</td>
+<td>为当前任务补充空输入检查，先看现场、保存消息；确认输入框空闲后投递并等待 ack。</td>
+<td>保存、投递、确认三个状态分别可核对</td>
+</tr>
+<tr>
+<td>续接工作</td>
+<td>检查旧任务与终端，条件满足后使用同一 Codex 会话创建后续任务，保留原模型。</td>
+<td>新 run/attempt、明确会话 ID、新的独立验收</td>
+</tr>
+</tbody>
+</table>
+<h2>常用流程</h2>
+<ol>
+<li>中控审核任务 JSON 的 instructions、artifacts 与 validators。验收命令会真正执行。</li>
+<li>创建任务可先选择“仅准备”，检查后再启动；启动会调用真实模型并打开终端。</li>
+<li>遇信任提示、弹窗或限流，查看现场后再决定，不反复按 Enter 或擅自换模型。</li>
+<li>Agent 负责 claim、heartbeat、ack、submit；中控负责 validate、accept。</li>
+<li>submitted 只表示已提交，verified 才表示通过验收；job 的 done 只说明一次后台操作结束。</li>
+<li>项目登记不代表原仓库已自动复制或合并。需要采纳副本改动时另行确定方式。</li>
+</ol>
+<h2>中控接口</h2>
+<p>MCP 提供 <code>ma3_overview</code>、<code>ma3_task</code>、<code>ma3_terminal</code>、<code>ma3_job</code>、<code>ma3_action</code>。读取操作返回值并轮询异步 job；网络结果不明时复用原 request_id，不生成新 ID 重复提交。</p>
+<p>MCP 不可用时使用 <code>workbench_client.py</code>：<code>snapshot</code>、<code>detail &lt;run_id&gt;</code>、<code>terminal &lt;run_id&gt;</code>、<code>job &lt;job_id&gt;</code> 是查询；<code>action &lt;payload.json&gt;</code> 会提交该文件中的操作。具体 payload 和状态限制以 <code>workbench.py</code> 为准。</p>
+<p>历史终端记录不证明现在可输入。旧任务未结束、CLI 已退出或会话 ID 不明时，先确认恢复条件，不手改状态绕过限制。关闭网页不等于结束任务，重启电脑也不等于任务已取消。</p>
+<h2>从网页里的 Agent 使用 MA3 派工</h2>
+<p>网页终端只是原 Codex CLI 的输入输出窗口。你要求“使用 MA3 执行任务”后，当前 Agent 作为中控读取 ma3-control Skill，通过 MCP 或本地客户端请求已有工作台后台。后台保存操作 job、任务目录和实例关系，启动独立 tmux 中的执行 CLI，并尝试打开 GNOME Terminal。执行器在 <code>runs/&lt;run_id&gt;/work</code> 中工作，按协议 claim、heartbeat、submit；中控检查结果并 validate/accept，网页不会替代中控独立验收。</p>
+<ul>
+<li>原网页终端：看到中控的分析说明、工具调用与最终报告。</li>
+<li>“运行终端”：刷新后可连接新执行会话，看同一个进程的实时输出；不是启动第二份模型。</li>
+<li>“历史任务与交付”：看到新任务状态、消息回执、产物与验收。</li>
+<li>桌面：会尝试打开新的 GNOME Terminal，连接到该执行会话。</li>
+<li>后台：操作队列和记录保存在 <code>.ma3</code> 与 <code>runs</code>；执行 CLI 会独立使用模型服务，增加对应模型用量。网页关闭后后台与 tmux 不因此停止，但不代表中控会无限自动续做。</li>
+</ul>
+<p>仅输入普通 shell 命令或让 Agent 自己运行 tmux，不会自动获得 MA3 任务登记和验收。恢复的历史聊天也不会自动成为任务。项目登记仍是分组，不会自动修改或合并原仓库。</p>
+<p>恢复进程退出后：选择模型会话 → 查看保留画面（只读），或点击“重新恢复”并确认。恢复会启动 Codex 载入同一对话，不自动发送提示词。旧终端画面仍可在“运行终端”中查看；若显示外部运行中，请先核对原窗口，不能重复恢复。</p>
+<h2>查看交付与回执</h2>
+<p>选择 MA3 任务，上方阶段条说明任务所处阶段，终端在线状态仍单独显示。点“产物”进入交付与验收：先查看文件，再看逐项检查结果；检查通过且当前证据匹配时才能确认验收。超时、错误与证据失效会单独显示。若任务历史已通过但文件后来变化，历史状态保留，页面同时标出当前证据不匹配。</p>
+<p>消息的“已保存”“已尝试投递”“执行器已确认”按各自时间分别展示。投递记录只证明发起过投递，不证明执行器已读；以 ack 为确认依据。</p>
+<h2>处理待关注提醒</h2>
+<p>顶部“待关注”点击后展开，按当前事项归并，点卡片入口查看对应任务、交付、消息或操作记录。查看不自动标记已读。点击“已知悉”或“忽略提醒”将其移至“已知悉与忽略”；这不代表问题已解决，更不代表任务验收通过。可随时点“重新提醒”放回待处理。</p>
+<p>处理状态在刷新和后台重启后保留。同一问题持续存在时不重复弹出；条件消失后再次出现、同类操作再次失败会重新提醒。原始事件可在“后台与操作记录 → 原始通知历史”查看。</p>
+<h2>顶部额度</h2>
+<p>Codex 7日进度条表示已用百分比，另一条表示距下次重置的七日周期已走过多少，并显示剩余时间。鼠标停在额度区查看准确重置时间和数据更新时间。后台每30分钟查询，浏览器刷新只读取缓存。查询失败时保留旧值并提示过期。重置时间采用接口d7_reset，updated仅作为数据更新时间。</p>
+<h2>管理常用模型会话</h2>
+<p>在“模型会话”选择条目，点“设置别名”输入易认名称；留空保存恢复 Codex 原标题。点“置顶”固定到当前目录列表前部，再点“取消置顶”恢复按更新时间排序。设置在刷新与后台重启后保留，原始Codex对话不改动；恢复到网页的终端也会显示别名。搜索支持别名、原名及会话ID。</p>
+<p>已退出的恢复终端提供“清理退出终端”：确认后移除该窗格，旧画面会消失，先保存需要的内容。对话记录、别名和置顶保留，还可点击恢复。运行中的进程、非MA3恢复终端、多窗口/多窗格布局不开放这个清理入口；不会自动结束它们。历史窗格可以从运行终端列表分别查看和清理。</p>
+<h2>阅读结构化对话</h2>
+<p>打开统一工作台 → 左侧“模型会话” → 选择具体会话 → “对话记录 · 实验”。即使会话仍在原本地终端运行，也能读取已写入日志的消息，无需先恢复。用户消息和Agent回复按时间顺序展示，工具卡片点击“已记录结果”展开。</p>
+<p>“读取更早记录”向前读取历史；当前视图每3秒检查已落盘增量，也可手动刷新。“跟随最新记录”默认关闭，阅读历史时不会因新消息自动跳到底部。切换会话或隐藏页面会暂停读取。此页只读，输入请切换“交互终端”；外部运行中的普通终端仍不能直接被接管。</p>
+<p>这是实验视图，可能延迟，且旧客户端不一定记录支持的工具事件。图片仅显示占位，超过2MiB的单条记录略过并提示，超过24000字符的展示内容截断；不显示环境指令、内部推理或重复的压缩摘要。某段没有卡片并不代表Agent没有执行，也不能把此视图当作完整对话备份。</p></main></html>

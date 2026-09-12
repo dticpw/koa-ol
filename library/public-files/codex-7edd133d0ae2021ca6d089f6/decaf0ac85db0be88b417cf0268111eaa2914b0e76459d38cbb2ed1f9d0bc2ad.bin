@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>three-model-implementation-2026-09-11.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>AI Chat 三模型接入 · 本地实现与上线清单</h1>
+<h2>用户确定的范围</h2>
+<ul>
+<li>网页 /chat/：GPT（gpt-5.6-sol）、DeepSeek（请求 deepseek-chat）、Qwen（现有 qwen-plus）。</li>
+<li>外部 /ai/v1/models 与 /ai/v1/responses：只提供 gpt-5.6-sol。</li>
+<li>三个网页模型经网站后端调用，上游分别为现有 GPT 服务、DeepSeek 官方和阿里云官方。继续写入现有 chat_logs，Stats 无须数据库迁移。</li>
+</ul>
+<h2>本地改动</h2>
+<p>现有源码 /mnt/f/bak/git_koa-ol 内修改 4 个文件：</p>
+<ul>
+<li>chat/index.html：三模型选项、真实回复角色与等待提示、防止重复发送、附件能力提示。</li>
+<li>functions/api/chat.js：三路转发；GPT 复用 UPSTREAM 配置并转换 Responses 输入/输出；DeepSeek 使用 DEEPSEEK_API_KEY；Qwen 保留原配置；成功和上游失败继续记录 Stats。</li>
+<li>functions/ai/v1/models.js：仅列出 gpt-5.6-sol。</li>
+<li>functions/ai/v1/responses.js：默认及唯一允许模型为 gpt-5.6-sol；保留客户端密钥校验、流式响应和工具字段转发。</li>
+</ul>
+<p>外部传入其他模型会得到 400，而不是悄悄替换成 GPT。模型范围写入代码，因此新版不再读取 DEFAULT_MODEL、AVAILABLE_MODELS。</p>
+<h2>验证</h2>
+<ul>
+<li>12 项 Node 测试通过，覆盖三模型路由、用量写库、附件转换、配置缺失、错误响应、外部模型限制、鉴权和流式日志。</li>
+<li>Playwright 使用现有 Chrome 进行本地桌面 1440px、手机 390px 验证；三模型切换/模拟发送/回复标识通过，无横向溢出、无脚本错误。截图及测试脚本位于 verification/。</li>
+<li>当前线上 GPT 代理真实请求返回 HTTP 200，model 为 gpt-5.6-sol，有文字回复，计量 input 306 / output 5。最初 Python 默认 User-Agent 请求为 403，改用常规 User-Agent 重试成功；未进一步证明具体拦截规则。</li>
+<li>前一轮 Qwen 官方 qwen-plus 与 DeepSeek 官方 deepseek-chat 均真实调用成功；DeepSeek 返回模型名为 deepseek-flash。</li>
+<li>图片/PDF 的 GPT 协议转换通过模拟测试，未向真实上游上传图片/PDF验证。Qwen/DeepSeek 当前选择只接受文字和文本文件；有二进制附件的对话切换时会提示。</li>
+</ul>
+<h2>当前阻碍</h2>
+<p>Cloudflare MCP GET 成功，但 PATCH production.env_vars.DEEPSEEK_API_KEY 返回 10000 Authentication error。没有完成新增密钥，未提交、未推送、未部署。现有线上仍为旧版，不要把本地实现当成线上已生效。</p>
+<h2>上线所需配置与顺序</h2>
+<ol>
+<li>为 Cloudflare Pages 配置写入取得可用权限，或者在控制台手动增加 Secret DEEPSEEK_API_KEY，值从密码本 deepseek-harness 读取。</li>
+<li>核对/更新 QWEN_API_KEY 为已验证的 qwen-dashscope 条目中的密钥，建议保存为 Secret。本次没有证明 Cloudflare 旧密钥与该条目相同。</li>
+<li>只提交本次 4 个源码文件并部署；验证网页三个模型、Stats 新日志、外部模型列表和模型拒绝行为。</li>
+<li>新版成功后删除 CHAT_PASSWORD、ANTHROPIC_API_KEY、ANTHROPIC_BASE_URL、ANTHROPIC_MODEL、DEFAULT_MODEL、AVAILABLE_MODELS 共 6 项。上线前不要删仍被旧版使用的变量。</li>
+</ol>
+<p>最终建议保留 8 个变量：UPSTREAM_BASE_URL、UPSTREAM_API_KEY、CLIENT_API_KEYS、DEEPSEEK_API_KEY、QWEN_BASE_URL、QWEN_API_KEY、QWEN_MODEL、STATS_PASSWORD；另保留数据库绑定 DB。Qwen 三项仍与 Multi-Agent 共用。</p>
+<h2>回退</h2>
+<p>本地未提交，可按交付补丁核对后恢复本次 4 文件的原内容；不要覆盖仓库原有未跟踪资料。线上配置未变，无需回退。正式部署后若回滚旧代码，应先恢复该旧版本需要的变量，尤其 Claude 及外部默认/列表配置。</p>
+<p>协议依据：https://developers.openai.com/api/docs/guides/text</p></main></html>

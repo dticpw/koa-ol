@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>muQ · 设计与证据索引</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>muQ 设计与证据索引</h1>
+<h2>现在采用的方向</h2>
+<p>图书馆服务长期阅读、项目验收与 Agent 交接。项目主题承接当前状态，真实会话承接过程和原话；一个主题可引用多场会话，一场混合会话也可被多个主题引用。原始记录不因排版更新而重写。</p>
+<p>HTML 是主要阅读载体。摘要接原比例截图，再给出状态和操作入口；长正文保留足够解释和随阅读定位目录。章节采用明显标题带与独立编号。网页、文件、历史来源保持纵向简洁入口，避免大段说明挤占资源清单。配色沿用 muQ 的梅紫与暖纸体系。</p>
+<h2>可以追溯的阶段</h2>
+<ul>
+<li>初版日记与文库：固定身份、版本存储与基本导出，旧档案中的早期路径只保留为历史。</li>
+<li>独立阅读与设备记忆：标签、条目单页、文件预览和持续解锁。见“标签与独立阅读验收报告”和“朋友条目评阅与设备记忆说明”。</li>
+<li>灵活成果归档：纯搜索、混合任务、文件大小阈值、本机索引与附件清单。见“灵活归档与成果展示验收”。</li>
+<li>HTML 阅读与恢复：共享主题、相对资源、附件全文搜索、私人恢复包与单条分享。见“HTML 阅读改造 · 实施与验证”。</li>
+<li>视觉素材：馆员最初生成与接入来自 imGen 会话；背景人物布局及发丝透明区域修正来自 daily 会话。红魔馆藏书室模型在个人主页提供独立视觉入口。</li>
+<li>长期主题试点：个人主页先建立结构化主题；后续 Open Design 本地对照明确目录和资源入口做法，muQ-journal 已记录复用规范。</li>
+</ul>
+<h2>如何理解报告</h2>
+<p>历史验收说明当时测过什么，不保证之后每次修改都自动继承结论。新主题整理区分源码事实、历史测试和本轮浏览器验证；不能把旧版 screenshot 当成当前网页，也不能把计划写作已交付。</p>
+<p>朋友图书馆的实现方案与 jarvis-voice 条目评阅保留为参考资料。参考报告说明当时借鉴判断，当前架构以 muQ 实现为准。</p>
+<h2>还没有完成的部分</h2>
+<p>全库主题迁移、独立管理员 Skill、统一通用主题写入工具尚未完成。个人主页主题已采用新版阅读布局并补充真实区域截图，muQ 门面与指南也已完成整理。网站部署结果以实际验收记录为准。</p></main></html>

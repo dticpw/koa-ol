@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>muQ · 维护与交接指南</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>muQ 维护与交接指南</h1>
+<h2>三个位置，各有职责</h2>
+<ul>
+<li><code>/mnt/e/PG/muQ</code>（Windows <code>E:/PG/muQ</code>）：共享运行目录与本地完整馆藏，现有 Skill 和启动器使用这里。</li>
+<li><code>/home/dticpw/PG_linux/muQ</code>：Linux Git 检出，推送到私有仓库 https://github.com/dticpw/muQ 。目前是审阅后提交的源码副本，不自动与共享目录同步。</li>
+<li><code>/mnt/f/bak/git_koa-ol</code>：个人网站仓库，图书馆发布产物进入 <code>library/</code>，专属分享服务进入 <code>functions/api/muq-share/</code>。</li>
+</ul>
+<p>源码提交、馆藏入库、网页构建、网站发布是不同操作，交付时分别报告。维护源码同步方式见 repository.md；共享 Skill 源码仍在 agentflow 仓库，不在 muQ 仓库复制维护。</p>
+<h2>接手先核对事实</h2>
+<p>读 AGENTS.md、README.md、DESIGN.md 和当前主题版本，再定位此次任务相关源码。检查 Git 差异、当前来源版本与运行状态，不用旧报告替代现状。主题固定 ID 为 worklog-library，旧 ID 与全部历史版本保留。</p>
+<p>app/kb.py 管理 CURRENT 与不可变版本，app/sessions.py 从真实日志采集提示词，app/curation.py 管理资源与上传边界，app/publishing.py 构建网页和密文。web/topic.js 与 topic.css 渲染主题门面，web/reader.js 负责附件阅读。</p>
+<h2>更新主题</h2>
+<p>本主题结构化内容位于 Store 当前 entry.topic。修改前保存目标 revision，并核对 sources 中使用的来源版本；基于最新状态合并，而不是覆盖别人更新。sources.primary=false 表示关联的混合会话，其纵览入口保留。来源原话不复制进项目 JSON。</p>
+<p>门面使用 reading-v2 布局：摘要、等比截图、状态入口、随阅读定位目录、正文及资源长条。配色与章首样式集中维护。HTML 附件是阅读副本，结构化主题与原始材料负责内容事实。</p>
+<p>新增文档用有意义的版本文件名入库，不能覆盖历史附件。源码与版本由仓库管理，当前有效的使用、维护和验收文档在主题文件区直接提供入口。</p>
+<h2>发布与恢复</h2>
+<p>本地 build 从真实馆藏生成 exports/library。scripts/publish.py 生成网站文件，带 --push 才提交和推送个人网站仓库；只发布明确授权范围，不夹带其他项目修改。发布后需核对线上版本与实际访问，不把 Git 推送成功当成部署完成。</p>
+<p>默认私人资料按既有加密流程导出。凭据通过 credential-vault 获取 muq-library，Linux 必须显式指定密码本路径，不能打印凭据。原话、私人路径与分享回执不可进入源码仓库。</p>
+<p>恢复用 verify、backup、restore；restore 必须写入新目录，不能覆盖真实库。详见 RECOVERY.md。源码 Git 仓库不含 data，不能代替完整馆藏备份；本机索引指向的大原件和密码本需独立保管。</p>
+<h2>验收边界</h2>
+<p>Python 测试使用临时目录；分享服务有 Node 测试。阅读器还需浏览器验证：桌面与手机、长标题、目录定位、附件入口、图片比例、原话默认展开、退出清除。2026-09-11 建库时 33 项 Python 测试及 Node 分享测试通过；新增功能需按实际改动复验。</p>
+<p>待推进：全库主题整理、通用主题维护工具与管理员 Skill、Windows 实机启动验证、共享目录和 Git 检出的长期同步方式。当前 homepage_pilot.py 只维护个人主页试点，不能直接拿它写 muQ 或其他主题。</p></main></html>

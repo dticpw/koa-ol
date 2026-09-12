@@ -1,0 +1,143 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>research-reviewed.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>当前 GPT/OpenAI 生图工具与角色提示词调研</h1>
+<p>核对日期：2026-09-10（UTC+8）</p>
+<p>中控修订版：修正原报告把小恶魔写成长角角色的错误，匹配页面实际配色，并补充透明输入与代理能力边界。原始 MA3 产物未改动。小恶魔身份锚点：深红长发、红棕眼、头侧小翼与背部蝙蝠翼、白衬衣、深紫黑长裙、书本，无角无尾。</p>
+<p>实际执行边界：官方文档描述的透明 preview、新模型和参数，不代表本机随附 CLI 或第三方代理已支持；本次已实测成功的路径是 gpt-image-2 暖白背景输出。应先核对所选接口和 CLI 的当前能力，不能仅凭文档替换已验证流程。页面另用梅紫 #665173、浅金 #dfcba2。</p>
+<h2>结论先行</h2>
+<p>对于已有“小恶魔馆员”立绘、目标是深紫与暖白个人图书馆网页素材的场景，最稳妥的路线不是重新“抽卡”，而是把现有立绘当作唯一的角色母版，持续做参考图编辑：</p>
+<ol>
+<li><strong>少量手工素材：优先 ChatGPT 图像编辑。</strong> 上传母版，用自然语言逐次只改一个变量；它最适合试造型、表情、姿势和构图。</li>
+<li><strong>批量、透明背景或需要参数可复现：优先 GPT Image API。</strong> 单次生成/编辑用 Image API；需要保留对话上下文、多轮迭代时用 Responses API。当前官方 Image API 指南列出的新工作流模型是 <code>gpt-image-2.5-sunburst</code>（偏编辑精度/高要求质量）和 <code>gpt-image-2.5-flare</code>（偏速度/日常生成）。必须以账号中实际可用模型为准，不从产品名推定权限。</li>
+<li><strong>设计师式精修：Adobe Firefly/Photoshop 是已核实的第三方集成。</strong> Adobe 官方页面明确列出 GPT Image 2、GPT Image 2.5 Flare 和 Sunburst；可在 Firefly 的 Text to image、Prompt to Edit Image、Boards 等流程中使用，区域可用性可能不同。</li>
+<li><strong>透明抠图兜底：Clipdrop 只作后处理。</strong> 它有独立的 Remove Background API，能接收 PNG/JPG/WebP 并返回 PNG/WebP/JPEG；这不是 OpenAI 集成。GPT Image 已能原生输出透明背景时，应先用原生透明，边缘不合格再后处理。</li>
+</ol>
+<h2>能力与证据边界</h2>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>已核实能力</th>
+<th>对本项目的意义</th>
+<th>边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ChatGPT / Codex 图像生成</td>
+<td>官方文档支持上传参考图生成或编辑；建议明确“改什么、什么保持不变”，一次做小范围修改</td>
+<td>无需写代码，适合围绕现有馆员立绘迭代表情、姿势和构图</td>
+<td>ChatGPT Web 的可用性和额度取决于套餐与工作区；Codex 内置页面标明其内置图像生成使用 <code>gpt-image-2</code>，不可把 API 新模型名自动套到所有界面</td>
+</tr>
+<tr>
+<td>GPT Image API</td>
+<td>Image API 支持生成与编辑；Responses API 增加多轮编辑与上下文；可配置尺寸、质量、格式等</td>
+<td>可批量生成表情包、空状态图、透明角色切图，并保存参数与提示词</td>
+<td>组织可能需要验证；模型访问、延迟、成本须以账户和实测为准</td>
+</tr>
+<tr>
+<td>透明背景</td>
+<td>OpenAI 提示指南明确：<code>gpt-image-2</code> 的透明背景为 preview，需 <code>background="transparent"</code> 且输出 PNG/WebP，JPEG 无 Alpha</td>
+<td>馆员立绘可直接叠在深紫网页背景上</td>
+<td>“生成一张棋盘格背景”不等于真的透明；交付前必须检查 Alpha 通道和浅色/深色底边缘</td>
+</tr>
+<tr>
+<td>角色一致性</td>
+<td>官方建议明确不变量、用参考图、每轮重复 preserve 清单并小步迭代；API 指南也承认跨多次生成的角色/品牌元素仍可能漂移</td>
+<td>应维护一个母版和固定角色描述，不要每次从纯文本重生</td>
+<td>不存在官方保证的“角色锁定”；脸、翼、瞳色、服装纹样、比例仍需人工验收</td>
+</tr>
+<tr>
+<td>Adobe Firefly</td>
+<td>Adobe 官方列出 OpenAI GPT Image 合作模型及可用功能</td>
+<td>适合生成后继续布局、局部编辑和设计交付</td>
+<td>属第三方产品；模型、地区、积分和商用条款要按 Adobe 当前界面确认</td>
+</tr>
+<tr>
+<td>Clipdrop</td>
+<td>官方 Remove Background API 可移除背景，默认可返回 PNG，并支持 WebP/JPEG Accept</td>
+<td>原生透明边缘失败时作为批量兜底</td>
+<td>只是通用后处理，会误伤发丝、翼尖、半透明阴影；不增强角色一致性</td>
+</tr>
+</tbody>
+</table>
+<h2>推荐工作流</h2>
+<h3>A. 先建立“角色母版包”</h3>
+<ul>
+<li>保留现有原图不动，选一张正面或 3/4 视角、五官和服装清楚的图作为 <code>master</code>。</li>
+<li>写一段不随场景变化的角色锚点：头侧小型蝙蝠翼与背部蝙蝠翼的形状与颜色、瞳色、发型、耳朵、服装剪影、书本/钥匙等标志物、身材比例、线条和上色风格。</li>
+<li>颜色用语与色值并用，例如“深紫 <code>#292332</code>、暖白 <code>#f5f1eb</code>”；色值是目标提示，不是像素级保证。</li>
+<li>每张衍生图都重新附上同一母版。不要把第 8 张衍生图继续当第 9 张的唯一参考，以减少逐代误差；这是基于编辑漂移限制给出的工程建议，并非官方保证。</li>
+</ul>
+<h3>B. 先低成本探索，再高质量定稿</h3>
+<ul>
+<li>用较低质量或 ChatGPT 中的小步修改探索姿势和留白。</li>
+<li>确认构图后再用 medium/high 做身份敏感的角色图和细小纹理；OpenAI 官方提示指南也建议对身份敏感编辑、小字和高分辨率输出比较 medium/high。</li>
+<li>一轮只修改一项，例如先改姿势，再改表情，最后处理灯光；每轮重复“保持”清单。</li>
+</ul>
+<h3>C. 网页交付前验收</h3>
+<ul>
+<li>在深紫、暖白、黑、白四种底色上检查 Alpha 边缘，尤其是翼尖、头发、衣袖、书页和投影。</li>
+<li>检查同一角色的：头侧翼与背翼数量/朝向、眼睛颜色、发型分缝、衣领、配饰、手指、身高比例。</li>
+<li>图片内不要生成重要正文。若必须有字，提示词中精确引用短文本，最后仍逐字校对；生产级排版应回到 HTML/CSS 或设计工具。</li>
+<li>导出语义明确的文件名，并保留母版、提示词、模型、质量、尺寸和生成日期，方便回归。</li>
+</ul>
+<h2>三套可复用提示词</h2>
+<p>下面的方括号是待替换变量。ChatGPT 中直接上传参考图；API 中把它作为输入图像。若使用支持透明参数的 API，除提示词外还要真正设置 <code>background="transparent"</code> 与 <code>output_format="png"</code> 或 <code>"webp"</code>。</p>
+<h3>1. 透明角色主素材：从现有立绘提取网页可用全身角色</h3>
+<p>适用：侧边悬浮馆员、首页迎宾角色、空状态插画。</p>
+<pre><code class="language-text">用途：为个人图书馆网页制作可复用的透明背景角色素材。
+
+参考：图像 1 是“小恶魔馆员”的唯一身份与画风母版。严格保留她的脸型、五官、瞳色、发型与发色、头侧小型蝙蝠翼与背部蝙蝠翼的数量/形状/颜色、耳朵、身体比例、服装剪影、配饰和原图线条与上色方式。
+
+画面：生成同一角色的单人全身 3/4 视角立绘，双脚完整可见，手持一本合上的旧书，神情亲切而略带顽皮，轮廓清楚，适合缩小显示。主色为深紫 #292332、暖白 #f5f1eb，允许少量低饱和金色点缀。
+
+背景与输出：角色完全隔离在真实透明背景上。不要场景、不要纯色底、不要棋盘格、不要边框、不要文字、不要水印、不要额外人物、不要多面板或角色设定表。保留自然且克制的接触阴影；若阴影妨碍透明叠放，则不要阴影。
+</code></pre>
+<h3>2. 一致性表情/动作变体：只改一个变量</h3>
+<p>适用：加载、无结果、欢迎、错误、解锁等状态。每次只替换 <code>[目标状态]</code> 与动作，不重写角色锚点。</p>
+<pre><code class="language-text">编辑图像 1，不要重新设计角色。
+
+只把小恶魔馆员改成“[目标状态，例如：没有找到书时略显困惑]”：她一只手托着下巴，另一只手仍拿着原来的书，视线看向画面左侧。保持单人、相同身份、相同脸型与五官、相同瞳色、相同发型与发色、相同头侧小型蝙蝠翼及背部蝙蝠翼、相同身体比例、相同服装和配饰、相同线稿粗细、相同上色质感、相同深紫/暖白配色。
+
+保持原图的裁切、视角、光源方向、背景和角色在画布中的尺寸完全不变。当前母版为暖白背景；仅当输入已经有真实 Alpha 时才要求保留透明背景。不要改变服装，不要新增道具，不要增加文字、徽标、边框、背景、第二个人物或多面板。只改变表情与上述手臂姿势，其余全部保持不变。
+</code></pre>
+<p>推荐生成顺序：<code>中性母版 → 欢迎 → 思考 → 空结果 → 轻微警告</code>。每次都从中性母版编辑，而不是从上一张变体继续编辑。</p>
+<h3>3. 深紫暖白图书馆 Hero：角色与网页留白协同</h3>
+<p>适用：首页宽屏 Hero 背景。建议把角色与背景分层生成；若直接合成，则把文字留白写清楚，真正标题仍由 HTML/CSS 渲染。</p>
+<pre><code class="language-text">用途：个人图书馆首页的宽屏 Hero 视觉，目标比例 [16:9 或 3:2]。
+
+参考关系：图像 1 是小恶魔馆员的角色母版，只用于锁定角色身份、服装和画风。角色位于画面右侧约 35% 区域，半身 3/4 视角，正在从书架抽出一本书，朝左侧内容区微笑。严格保留图像 1 的脸、发型、头侧小型蝙蝠翼及背部蝙蝠翼、瞳色、身体比例、服装、配饰和绘画风格。
+
+场景：温暖、安静、略带魔法感的私人图书馆。背景以深紫 #292332 为主，书页与灯光为暖白 #f5f1eb，辅以克制的旧金色；木质书架、少量漂浮尘埃、柔和局部光，不要赛博霓虹，不要恐怖氛围。
+
+构图：左侧 45% 保持低细节、低对比度的干净负空间，供网页标题和按钮叠加；角色脸部和翼不能被裁切；视觉焦点从角色视线引向左侧。不要在图中生成任何文字、按钮、Logo、水印或仿 UI。不要多角色、不要多面板、不要改变角色设计。
+</code></pre>
+<p>若首轮背景很好但角色漂移，下一轮不要整张重画；改为分别生成“透明角色层”和“无人物背景层”，在网页中用 CSS 定位叠放。这比反复要求模型同时修角色和复杂场景更容易验收。</p>
+<h2>第三方与社区技巧：如何采用</h2>
+<h3>已核实第三方工具</h3>
+<ul>
+<li><strong>Adobe Firefly/Photoshop：推荐给需要图层、局部精修和设计交付的人。</strong> 官方集成证据充分；但需在实际 Adobe 账户中确认区域和功能入口。</li>
+<li><strong>Clipdrop Remove Background：仅作为抠图兜底。</strong> 官方文档只证明背景移除端点与格式，不证明它对“小恶魔翼尖/发丝”一定优于 GPT 原生透明；应拿 5–10 张本项目图片做盲测再决定是否批量用。</li>
+</ul>
+<h3>社区技巧（可试，但不是官方保证）</h3>
+<p>OpenAI Community 有一篇 2026-04-27 的单角色动漫模板帖，核心做法是固定“头发 → 眼睛 → 性格/表情 → 体型 → 服装 → 姿势 → 构图”的描述顺序，并显式写 <code>single character, no reference sheet, no multiple panels</code>。该帖只有 2 个帖子、2 个赞，属于单个用户的小样本经验。它与 OpenAI 官方“结构固定、约束明确”的建议方向一致，因此可作为提示词组织法测试，但不能据此声称角色一致性已被解决。</p>
+<h3>未验证项</h3>
+<ul>
+<li>搜索中出现的“完美角色锁定”“所有帧完全一致”“透明边缘百分百干净”等说法，没有官方保证或量化基准，不采纳。</li>
+<li>未对第三方工具做真实图片生成/抠图测试；本报告验证的是文档与公开页面，而不是本项目图片上的效果。</li>
+<li>未验证用户账户是否已获得某个模型、Adobe 区域功能或对应额度；使用前以实际产品界面/API model list 为准。</li>
+</ul>
+<h2>来源</h2>
+<ol>
+<li>OpenAI Docs — Image generation API guide：<a href="https://developers.openai.com/api/docs/guides/image-generation">https://developers.openai.com/api/docs/guides/image-generation</a></li>
+<li>OpenAI Docs — GPT Image Generation Models Prompting Guide：<a href="https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide">https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide</a></li>
+<li>ChatGPT Docs — Image generation：<a href="https://learn.chatgpt.com/docs/image-generation">https://learn.chatgpt.com/docs/image-generation</a></li>
+<li>Adobe Help — Use non-Adobe generative AI models in Adobe products：<a href="https://helpx.adobe.com/creative-cloud/apps/generative-ai/non-adobe-models-in-adobe-products.html">https://helpx.adobe.com/creative-cloud/apps/generative-ai/non-adobe-models-in-adobe-products.html</a></li>
+<li>Clipdrop APIs — Remove Background：<a href="https://clipdrop.co/apis/docs/remove-background">https://clipdrop.co/apis/docs/remove-background</a></li>
+<li>OpenAI Community — Stable Single-Character Anime Prompt Template：<a href="https://community.openai.com/t/stable-single-character-anime-prompt-template-avoids-multi-panel-issues/1379868">https://community.openai.com/t/stable-single-character-anime-prompt-template-avoids-multi-panel-issues/1379868</a></li>
+</ol>
+<p>完整核对证据见 <code>sources.json</code>。</p></main></html>

@@ -1,0 +1,42 @@
+[
+  {
+    "source": "/mnt/e/PG/keys/AI周报-2026-08-27.html",
+    "manifest": "/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/1-AI周报-2026-08-27.report.json",
+    "report_date": "2026-08-27",
+    "window_start": "2026-08-21",
+    "items": 9,
+    "sources": 16,
+    "sha256": "3fd8ba332460d57793636b1d7a183bb357bff74492d70403c9b2ae80e6699eb9",
+    "month": "ai-daily-2026-08"
+  },
+  {
+    "source": "/mnt/e/PG/keys/GitHub社区周报-2026-08-27.html",
+    "manifest": "/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/2-GitHub社区周报-2026-08-27.report.json",
+    "report_date": "2026-08-27",
+    "window_start": "2026-08-21",
+    "items": 8,
+    "sources": 12,
+    "sha256": "fa0ef066d66a04f0218d60d44c0313d128f3614e811c4f7792e44b2670b5eb1a",
+    "month": "ai-daily-2026-08"
+  },
+  {
+    "source": "/mnt/c/Users/DTICPW/Desktop/codex/daily/ai-weekly-2026-08-31.html",
+    "manifest": "/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/3-ai-weekly-2026-08-31.report.json",
+    "report_date": "2026-08-31",
+    "window_start": "2026-08-25",
+    "items": 8,
+    "sources": 18,
+    "sha256": "707345bff06ba5d05375aa5d508cc2f35b3a9049713c4edb30e82fc7027a7d5e",
+    "month": "ai-daily-2026-08"
+  },
+  {
+    "source": "/mnt/c/Users/DTICPW/Desktop/codex/daily/ai-daily-2026-09-04.html",
+    "manifest": "/mnt/e/PG/muQ/data/ai-daily/imports/2026-09-10/4-ai-daily-2026-09-04.report.json",
+    "report_date": "2026-09-04",
+    "window_start": "2026-09-03",
+    "items": 6,
+    "sources": 13,
+    "sha256": "7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2",
+    "month": "ai-daily-2026-09"
+  }
+]

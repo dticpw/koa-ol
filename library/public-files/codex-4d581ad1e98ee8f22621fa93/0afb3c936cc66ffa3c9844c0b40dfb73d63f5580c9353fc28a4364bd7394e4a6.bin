@@ -1,0 +1,4 @@
+13 项 unittest 通过：月刊追加/幂等/跨月/附件摘要校验、增量窗口/覆盖优先级、日期标题去重、七天提醒/冷却/延期、dry-run 无写入、搜索失败请求记录、成功生成入库、构建失败可恢复、临时私有构建。
+两个 Skill 通过 quick_validate；使用 py310 加载系统已有 PyYAML，无安装或升级依赖。
+git diff --check 通过。未提交或推送共享 Skill 仓库。
+persona-sync status 21/21 一致；facts 唯一 WARN 为已有历史 Skill 数量记录与当前探针比较，未扩大改动。

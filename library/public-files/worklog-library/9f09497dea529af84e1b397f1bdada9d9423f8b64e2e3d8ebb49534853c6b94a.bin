@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>muQ · 备份、恢复与单条分享</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>私人恢复包与验证</h1>
+<p>恢复包含 app、web、functions、scripts、完整 data 历史、封面与依赖清单；不包含密码本，不包含 resources 中仅登记原位置的大文件，也不包含 Cloudflare/GitHub 账户授权。它含私人档案和分享回执，不能作为公开附件。</p>
+<p>以下命令均通过共享 Skill 的 scripts/muq.py 调用。Linux 使用 py310，Windows 使用 th123；用当前系统解释器，不依赖 shell 别名。</p>
+<ol>
+<li><code>verify</code>：流式核验所有版本附件的长度与 SHA256，读取每个 CURRENT 验证当前版本。</li>
+<li><code>backup --out &lt;新文件.zip&gt;</code>：创建含逐文件校验清单的恢复包，拒绝覆盖旧备份。</li>
+<li><code>restore &lt;文件.zip&gt; --out &lt;不存在的新目录&gt;</code>：先验证清单、路径及所有字节，再恢复到新目录，不覆盖真实库。</li>
+<li>在恢复目录以自己的 Python 环境安装 requirements.txt（先核对已有环境），然后运行 <code>app/muq.py build</code>。构建从 CURRENT 与版本目录重新生成公开目录、搜索索引和加密档案，不依赖原导出目录。</li>
+<li>凭据通过 credential-vault 中 <code>muq-library</code> 取得；Linux 显式设置 AGENTFLOW_CREDENTIALS_FILE 指向共享密码本。密码丢失会导致受保护原文无法恢复，不要把“数据备份”误认为“密钥备份”。</li>
+<li>启动 <code>start-linux.sh</code> 或 <code>start-windows.cmd</code>。迁机时用 MUQ_PYTHON 指定实际解释器。核对封面来源、本地文件引用与项目路径；缺失封面自动退回文字概览，原路径引用不等于原文件已备份。</li>
+</ol>
+<p><code>info &lt;id&gt; --brief</code> 是低输出量入口；<code>get &lt;id&gt; --out &lt;新目录&gt;</code> 导出当前版本；<code>get &lt;id&gt; --file artifacts/report.html --out &lt;新文件&gt;</code> 逐字节导出并校验。完整 get 无 --out 仍兼容旧调用，会返回私有元数据，不用于公开日志。</p>
+<h2>单条分享</h2>
+<p><code>share &lt;id&gt; --title &lt;对访客显示的标题&gt; --summary &lt;审核后的概述&gt; --days 7 --file artifacts/report.html</code> 只选择获准分享的成果，可重复 --file。最多30天。返回本地 receipt.json 路径，其中的链接是访问凭据，不放进普通日志。不会打印整馆密钥。</p>
+<p><code>revoke-share &lt;share-id&gt;</code> 标记撤销；随后 <code>publish --push</code> 发布静态加密快照与 <code>functions/api/muq-share</code> 服务端，线上才生效。创建和撤销都不改变原条目可见范围。分享文件不需要 KV/R2 绑定；浏览器每次访问由服务端验证期限与撤销状态，返回 no-store。共享附件采用受限脚本策略，复杂交互配套资源请在原条目隔离阅读器使用。</p>
+<p>撤销实现同时保留无正文的撤销标记，并在每次发布时将撤销 ID 注入 muQ 专属 Function。服务端先检查名单，避免旧静态清单仍可读时继续放行。2026-09-11 实机演练已验证先读取成功、撤销部署后返回410。</p>
+<h2>条目直接展示 HTML 门面</h2>
+<p>将已归档的 HTML 文件资源设置为 <code>"presentation": "frontpage"</code>，例如：</p>
+<pre><code class="language-json">{&quot;kind&quot;:&quot;file&quot;,&quot;title&quot;:&quot;项目介绍与使用&quot;,&quot;file&quot;:&quot;artifacts/front.html&quot;,&quot;featured&quot;:true,&quot;presentation&quot;:&quot;frontpage&quot;}
+</code></pre>
+<p>详情页在可见权限检查后自动载入第一个有效门面，正文随外层页面自然滚动。私有门面只在馆主解锁后载入，锁定时销毁。未标记的条目沿用既有模板。门面资源必须是 HTML；文件仍须通过 <code>--artifact</code> 入库。原附件不覆盖，修改后使用新文件名并更新资源引用。</p>
+<p>默认静态模式删除原脚本，仅允许带随机 nonce 的高度报告脚本；iframe 不授予同源访问或网络请求。用户可显式切换隔离交互。文内项目入口与原图链接在门面上方列出。发布前检查真实条目入口、手机与桌面图像比例、页面滚动与退出清除，不能只检查独立附件。</p></main></html>

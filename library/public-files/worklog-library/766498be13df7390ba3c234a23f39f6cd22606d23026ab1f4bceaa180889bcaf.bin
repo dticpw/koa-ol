@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RECORDING.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>主动归档约定（第一版）</h1>
+<p>本文件定义本项目的记录方式，不是自动安装的全局 Agent 指令。要让其他会话采用，可直接告诉 Agent：读取 <code>D:\Linux_share\worklog\RECORDING.md</code>（Linux：<code>/mnt/d/Linux_share/worklog/RECORDING.md</code>），按这里的规则归档本次任务。</p>
+<ol>
+<li>一份项目档案对应一个稳定 ID。先 <code>get</code> 再更新，不按日期反复新建同一个项目。</li>
+<li>一次有实质产出的任务留一条日记；一天允许多条。记录日期取用户所在时区的日期，内部创建与更新时间保存 UTC。</li>
+<li>记录“做了什么、问题与现状、处理与决策、产出与证据、下一步”。明确区分已完成、尝试失败、未经验证、仍待处理。</li>
+<li>日记链接项目；产出写清路径、链接或提交号，需要保存的文件复制进附件。只保留链接不能替代文件备份。</li>
+<li>用户 prompts 仅保存当前可见的真实原文，不从摘要重建，不把历史缺失写成完整。每轮原话可单独保存为 UTF-8 文本附件，并以轮次命名。</li>
+<li>不归档密码本、令牌、私钥、含凭据的终端输出。不用扫描整个用户目录来“补齐”历史。</li>
+<li>更新携带上次读取的 <code>revision</code>；冲突时重新读取并合并，不强行跳过校验。</li>
+<li>写入后 <code>get</code> 确认关联、正文与附件清单。报告记录 ID 和实际产出，不把计划当已完成。</li>
+</ol>
+<p>常用 Linux 命令：<code>sh /mnt/d/Linux_share/worklog/kb.sh get &lt;id&gt;</code> 和 <code>sh /mnt/d/Linux_share/worklog/kb.sh put &lt;JSON路径&gt; --artifact &lt;文件路径&gt;</code>。完整格式见 <code>README.md</code>。</p></main></html>

@@ -1,0 +1,66 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>library-v2-validation.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>muQ：标签、独立阅读与附件按需加载</h1>
+<h2>已实现与本机验收</h2>
+<ul>
+<li>默认列出会话日记，项目档案单独切换；3 个真实条目添加实际主题标签。公开标签单独维护，避免公开私人标签。</li>
+<li>标签按钮展示 <code>#名称 数量</code>，可筛选；标签多于 12 项时可展开。卡片保留概览图并用原生链接打开独立详情页。</li>
+<li>所有条目共享 <code>entry.html</code>，由稳定 id 定位。独立页含章节导航、全过程、全部提示词、附件和项目关联。</li>
+<li>图片、Markdown、JSON、静态 HTML 已实际浏览器验证。HTML 以无权限 sandbox 预览，不执行脚本、不联网加载资源；PDF 使用浏览器内建阅读器（本馆暂无真实 PDF，尚未实机验收）。ZIP 等文件展示下载入口，不在预览时预加载。</li>
+<li>完整 ZIP 由浏览器组装，实际下载包内 13 个文件逐一与归档原件对照，全部字节一致，CRC 正常。浏览器扩展未转发 download 事件，但系统 Downloads 中存在正确下载文件。</li>
+<li>桌面 1440px、移动 390px、窄屏 320px 检查无横向溢出。标签筛选、项目切换、新标签页临时共享解锁、刷新恢复、同步锁定清除原文与图片已验证。</li>
+<li>17 项 Python 测试通过：原有会话/存储用例，新增分块往返、去重、未变密文复用、损坏修复、密码变化时资产密钥更换、构建幂等、公开边界、标签校验及受保护提示词恢复。JS 语法校验、Skill 校验通过。</li>
+<li>本会话仍为 <code>codex-7bdfb3a609cc16f657b9c69a</code>，6 条真实用户提示词；重复同步 <code>changed=false</code>。含当前馆主口令的原话在本地单独加密，网页解锁后恢复原文；源日志不修改。</li>
+</ul>
+<h2>容量与实现</h2>
+<p>比较同一馆藏（尚未添加本轮验收附件）：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th style="text-align: right;">改造前</th>
+<th style="text-align: right;">改造后</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>library 总大小</td>
+<td style="text-align: right;">2,485,088 B（2.37 MiB）</td>
+<td style="text-align: right;">1,718,235 B（1.64 MiB）</td>
+</tr>
+<tr>
+<td>解锁用加密索引</td>
+<td style="text-align: right;">2,346,719 B（2.24 MiB）</td>
+<td style="text-align: right;">60,271 B（58.9 KiB）</td>
+</tr>
+<tr>
+<td>共享详情模板</td>
+<td style="text-align: right;">无</td>
+<td style="text-align: right;">4,903 B（4.8 KiB）</td>
+</tr>
+<tr>
+<td>文件数</td>
+<td style="text-align: right;">未单独统计</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr>
+<td>最大文件</td>
+<td style="text-align: right;">2,346,719 B</td>
+<td style="text-align: right;">282,812 B</td>
+</tr>
+</tbody>
+</table>
+<p>改造前附件和 ZIP 使用 base64 嵌入整体密文。现附件使用 AES-GCM 二进制密文，每块最多 4 MiB 原文；HMAC 内容寻址保证不同文件的相同内容只保存一份，并复用未变化的密文。完整 ZIP 不再作为重复的网页资源上传。无内容变化重复构建不会改变密文。</p>
+<p>新增独立页面不意味着每条复制一整套网页，更不意味着重复上传每份附件。新增会话正文和真实产物仍会占空间；大视频、数据集和频繁更换的大 ZIP 才是长期 Git 历史增长的主要来源。图书馆当前体量无需迁移存储。以后大附件适合放 R2，对馆藏保留描述和访问链接。</p>
+<h2>官方限制核对</h2>
+<p>2026-09-10 通过官方原文核对：</p>
+<ul>
+<li><a href="https://developers.cloudflare.com/pages/platform/limits/">Cloudflare Pages limits</a>：单静态资源最大 25 MiB；Free 每站点最多 20,000 文件，每月 500 次构建。分块保证本项目单个附件资源约 4 MiB 上限，但仍需要关注整站文件数量与索引体积（本项目索引 24 MiB 时拒绝发布）。</li>
+<li><a href="https://developers.cloudflare.com/pages/functions/pricing/">Cloudflare Pages pricing</a>：未调用 Functions 的静态资源请求免费且不限量。本功能由静态页面和浏览器解密实现，未增加 Functions。</li>
+<li><a href="https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github">GitHub large files</a>：单文件超过 50 MiB 警告，超过 100 MiB 拒绝；建议仓库理想小于 1 GB，强烈建议小于 5 GB。这里是官方建议，不是 1 GB 硬上限。不要将搜索摘要里的“100 MiB 仅警告”当作准确信息。</li>
+<li>网站仓库本机 Git 对象实测约 12.79 MiB（本轮发布前），包括整个网站历史，不只是图书馆。</li>
+</ul>
+<p>本报告中的尺寸是可比基线。本轮截图、验收报告和源码快照作为新产物入库后，最终发布大小会相应增加；最终测量见 <code>library-v2-deployment.json</code>。</p></main></html>

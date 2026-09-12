@@ -1,0 +1,67 @@
+# v0.3 接口与运行约定
+
+浏览器和 MCP 共用一个独立 Python 后台。核心仍是 `orchestrator.py` 的持久回执协议，不通过解析 CLI 文案伪造任务完成。
+
+```text
+用户 ↔ 中控聊天 + ma3-control Skill
+                   ↓ MCP / 本地客户端
+浏览器 ← HTTP/SSE → workbench_server.py → Workbench → orchestrator → tmux → CLI
+                     ↓                     ↓                       ↓
+                 只读产物预览       .ma3/workspace.json        runs/任务状态与证据
+```
+
+## HTTP
+
+固定本机地址 `http://127.0.0.1:8763`。独立客户端跳过环境代理。浏览器使用同源请求，不支持 CORS 跨站调用。
+
+| 路由 | 内容 |
+|---|---|
+| GET /api/health | 后台进程、版本、地址 |
+| GET /api/snapshot | 项目、实例、运行、通知、操作与任务模板 |
+| GET /api/events | SSE snapshot 事件；约每 2 秒观察一次，重连发送完整快照 |
+| GET /api/runs/{run_id} | 任务正文、原始状态、产物列表和独立验收证据 |
+| GET /api/runs/{run_id}/terminal | 实时尾部或明确标记的历史记录 |
+| GET /api/jobs/{request_id} | 持久操作结果 |
+| GET /api/artifact?run_id=…&name=… | 声明产物的 text/plain 预览，最多 5 MB，禁止路径逃逸与符号链接 |
+| POST /api/action | JSON `{request_id, payload}`；需 `X-MA3-Request: 1` |
+
+POST 返回 202 和操作记录。`request_id` 必须 8–100 字符，同一 ID 与同一 payload 重投会返回原操作，不再次执行；同一 ID 配不同 payload 被拒绝。这不等于每种底层动作都能跨任意故障“恰好执行一次”：若后台中断，检查任务、终端与操作证据后再决定恢复。
+
+操作状态为 queued、running、done、failed、interrupted。`validate` 的 done 只表示检查执行结束，必须再读 `result.passed`；只有 `accept` 核对证据后任务才是 verified。
+
+## 操作字段
+
+| action | 必要字段 | 可选字段 / 行为 |
+|---|---|---|
+| create_project | name, path | 登记已有目录 |
+| create_task | task_file | project_id, executor, model, prepare_only, instance_id |
+| launch | run_id | 启动已准备任务，会调用模型 |
+| message | run_id, text | 只保存；未确认消息会阻止 submit |
+| deliver | run_id, message_id, idle_confirmed=true | 必须人工 / 中控核对真实终端空闲；不等于 ack |
+| validate / accept | run_id | 独立运行验收 / 确认通过 |
+| note | run_id | runtime=unknown/running/waiting_input/idle、reason |
+| stop | run_id | reason；保存终端尾部后结束目标会话 |
+| open_terminal | run_id | 真实 GNOME Terminal 进入 tmux |
+| open_artifact | run_id, name | 系统打开声明产物 |
+| read_notification | notification_id | 单个 ID 或 all |
+| rename_instance | instance_id, name | 更改实例显示名称 |
+
+`task_file` 是已审核的本机 JSON 文件，不接受网页直接编写任意 shell。任务 JSON 的 validators 仍是真实可执行命令，不构成不可信代码沙箱。
+
+## Codex 续接
+
+读取 `~/.codex/sessions/` 下 JSONL 的首行元数据，按任务 cwd 匹配本地会话 ID；不扫描对话正文，不读取账号或凭据文件。保存的 ID 用于 `codex resume UUID -C 新任务work`。每项新任务仍获得新 run_id / attempt。
+
+同一实例旧任务须为 verified、validation_failed 或 cancelled，且其终端确实离线。后台在派工前实时检查，避免仅凭过期网页快照启动同一对话的两个执行器。模型缺省时保留上次选择。
+
+本轮使用的 CLI 为 Codex 0.153.4、模型 gpt-5.6-sol。恢复同一对话和新 cwd 已实测；长对话压缩、跨机器迁移、Claude 会话续接尚未验证。
+
+## 部署与恢复
+
+服务源码 `deploy/ma3-workbench.service`，用户级安装，无 sudo。固定 py310 解释器与 nvm Node 路径，避免非交互 shell 不加载 `.bashrc` 导致 CLI command not found。后台自身及 MCP 使用 Python 标准库，未安装新包。
+
+后台单实例锁防止同时启动第二份并改写注册表。状态以原子写入与 fsync 保存。任务状态由原协议 flock 保护；项目和操作元数据由服务单写者管理。
+
+`KillMode=process` 保留 tmux 后代，使后台重启不杀死执行器；关闭后台不是停止全部任务的手段。常驻观察不调用模型，也不自动调度待办任务。
+
+当前只支持本机单用户信任边界，没有远程鉴权、多用户会话、移动端中继或进程级资源隔离。若以后扩展公网，这套 loopback 假设需要重新设计，不能只改监听地址。

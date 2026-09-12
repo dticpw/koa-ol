@@ -1,0 +1,64 @@
+{
+  "widths": [
+    {
+      "innerOverflow": false,
+      "imageLoaded": true,
+      "ratioError": 0.000018036298049972643,
+      "scenes": 6,
+      "bodyHeight": 11061.578125,
+      "scriptCount": 1,
+      "width": 1440,
+      "outerOverflow": false,
+      "frameHeight": 11094
+    },
+    {
+      "innerOverflow": false,
+      "imageLoaded": true,
+      "ratioError": 0.0000041763462190758105,
+      "scenes": 6,
+      "bodyHeight": 11102.09375,
+      "scriptCount": 1,
+      "width": 1024,
+      "outerOverflow": false,
+      "frameHeight": 11135
+    },
+    {
+      "innerOverflow": false,
+      "imageLoaded": true,
+      "ratioError": 0.000017822002747580612,
+      "scenes": 6,
+      "bodyHeight": 12256.90625,
+      "scriptCount": 1,
+      "width": 768,
+      "outerOverflow": false,
+      "frameHeight": 12289
+    },
+    {
+      "innerOverflow": false,
+      "imageLoaded": true,
+      "ratioError": 0,
+      "scenes": 6,
+      "bodyHeight": 14901.65625,
+      "scriptCount": 1,
+      "width": 390,
+      "outerOverflow": false,
+      "frameHeight": 14934
+    },
+    {
+      "innerOverflow": false,
+      "imageLoaded": true,
+      "ratioError": 0.00007347313638450537,
+      "scenes": 6,
+      "bodyHeight": 16181.0625,
+      "scriptCount": 1,
+      "width": 360,
+      "outerOverflow": false,
+      "frameHeight": 16214
+    }
+  ],
+  "errors": [],
+  "filter": 2,
+  "fallback": true,
+  "sandbox": "allow-scripts",
+  "privateCleared": true
+}

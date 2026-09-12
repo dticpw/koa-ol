@@ -1,0 +1,30 @@
+{
+  "widths": [
+    {
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "width": 360,
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "filtered": 2,
+  "all": 6,
+  "fallback": true,
+  "copied": true,
+  "copyTest": "mock clipboard success/denial; no system clipboard mutation"
+}

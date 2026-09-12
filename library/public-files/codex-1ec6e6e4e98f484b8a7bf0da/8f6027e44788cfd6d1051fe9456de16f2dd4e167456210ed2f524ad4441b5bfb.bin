@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>README.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>MA3 v0.3 · 本机 Agent 工作台</h1>
+<p>入口：<strong>http://127.0.0.1:8763</strong>。后台已作为 Linux 用户服务运行，并设置为登录图形桌面后自动启动。关闭网页或中控聊天不会停止 tmux 中的执行器。</p>
+<p>这是中控在场的工作台：中控聊天负责理解需求与判断，后台负责任务记录、回执、通知和控制接口，tmux 承载真实执行 Agent。网页已经连接实际任务，尚未内置可直接对话的中控 Agent。</p>
+<h2>日常使用</h2>
+<ol>
+<li>在中控聊天中描述任务，由中控准备带交付要求和独立验收命令的任务 JSON。</li>
+<li>网页点击「新任务」，选择定义与明确模型。勾选「仅准备任务」不会调用模型，之后可在工作动态中启动。</li>
+<li>执行时可看到真实 GNOME Terminal / tmux；网页显示任务动态与消息回执。「终端记录」在当前标签激活时定期更新，「打开终端」用于直接交互。</li>
+<li>首次新目录的信任提示仍需中控或用户核对并确认。网页不会自动识别所有 CLI 弹窗。</li>
+<li>Agent 提交后，在「交付产物」运行独立验收，再「确认通过」。操作完成与任务验收通过是不同状态。</li>
+<li>后续可新建实例，或先结束已完成实例的旧终端，再在「新任务」中选择继续其 Codex 会话。旧任务和产物在实例历史中保留。</li>
+</ol>
+<p>消息分为保存、投递、确认回执三步。只有确实查看实时终端、确认输入框空闲后才投递；投递不等于接收。工作台不会自动重发、猜测权限提示或换模型。</p>
+<h2>项目、实例、任务</h2>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>本版含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>项目</td>
+<td>登记已有目录与名称，用于分组；不会移动文件，也不会自动进入该项目仓库开展工作</td>
+</tr>
+<tr>
+<td>实例</td>
+<td>一个执行 Agent 的工作历史，可以关联多项任务和同一段 Codex 对话</td>
+</tr>
+<tr>
+<td>任务</td>
+<td>独立的 run_id、attempt、工作目录、任务快照、消息与验收证据</td>
+</tr>
+</tbody>
+</table>
+<p>所有任务当前在 <code>runs/&lt;run_id&gt;/work</code> 中运行。直接修改已有仓库、Git worktree 隔离、任务依赖图和无人值守调度尚未实现。Claude 启动适配保留，但未做真实模型验收；续接当前仅支持 Codex。</p>
+<h2>服务控制</h2>
+<p>下面查询后台状态，不修改任务：</p>
+<pre><code class="language-bash">systemctl --user status ma3-workbench.service
+</code></pre>
+<p>下面重启工作台接口；tmux 执行器保留，网页会自动重连：</p>
+<pre><code class="language-bash">systemctl --user restart ma3-workbench.service
+</code></pre>
+<p>下面关闭工作台并取消自动启动；<strong>不会结束已有 tmux 任务</strong>，结束任务请用网页「结束会话」或原有 <code>ma3.py stop</code>：</p>
+<pre><code class="language-bash">systemctl --user disable --now ma3-workbench.service
+</code></pre>
+<p>重新启用并立即启动：</p>
+<pre><code class="language-bash">systemctl --user enable --now ma3-workbench.service
+</code></pre>
+<p>自动启动依赖本机 GNOME 图形会话，未设置开机无登录常驻，也未做本轮真实重启验证。操作系统重启后 CLI 进程消失，但任务记录和 Codex 保存的会话仍可查看；后台不会自动重放未完成操作。</p>
+<p>服务单元源码位于 <code>deploy/ma3-workbench.service</code>，已安装到 <code>~/.config/systemd/user/</code>。<code>KillMode=process</code> 是有意配置：停止后台不连带杀死 tmux 后代。后台的任务操作是串行执行，验证命令也会进入操作队列；观察与网页读取独立进行。</p>
+<h2>MCP 与 Skill</h2>
+<p>Linux Codex 已注册 <code>ma3</code> stdio MCP：<code>ma3_overview</code>、<code>ma3_task</code>、<code>ma3_terminal</code>、<code>ma3_job</code>、<code>ma3_action</code>。它调用独立后台，MCP 客户端断开不停止服务。</p>
+<p>共享 Skill 源码：<code>/mnt/c/Users/DTICPW/agent-workflows/skills/ma3-control/SKILL.md</code>。它教中控如何使用这组工具，不承载后台状态。虽然源文件两系统可见，运行时明确仅支持 Linux。</p>
+<p>新 MCP 与 Skill 需要<strong>新开 Codex 会话</strong>发现；当前会话可以先用本地客户端：</p>
+<pre><code class="language-bash">/home/dticpw/conda/envs/py310/bin/python /home/dticpw/PG_linux/MA3/workbench_client.py snapshot
+</code></pre>
+<p>这是只读概览；<code>detail &lt;run_id&gt;</code>、<code>terminal &lt;run_id&gt;</code>、<code>job &lt;job_id&gt;</code> 分别查询任务、终端和异步操作。<code>action &lt;payload.json&gt;</code> 会执行文件中的操作；接口详情见 <a href="V0.3接口与运行.md">接口说明</a>。</p>
+<p>只注册了 Linux Codex；Claude Code 与 Windows MCP 配置未改。MCP 原配置备份在 <code>~/.codex/config.toml.before-ma3-20260910</code>，移除本次接口用 <code>codex mcp remove ma3</code>，无需恢复整个旧配置。</p>
+<h2>存储与边界</h2>
+<ul>
+<li><code>runs/</code> 是任务与验收证据；<code>.ma3/workspace.json</code> 是项目、实例映射、收件箱和操作记录。备份时两者一起保留。</li>
+<li>只监听 <code>127.0.0.1:8763</code>，校验 Host、Origin 与写请求头；无公网、手机中继、VPS 或云端同步。</li>
+<li>产物预览只返回原文，Agent 生成的 HTML 不会在工作台控制接口的域内运行。「打开」使用本机系统程序。</li>
+<li>本机同一用户下的程序可以调用控制接口。CLI 沿用现有本机权限；工作目录隔离不是操作系统安全沙箱。</li>
+<li>重启时未完成的后台操作标记 interrupted，不自动重试；请检查实际任务后决定下一步。</li>
+</ul>
+<h2>验证与当前现场</h2>
+<p><a href="V0.3验收报告.md">验收报告</a>记录 44 项自动化测试、五种宽度的浏览器检查、真实模型任务、MCP 与后台重启实测。</p>
+<p>首次网页派工已通过独立验收。续接任务已恢复同一 Codex 对话、生成正确记忆标记，但随后遇到 <strong>429 限流</strong>，尚无 submit 回执；保留为执行中 / 等待输入，不能记为完整验收成功。</p>
+<p>以下测试使用临时目录，不调用模型：</p>
+<pre><code class="language-bash">/home/dticpw/conda/envs/py310/bin/python -m unittest -q test_workbench test_orchestrator test_protocol
+</code></pre>
+<p>旧命令行流程见 <a href="archive/README_v02.md">v0.2 使用说明</a>、<a href="V0.2施工与协议.md">施工与协议</a>。之前的 <a href="index.html">研究方案</a>、<a href="V0.2验收报告.md">v0.2 验收报告</a>和冒泡排序产物全部保留。</p></main></html>

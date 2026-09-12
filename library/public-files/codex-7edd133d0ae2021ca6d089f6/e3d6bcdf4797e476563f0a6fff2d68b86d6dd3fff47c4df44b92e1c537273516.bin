@@ -1,0 +1,27 @@
+# Chat / Stats 已上线 · 2026-09-11
+
+生产部署成功，提交 `462fa0415f639facd29bea78d9476b9127bedbc2`，部署 ID `0b41b863-4f4a-4dfe-b93b-c06feee14baf`。
+
+- Chat：https://koa-ol.com/chat/
+- Stats：https://koa-ol.com/stats/
+- 主页入口：https://koa-ol.com/#chat-block
+
+## 线上验收
+
+网页 GPT、DeepSeek、Qwen 各一次最小请求均为 HTTP 200、有文字回复。实际返回模型分别为 gpt-5.6-sol、deepseek-flash、qwen-plus，Stats 已记录三者的输入/输出 token 和成功状态。
+
+外部 `/ai/v1/models` 只列出 gpt-5.6-sol；该模型真实请求为 HTTP 200，Qwen 请求被返回 400。Stats 的历史 GPT/Claude 记录继续保留，不代表现在仍允许调用旧模型。
+
+Stats 成功解锁并显示 6 项累计指标、30 天图表、模型分组和旧明细。主页进入 Chat 的原生跨文档过渡已在线上触发，无页面级横向溢出。此前本地完成了桌面、平板、手机与减少动态效果检查。
+
+## Skill 沉淀
+
+共享源码 open-design-ui 增补了入口路由、页面流程以及 references/page-transitions.md。内容包括入口与目标页共同设计、少量共享元素、避免标题缩放重影、保留原生链接和浏览器返回、减少动态效果与不支持时降级、首帧/中段/稳定帧验证。没有固定套用本项目配色、星形或动画时长。
+
+Skill 格式验证通过；保留共享仓库此前的其他改动，未把它们一起提交。网站仓库仅提交本次 15 个文件；原有未跟踪游戏和设计实验资料保持原样。
+
+本次没有删除 Cloudflare 旧变量。代码已经不再读取 Claude、CHAT_PASSWORD、DEFAULT_MODEL、AVAILABLE_MODELS；后续清理可按前面的核查清单操作。
+
+## 发布回退入口
+
+旧生产部署 `a8c36b94-a95d-431a-b90c-54993e8c7080` 对应提交 `58dea13185862060f8054756663192cd47ba122f`。如出现故障，可在 Cloudflare Pages 部署列表选择该旧生产部署回滚。旧变量保留，因此仍具备旧代码所需配置。本次不涉及数据库迁移。

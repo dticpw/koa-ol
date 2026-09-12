@@ -1,0 +1,27 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>muQ · 统一目录与公开／私有管理</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>统一目录与公开／私有管理 · 2026-09-12</h1>
+<h2>为什么转变</h2>
+<p>旧机制把完全私有条目排除在游客目录之外，并在主题可见时收起核心来源日记。于是同一篇日记可能在游客列表出现，馆主解锁后反而消失。此前共享阅读投影解决了公开内容漏字段的问题，但没有解决列表身份差异。</p>
+<p>用户现已明确授权：所有人看到同一组条目与排列；私有条目以模糊封面和锁标识占位，馆主认证后恢复正常封面与访问。主题和来源仍关联，但 primary 不再控制纵览隐藏。默认无筛选的列表按共同顺序展示，筛选与搜索只使用当前身份获准的数据。</p>
+<h2>当前规则</h2>
+<ul>
+<li>公开：游客可读正文与获准附件；原始提示词、本机路径和未发布附件继续受保护。</li>
+<li>私有：游客看到低清高斯模糊衍生封面、锁标识和“私密条目”。不发送真实摘要、标签、源日期、提示词数量或普通封面。馆主可设置独立的 locked_title 公开名称。存在和数量可见，不代表内容公开。</li>
+<li>锁定卡片没有跳转链接。公开主题中的私有来源、结构化资源和条目链接也锁定，私有目标标题不由引用自动公开。直接访问私有地址只得到锁定页。HTML 阅读器提取链接时也按当前权限处理。</li>
+<li>真实原件及历史报告保持原样；已经写进公开正文或附件的文字属于该内容本身，切换另一条目的权限不会自动改写这些历史文字。公开前应检查正文与附件内容。</li>
+<li>主题与来源分别设置权限。附件分享是另行明确创建的限时授权，不因普通条目公开自动创建；如需停止既有独立分享，仍须撤销该分享。</li>
+</ul>
+<h2>馆主管理</h2>
+<p>本机解锁后，条目页标题旁可调整公开／私有；馆藏管理支持全部、公开、私有筛选。公开前填写独立标题与概述，可预览封面、查看将公开的附件数量并进入正文检查。私有状态可留空游客名称，默认“私密条目”。</p>
+<p>保存使用 revision 检查并生成新版本、构建本机。同步到网站是独立操作；显示待同步、同步中、已推送等待部署、网站已生效、同步失败。只有线上 catalogue 的 build_id 与当前版本一致，才显示已生效；网络检查失败不会误报成功。在线条目管理入口引导至本机管理，静态网站不直接写本机馆藏。</p>
+<h2>实现与兼容</h2>
+<p><code>access_schema=2</code> 的条目以 public 布尔值为唯一访问决策。public_content 暂保留为旧客户端兼容字段，由正式可见设置接口同步，不再作为第二个开关。旧格式仅 public=true 而无公开正文的条目按锁定处理。本次迁移15个有效条目：5公开、10私有；旧“从日记本到 muQ”概览条目转为私有。普通新条目默认私有，AI月刊默认公开，已有馆主选择优先。</p>
+<p>公开目录 schema 2 含所有有效条目的卡片及共同排序；馆主密文档案仍为 schema 2。阅读字段由 reading_model 统一声明，access 处理访问决策及私有目标引用，file_plan 处理附件边界。</p>
+<p>公开转私有后重新构建会移除旧公开附件和普通封面。发布维护站点根 <code>_headers</code> 中限定 <code>/library/*</code> 的无缓存规则，保留其他站点规则。部署后检查旧地址，不承诺召回既有下载、浏览器副本或历史部署副本。</p>
+<h2>回退与验收</h2>
+<p>迁移前 data 压缩包、逐条原 revision 及迁移结果位于 <code>/mnt/e/PG/agent-artifacts/muq-unified-access-20260912/</code>，不纳入 Git 或公开附件。压缩包已逐文件比对；恢复应先解包到新目录检查，不能覆盖正在使用的馆藏。需要回退单条时通过 Store 从原 revision 建立新版本，保留后续历史。</p>
+<p>自动测试覆盖私有字段排除、统一目录顺序、结构化链接、源数据不变、公开／私有切换与旧附件删除。本地浏览器在临时馆藏验证锁定链接、直接访问、封面预览、状态切换、旧地址404与退出清理；真实馆藏只做只读预览和获准迁移，不作切换测试夹具。桌面、平板、手机宽度验收留在任务产物目录。</p></main></html>

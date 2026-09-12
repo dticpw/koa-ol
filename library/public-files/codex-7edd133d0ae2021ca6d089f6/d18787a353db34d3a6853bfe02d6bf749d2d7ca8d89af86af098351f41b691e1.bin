@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>delivery.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>Chat 与 Stats 界面 · 2026-09-11</h1>
+<p>本轮采用主页 AI Chat 章节现有的深绿、浅柠檬色与星形元素，使用 Open Design 页面流程和专项动效流程完成本地实现。没有另建品牌或覆盖其他子项目的共享样式。</p>
+<h2>文件与功能</h2>
+<ul>
+<li><code>chat/index.html</code>、<code>assets/conversation/chat.{css,js}</code>：固定输入区、独立滚动消息区、三模型选择、开场草稿、新对话、附件、错误重试草稿恢复、代码复制/下载。网页入口仍为 <code>/api/chat</code>。</li>
+<li><code>stats/index.html</code>、<code>assets/conversation/stats.{css,js}</code>：私有密码门、六项累计指标、近 30 天请求/token 趋势、累计模型 token 分布、最近 20 条模型筛选，以及原有 IP/国家/每日明细。无数据和刷新失败有独立状态。</li>
+<li><code>functions/api/stats.js</code>：新增 <code>per_model</code> 返回字段，从现有 <code>chat_logs</code> 按模型分组求和。没有数据库迁移，不合并或删除旧模型历史。不从最近 20 条推算累计用量。</li>
+<li><code>assets/conversation/studio.css</code>：仅由 Chat、Stats 使用的共享页面基础，未修改原 <code>design-system.css</code>。</li>
+<li><code>assets/conversation/transition.{css,js}</code>：主页、Chat、Stats 同源跨文档过渡。星形共享元素从主页移动到侧栏，页面短淡变。保持原生链接，不拦截点击、不人为延迟网络请求。减少动态效果时跳过过渡；不支持原生过渡的浏览器使用简短入场降级。</li>
+</ul>
+<p>日期趋势使用 UTC，自当天往前展示 30 个日历日，缺失日期填零。累计指标不受趋势按钮或最近记录筛选影响，界面已标明各自范围。Tokens 为接口返回计数，不是账单金额。</p>
+<h2>验证</h2>
+<ul>
+<li>14 项后端测试通过，包含此前三模型/外部 GPT 限定测试，以及新增 Stats 鉴权、真实聚合查询和旧数据集保留检查。</li>
+<li>Chrome + Playwright 检查 1440、900、390px 布局；额外检查 360×640 小屏。无页面级横向溢出。</li>
+<li>验证了模型选择、开场草稿、等待状态、失败草稿保留、新对话、代码下载、附件能力提示、重复发送防护、密码门、模型筛选、趋势指标切换、空数据、刷新失败和退出。</li>
+<li>实际捕捉了原生 <code>pagereveal</code> 的 <code>viewTransition</code>，保存过渡前、中、后截图；检查浏览器后退和减少动态效果。</li>
+<li>本轮 UI 验证使用明确标注的模拟回复和统计；未为视觉测试调用付费模型，未把测试数据放进网站源码。</li>
+</ul>
+<h2>本地评审与交付边界</h2>
+<p>本地示例预览入口：<code>http://127.0.0.1:8795/#chat-block</code>、<code>/chat/</code>、<code>/stats/</code>。预览服务在产物目录内，用真实页面文件加本地示例 API，页面持续标记“本地界面预览 · 示例回复 / 示例统计”。正式页面中不含自动解锁、演示密码或示例 API。</p>
+<p>产物目录：<code>/mnt/e/PG/koa-ol-maintenance/ui-2026-09-11/</code>，包含旧文件备份、截图、测试夹具、测试脚本与结果。本地服务仅监听 127.0.0.1，关闭服务后链接失效。源码尚未提交、推送或部署，线上仍是旧版。</p>
+<p>正式发布须同时包含本轮 UI 资源、Stats 新返回字段和前一阶段完成的三模型后端改动。Cloudflare 生产 DeepSeek Secret 已通过浏览器设置；旧变量清理应等新版部署和功能验收后进行。</p></main></html>

@@ -1,0 +1,75 @@
+# koa-ol 环境变量核查 · 2026-09-11
+
+本次“变量”指 Cloudflare Pages 环境变量，不是 JavaScript 局部变量或 CSS 变量。
+
+## 核查结论
+
+Cloudflare MCP GET 实测：项目 koa-ol，域名 koa-ol.com。生产配置 13 个变量（11 个 plain_text、2 个 secret_text），另有 1 个 D1 数据库绑定 DB；预览配置 0 个变量、未配置数据库绑定。
+
+生产部署 a8c36b94-a95d-431a-b90c-54993e8c7080，状态 success，提交 58dea13185862060f8054756663192cd47ba122f，与本地 HEAD 一致。部署记录的变量名与当前项目配置一致。未执行真实模型请求、数据库查询或配置修改；代码引用不代表近期有真实调用。
+
+## 13 个变量
+
+| 名称 | 用途 | 建议 | Cloudflare 类型 |
+|---|---|---|---|
+| ANTHROPIC_API_KEY | 网页 Claude 的上游密钥 | 保留 | plain_text |
+| ANTHROPIC_BASE_URL | 网页 Claude 的上游服务地址；当前不同于代码默认值 | 保留，删除会改走默认官方地址 | plain_text |
+| ANTHROPIC_MODEL | 网页 Claude 模型；当前等于默认 claude-opus-4-6 | 可选精简 | plain_text |
+| AVAILABLE_MODELS | /ai/v1/models 返回的模型列表；不是请求模型的白名单 | 保留，当前与 DEFAULT_MODEL 不同 | plain_text |
+| CHAT_PASSWORD | 历史聊天密码；当前代码没有读取，前端也不发送密码 | 明确清理候选 | plain_text |
+| CLIENT_API_KEYS | /ai/v1/models 和 /ai/v1/responses 的客户端准入密钥，逗号分隔 | 保留 | secret_text |
+| DEFAULT_MODEL | /ai/v1/responses 请求未指定模型时补用；也是模型列表的回退值 | 保留 | plain_text |
+| QWEN_API_KEY | 网页千问和 Multi-Agent 共用的上游密钥 | 保留 | plain_text |
+| QWEN_BASE_URL | 网页千问和 Multi-Agent 的服务地址；等于默认 https://dashscope.aliyuncs.com/compatible-mode/v1 | 可选精简 | plain_text |
+| QWEN_MODEL | 网页千问和 Multi-Agent 模型；等于默认 qwen-plus | 可选精简 | plain_text |
+| STATS_PASSWORD | /api/stats 的访问密码，统计页提交该密码以读取数据 | 保留 | plain_text |
+| UPSTREAM_API_KEY | /ai/v1/responses 转发到上游所用的密钥 | 保留 | secret_text |
+| UPSTREAM_BASE_URL | /ai/v1/responses 的上游地址；当前不同于默认值 | 保留，删除会改走默认官方地址 | plain_text |
+
+## 清理顺序
+
+1. 优先只清理 CHAT_PASSWORD：Git 跟踪文件和相关功能目录均无引用，functions/api/chat.js 明确采用无密码流程。删它不会改变现有鉴权行为。当前尚未删除。
+2. 可选再精简 ANTHROPIC_MODEL、QWEN_BASE_URL、QWEN_MODEL：实测值与当前代码默认值一致。删除后依赖代码默认值；以后修改默认值会随之改变行为。仅删第 1 项后为 12 个，连同这 3 项一起删后为 9 个。
+3. 其余 9 项保留。独立 AI 接口与 Multi-Agent 仍有代码引用，不能因网页聊天不直接使用就判断无用。
+
+## DB 与统计范围
+
+DB 是 D1 资源绑定，不是普通字符串变量。网页聊天和独立 Responses 代理写入同一张 chat_logs 表，Stats 读取请求数、独立 IP、国家、输入/输出 token、耗时、成功/失败、近 30 天趋势和最近记录。它不是整站浏览量，也不只是网页 Chat 的用量。
+
+DB 同时服务 games 的联机房间接口。不能为了清理聊天变量而删除这个共享绑定。Multi-Agent 当前代码未写入 chat_logs。
+
+首页入口的实际名称为 Stats（/stats/）。Chat 页内另有 status 元素，用来显示读取文件、请求中和错误提示，它不是 Cloudflare 环境变量。
+
+## 代码中存在但 Cloudflare 未配置
+
+- ANTHROPIC_MAX_TOKENS：默认 1024；虽然名字带 ANTHROPIC，实际同时用于网页 Claude 和 Qwen。Multi-Agent 自己固定 1024。
+- ANTHROPIC_BETA：可选的 Claude 请求头；未配置就不发送。
+- ASSETS：muQ 分享接口使用的平台静态资源入口，不在本次用户环境变量计数里。
+
+## 凭据与证据边界
+
+不保存任何变量值或密码。secret_text 在 API 中不回传值，不能将未返回值理解为未配置。ANTHROPIC_API_KEY、QWEN_API_KEY、STATS_PASSWORD 当前类型为 plain_text；后续可改为 Secret，此项与删除无效变量分开处理。
+
+未通过此轮只读调用验证 Pages 写入权限。删除与重新部署的具体操作尚未执行。
+
+## 代码引用索引
+
+- `ANTHROPIC_API_KEY`：`functions/api/chat.js:42`
+- `ANTHROPIC_BASE_URL`：`functions/api/chat.js:37`
+- `ANTHROPIC_MODEL`：`functions/api/chat.js:39`
+- `AVAILABLE_MODELS`：`functions/ai/v1/models.js:10`
+- `CHAT_PASSWORD`：无引用
+- `CLIENT_API_KEYS`：`functions/ai/v1/models.js:38`、`functions/ai/v1/responses.js:89`
+- `DEFAULT_MODEL`：`functions/ai/v1/models.js:10`、`functions/ai/v1/responses.js:15`、`functions/ai/v1/responses.js:29`、`functions/ai/v1/responses.js:40`、`functions/ai/v1/responses.js:48`、`functions/ai/v1/responses.js:49`、`functions/ai/v1/responses.js:65`、`functions/ai/v1/responses.js:76`
+- `QWEN_API_KEY`：`functions/api/chat.js:58`、`functions/api/multi-agent.js:54`
+- `QWEN_BASE_URL`：`functions/api/chat.js:53`、`functions/api/multi-agent.js:49`
+- `QWEN_MODEL`：`functions/api/chat.js:55`、`functions/api/multi-agent.js:50`
+- `STATS_PASSWORD`：`functions/api/stats.js:10`、`functions/api/stats.js:13`
+- `UPSTREAM_API_KEY`：`functions/ai/v1/responses.js:12`、`functions/ai/v1/responses.js:114`
+- `UPSTREAM_BASE_URL`：`functions/ai/v1/responses.js:52`
+
+## 工作目录
+
+- 维护资料：/mnt/e/PG/koa-ol-maintenance
+- 现有源码：/mnt/f/bak/git_koa-ol（保留原位）
+- 仓库已有未跟踪的设计和游戏资料，本轮未修改。

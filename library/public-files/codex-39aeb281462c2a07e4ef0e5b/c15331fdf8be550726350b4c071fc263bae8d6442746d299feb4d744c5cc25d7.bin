@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>afterglow-trail-performance-v2.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>Afterglow 拖尾性能对照</h1>
+<p>源码 ab9cb40，站点 92c6b0f；已推送并确认线上生效。</p>
+<p>逐段 shadowBlur 是主要瓶颈。移除模糊后，仍用分层半透明外缘、主线与核心表现流光。</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th style="text-align: right;">平均帧间隔（ms）</th>
+<th style="text-align: right;">P90（ms）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>修复前 · 第一轮</td>
+<td style="text-align: right;">68.18</td>
+<td style="text-align: right;">200.00</td>
+</tr>
+<tr>
+<td>修复前 · 第二轮</td>
+<td style="text-align: right;">69.80</td>
+<td style="text-align: right;">193.90</td>
+</tr>
+<tr>
+<td>修复后 · 第一轮</td>
+<td style="text-align: right;">7.07</td>
+<td style="text-align: right;">6.10</td>
+</tr>
+<tr>
+<td>修复后 · 第二轮</td>
+<td style="text-align: right;">8.99</td>
+<td style="text-align: right;">6.10</td>
+</tr>
+<tr>
+<td>关闭拖尾</td>
+<td style="text-align: right;">6.06</td>
+<td style="text-align: right;">6.10</td>
+</tr>
+</tbody>
+</table>
+<p>条件：本机 Chrome，1440×900、DPR 1、60 个拖尾点；逻辑暂停、绘制继续。每轮60个 requestAnimationFrame 间隔，修复前后与关闭模式交替测量。少量长帧使平均值高于P90。数据不代表所有场景或设备的保证帧率。</p>
+<p>线上复测：1800×1125 CSS视口，60个拖尾点，90个间隔，平均6.06ms；视口与本地对照不同，不混算倍数。</p>
+<p>两项独立检查：暂停时拖尾年龄保持不变；模拟停车、允许拖尾继续更新时，90 帧后旧轨迹全部消散。重开清空，最多80点。修复后仍可见双色转弯轨迹与冲刺增强；手机390×844没有横向溢出。飞行与战斗逻辑未改。</p></main></html>

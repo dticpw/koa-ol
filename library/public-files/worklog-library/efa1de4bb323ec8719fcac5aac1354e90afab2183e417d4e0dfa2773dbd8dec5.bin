@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>README.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>日记与项目文库</h1>
+<p>把每天做过的事、项目中的问题、决策和产出保存在可以搜索、回看、导出的本地档案里。</p>
+<p>第一版：本机网页 + Python 标准库 CLI；日记和项目使用同一套存储。参考 <code>/home/dticpw/Downloads/文库.html</code> 的组织方式，未复制参考站的项目内容或插画。</p>
+<h2>打开</h2>
+<p>Linux 在终端执行下面这一行，启动本机服务，终端需保持打开；<code>Ctrl+C</code> 停止：</p>
+<pre><code class="language-sh">sh /mnt/d/Linux_share/worklog/start-linux.sh
+</code></pre>
+<p>浏览器访问 <a href="http://127.0.0.1:6767">http://127.0.0.1:6767</a>。如果已经启动，直接访问，不必重复运行。端口被占用时可在启动命令末尾加 <code>--port 6768</code>，并使用对应地址。服务不是开机自启。</p>
+<p>Windows 双击 <code>D:\Linux_share\worklog\start-windows.cmd</code>，随后访问相同网址。默认解释器为 <code>D:\python\anaconda\envs\th123\python.exe</code>；可用 <code>WORKLOG_PYTHON</code> 覆盖。代码面向 Python 3.10+，Windows 启动脚本与文件写入尚未在 Windows 实机验证。</p>
+<p>全部源码和数据位于同一 NTFS 目录，两系统看到同一份文件。无需安装包、Node、数据库服务或浏览器插件。此目录没有初始化 Git 仓库。</p>
+<h2>怎么记录</h2>
+<ul>
+<li><strong>日记</strong>：每次任务结束留一条，多个任务可在同一天留下多条；界面按月份浏览，记录自身保留日期。用 <code>project</code> 关联项目固定 ID。</li>
+<li><strong>项目文库</strong>：一个项目一个固定 slug，例如 <code>multimodal-rag</code>。复用 ID 更新当前档案，每次更新生成新版本，旧版不会被覆盖。</li>
+<li><strong>问题</strong>：写清现象、当前状态和影响；已解决的问题在“处理与决策”记录办法与验证，不删除原始记录。</li>
+<li><strong>产出</strong>：正文可记路径、提交或链接；需要长期保存的文件通过 CLI <code>--artifact</code> 复制入库。仅写原文件路径不会自动备份文件。</li>
+<li><strong>用户原话</strong>：只保存确实可见的原文，与 AI 整理的字段分开。当前没有完整会话导入器，未收录就留空，不能声称“已保存全部 prompts”。不同轮次的原文可另存为独立 <code>.txt</code> 附件，避免人为合并改变原文。</li>
+<li><strong>归档</strong>：状态改为“已归档”，仍然保留并可搜索。未实现删除按钮。</li>
+</ul>
+<p>网页支持新建、编辑、状态筛选、搜索、项目与日记双向关联、版本选择、完整 ZIP 下载。表单失焦不会自动保存，关闭未保存的编辑会提醒。</p>
+<p>搜索覆盖当前版本的 JSON 正文、用户原话、附件名称，以及 2 MB 以内的 UTF-8 文本附件（<code>.md/.txt/.html/.csv/.json/.py/.js/.css</code>）。采用大小写不敏感的子串搜索，支持中文；不包含 PDF/图片 OCR、语义搜索或历史版本全文搜索。</p>
+<h2>给 Agent 的 CLI</h2>
+<p>Linux 入口为 <code>sh /mnt/d/Linux_share/worklog/kb.sh</code>，下文简称 <code>kb</code>。Windows 使用默认环境解释器执行 <code>D:\Linux_share\worklog\app\kb.py</code>，参数相同。</p>
+<pre><code class="language-text">kb ls
+kb ls --kind journal
+kb search &quot;检索关键词&quot;
+kb get worklog-library
+kb history worklog-library
+kb get worklog-library --revision &lt;版本ID&gt;
+kb put /path/to/entry.json --artifact /path/to/report.html
+kb export worklog-library /path/to/new-export-directory
+</code></pre>
+<p><code>ls/search/get/history</code> 只读，输出 JSON。<code>put</code> 写入新版本并复制附件；已有附件同名时拒绝写入，请给新版附件另起文件名。<code>export</code> 复制完整 bundle 到一个尚不存在的目录，原档案不变。</p>
+<p>创建项目的 JSON 示例（示例尚未入库）：</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;example-project&quot;,
+  &quot;kind&quot;: &quot;project&quot;,
+  &quot;revision&quot;: &quot;&quot;,
+  &quot;title&quot;: &quot;示例项目&quot;,
+  &quot;date&quot;: &quot;2026-09-10&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;summary&quot;: &quot;为什么做这个项目&quot;,
+  &quot;work&quot;: &quot;已经完成的事情&quot;,
+  &quot;problems&quot;: &quot;问题与当前状态&quot;,
+  &quot;decisions&quot;: &quot;处理方式、依据与验证结果&quot;,
+  &quot;outputs&quot;: &quot;产出路径与证据&quot;,
+  &quot;next&quot;: &quot;下一步&quot;,
+  &quot;prompts&quot;: &quot;&quot;
+}
+</code></pre>
+<p>创建日记时，<code>kind</code> 改为 <code>journal</code>，使用独立 ID，增加 <code>"project": "example-project"</code>。<code>status</code> 可选 <code>active</code> / <code>done</code> / <code>archived</code>。</p>
+<p>更新前先 <code>get</code>，保留其中的 <code>revision</code> 再 <code>put</code>，可阻止过期内容覆盖新版本。<code>put</code> 合并提供的字段，省略字段保留旧值；提供空字符串会清空该字段，但旧版仍可查。创建时 <code>revision: ""</code> 可防止不小心复用已有 ID。省略 <code>revision</code> 则不做版本冲突校验，仅供确定当前状态的操作使用。</p>
+<p>Agent 每次结束任务的建议顺序：先读项目当前档案 → 写清本次事实与证据 → 保存日记并关联项目 → 按需更新项目状态与过程 → 复制本次重要产出 → <code>get</code> 核对写入结果。具体规则见 <code>RECORDING.md</code>。尚未安装全局 hook 或修改任何 Agent 全局指令，因此不会自动在其他会话触发。</p>
+<h2>文件与版本</h2>
+<pre><code class="language-text">worklog/
+  app/                   应用与 CLI
+  data/entries/&lt;id&gt;/
+    CURRENT              当前版本 ID
+    revisions/&lt;version&gt;/
+      entry.json         该版本的权威结构化记录
+      index.html         可离线打开的流程页
+      PROCESS.md         过程记录的 Markdown 导出
+      PROMPTS.txt        原话文本，按输入保留
+      artifacts/         复制入库的附件
+  tests/                 独立临时目录中的存储测试
+</code></pre>
+<p><code>entry.json</code> 是权威数据；HTML/Markdown 是保存时生成的视图，不要直接修改生成文件。用网页或 CLI 修改。每次保存完成新 bundle 后，以原子替换切换 <code>CURRENT</code>，不会让正常读操作看到半写入的当前版本。全局目录锁防止网页和 CLI 同时写入；写入异常退出可能留下 <code>.write-lock</code>，须先确认没有运行中的写入操作再移除空锁目录。这里没有断电级事务或磁盘快照保证。</p>
+<p>每版保存完整附件，因此历史版本会占用额外空间。大模型权重、依赖目录、整份代码仓库宜保留路径与提交号；需要独立存档时再选定文件复制。</p>
+<h2>备份与边界</h2>
+<p>当前数据只在 D 盘这一处，没有远程副本。停止写入后，把整个 <code>worklog</code> 目录复制到另一个物理磁盘作为备份；恢复时停服务再还原目录。<code>data</code> 是恢复记录的必要部分，单独备份网页代码不够。</p>
+<p>服务只监听 <code>127.0.0.1</code>，校验 Host 和写请求 Origin；当前没有账号体系，不适合直接绑定公网。没有实现 <code>pub</code>、公开分享、自动会话采集、自动每日总结、自动备份或 PDF 全文提取。ZIP 与离线流程页可以本地交付；对外分享前另行选择内容。</p>
+<h2>验证</h2>
+<p>Linux 存储回归测试（使用临时目录，不修改正式记录）：</p>
+<pre><code class="language-sh">/home/dticpw/conda/envs/py310/bin/python -B -m unittest discover -s /mnt/d/Linux_share/worklog/tests -v
+</code></pre>
+<p>覆盖版本与原文保存、冲突检测、附件复制和检索、项目关联与输入验证、失败写入保持当前版本、同时写入拦截。</p></main></html>

@@ -1,0 +1,20 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>stage3-report.md</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><h1>第3阶段真实模型验收记录</h1>
+<p>使用新任务 <code>task-20260912-160801-81175f</code>，默认模型 gpt-5.6-sol；没有复用历史未完成任务。任务为实现整数稳定去重，产物 unique.py、result.json 已复制到本目录，原件和完整协议记录仍在 MA3 的 runs 目录。</p>
+<h2>实际结果</h2>
+<ul>
+<li>首次目录信任提示经中控核对后确认一次，没有自动重发任务或更换模型。</li>
+<li>执行器真实 claim → waiting_input；网页保存消息时仍显示尚未投递/尚未确认。</li>
+<li>中控查看实时空闲终端后经网页投递，随后执行器真实 ack，三步各有时间戳。</li>
+<li>执行器提交两份产物。独立检查前确认验收按钮禁用；网页运行156组边界/随机检查，退出码0，仍停留待验收。</li>
+<li>中控审阅算法和测试记录、网页预览文件，确认哈希证据匹配后点击验收。状态 verified；刷新页面仍显示“已验收通过 · 证据匹配”。</li>
+<li>原7项任务的ID、attempt和持久状态与本轮开始一致。</li>
+</ul>
+<h2>截图</h2>
+<p>01 启动待领取；02 消息仅保存；03 尝试投递等待确认；04 真实ack；05 已提交待检查；06 独立检查通过待确认；07 网页产物预览；08 验收通过。均为正式工作台真实任务，无模拟响应。</p>
+<h2>范围</h2>
+<p>本次补齐第3阶段真实小模型任务验收；失败、超时和证据过期分支沿用此前隔离测试与模拟浏览器证据，没有为了截图破坏本次正确产物。该任务终端保留空闲供查看，任务验收状态与进程在线状态独立。未修改产品源码，未重新运行无关全套测试。未据此宣称自动多Agent协作、自动返工或所有模型均已验收。</p></main></html>

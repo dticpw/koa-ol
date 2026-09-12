@@ -1,0 +1,105 @@
+# MA3：Linux + tmux 从头设计方案
+
+调研日期：2026-09-08。本文是本轮最新方案，实施方向优先于《调研总结与MA3路线.md》中迁移 MA2 的建议。用户明确希望依托 tmux 从头建设；保留经验，不依赖旧框架。
+
+展示入口：[index.html](index.html)。其中工作流是交互示意，不是运行中的 Agent 控制台。
+
+## 推荐
+
+采用 **原生 tmux + 轻量 Python 控制器 + 显式任务回执 + Git worktree**。
+
+Codex、Claude 运行在真实可进入的交互 CLI 窗格。tmux 是运行与人机交互的底座，不只是摆放 headless 日志的工具。首版不建设 Web 管理平台，不接分布式队列，不照搬 MA2 四阶段执行器。
+
+首版验证：协调者派任务 → Codex 编写 → Claude 复核指定版本 → 最多两轮返工 → 测试与复核通过 → 本地交付。合并、推送不自动跟随。
+
+先使用现有 Python 3.10 与 tmux 3.2a，控制器尽量只用标准库。SQLite 保存任务与状态，文件保存输入和成果，JSONL 作为审计导出；不维护两套竞争的权威状态。
+
+### 为什么没有直接选现成项目
+
+AgentMux 最贴近形态，值得隔离对照。但它带完整阶段体系、MCP 提交和多种依赖。这次先实现三个角色的最小流程，更有利于理解机制和控制范围。
+
+如果优先尽快获得完整流程，试 AgentMux；如果主要想管理日常多路会话，试 Agent of Empires。选择自建针对本次学习与建设目标，不是证明现成项目较差。
+
+## 核心机制与边界
+
+1. 创建 MA3 专属 tmux session，保存逻辑 Agent ID、pane ID 与会话 generation；pane ID 不是永久身份。进程环境显式准备，CLI 用绝对路径，避免旧 tmux server 的 PATH 继承问题。
+2. 任务先在数据库持久化，正文写到文件。核对 pane 所有权和 CLI 就绪后，用每次唯一的 tmux buffer 投递简短文件引用；tmux 参数通过 argv 传递，不拼接不可信 shell。长文本、Unicode、粘贴与提交按 provider 实测。
+3. 拟议 CLI 接口为 ma3 claim / ma3 submit。Worker 显式领取、提交产物；工具校验 run、task、attempt、generation、状态和 schema，控制器串行推进。未来有必要再封装成 MCP。
+4. 重复回执幂等，过期 attempt 拒绝。投递后若没有 claim，标为待介入，不无限重发 Enter。唤醒重试不能变成重复创建业务任务。
+5. submitted 只是 Agent 声称完成；核验文件、固定 commit、测试和 review 后才是 verified。屏幕 idle/停止输出不能作为正式验收。
+6. 同一 pane 同时仅处理一个受控任务。人工介入先暂停自动派发，避免双方同时输入。自由键入的每个按键不保证被完整审计；介入后补充说明并核对 diff/版本。
+7. 并行写入各自用 worktree，审查针对特定 commit。worktree 是文件布局隔离，不是权限沙箱。项目角色契约不修改用户全局人格或凭据。
+8. 恢复区分 tmux 服务存活、控制器重启、Agent 消失、机器重启。核对 generation、回执、commit 与副作用；不假设无损接回原对话，不自动重放未知副作用。
+9. 终止只作用于 MA3 所拥有的 pane/进程。POSIX 进程组不保证覆盖主动脱离的新会话后代。取消能力必须以实际负载测试，不使用全局 kill-server。
+10. 协调者 Agent 负责语义拆分与决策，Python 控制器负责验证和状态迁移。即使协调者掉线，已经持久化的任务也应可读取；下一位协调者从任务记录恢复，而非凭聊天记忆重建。
+
+仍然有明确限制：claim/submit 依赖 Worker 遵守契约；缺少回执必须暂停或失败。交互 CLI 的就绪、审批、多行输入对版本敏感；第一轮必须验证，不承诺“发送按键就能可靠编排”。
+
+### 值得从 MA2 保留的经验
+
+- 进程结束、模型说完成、任务验收通过要分开。
+- 失败 attempt 的证据不覆盖；清理前保存成果。
+- 审查绑定版本；固定次数返工，而不是无限讨论。
+- 汇总由代码兜底，模型综合可失败。
+- 费用未知写未知，不写零；不要把输入 token 当隐藏推理。
+- 原生终端给人操作，结构化回执给程序判断，不用抓屏解析代替正式结果。
+
+## 里程碑
+
+| 阶段 | 交付 | 验收 |
+|---|---|---|
+| 1 | 三个原生 CLI 角色窗格 | 中文长任务定向投递；可进入；detach 后继续；需要输入时不误报完成 |
+| 2 | 领取/提交、版本与复核闭环 | 重复 submit 不重放，旧 attempt 被拒；review 绑定具体 commit |
+| 3 | 暂停、人工接管与恢复 | 关闭 Worker、重启控制器不丢成果；不误杀别的会话；未知状态不盲目重做 |
+| 4 | 并行与棋局轮转 | 独立写入不互相覆盖；裁判持有棋谱；与单 Agent 比较质量、耗时和成本 |
+
+第一轮：给小型 CLI 补输入校验。启动前确定验收标准、预算与最大尝试次数。先做一个写入任务，避免把并发文件冲突掺入消息机制实验。
+
+后续下棋用规则引擎保存局面与完整棋谱，模型只提供走法。代码审查靠版本和测试。多角色串行交接不天然加速，价值须与单 Agent 比较。
+
+## 本轮检索
+
+使用 smart-websearch 开放式搜索，返回 status=ok，报告 web_search_calls=11；之后通过 GitHub API 补充候选，实际读取官方 README、协议、恢复、架构和授权页面。
+
+产品均未安装、执行，文档确认不等于本机可用。未用星数打分；main 材料会变化，实施前锁版本。本次未保存搜索服务原始响应缓存。
+
+| 项目 | 核对到的机制 | 局限与决定 |
+|---|---|---|
+| AgentMux | tmux 角色窗格；文件和 MCP submit；事件总线；恢复游标；Python ≥3.10 | 首要对照；完整流程较重，存在自动信任处理。LICENSE 路径 404，不据此确定授权，不复制源码 |
+| CAO / awslabs | provider/backend 分层，HTTP/MCP/SQLite，Codex 终端状态提取 | README 要求 tmux ≥3.3，本机 3.2a 不满足；默认 Codex 启动与审批行为有明确限制 |
+| Agent of Empires | 每 Agent 独立 tmux session；TUI/Web/CLI/API；worktrees，可直接 attach | 适合即用工作台；我们的收据、轮转和验收需验证 |
+| CCB | 多 provider 工作区；ask 协作、worktree、共享记忆和诊断 | 接管配置/角色/会话生命周期较多，隔离评估后再引入 |
+| tmux-message-bus | SQLite WAL 消息；core 与 Claude hooks 分离；唤醒 best-effort | 明确是实验项目；持久消息不等于即时唤醒，不推导业务 exactly-once |
+| NTM | README 描述命名窗格、worktrees、机器人接口、Agent Mail、检查点和审计 | LICENSE 带 OpenAI/Anthropic rider，非普通 MIT；不作为依赖，未运行或复用源码 |
+
+### 纠正搜索摘要和宣传
+
+- AgentMux 当前文件协议比“文件出现就推进”更具体：提交工具验证 Agent 写的文件，追加工具事件，控制器记录已应用游标。恢复仍需实际中断测试。
+- AgentMux 宣传“No API costs”，仅反映复用现有 CLI/订阅的思路。使用 API 或自定义 provider 时仍可能计费，不能承诺免费。
+- AgentMux README 引用的 docs/completing-phase.md 返回 404；本文没有据此断言完成阶段所有 Git 副作用已经核验。
+- NTM README 与 LICENSE 明确有附加限制，没有按普通 MIT 描述或复用。
+- tmux-message-bus README 宣称有序、无重复消息投递；本文只确认文档表述，不升级为外部副作用 exactly-once 的证明。
+- CAO Codex provider 明确用终端字符模式判断状态；结构化 HTTP 返回不代表底层全部来自原生语义事件。
+- 现成项目的“会话持久”通常不等于机器重启后无损续跑，必须区分恢复层级。
+
+## 一手来源
+
+1. AgentMux README：<https://github.com/markuswondrak/AgentMux>
+2. AgentMux 协议：<https://github.com/markuswondrak/AgentMux/blob/main/docs/file-protocol.md>
+3. AgentMux 恢复：<https://github.com/markuswondrak/AgentMux/blob/main/docs/session-resumption.md>
+4. AgentMux tmux 布局：<https://github.com/markuswondrak/AgentMux/blob/main/docs/tmux-layout.md>
+5. AgentMux 依赖：<https://github.com/markuswondrak/AgentMux/blob/main/pyproject.toml>
+6. CAO README：<https://github.com/awslabs/cli-agent-orchestrator>
+7. CAO 架构：<https://github.com/awslabs/cli-agent-orchestrator/blob/main/CODEBASE.md>
+8. CAO Codex provider：<https://github.com/awslabs/cli-agent-orchestrator/blob/main/docs/codex-cli.md>
+9. Agent of Empires：<https://github.com/agent-of-empires/agent-of-empires>
+10. CCB：<https://github.com/SeemSeam/claude_codex_bridge>
+11. tmux-message-bus：<https://github.com/NikiforovAll/tmux-message-bus>
+12. NTM README：<https://github.com/Dicklesworthstone/ntm>
+13. NTM 授权：<https://github.com/Dicklesworthstone/ntm/blob/main/LICENSE>
+
+第三方关于 Codex 的描述仅作为该集成的文档事实，不替代 OpenAI 官方契约。本文没有提供未经验证的当前 Codex SDK 配置命令。
+
+## 本次交付边界
+
+方案 Markdown 与自包含 HTML；HTML 没有外部字体、图片或脚本依赖，包含三个五步模拟、路线切换、项目筛选。系统源码、后台控制器、实际 Agent 协作和候选工具安装均未实施。浏览器验证见《验证记录.md》。
