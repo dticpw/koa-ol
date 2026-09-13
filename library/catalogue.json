@@ -1,9 +1,9 @@
 {
-  "build_id": "557a5cba8163d8d8235f675662d0aeddd12d8354a61e294bb9ad705778bb9593",
+  "build_id": "a959d7284c1a8b93614b5378ce8eb811d11c70b646d5e6914c927966974ed26b",
   "schema": 2,
   "name": "muQ · 大图书馆",
   "mode": "catalogue",
-  "updated": "2026-09-13T10:51:20.925264+00:00",
+  "updated": "2026-09-13T14:56:17.487788+00:00",
   "entries": [
     {
       "id": "ovh-server-deployment",
@@ -3459,30 +3459,190 @@
       "kind": "project",
       "collection": "ai-daily",
       "title": "AI 日报 · 2026-09",
-      "summary": "2026-09 AI 日报月刊，共 1 份报告。按报告生成日期归月，跨月搜索结果保留在当次报告内。",
+      "summary": "2026 年 9 月 AI 动态月刊；最新一期覆盖 9 月 4—13 日，共 9 条，含模型、开源研究、算力与安全治理。",
       "date": "2026-09-01",
-      "updated": "2026-09-12T07:30:45.760558+00:00",
+      "updated": "2026-09-13T14:56:17.487788+00:00",
       "status": "active",
-      "cover": "covers/ai-daily-2026-09-ff650e937ebd.png",
+      "cover": "covers/ai-daily-2026-09-f7ed8fd57a87.png",
       "cover_kind": "overview",
       "public": true,
       "locked": false,
       "catalogue_order": 11,
-      "tags": [],
-      "work": "2026-09-04｜2026-09-03 至 2026-09-04｜6 条｜ai-daily-2026-09-04-7a95d30437fee497.html",
-      "problems": "",
+      "tags": [
+        "AI日报"
+      ],
+      "work": "本期覆盖 2026 年 9 月 4—13 日，整理 9 条新增动态。搜索引用与直接正文核验的范围不同，限制在各条中说明。",
+      "problems": "部分来源有访问限制，已在对应新闻中标明。",
       "decisions": "",
-      "outputs": "报告全文和来源见附件；历次附件保留，不覆盖。",
-      "next": "",
+      "outputs": "本期完整 HTML 日报与 9 月 4 日历史日报见成果文件。",
+      "next": "月刊持续更新。",
       "current_state": "",
-      "sections": [],
+      "sections": [
+        {
+          "title": "2026-09-12 · Anthropic CEO Dario Amodei发表“We Must Pace the Frontier”呼吁放缓AI进展",
+          "body": "据 CNN 9 月 12 日报道，Amodei 发文呼吁放缓 AI 能力提升速度，并提出引入可全面访问公司的独立评估员、协调安全标准等措施。Altman 表示将采用同类独立评估安排；Musk 表达支持。\n\n为何重要：前沿实验室CEO公开呼吁放缓并获主要对手背书，是AI安全与治理辩论的重大转折，可能影响政策制定、投资节奏与国际协调。\n\n核验说明：观点与治理倡议，不代表行业已执行统一减速；本次直接读到 CNN 正文，其他引用存在访问限制。"
+        },
+        {
+          "title": "2026-09-11 · 浪潮信息发布2026年度定增预案募资投入AI基础设施",
+          "body": "拟募资不超过90亿元人民币，用于面向智能体规模化应用的新一代AI基础设施研发及产业化、绿色智算集群液冷原生算力基础设施、多智能体协同存算融合关键技术、高密度算力装备智造升级等项目。\n\n为何重要：中国AI服务器算力龙头的大规模资本行动，回应智能体时代对异构、液冷、高密度算力的需求，推动算力基础设施产业升级。\n\n核验说明：直接核对了澎湃正文；网易来源可能为转载，两个域名不等于两个独立调查。募资尚属预案，并非资金已经到账。"
+        },
+        {
+          "title": "2026-09-10 · OpenAI推出ChatGPT for Financial Services企业定制版",
+          "body": "针对投资银行家与股权研究员，内置LSEG、PitchBook、Daloopa、Crunchbase等金融数据，支持研究、建模、pitchbook生成与合规工作流；Morgan Stanley和Evercore为设计伙伴；采用企业级安全、角色访问与审计日志，将随新模型更新自动升级。\n\n为何重要：OpenAI向垂直监管行业深化渗透的标志，推动AI在高合规场景商业化，体现从通用向领域特定智能体的战略转变。\n\n核验说明：搜索返回了上述来源，但关键原文受到访问限制，本次未完成直接正文复核，相关细节暂作待核实信息。"
+        },
+        {
+          "title": "2026-09-10 · NASA与IBM联合开源Lunar Foundation Model",
+          "body": "NASA 与 IBM 开源月球基础模型，整合多任务、多传感器观测，用于陨石坑检测、火山地貌分析和极区冰探测。据 IBM，在指定冰探测任务中较 SwinV2 的误差降低 22%；在 100 米/像素的陨石坑检测中，以一半训练数据取得近 19% 的提升。\n\n为何重要：AI for Science典范，首次公开统一月球ML-ready数据集，降低全球研究门槛，支持未来行星任务。\n\n核验说明：性能数字来自发布方特定任务实验，不代表所有月球科学任务的通用提升；本次未另行核验模型仓库许可与训练样本总量。"
+        },
+        {
+          "title": "2026-09-10 · DeepSeek正式发布V4.1 Flash原生多模态MoE模型",
+          "body": "DeepSeek 9 月 10 日发布 V4.1-Flash，官方列出 552B 总参数的非对称 MoE 架构、原生视觉理解，以及较前代更低的 KV Cache 存储需求。官方宣布自 9 月 14 日 04:00 UTC（北京时间 12:00）起，将 deepseek-v4-pro 请求转接到 V4.1-Flash 并按其费率计费。\n\n为何重要：显著降低长上下文和代理成本，推动高效多模态部署，提升中国模型在开发者生态竞争力。\n\n核验说明：截至本报告日期，V4-Pro 转接仍是待执行安排；性能优于 V4-Pro 是发布方及其引用测试的结论。官方称将与开源社区合作适配，不据此认定完整权重和许可已开放。"
+        },
+        {
+          "title": "2026-09-10 · Anthropic发布AI威胁情报报告详述误用案例",
+          "body": "报告记录2025年12月至2026年8月活动，包括5起可能支持生物武器开发的案例（gain-of-function、鸟流感适应等）、俄罗斯关联团体使用Claude逆向工程无人机系统及针对军方目标、常规武器开发等；公司已阻断并分享情报，生物误用被列为最严重风险之一。\n\n为何重要：提供真实世界具体误用案例证据，推动监管、防护迭代和社会对AI双刃剑的认知，关联生物安全、国家安全与政策监管。\n\n核验说明：搜索返回了上述来源，但关键原文受到访问限制，本次未完成直接正文复核，相关细节暂作待核实信息。"
+        },
+        {
+          "title": "2026-09-09 · Sierra开源Hyper-τ-Bench代理构建基准",
+          "body": "在τ-bench基础上扩展Hyper-τ-Bench，用于评估AI编码代理从业务记录、代码库、API等环境中构建完整可部署客服代理；53个跨4领域任务，最强配置通过率23.9%，专家参考82.2%，代码和数据公开。\n\n为何重要：将代理评估从操作推进到自主构建复杂系统，填补能力缺口，对长时程agent研究和开发者工具链有基准意义。\n\n核验说明：单一媒体来源；通过率为特定基准配置结果，不代表所有软件开发任务。"
+        },
+        {
+          "title": "2026-09-07 · OpenBMB发布MiniCPM5-2B开源模型及完整训练配方",
+          "body": "发布2.5B-2.6B参数dense文本模型，上下文131k，Apache 2.0许可，完整开放权重、训练数据、RL框架、检查点和量化版本；在Artificial Analysis Intelligence Index等基准上领先同规模模型，尤其<4B开源模型中得分最高。\n\n为何重要：推动开源高效端侧设备AI生态，完整配方开放利于开发者复现，是小模型高智能密度的工程化典范。\n\n核验说明：不同报道的参数统计和 Intelligence Index 版本、分数存在差异，不能混用比较；本次未逐项核验全部训练数据及配方是否完整发布。"
+        },
+        {
+          "title": "2026-09-06 · OpenAI宣布达到自动化AI研究实习生里程碑",
+          "body": "OpenAI官方博客公布内部测量结果：已达到2026年9月自动化AI研究实习生目标，可在人类指导下完成定义明确的多日研究任务；研究组织中AI代理agent-workdays与人类劳动比例达到3.1:1，8月实验数量和复杂度为跟踪以来峰值。\n\n为何重要：这是递归自我改进和代理驱动AI研究路径的具体里程碑，对开发者生态和AGI路线图有直接参考价值。\n\n核验说明：里程碑定义依赖OpenAI内部标准，测量方法未完全第三方审计。 搜索返回了上述来源，但关键原文受到访问限制，本次未完成直接正文复核，相关细节暂作待核实信息。"
+        },
+        {
+          "title": "历史报告",
+          "body": "2026 年 9 月 4 日报告保留原附件。本期与历史报告均可在成果文件中预览或下载。"
+        }
+      ],
       "resources": [
         {
           "kind": "file",
           "file": "artifacts/ai-daily-2026-09-04-7a95d30437fee497.html",
           "title": "2026-09-04 · AI 日报",
           "description": "2026-09-03 至 2026-09-04 · 6 条信息",
+          "featured": false
+        },
+        {
+          "kind": "file",
+          "file": "artifacts/ai-daily-2026-09-13-5b0145658714ed21.html",
+          "title": "2026-09-13 · AI 日报",
+          "description": "2026-09-04 至 2026-09-13 · 9 条信息",
           "featured": true
+        },
+        {
+          "kind": "link",
+          "url": "https://www.nytimes.com/2026/09/12/technology/anthropic-dario-amodei-ai-slowdown.html",
+          "title": "Anthropic CEO Dario Amodei发表“We Must Pace the Frontier”呼吁放缓AI进展 · New York Times"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.cnn.com/2026/09/12/tech/anthropic-ceo-essay-ai",
+          "title": "Anthropic CEO Dario Amodei发表“We Must Pace the Frontier”呼吁放缓AI进展 · CNN"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.bbc.co.uk/news/articles/c14dpgm0rg4o",
+          "title": "Anthropic CEO Dario Amodei发表“We Must Pace the Frontier”呼吁放缓AI进展 · BBC"
+        },
+        {
+          "kind": "link",
+          "url": "https://m.thepaper.cn/newsDetail_forward_34053665",
+          "title": "浪潮信息发布2026年度定增预案募资投入AI基础设施 · 澎湃新闻"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.163.com/dy/article/L6KGCCB20530NLC9.html",
+          "title": "浪潮信息发布2026年度定增预案募资投入AI基础设施 · 网易"
+        },
+        {
+          "kind": "link",
+          "url": "https://openai.com/index/introducing-chatgpt-financial-services/",
+          "title": "OpenAI推出ChatGPT for Financial Services企业定制版 · OpenAI"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.reuters.com/business/openai-launches-chatgpt-financial-services-industry-2026-09-10/",
+          "title": "OpenAI推出ChatGPT for Financial Services企业定制版 · Reuters"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.bloomberg.com/news/articles/2026-09-10/openai-debuts-chatgpt-for-financial-services-an-investment-banker-tool",
+          "title": "OpenAI推出ChatGPT for Financial Services企业定制版 · Bloomberg"
+        },
+        {
+          "kind": "link",
+          "url": "https://research.ibm.com/blog/nasa-ibm-lunar-foundation-model",
+          "title": "NASA与IBM联合开源Lunar Foundation Model · IBM Research"
+        },
+        {
+          "kind": "link",
+          "url": "https://science.nasa.gov/science-research/artificial-intelligence-lunar-foundation-model/",
+          "title": "NASA与IBM联合开源Lunar Foundation Model · NASA"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.space.com/astronomy/moon/nasa-ibm-launch-new-ai-model-for-studying-the-moon",
+          "title": "NASA与IBM联合开源Lunar Foundation Model · Space.com"
+        },
+        {
+          "kind": "link",
+          "url": "https://api-docs.deepseek.com/news/news260910",
+          "title": "DeepSeek正式发布V4.1 Flash原生多模态MoE模型 · DeepSeek"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.reuters.com/world/asia-pacific/chinas-deepseek-launches-v41-flash-model-2026-09-10/",
+          "title": "DeepSeek正式发布V4.1 Flash原生多模态MoE模型 · Reuters"
+        },
+        {
+          "kind": "link",
+          "url": "https://technode.com/2026/09/10/deepseek-formally-launches-v4-1-flash-routes-v4-pro-requests-to-flash/",
+          "title": "DeepSeek正式发布V4.1 Flash原生多模态MoE模型 · TechNode"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.nytimes.com/2026/09/10/us/politics/anthropic-ai-biological-weapons.html",
+          "title": "Anthropic发布AI威胁情报报告详述误用案例 · New York Times"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.bbc.co.uk/news/articles/cx2zrrpkx20o",
+          "title": "Anthropic发布AI威胁情报报告详述误用案例 · BBC"
+        },
+        {
+          "kind": "link",
+          "url": "https://therecord.media/anthropic-russia-hackers-claude",
+          "title": "Anthropic发布AI威胁情报报告详述误用案例 · The Record"
+        },
+        {
+          "kind": "link",
+          "url": "https://www.opensourceforu.com/2026/09/sierra-open-sources-hyper-%cf%84-bench-for-ai-agent-building/",
+          "title": "Sierra开源Hyper-τ-Bench代理构建基准 · OpenSourceForU"
+        },
+        {
+          "kind": "link",
+          "url": "https://artificialanalysis.ai/articles/openbmb-releases-minicpm5-2b",
+          "title": "OpenBMB发布MiniCPM5-2B开源模型及完整训练配方 · Artificial Analysis"
+        },
+        {
+          "kind": "link",
+          "url": "https://gigazine.net/news/20260908-openbmb-minicpm5-2b/",
+          "title": "OpenBMB发布MiniCPM5-2B开源模型及完整训练配方 · Gigazine"
+        },
+        {
+          "kind": "link",
+          "url": "https://openai.com/index/research-acceleration-view-inside-openai/",
+          "title": "OpenAI宣布达到自动化AI研究实习生里程碑 · OpenAI"
+        },
+        {
+          "kind": "link",
+          "url": "https://thursdai.news/releases/2026-09",
+          "title": "OpenAI宣布达到自动化AI研究实习生里程碑 · ThursdAI"
         }
       ],
       "public_content": true,
@@ -3492,6 +3652,13 @@
           "url": "public-files/ai-daily-2026-09/7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2.bin",
           "bytes": 8850,
           "sha256": "7a95d30437fee497b37ebab9ecc68b34da5b395330345e2ad7ae4d512a81fca2"
+        },
+        {
+          "name": "artifacts/ai-daily-2026-09-13-5b0145658714ed21.html",
+          "source_modified": "2026-09-13T14:54:46.701738+00:00",
+          "url": "public-files/ai-daily-2026-09/5b0145658714ed21400bc1d6345b058ff4d3a7b2e415a0d65a91fc4e5b012541.bin",
+          "bytes": 14983,
+          "sha256": "5b0145658714ed21400bc1d6345b058ff4d3a7b2e415a0d65a91fc4e5b012541"
         }
       ],
       "omitted_files": [],
@@ -3499,6 +3666,10 @@
         {
           "file": "artifacts/ai-daily-2026-09-04-7a95d30437fee497.html",
           "text": "AI 日报 · 2026-09-04 AI 日报 · 2026-09-04 时间范围：2026-09-03 至 2026-09-04 2026年9月3日AI领域多点开花：IFM发布史上最大规模完全开源模型舰队（含375B），OpenAI有限推出GPT-6 Astra（SOTA agentic与网络安全能力），NVIDIA宣布129亿美元收购Hugging Face，美国议员提出永久禁止ASI法案，多家主流AI服务（ChatGPT、Claude等）罕见同时大规模中断。这些事件聚焦开源创新、前沿模型、产业并购、强监管呼声与基础设施可靠性。 模型与产品 2026-09-03 交叉验证 mixed OpenAI发布GPT-6 Astra模型及系统卡 OpenAI推出GPT-6 Astra，上下文窗口超1M token，在计算机使用、浏览器操作、软件工程、网络安全、科学等领域宣称SOTA。基准包括ARC-AGI-3约99.9%、FrontierMath高分。有限rollout开始，系统卡同步发布，网络功能受控访问。 为何重要： 标志agentic能力和网络安全重大进展，引发AGI时代、安全透明度及监控讨论，对开发者与企业自动化影响深远。 OpenAI Research official 9to5Mac media OpenAI X community 2026-09-03 单一来源 fact NVIDIA发布开源工具PAIR实现本地AI推理集群 NVIDIA推出Apache 2.0开源软件PAIR，可将局域网内兼容电脑连接成分布式AI推理集群，支持Ollama等工具，无需修改，针对多agent工作负载利用闲置硬件。 为何重要： 降低个人和边缘AI部署门槛，推动去中心化本地计算，在agentic AI时代为开发者提供实用工具。 Unite.AI media 研究与开源 2026-09-03 交叉验证 mixed IFM发布K2 Horizon六款完全开源AI模型舰队 IFM推出6款从0.9B到375B参数的模型，所有以Apache 2.0完全开源，包括权重、代码、训练数据、方法论、中间检查点和训练日志。小规模模型在推理、数学、编码和agentic任务上宣称SOTA，支持边缘到企业部署。 为何重要： 历史上最大规模完全透明开源发布，提升研究可复现性，推动开源生态从边缘设备到企业级发展。 IFM Press Release official Middle East AI News media 产业与治理 2026-09-03 交叉验证 fact NVIDIA以约129亿美元收购Hugging Face NVIDIA同意以约129.3亿美元收购Hugging Face，包括支付给投资者和员工留任股权计划。CEO Jensen Huang表示平台将保持开放、多云、中立，不强制使用NVIDIA芯片。交易预计2027上半年完成。 为何重要： 芯片巨头深化对开源AI模型分发和开发者社区的影响，可能加速开放模型采用，同时引发集中化、竞争和反垄断讨论。 不确定性： 交易完成时间和监管批准存在不确定性 Reuters media SEC Filing official The Verge media 政策与安全 2026-09-03 交叉验证 mixed 美国议员提出《禁止人工超级智能法案》 参议员Bernie Sanders和众议员Greg Casar提出法案，永久禁止创建人工超级智能（ASI），临时中止先进AI开发，直至新内阁级联邦机构制定安全标准。违规个人最高20年监禁，企业可能面临强制解散。 为何重要： 在模型能力快速提升背景下推动强监管政策，直接影响AI开发、安全标准与社会治理，可能引发广泛辩论。 不确定性： 法案通过前景不确定 Politico media Law360 media 其他动态 2026-09-03 交叉验证 fact 多家主流AI服务同时发生大规模中断 ChatGPT、Claude、Grok、Gemini、Copilot等多款主流AI服务于美东时间9月3日上午约9:23开始同时中断，持续约3-4小时后逐步恢复，可能与上游云基础设施相关。 为何重要： 凸显AI基础设施脆弱性和供应链集中风险，随着AI依赖度提升，对社会经济运行可靠性提出挑战。 不确定性： 确切根因尚不完全明确，需官方事后分析 Gate News media AI225 Daily media 来源索引 Politico Law360 Gate News AI225 Daily OpenAI Research 9to5Mac OpenAI X Unite.AI Reuters SEC Filing The Verge IFM Press Release Middle East AI News"
+        },
+        {
+          "file": "artifacts/ai-daily-2026-09-13-5b0145658714ed21.html",
+          "text": "AI 日报 · 2026-09-13 AI 日报 · 2026-09-13 时间范围：2026-09-04 至 2026-09-13 本期补齐 2026 年 9 月 4—13 日的新增动态，收录 9 条。重点关注 DeepSeek V4.1-Flash、MiniCPM5-2B、月球科学基础模型和 AI 治理倡议。交叉验证标签仅表示搜索引用覆盖多个域名；直接正文核验的限制逐条说明。 模型与产品 2026-09-10 交叉验证 fact OpenAI推出ChatGPT for Financial Services企业定制版 针对投资银行家与股权研究员，内置LSEG、PitchBook、Daloopa、Crunchbase等金融数据，支持研究、建模、pitchbook生成与合规工作流；Morgan Stanley和Evercore为设计伙伴；采用企业级安全、角色访问与审计日志，将随新模型更新自动升级。 为何重要： OpenAI向垂直监管行业深化渗透的标志，推动AI在高合规场景商业化，体现从通用向领域特定智能体的战略转变。 不确定性： 搜索返回了上述来源，但关键原文受到访问限制，本次未完成直接正文复核，相关细节暂作待核实信息。 OpenAI official Reuters media Bloomberg media 2026-09-10 交叉验证 fact DeepSeek正式发布V4.1 Flash原生多模态MoE模型 DeepSeek 9 月 10 日发布 V4.1-Flash，官方列出 552B 总参数的非对称 MoE 架构、原生视觉理解，以及较前代更低的 KV Cache 存储需求。官方宣布自 9 月 14 日 04:00 UTC（北京时间 12:00）起，将 deepseek-v4-pro 请求转接到 V4.1-Flash 并按其费率计费。 为何重要： 显著降低长上下文和代理成本，推动高效多模态部署，提升中国模型在开发者生态竞争力。 不确定性： 截至本报告日期，V4-Pro 转接仍是待执行安排；性能优于 V4-Pro 是发布方及其引用测试的结论。官方称将与开源社区合作适配，不据此认定完整权重和许可已开放。 DeepSeek official Reuters media TechNode media 研究与开源 2026-09-10 交叉验证 fact NASA与IBM联合开源Lunar Foundation Model NASA 与 IBM 开源月球基础模型，整合多任务、多传感器观测，用于陨石坑检测、火山地貌分析和极区冰探测。据 IBM，在指定冰探测任务中较 SwinV2 的误差降低 22%；在 100 米/像素的陨石坑检测中，以一半训练数据取得近 19% 的提升。 为何重要： AI for Science典范，首次公开统一月球ML-ready数据集，降低全球研究门槛，支持未来行星任务。 不确定性： 性能数字来自发布方特定任务实验，不代表所有月球科学任务的通用提升；本次未另行核验模型仓库许可与训练样本总量。 IBM Research official NASA official Space.com media 2026-09-09 单一来源 fact Sierra开源Hyper-τ-Bench代理构建基准 在τ-bench基础上扩展Hyper-τ-Bench，用于评估AI编码代理从业务记录、代码库、API等环境中构建完整可部署客服代理；53个跨4领域任务，最强配置通过率23.9%，专家参考82.2%，代码和数据公开。 为何重要： 将代理评估从操作推进到自主构建复杂系统，填补能力缺口，对长时程agent研究和开发者工具链有基准意义。 不确定性： 单一媒体来源；通过率为特定基准配置结果，不代表所有软件开发任务。 OpenSourceForU media 2026-09-07 交叉验证 fact OpenBMB发布MiniCPM5-2B开源模型及完整训练配方 发布2.5B-2.6B参数dense文本模型，上下文131k，Apache 2.0许可，完整开放权重、训练数据、RL框架、检查点和量化版本；在Artificial Analysis Intelligence Index等基准上领先同规模模型，尤其<4B开源模型中得分最高。 为何重要： 推动开源高效端侧设备AI生态，完整配方开放利于开发者复现，是小模型高智能密度的工程化典范。 不确定性： 不同报道的参数统计和 Intelligence Index 版本、分数存在差异，不能混用比较；本次未逐项核验全部训练数据及配方是否完整发布。 Artificial Analysis media Gigazine media 2026-09-06 交叉验证 mixed OpenAI宣布达到自动化AI研究实习生里程碑 OpenAI官方博客公布内部测量结果：已达到2026年9月自动化AI研究实习生目标，可在人类指导下完成定义明确的多日研究任务；研究组织中AI代理agent-workdays与人类劳动比例达到3.1:1，8月实验数量和复杂度为跟踪以来峰值。 为何重要： 这是递归自我改进和代理驱动AI研究路径的具体里程碑，对开发者生态和AGI路线图有直接参考价值。 不确定性： 里程碑定义依赖OpenAI内部标准，测量方法未完全第三方审计。 搜索返回了上述来源，但关键原文受到访问限制，本次未完成直接正文复核，相关细节暂作待核实信息。 OpenAI official ThursdAI media 产业与治理 2026-09-11 交叉验证 fact 浪潮信息发布2026年度定增预案募资投入AI基础设施 拟募资不超过90亿元人民币，用于面向智能体规模化应用的新一代AI基础设施研发及产业化、绿色智算集群液冷原生算力基础设施、多智能体协同存算融合关键技术、高密度算力装备智造升级等项目。 为何重要： 中国AI服务器算力龙头的大规模资本行动，回应智能体时代对异构、液冷、高密度算力的需求，推动算力基础设施产业升级。 不确定性： 直接核对了澎湃正文；网易来源可能为转载，两个域名不等于两个独立调查。募资尚属预案，并非资金已经到账。 澎湃新闻 media 网易 media 政策与安全 2026-09-12 交叉验证 mixed Anthropic CEO Dario Amodei发表“We Must Pace the Frontier”呼吁放缓AI进展 据 CNN 9 月 12 日报道，Amodei 发文呼吁放缓 AI 能力提升速度，并提出引入可全面访问公司的独立评估员、协调安全标准等措施。Altman 表示将采用同类独立评估安排；Musk 表达支持。 为何重要： 前沿实验室CEO公开呼吁放缓并获主要对手背书，是AI安全与治理辩论的重大转折，可能影响政策制定、投资节奏与国际协调。 不确定性： 观点与治理倡议，不代表行业已执行统一减速；本次直接读到 CNN 正文，其他引用存在访问限制。 New York Times media CNN media BBC media 2026-09-10 交叉验证 mixed Anthropic发布AI威胁情报报告详述误用案例 报告记录2025年12月至2026年8月活动，包括5起可能支持生物武器开发的案例（gain-of-function、鸟流感适应等）、俄罗斯关联团体使用Claude逆向工程无人机系统及针对军方目标、常规武器开发等；公司已阻断并分享情报，生物误用被列为最严重风险之一。 为何重要： 提供真实世界具体误用案例证据，推动监管、防护迭代和社会对AI双刃剑的认知，关联生物安全、国家安全与政策监管。 不确定性： 搜索返回了上述来源，但关键原文受到访问限制，本次未完成直接正文复核，相关细节暂作待核实信息。 New York Times media BBC media The Record media 来源索引 New York Times CNN BBC 澎湃新闻 网易 OpenAI Reuters Bloomberg IBM Research NASA Space.com DeepSeek Reuters TechNode New York Times BBC The Record OpenSourceForU Artificial Analysis Gigazine OpenAI ThursdAI"
         }
       ]
     },
