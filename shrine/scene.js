@@ -1,4 +1,3 @@
-import {createReimu} from './reimu.js?v=walk-20260914';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/OrbitControls.js';
 import { RoundedBoxGeometry } from 'three/addons/RoundedBoxGeometry.js';
@@ -27,14 +26,14 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.02;
+renderer.toneMappingExposure = 1.15;
 renderer.setClearColor(0xeee9df,embedded?0:1);
 if(embedded){document.documentElement.style.background="transparent";document.body.style.background="transparent";}
 const scene = new THREE.Scene();
 const model = new THREE.Group();
 scene.add(model);
 const camera = new THREE.OrthographicCamera(-15,15,15,-15,0.1,120);
-camera.position.set(22,18,32);
+camera.position.set(24,21,30);
 const controls = new OrbitControls(camera,canvas);
 controls.target.set(0,3.1,0);
 controls.enableDamping = true;
@@ -60,8 +59,8 @@ canvas.addEventListener('webglcontextrestored',()=>{renderer.render(scene,camera
 controls.update();
 controls.saveState();
 
-scene.add(new THREE.HemisphereLight(0xfff9ed,0x637d89,1.35));
-const sun = new THREE.DirectionalLight(0xffe4be,3.3);
+scene.add(new THREE.HemisphereLight(0xfff9ed,0x8c9f8a,2.25));
+const sun = new THREE.DirectionalLight(0xffeed6,3.0);
 sun.position.set(-8,26,10);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048,2048);
@@ -70,20 +69,20 @@ sun.shadow.bias = -0.00035;
 sun.shadow.normalBias = 0.035;
 sun.shadow.radius = 3;
 scene.add(sun);
-const fill = new THREE.DirectionalLight(0xc8e2e6,0.45);
+const fill = new THREE.DirectionalLight(0xc8e2e6,0.55);
 fill.position.set(12,8,-8);scene.add(fill);
-const ramp = new THREE.DataTexture(new Uint8Array([70,138,205,255]),4,1,THREE.RedFormat);
+const ramp = new THREE.DataTexture(new Uint8Array([115,165,210,255]),4,1,THREE.RedFormat);
 ramp.minFilter = ramp.magFilter = THREE.NearestFilter;ramp.needsUpdate=true;
 const mat = (color,extra={}) => new THREE.MeshToonMaterial({color,gradientMap:ramp,...extra});
 const M = {
-  red:mat('#b52d22'), scarlet:mat('#da4a2b'), redShade:mat('#782922'),
-  dark:mat('#343d3a'), roof:mat('#24353e'), tile:mat('#304249'), tileLight:mat('#52676a'),
-  wood:mat('#67422c'), woodLight:mat('#a8753f'), endgrain:mat('#d0a97a'),
-  plaster:mat('#f6e7d3'), paper:mat('#fff5df'), gold:mat('#bda061'), rope:mat('#d8bc83'),
+  red:mat('#b94334'), scarlet:mat('#d95540'), redShade:mat('#883a30'),
+  dark:mat('#343d3a'), roof:mat('#3b5355'), tile:mat('#536d6a'), tileLight:mat('#6b8279'),
+  wood:mat('#886247'), woodLight:mat('#b78b60'), endgrain:mat('#d0a97a'),
+  plaster:mat('#eee3ce'), paper:mat('#fff5df'), gold:mat('#bda061'), rope:mat('#d8bc83'),
   stone:mat('#9ca69a'), stoneLight:mat('#b9bfb0'), stoneDark:mat('#7a877e'),
-  sand:mat('#c6c2a3'), earth:mat('#8d926c'), moss:mat('#809668'),
-  green:mat('#718c47'), greenDark:mat('#395d42'), greenLight:mat('#9db266'),
-  pink:mat('#e992a5'), pinkLight:mat('#f1b7bc'), pinkWhite:mat('#ffe1d4'), pinkDark:mat('#bc718b'),
+  sand:mat('#d2ceb2'), earth:mat('#8d926c'), moss:mat('#809668'),
+  green:mat('#8ca674'), greenDark:mat('#587d60'), greenLight:mat('#acc18b'),
+  pink:mat('#e9a9ae'), pinkLight:mat('#f4c4c1'), pinkWhite:mat('#f8d6cc'), pinkDark:mat('#cf8998'),
   leaf:mat('#c49b60'), water:mat('#88bab0',{transparent:true,opacity:0.8}),
   ink:new THREE.MeshBasicMaterial({color:'#564237'}),
 };
@@ -156,7 +155,7 @@ for(let i=0;i<180;i++){
 // rounded tile seams; rotate the group to turn a horizontal ridge into a gable.
 function roof(w,d,y,x,z,parent=model){
  const g=new THREE.Group();g.position.set(x,y,z);parent.add(g);
- const eave=t=>1.78*(1-t)**1.75+.34*t**10;
+ const eave=t=>1.46*(1-t)**1.48+.15*t**9;
  for(const s of [-1,1]){
   const verts=[],uv=[],idx=[],steps=18;
   for(let i=0;i<=steps;i++){
@@ -165,22 +164,22 @@ function roof(w,d,y,x,z,parent=model){
   for(let i=0;i<steps;i++){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);}
   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geo.setIndex(idx);geo.computeVertexNormals();
   const rm=M.roof.clone();rm.side=THREE.DoubleSide;mesh(geo,rm,0,0,0,g);
-  for(let x1=-w/2;x1<=w/2+.01;x1+=.21){
+  for(let x1=-w/2;x1<=w/2+.01;x1+=.25){
    const pts=[];for(let j=0;j<=12;j++){const t=j/12;pts.push([x1,eave(t)+.035,s*t*d/2]);}
-   cord(pts,.045,M.tile,g);
+   cord(pts,.029,M.tile,g);
   }
   for(let j=1;j<=6;j++){const t=j/6;box(w+.2*t,.025,.028,0,eave(t)+.025,s*t*d/2,M.tile,g);}
   box(w+.28,.14,.15,0,eave(1)-.045,s*d/2,M.dark,g,.035);
   box(w+.31,.038,.17,0,eave(1)+.04,s*d/2,M.tileLight,g,.012);
-  for(let x1=-w/2;x1<=w/2;x1+=.21){const c=cyl(.065,.065,.07,x1,eave(1)+.01,s*(d/2+.085),M.tile,g,8);c.rotation.x=Math.PI/2;}
+  for(let x1=-w/2;x1<=w/2;x1+=.25){const c=cyl(.065,.065,.07,x1,eave(1)+.01,s*(d/2+.085),M.tile,g,8);c.rotation.x=Math.PI/2;}
  }
  for(const side of [-1,1]){
   for(const s of [-1,1]){const pts=[];for(let j=0;j<=12;j++){const t=j/12;pts.push([side*(w/2+.1*t*t),eave(t)-.04,s*t*d/2]);}cord(pts,.09,M.dark,g);cord(pts.map(p=>[p[0]+side*.025,p[1]+.075,p[2]]),.035,M.endgrain,g);}
  }
- box(w+.38,.22,.23,0,1.82,0,M.tile,g,.045);
+ box(w+.38,.22,.23,0,1.49,0,M.tile,g,.045);
  for(const s of [-1,1]){
-  const cap=box(.21,.35,.32,s*(w/2+.18),1.92,0,M.tile,g,.035);cap.rotation.z=-s*.18;
-  ball(.13,s*(w/2+.18),2.11,0,M.tileLight,g);
+  const cap=box(.21,.35,.32,s*(w/2+.18),1.59,0,M.tile,g,.035);cap.rotation.z=-s*.18;
+  ball(.13,s*(w/2+.18),1.78,0,M.tileLight,g);
  }
  return g;
 }
@@ -239,7 +238,7 @@ for(let i=0;i<21;i++)box(.10,.12,6.75,-3.8+i*.38,4.99,-3.40,M.woodLight);
 for(const side of [-1,1]){
  const gable=new THREE.BufferGeometry();
  gable.setAttribute('position',new THREE.Float32BufferAttribute([
-  side*3.23,4.96,-5.67, side*3.23,6.76,-3.40, side*3.23,4.96,-1.13
+  side*3.23,4.96,-5.67, side*3.23,6.43,-3.40, side*3.23,4.96,-1.13
  ],3));gable.computeVertexNormals();
  const gableMat=M.plaster.clone();gableMat.side=THREE.DoubleSide;mesh(gable,gableMat);
  for(const z of [-4.48,-3.40,-2.32])box(.10,z===-3.40?1.42:.70,.10,side*3.29,z===-3.40?5.65:5.30,z,M.red);
@@ -248,12 +247,6 @@ for(const side of [-1,1]){
 for(const x of [-3.18,-1.1,1.1,3.18]){
  box(.53,.14,.66,x,4.74,-1.38,M.scarlet);box(.77,.13,.81,x,4.89,-1.38,M.red);
 }
-
-for(const z of [-1.25,-5.7])for(const x of [-3.18,-1.1,1.1,3.18]){
- box(.72,.12,.58,x,4.59,z,M.wood);box(.96,.12,.69,x,4.72,z,M.redShade);
- for(const sign of [-1,1]){beam([x,4.3,z],[x+sign*.46,4.67,z],.065,M.red);box(.12,.15,.78,x+sign*.35,4.83,z,M.endgrain);}
-}
-for(const x of [-2.13,0,2.13]){box(1.88,.075,.12,x,4.02,-1.20,M.dark);for(let i=0;i<7;i++)box(.052,.12,.05,x-.69+i*.23,2.88,-1.18,M.gold);}
 roof(8.15,6.8,5.0,0,-3.4);
 // Decorative projecting gable above the bell and offertory box.
 const entryRoof=roof(2.50,4.5,4.83,0,-.58);entryRoof.rotation.y=Math.PI/2;
@@ -265,13 +258,11 @@ for(const x of [-1.66,1.66]){
  box(.62,.12,.44,x,4.83,-.09,M.scarlet);
 }
 plaque('博麗神社',1.28,.40,0,5.65,.90,M.dark);
-for(const side of [-1,1])cord([[0,6.48,.83],[side*.7,5.84,.83],[side*1.5,5.29,.83],[side*2.22,5.22,.83]],.052,M.gold);
-for(const side of [-1,1]){const disc=cyl(.12,.12,.05,side*1.65,4.71,.075,M.gold);disc.rotation.x=Math.PI/2;}
 
 function shide(x,y,z,size=.32,parent=model){
  const pts=[[0,0],[.33,0],[.33,-.30],[.65,-.30],[.65,-.62],[.33,-.62],[.33,-.92],[0,-.92],[0,-.56],[.30,-.56],[.30,-.32],[0,-.32]];
  const shape=new THREE.Shape(pts.map(p=>new THREE.Vector2(p[0]*size,p[1]*size)));
- const paper=M.paper.clone();paper.side=THREE.DoubleSide;const m=mesh(new THREE.ShapeGeometry(shape),paper,x,y,z,parent);m.rotation.z=-.13;m.userData.swayPaper=true;return m;
+ const paper=M.paper.clone();paper.side=THREE.DoubleSide;const m=mesh(new THREE.ShapeGeometry(shape),paper,x,y,z,parent);m.rotation.z=-.13;return m;
 }
 cord([[-1.8,4.59,.10],[-1.2,4.36,.17],[0,4.24,.2],[1.2,4.36,.17],[1.8,4.59,.1]],.085);
 for(let j=0;j<29;j++){
@@ -281,13 +272,11 @@ for(let j=0;j<29;j++){
 for(const x of [-1.3,-.65,.58,1.18])shide(x,4.28+.20*Math.abs(x),.25,.46);
 cyl(.15,.23,.30,0,4.12,.26,M.gold);ball(.22,0,3.99,.26,M.gold);
 box(.21,.045,.025,0,3.92,.466,M.dark);
-const ropeStart=model.children.length;
 const bellRope=cord([[0,3.87,.29],[.03,3.20,.34],[-.045,2.69,.41],[.02,2.21,.54]],.045);
 for(let j=0;j<15;j++){
  const y=2.3+j*.1;cyl(.048,.048,.04,Math.sin(j*.55)*.025,y,.51-(y-2.3)*.14,j%2?M.paper:M.redShade);
 }
 cyl(.10,.035,.21,.02,2.12,.54,M.rope);
-const ropeGroup=new THREE.Group();ropeGroup.position.set(0,3.87,.29);ropeGroup.userData.swayRope=true;const ropeParts=model.children.slice(ropeStart);model.add(ropeGroup);model.updateMatrixWorld(true);for(const part of ropeParts)ropeGroup.attach(part);
 // Saisen box: slatted top, metal straps and the traditional dedication.
 box(1.56,.66,.77,0,2.63,-.27,M.wood,model,.035);
 box(1.66,.10,.85,0,2.96,-.27,M.dark,model,.018);
@@ -432,23 +421,6 @@ fence([-8.13,-7.97],[8.13,-7.97],16);
 fence([-8.12,-7.97],[-8.12,.7],9);fence([8.12,-7.97],[8.12,.7],9);
 fence([-8.12,2],[-8.12,6.80],5);fence([8.12,2],[8.12,6.80],5);
 
-// Small planted beds and a low front fence frame the open approach.
-fence([-8.12,7.95],[-2.35,7.95],7);fence([2.35,7.95],[8.12,7.95],7);
-for(const side of [-1,1]){
- const bed=box(4.9,.06,.85,side*5.24,.94,7.35,M.moss,model,.28);
- for(let j=0;j<6;j++){
-  const x=side*(3.1+j*.8);
-  const pad=ball(.30,x,1.10,7.32,j%2?M.green:M.greenLight);pad.scale.set(1,.60,1);
-  for(let k=0;k<3;k++){
-   const px=x+(k-1)*.13,py=1.35+(j%3)*.08;
-   beam([px,1,7.33],[px,py,7.33],.013,M.greenDark);
-   for(let l=0;l<5;l++){const a=l*Math.PI*2/5;const petal=ball(.055,px+Math.cos(a)*.067,py+Math.sin(a)*.067,7.35,M.pinkLight,model,0);petal.scale.z=.45;}
-   ball(.03,px,py,7.39,M.gold,model,0);
-  }
- }
- for(let j=0;j<7;j++)box(.68,.12,.15,side*(2.85+j*.79),.98,6.9,M.stoneLight,model,.04);
-}
-
 function rock(x,z,r,ground=.95){
  const m=ball(r,x,ground+r*.30,z,rand()>.5?M.stone:M.stoneDark,model,1);m.scale.set(1,.57,.83);m.rotation.set(rand(-.25,.25),rand(0,6),rand(-.15,.15));
  if(r>.4){const cap=ball(r*.71,x-.03,ground+r*.64,z,M.moss);cap.scale.set(1,.17,.77);}
@@ -481,18 +453,18 @@ function cherry(x,z,height,spread){
  }
  for(let k=0;k<crowns.length;k++){
   const p=crowns[k];
-  for(let j=0;j<12;j++){
-   const a=j*2.399,rad=j===0?0:spread*.25;
-   const m=ball(spread*rand(.20,.31),p[0]+Math.cos(a)*rad,p[1]+rand(-.20,.22),p[2]+Math.sin(a)*rad,[M.pink,M.pinkLight,M.pinkWhite,M.pinkLight,M.pinkDark][(j+k)%5],g,1);
-   m.scale.set(1,.92,.90);m.rotation.y=rand(0,6.28);
+  for(let j=0;j<7;j++){
+   const a=j*2.399,rad=j===0?0:spread*.28;
+   const m=ball(spread*rand(.29,.43),p[0]+Math.cos(a)*rad,p[1]+rand(-.20,.22),p[2]+Math.sin(a)*rad,[M.pink,M.pinkLight,M.pinkWhite,M.pinkLight,M.pinkDark][(j+k)%5],g,1);
+   m.scale.set(1,.68,1);m.rotation.y=rand(0,6.28);
   }
  }
- for(let i=0;i<110;i++){
+ for(let i=0;i<60;i++){
   const p=crowns[i%crowns.length],px=p[0]+rand(-spread*.58,spread*.58),py=p[1]+rand(-.15,.48),pz=p[2]+rand(-spread*.58,spread*.58);
   const flower=ball(.085,px,py,pz,i%3?M.pinkWhite:M.pinkDark,g,0);flower.scale.y=.4;
  }
 }
-cherry(-5.85,-4.96,6.45,2.20);
+cherry(-5.62,-4.66,6.95,2.12);
 cherry(5.83,-6.39,6.50,1.9);
 // Small rounded evergreen gives the garden a lower, greener counterweight.
 const evergreen=new THREE.Group();evergreen.position.set(-6.63,.94,4.68);model.add(evergreen);
@@ -500,9 +472,7 @@ beam([0,0,0],[.04,2.43,0],.11,M.wood,evergreen,.04);
 for(let i=0;i<7;i++){
  const a=i*2.4,px=Math.cos(a)*.61,pz=Math.sin(a)*.61,y=1.3+i*.17;
  beam([0,.6,0],[px,y,pz],.05,M.wood,evergreen,.018);
- for(let k=0;k<6;k++){
- const a2=k*2.399;const b=ball(.36,px+Math.cos(a2)*.32,y+Math.sin(k*1.4)*.14,pz+Math.sin(a2)*.3,[M.greenDark,M.green,M.greenLight][(i+k)%3],evergreen);b.scale.y=.72;
-}
+ const b=ball(.64,px,y,pz,[M.greenDark,M.green,M.greenLight][i%3],evergreen);b.scale.y=.58;
 }
 for(let i=0;i<105;i++){
  const x=rand(-8,8),z=rand(-7.6,7.9);if(Math.abs(x)<3.6&&z<.8)continue;
@@ -527,7 +497,6 @@ function bakeStatic(root){
  root.updateMatrixWorld(true);const batches=new Map();const originals=[];
  root.traverse(o=>{
   if(!o.isMesh)return;
-  for(let a=o;a;a=a.parent)if(a.userData.swayPaper||a.userData.swayRope)return;
   const key=o.material.uuid;
   if(!batches.has(key))batches.set(key,{material:o.material,geos:[]});
   const geo=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();
@@ -544,9 +513,6 @@ function bakeStatic(root){
  for(const o of originals){o.removeFromParent();o.geometry.dispose();}
 }
 bakeStatic(model);
-const swayingPaper=[];model.traverse(o=>{if(o.userData.swayPaper)swayingPaper.push(o);});
-const groundMeshes=[];scene.traverse(o=>{if(o.isMesh)groundMeshes.push(o);});
-const reimu=await createReimu(scene,camera,groundMeshes);
 // Studio floor, with no horizon or surrounding town.
 const floor=mesh(new THREE.PlaneGeometry(400,400),new THREE.MeshBasicMaterial({color:'#eee9df',toneMapped:false}),0,-.51,0,scene);floor.rotation.x=-Math.PI/2;floor.castShadow=false;floor.visible=!embedded;
 const shadowFloor=mesh(new THREE.PlaneGeometry(100,100),new THREE.ShadowMaterial({color:'#635a4c',opacity:.23}),0,-.505,0,scene);shadowFloor.rotation.x=-Math.PI/2;shadowFloor.castShadow=false;
@@ -589,12 +555,12 @@ canvas.addEventListener('keydown',e=>{
 let elapsed=0,previous=performance.now();
 function render(now){
  requestAnimationFrame(render);
- const dt=Math.max(0,Math.min((now-previous)/1000,.05));previous=now;
+ const dt=Math.min((now-previous)/1000,.05);previous=now;
  if(document.hidden || !inViewport)return;
  if(!motion.matches)elapsed+=dt;
- updatePetals(elapsed);swayingPaper.forEach((p,i)=>p.rotation.z=-.13+Math.sin(elapsed*.85+i)*.038);ropeGroup.rotation.z=Math.sin(elapsed*.7)*.012;controls.update();reimu.update(elapsed,motion.matches?0:dt);renderer.render(scene,camera);
+ updatePetals(elapsed);controls.update();renderer.render(scene,camera);
 }
 requestAnimationFrame(render);
 // Read-only diagnostics for browser verification; no visible interface.
-window.__shrine={renderer,scene,camera,controls,reimu,ready:true,setVisible(v){inViewport=!!v;},seek(t){elapsed=t;reimu.update(t,0);renderer.render(scene,camera);},get paused(){return document.hidden || !inViewport;}};
+window.__shrine={renderer,scene,camera,controls,ready:true,get paused(){return document.hidden || !inViewport;}};
 notifyParent('shrine-ready');
