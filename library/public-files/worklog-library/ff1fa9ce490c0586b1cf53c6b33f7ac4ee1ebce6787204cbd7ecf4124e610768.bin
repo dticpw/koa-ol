@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>新 muQ · 公网入口与最小归档工具接入</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><nav aria-label="面包屑"><a href="https://koa-ol.com/library/">馆藏</a> › <a href="https://koa-ol.com/library/entry.html?id=worklog-library">muQ · 大图书馆</a> › <span aria-current="page">公网入口与最小工具接入</span></nav><h1>新 muQ：公网入口与最小归档工具接入</h1>
+<p>2026-09-13 阶段记录。新站已经可以通过 <a href="https://muq.koa-ol.com">muq.koa-ol.com</a> 直接访问；目前仍是虚构条目的试运行环境，真实馆藏继续由旧 muQ 维护。</p>
+<h2>当前已经完成什么</h2>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>本次实际结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>旧站发布核验</td>
+<td>第1—4阶段的两份主题更新已在线。公开 muQ 主题、私有服务器主题的版本匹配，馆主解密与阶段报告文件一致性通过。发布命令检测内容未变化，因此没有制造重复提交。</td>
+</tr>
+<tr>
+<td>5 · 公网入口</td>
+<td>新增子域名 A 记录，使用 Caddy 2.11.4 转发到 Go 服务；Let's Encrypt 证书签发成功，HTTP 自动跳转 HTTPS。</td>
+</tr>
+<tr>
+<td>5 · 访问验收</td>
+<td>公开阅读、搜索、目录和文件可用；匿名写入、错误令牌以及匿名分享管理被拒绝；认证写入、回读和删除验证通过。</td>
+</tr>
+<tr>
+<td>6 · 最小工具接入</td>
+<td>muq-journal 新增独立 OVH 试运行客户端，支持读取、搜索、下载和带哈希预检查的单文件替换。真实主题写入暂未开放。</td>
+</tr>
+</tbody>
+</table>
+<p>这是第6阶段的最小试运行接入，不代表已经完成真实主题的整篇发布、原话采集或旧馆藏迁移。</p>
+<h2>浏览器现在如何连接</h2>
+<p>浏览器通过 DNS 找到 OVH，再与 Caddy 建立 HTTPS 加密连接；Caddy 将请求转交给仅监听服务器内部地址的 Go 程序。访问新站不再依赖本机 SSH 隧道，原隧道保留作维护入口。</p>
+<p>Caddy 负责证书申请、续期调度、HTTP 跳转及反向代理，Go 程序负责图书馆的数据和功能。此次 Cloudflare 对新子域仅提供 DNS 解析，未启用代理；旧个人主页和旧图书馆仍使用原来的 Pages 部署。</p>
+<p>服务器只在原有 SSH 之外开放网页所需的 TCP 80 和 443。Go 服务与 Caddy 管理接口继续仅监听回环地址。新站发送 noindex 提示搜索引擎不要收录试运行材料；这不是访问限制。</p>
+<h2>为什么没有直接接管原来的归档命令</h2>
+<p>旧 muQ 与朋友的 Go KB 具有不同的数据结构。贸然把原来的归档命令改成新站地址，会使主题、来源原话、附件权限和历史版本失去原来的保障。</p>
+<p>本次保留旧归档入口，另加固定指向新站的客户端。读操作无需令牌；写操作从现有凭据库取用命名凭据，不采用朋友命令行工具的默认服务器，也不复制朋友的全局规则。</p>
+<p>客户端只允许替换虚构条目中已有的文件。它先核对远端 SHA256，再写入并逐字节回读验证；相同内容不重复写入，哈希不匹配时要求重新读取和合并。这个预检查不是服务端原子并发控制，因此仍需保证同一主题只有一个写入者。</p>
+<h2>这次实际验证了哪些路径</h2>
+<p>通过公网 HTTPS 验证首页、条目总览、正文、目录、搜索与文件读取；实际完成一个临时文件的认证写入和回读，再删除该验证文件。匿名写入和匿名分享管理返回401，错误令牌同样被拒绝。</p>
+<p>CLI 实测包括读取信息、下载校验、拒绝覆盖已存在的本机文件、拒绝真实主题写入、更新回读、旧哈希拒绝和相同内容跳过。修改过的虚构附件已恢复为原始字节。</p>
+<p>真实浏览器在1440和390宽度检查五种阅读入口，没有整页横向溢出、缺图或脚本错误；目录与 Markdown 链接点击通过。新站版式仍主要沿用原版，这些检查不等于已完成 muQ 的文件四列等 UI 适配。</p>
+<h2>仍然保留的边界</h2>
+<p>真实馆藏、原话、私有服务器主题和本机文件索引均未上传到新站。旧 Store 仍是现有主题的唯一可写权威来源。新客户端不具备私有内容保护、完整主题发布和版本历史能力。</p>
+<p>现有恢复演练证明了同机一致性备份可恢复，但尚未完成多版本异机备份。本次 Caddy 配置和原防火墙配置已备份，停用新入口可以停止 Caddy 并撤销新子域的 DNS 记录，不必删除旧站或 Go 数据。</p>
+<h2>下一步：真实主题试迁移</h2>
+<p>先确定异机备份位置并完成恢复验证，再选择已确认可公开的主题作为预览副本。试迁移清单应登记稳定主题 ID、公开正文与附件清单、哈希、写入权威来源及回退方法；原话和私有资料继续留在旧档案中。</p>
+<p>一主题一日记、新主题名称商讨、顶部纵向、面包屑、网页与文件展示规范、真实目录层级，以及独立归档审核继续有效。真实主题必须在新站实际入口满足要求后再进入正式切换，不能凭连通成功或单文件回读成功宣称迁移完成。</p></main></html>
