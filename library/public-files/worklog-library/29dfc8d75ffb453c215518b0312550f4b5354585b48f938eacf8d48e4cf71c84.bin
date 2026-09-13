@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>新 muQ · 源码与隔离试运行验收</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+</style><main class="muq-document"><nav aria-label="面包屑"><a href="https://koa-ol.com/library/">馆藏</a> › <a href="https://koa-ol.com/library/entry.html?id=worklog-library">muQ · 大图书馆</a> › <span aria-current="page">源码与隔离试运行验收</span></nav><h1>新 muQ：源码与隔离试运行验收</h1>
+<p>阶段记录 · 2026-09-13｜第 1—4 阶段完成，尚未接入公网与真实馆藏。</p>
+<h2>已经达到的结果</h2>
+<p>朋友的 KB 源码已在 OVH 上完成原版测试和编译，带有必要站名配置与权限修正的试运行版本也已运行。当前只有虚构条目，通过本机 SSH 隧道阅读；旧 muQ 保持运行。</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>实际完成与证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 · 源码基线</td>
+<td>原包 SHA256 复核；压缩包保存原始提交标识 a99f11029f9b786a246f7bb9e62d6f21207ba955。服务器建立独立 Git 基线与原版标签，另留源码 Git bundle 备份。原标识不等于取得了作者完整 Git 历史。</td>
+</tr>
+<tr>
+<td>2 · 测试编译</td>
+<td>官方 Go 1.27.1 工具链校验通过，满足源码最低 Go 1.25.6；依赖校验通过。原版 51 个测试函数所属测试套件通过；修正版 52 个测试函数所属套件及 go vet 通过。CGO_ENABLED=0 编译，程序经 file 检查为静态链接。</td>
+</tr>
+<tr>
+<td>3 · 隔离服务</td>
+<td>专用 muq 低权限用户，systemd 开机启动、失败重启、受限写入范围；仅监听服务器回环地址。SSH 隧道只监听本机回环地址，防火墙仍只开放 22。</td>
+</tr>
+<tr>
+<td>4 · 功能与恢复</td>
+<td>虚构条目发布、重复覆盖、文件替换、目录、中文空格路径、搜索、归档/取消归档、删除及重建索引通过；原版 CLI 的摘要读取、文件读取与 put --verify 通过；独立恢复实例验证数据和分享访问记录保留。</td>
+</tr>
+</tbody>
+</table>
+<p>这些是本次实测结果，不表示已经完成正式上线、真实馆藏迁移或生产负载测试。</p>
+<h2>原版与必要修改的边界</h2>
+<p>先测试原版，再单独提交 muQ 试运行改动：替换主要站名与域名显示，移除朋友本机日记本入口，并修正公开阅读模式的匿名分享管理权限。其余主题样式和页面结构暂沿用套件，不把原版布局声称为已经符合全部 muQ 阅读规范。</p>
+<p>原版在没有阅读口令时把访客视为分享管理员，允许匿名调用分享管理接口。修正后，公开阅读仍可用，匿名分享管理返回 401，带写入 token 的管理正常。旧测试中明确断言匿名管理成功的一项已按新要求调整，新增测试覆盖匿名管理拒绝及认证管理成功。</p>
+<p>有阅读口令时，原版“阅读 cookie 可以管理分享”的规则仍保留；当前试运行没有配置阅读口令。未来若启用它，仍须复核权限模型，不能外推为所有模式都只认写 token。</p>
+<h2>虚构数据验证了什么</h2>
+<p>重复发布保持同一条目 ID 与创建时间，不产生重复列表项。更新一个 Markdown 文件后，旧关键词退出搜索，新关键词可检索，旁边的文本附件不变。中文和带空格的文件路径可读取原始字节。</p>
+<p>无认证写入、修改受保护 entry.json、非法 JSON 和目录穿越上传被拒绝，已有文件仍保持正确。归档态从默认列表隐藏，但直接链接仍可阅读；取消归档后返回列表。删除操作与重建索引后，保留的试运行条目完整。</p>
+<p>独立命令行检查使用明确的试运行地址与专用 token 文件，没有把朋友的服务器默认地址作为发布目标，也没有把其 Skill 或全局规则直接安装到本机。</p>
+<h2>备份恢复与一个文档差异</h2>
+<p>暂停试运行服务后取得一致性备份，在另一份数据目录、另一个回环端口启动临时恢复实例。条目元数据及三个文件逐字节一致，一条用于验收的分享访问记录也保留；重建索引后全文搜索和访问记录仍正常。原服务重启后的持久化检查通过，恢复验证实例已停止。</p>
+<p>SQLite 不仅包含可重建的索引，还保存访问记录，因此不能把“删除数据库再 rescan”当作完整恢复方案。源码实际会在 rescan 时清理超过 30 天的回收内容，与套件 README 中“没有自动清理策略”的说法不同；回收站不能代替长期备份。</p>
+<p>本次是同机一致性备份及恢复演练，并未完成多版本异机备份，也没有尝试整机恢复或重装。真实数据进入系统前仍需补齐异机备份方案。</p>
+<h2>浏览器验收与当前入口</h2>
+<p>在 1440 和 390 宽度检查首页、条目文件总览、目录、HTML 和 Markdown 阅读页：无整页横向溢出、无缺失图片、无浏览器脚本异常；实际点击目录与 Markdown 链接通过。入口页面是套件的条目总览，正文可从 HTML 文件进入，不误把总览当成正文文件。</p>
+<p>试运行入口是本机 http://127.0.0.1:18091/，依赖到 OVH 的 SSH 隧道。它不是公网网址；页面内显示的 muq.koa-ol.com 是规划域名，目前没有据此配置 DNS 或启用 HTTPS。</p>
+<h2>下一步</h2>
+<p>下一阶段是核对域名管理权限、配置 Caddy 与 HTTPS、验证公开读取和认证写入，然后接入归档工具与小批真实主题。真实迁移前先确定单一可写来源与多版本异机备份。muQ 已确认的顶部纵向、面包屑和文件四列等体验要求仍在后续适配阶段，尚未整体移植到新 KB。</p></main></html>
