@@ -1,0 +1,9 @@
+
+/* A direct entrance from the shrine exhibit to the shared model garden. */
+.garden-entry{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:18px;padding:16px 0;border-top:1px solid var(--page-line,var(--line));color:inherit}
+.garden-entry strong{font:18px var(--serif);display:block}.garden-entry small{display:block;font-size:11px;color:var(--page-muted,var(--muted));margin-top:6px}.garden-entry-action{display:flex;align-items:center;gap:8px;font-size:12px;white-space:nowrap}.garden-entry:hover .garden-entry-action{color:var(--page-accent,var(--red))}.garden-entry:focus-visible{outline:2px solid var(--red);outline-offset:5px}
+@media(max-width:540px){.garden-entry{margin-top:10px;padding:13px 0;gap:10px}.garden-entry strong{font-size:17px}.garden-entry small{font-size:10px}.garden-entry-action{font-size:11px}.site-header nav{gap:13px}}
+
+.shrine-exhibit{margin-bottom:85px}.garden-entry{position:absolute;top:calc(100% + 12px);left:16px;right:0;margin-top:0}
+@media(max-width:850px){.garden-entry{left:2px;right:2px}}
+@media(max-width:600px){.site-header{height:auto;min-height:96px;flex-wrap:wrap;padding-block:12px;gap:8px}.site-header nav{width:100%;justify-content:space-between;gap:12px;order:3}.site-header nav a{white-space:nowrap;padding-block:5px}.garden-entry{top:calc(100% + 9px)}.shrine-exhibit{margin-bottom:82px}}

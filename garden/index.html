@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>幻想草庭 · Koa-OL</title>
+<meta name="description" content="在一片草地上，摆放属于你的幻想乡。六座东方 Project 微缩模型，可拖动、水平旋转与自由组合。">
+<meta name="theme-color" content="#eee9df"><link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./garden.css">
+<script type="importmap">{"imports":{"three":"/shrine/vendor/three.module.js","three/addons/":"/shrine/vendor/"}}</script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/" aria-label="返回 Koa-OL 个人主页">Koa-OL <span>↗</span></a><div class="title"><span class="eyebrow">A LITTLE GENSOKYO</span><h1>幻想草庭</h1></div><button id="help-open" class="quiet" aria-label="打开操作说明">怎么玩 <span>?</span></button></header>
+<main id="garden">
+  <canvas id="world" tabindex="0" aria-label="幻想草庭三维场景。拖动模型摆放，空地拖动水平环绕。先选择模型后方向键移动，Q 和 E 旋转，Escape 取消操作，Home 查看全景。" aria-describedby="instructions"></canvas>
+  <div class="intro"><span class="eyebrow">YOUR OWN LITTLE WORLD</span><p>一片草地，<br>六处幻想。</p><span class="intro-hint">把喜欢的风景，放在一起。</span></div>
+  <div class="view-tools" aria-label="视角控制"><button id="zoom-in" aria-label="放大视角">＋</button><button id="zoom-out" aria-label="缩小视角">−</button><button id="overview" aria-label="恢复全景视角">⌂</button></div>
+  <div id="loading" class="loading" role="status"><span class="loading-flower" aria-hidden="true">✳</span><p id="load-text">正在铺开草地…</p></div>
+  <div id="error" class="error" hidden role="alert"><h2>草庭暂时没有展开</h2><p id="error-text">请开启浏览器硬件加速，再试一次。</p><button id="reload" onclick="location.reload()">重新加载</button><a href="/">返回主页</a></div>
+  <section class="selection" id="selection" hidden aria-label="模型摆放工具">
+    <div class="selection-heading"><div><span class="eyebrow" id="selected-index">01 / DIORAMA</span><h2 id="selected-name"></h2></div><button id="deselect" class="quiet" aria-label="取消选择">×</button></div>
+    <div class="rotation"><button id="rotate-left" aria-label="逆时针旋转模型15度">↶</button><label for="angle">水平朝向 <output id="angle-value">0°</output></label><button id="rotate-right" aria-label="顺时针旋转模型15度">↷</button></div>
+    <input id="angle" type="range" min="-180" max="180" step="1" value="0" aria-label="模型水平朝向">
+    <div class="selection-actions"><button id="focus-model">近看模型 ↗</button><details class="nudge"><summary>微调位置</summary><div aria-label="沿草地坐标微调，每步半格"><button data-nudge="0,-0.5" aria-label="向草地后方移动">↑</button><button data-nudge="-0.5,0" aria-label="向草地左方移动">←</button><button data-nudge="0,0.5" aria-label="向草地前方移动">↓</button><button data-nudge="0.5,0" aria-label="向草地右方移动">→</button></div></details></div>
+  </section>
+  <div class="bottom-area"><p id="status" role="status" aria-live="polite">选择一座模型，开始摆放。</p><nav id="catalog" aria-label="选择模型"></nav><div class="bottom-meta"><span id="save-state">布局仅保存在当前浏览器</span><button id="undo" disabled>撤销</button><button id="reset-layout">还原摆放</button><span class="fan-note">东方 Project 非官方同人</span></div></div>
+</main>
+<dialog id="help"><button id="help-close" class="dialog-close" aria-label="关闭说明">×</button><span class="eyebrow">MAKE YOURSELF AT HOME</span><h2>给幻想乡换个位置。</h2><div id="instructions"><p><b>摆放模型</b> · 直接拖动模型；也可先点下方名称，再拖动。绿色轮廓表示可以放下，红色表示重叠或越界。</p><p><b>水平旋转</b> · 选中模型后拖动朝向滑块，或使用 ↶ ↷ 按钮。模型始终直立。</p><p><b>环顾草庭</b> · 拖动空地水平环绕，滚轮缩放；右键拖动平移。手机双指缩放与平移，单指空地环绕。</p><p><b>键盘操作</b> · 选中模型并聚焦场景后，方向键移动，Shift 加速，Q / E 旋转，Esc 取消拖动或选择。＋ / − 缩放，Home 回到全景。所有功能也可用按钮操作。</p><p><b>保留布局</b> · 自动保存在当前浏览器，不影响其他访客。支持撤销与还原摆放。庭院和伸出的树冠也属于模型占地。</p></div><button id="help-done" class="solid">开始摆放</button></dialog>
+<dialog id="reset-dialog"><h2>还原六座模型的位置？</h2><p>将恢复初始摆放；之后仍可点击「撤销」恢复你的布局。</p><div class="dialog-actions"><button id="reset-cancel">保留布局</button><button id="reset-confirm" class="solid">还原摆放</button></div></dialog>
+<noscript><div class="error"><h2>请启用 JavaScript 来打开三维草庭。</h2><a href="/">返回主页</a></div></noscript>
+<script type="module" src="./garden.js" onerror="document.getElementById('loading').hidden=true;document.getElementById('error').hidden=false;document.getElementById('error-text').textContent='场景文件未能加载，请检查网络后重试。'"></script>
+</body></html>

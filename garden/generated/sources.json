@@ -1,0 +1,26 @@
+[
+  {
+    "model": "hakurei-shrine",
+    "sha256": "85fd0807a662a8ec2f20882204ae1df7514e5004eb7a5ae15ad5f7ac4b0020eb"
+  },
+  {
+    "model": "scarlet-library",
+    "sha256": "d26ca7e79e3bcb7a705ab7280bad4a0611912e707270a53e87fc1fc5bb99b11d"
+  },
+  {
+    "model": "scarlet-mansion",
+    "sha256": "616a66575f7f39bbebdb5fe7cac789f93b6f3461b7a8e39b1b98687fd09f6e69"
+  },
+  {
+    "model": "eientei",
+    "sha256": "84d2cf0f19cdcc59ade043cbce691869c1b1bd6a6f8caff057a955ae617b94cc"
+  },
+  {
+    "model": "hakugyokurou-v3",
+    "sha256": "d7a7e084221ead15d235a090bfc94b118d462126a3c27f4cabafe8713e4378ff"
+  },
+  {
+    "model": "chireiden-v2",
+    "sha256": "ef67d1dd7e902e5bf6e0aec75f5da55db5a62da30c4f762de4ce56d151bbfc4d"
+  }
+]
