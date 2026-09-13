@@ -1,0 +1,220 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>向 OVH 迁移：建设记录与阶段计划</title><style>/* muQ theme contract v1: semantic roles shared by catalogue, reader, reports. */
+:root{--paper:#f5f1eb;--white:#fffdf9;--ink:#302936;--muted:#716772;--plum:#665173;--night:#292332;--gold:#dfcba2;--line:#dfd7dc;--muq-reading-width:78ch;--muq-radius:8px;--muq-space:24px;--muq-body-font:"Noto Sans CJK SC","Microsoft YaHei",system-ui,sans-serif;--muq-heading-font:"Noto Serif CJK SC","Songti SC",serif}
+/* Namespaced report components, v1. Safe to embed in a standalone report. */
+.muq-document{box-sizing:border-box;max-width:var(--muq-reading-width,78ch);margin:40px auto;padding:0 24px;color:var(--ink,#302936);font:16px/1.95 var(--muq-body-font,system-ui);overflow-wrap:anywhere}
+.muq-document h1,.muq-document h2,.muq-document h3{font-family:var(--muq-heading-font,serif);line-height:1.5;margin:1.8em 0 .6em}.muq-document h1{font-size:2em}.muq-document h2{font-size:1.5em;border-bottom:1px solid var(--line);padding-bottom:.4em}.muq-document a{color:var(--plum);text-decoration:underline}.muq-document pre{padding:18px;background:var(--paper);overflow:auto;white-space:pre-wrap}.muq-document code{font-size:.9em}.muq-document table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}.muq-document th,.muq-document td{border:1px solid var(--line);padding:10px 14px;text-align:left}.muq-document img{max-width:100%;height:auto}.muq-document blockquote,.muq-callout{margin:24px 0;padding:16px 22px;border-left:3px solid var(--plum);background:var(--paper)}.muq-lead{font-size:1.15em;color:var(--muted)}.muq-source{font-size:.85em;color:var(--muted)}.muq-document :focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:540px){.muq-document{margin:20px auto;padding:0 16px;font-size:15px}}@media print{.muq-document{max-width:none;margin:0}.muq-document a{color:inherit}}
+.muq-document{max-width:1000px;padding:40px 28px}.breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;margin-bottom:40px}.chapter-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;border-block:1px solid var(--line);padding:16px 0;margin:36px 0}.chapter-nav a{padding:9px 0;font-size:14px}h2{background:var(--paper);border-top:3px solid var(--plum);padding:20px 16px;margin-top:56px!important;scroll-margin-top:20px}table{width:100%;table-layout:fixed}th,td{overflow-wrap:anywhere}code{overflow-wrap:anywhere;white-space:normal}a:focus-visible{outline:3px solid var(--plum);outline-offset:3px}@media(max-width:600px){.muq-document{padding:24px 16px}.chapter-nav{grid-template-columns:1fr}th,td{padding:8px!important;font-size:13px}h2{font-size:24px!important}}</style><main class="muq-document"><nav class="breadcrumbs" aria-label="面包屑"><a href="https://koa-ol.com/library/">馆藏</a><span>›</span><a href="https://koa-ol.com/library/entry.html?id=worklog-library">muQ · 大图书馆</a><span>›</span><span aria-current="page">向 OVH 迁移</span></nav><h1>向 OVH 迁移</h1>
+<p>从静态馆藏到独立服务器：建设记录与九阶段计划</p>
+<p><strong>阶段快照 · 2026-09-13｜服务器基础完成，源码已取得，应用尚未部署。</strong> 本页归属于「muQ · 大图书馆」，记录迁移中的一个检查点，不是另一个主题，也不代表新馆已经上线。</p>
+<nav class="chapter-nav" aria-label="本页目录"><a href="#chapter-1">为什么开始这次迁移</a><a href="#chapter-2">已确认的方向与边界</a><a href="#chapter-3">服务器基础已经完成什么</a><a href="#chapter-4">备份状态的纠正与运维权限</a><a href="#chapter-5">源码获取与访问问题如何解决</a><a href="#chapter-6">九阶段施工计划</a><a href="#chapter-7">尚待验证的差异与风险</a><a href="#chapter-8">下一步与阶段资料</a></nav><h2 id="chapter-1">为什么开始这次迁移</h2>
+<p>旧 muQ 已积累了主题归档、真实来源、公开访问、文件目录和阅读布局等能力。但归档规则与部分旧程序仍未完全一致，Agent 归档需要专门整理与反复修正，馆主花在维护图书馆本身的时间过多。</p>
+<p>朋友的 KB 已持续运行约半年，这是朋友提供的使用经验，并非本次完成的稳定性测试。它提供 Go 服务、文件式条目、SQLite 检索索引及命令行发布路径，适合作为一次可验证的替代实现。决定先复现其原版核心工作流，再按实际试用结果逐步改成已磨合的 muQ；不在复刻之前同时重写全部规则和界面。</p>
+<p>已有方案比较与初版购机规划属于前期材料。本文采用后续确认的九阶段施工顺序；前期资料不自动代表当前配置与进度。</p>
+<h2 id="chapter-2">已确认的方向与边界</h2>
+<ul>
+<li>正式入口拟使用 <strong>muq.koa-ol.com</strong>；域名不区分大小写，页面品牌仍写 muQ。当前尚未配置 DNS 或启用这个新站。</li>
+<li>个人主页保留图书馆入口，未来跳转到独立子域。旧站继续运行，正式切换前不删除旧馆藏。</li>
+<li>优先公开阅读、直接发送普通链接；发布和管理接口必须认证。原始用户提示词、凭据与本机文件索引不因条目公开而自动公开。</li>
+<li>初期只用虚构条目验证。真实迁移按小批试点推进，每个主题在切换期间只保留一个可写权威来源，防止两边各自更新。</li>
+<li>延续一主题一日记、接手续写原主题、顶部纵向排版、真实面包屑及紧凑文件四列等方向；这些是后续适配要求，不能声称朋友原版已经全部满足。</li>
+</ul>
+<h2 id="chapter-3">服务器基础已经完成什么</h2>
+<p>实际交付系统为 <strong>Ubuntu 26.04 LTS</strong>，2 vCPU、4 GB 内存档位、约 40 GB NVMe 磁盘；此前实际系统检查可用内存约 3.7 GiB、根分区约 38 GiB。产品标称和系统可见容量的单位与预留空间不同。系统版本以交付实测为准。</p>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>已完成的内容</th>
+<th>作用与边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>系统更新</td>
+<td>模拟核对后更新系统，重启并确认内核 7.0.0-31-generic；无失败服务</td>
+<td>安装安全修复，旧内核保留作回退选项</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>专用密钥连接通过；禁用密码 SSH、root 直登和 X11 转发</td>
+<td>降低密码攻击风险；系统账户密码不等于 SSH 仍允许密码登录</td>
+</tr>
+<tr>
+<td>防火墙</td>
+<td>UFW 启用，IPv4/IPv6 仅开放 22；入站默认拒绝</td>
+<td>应用试运行阶段不直接暴露公网端口；80/443 在 HTTPS 阶段开放</td>
+</tr>
+<tr>
+<td>配置退路</td>
+<td>修改前留存配置备份；网络变更以独立连接验收</td>
+<td>配置备份并非整机快照；含主机私钥的备份仅供受限运维使用</td>
+</tr>
+<tr>
+<td>日志</td>
+<td>持久化日志，上限 256 MB，最多保留 14 天，并预留磁盘空间</td>
+<td>保留排障线索，避免日志持续挤占小容量系统盘</td>
+</tr>
+<tr>
+<td>自动维护</td>
+<td>保留安全更新，关闭自动重启及自动清理内核/依赖；UTC 与时间同步已核验</td>
+<td>避免无人值守重启打断应用；重大维护仍需安排与验证</td>
+</tr>
+<tr>
+<td>状态检查</td>
+<td>安装只读服务器状态检查工具</td>
+<td>后续快速核对系统、磁盘、网络与服务，不把历史状态当永久事实</td>
+</tr>
+</tbody>
+</table>
+<p>没有在这一阶段安装 KB、Go 或 Caddy，也尚未建立应用服务用户、应用数据目录与正式域名入口。没有迁移真实馆藏。</p>
+<h2 id="chapter-4">备份状态的纠正与运维权限</h2>
+<p>购机时对选项的理解曾偏向“已勾选 Snapshot”。朋友后续交接说明和本次只读 API 核验修正了这一点：当前选项为存储和 <strong>Automated Backup</strong>，<strong>没有订购手动 Snapshot</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>当前证据</th>
+<th>对迁移的意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每日自动备份</td>
+<td>enabled；每天 UTC 06:13，即北京时间 14:13；rotation=1</td>
+<td>只有最近一份，不能替代多版本备份</td>
+</tr>
+<tr>
+<td>可用还原点</td>
+<td>查询时存在 2026-09-13 06:13:34 UTC 的还原点</td>
+<td>仅代表查询时可用，不保证此时间点长期保留</td>
+</tr>
+<tr>
+<td>手动 Snapshot</td>
+<td>未订购</td>
+<td>已决定暂不等待购买，即可开始隔离试运行</td>
+</tr>
+<tr>
+<td>限权 OVH API</td>
+<td>机器与备份相关只读请求均返回 200</td>
+<td>没有面板账号仍可查询状态；指南另提供控制台与救援入口，本次未执行其写操作</td>
+</tr>
+<tr>
+<td>购买与升级</td>
+<td>仍由账号持有人代办</td>
+<td>升级配置、购买选项不能当作已经取得的权限</td>
+</tr>
+</tbody>
+</table>
+<p>整机恢复会覆盖还原点之后的系统状态；取回个别文件应优先考虑文件恢复路径，而不是直接回退整台机器。本次没有执行恢复、重装、退订或其他破坏性 API 操作。正式馆藏上线前，还需建立独立的多版本异机备份并做恢复演练。</p>
+<h2 id="chapter-5">源码获取与访问问题如何解决</h2>
+<p>朋友提供 KB 介绍页与 share-kit。此前已保存说明文档，但一直没有真正取得源码，不能把“读过攻略”写成“已经验证源码”。</p>
+<p>直接 HTTP 请求两个页面均返回 <strong>401</strong>，返回正文是“进入文库”的登录页。用户浏览器可以打开，并不表示无会话的请求也被允许；该浏览器已有有效访问授权。几次 Playwright 连接等待未成功后，用户重新选择页面并点击 Allow，连接恢复。</p>
+<p>最终通过用户授权的浏览器上下文下载源码，返回 <strong>HTTP 200</strong>。没有绕过站点认证，也没有将浏览器授权信息作为馆藏附件。</p>
+<table>
+<thead>
+<tr>
+<th>源码检查</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件</td>
+<td>hth-kb-src.tar.gz</td>
+</tr>
+<tr>
+<td>大小</td>
+<td>16,132,170 字节，约 15.4 MiB</td>
+</tr>
+<tr>
+<td>压缩包成员</td>
+<td>82 个，展开总大小 16,854,464 字节</td>
+</tr>
+<tr>
+<td>路径检查</td>
+<td>未发现绝对路径、父目录穿越或非普通文件/目录成员</td>
+</tr>
+<tr>
+<td>实际 Go 要求</td>
+<td>go.mod 声明 <strong>Go 1.25.6</strong>，后续以源码为准</td>
+</tr>
+<tr>
+<td>校验值</td>
+<td>SHA256 见下方；仅是本次取得文件的完整性标识，不是作者签名认证</td>
+</tr>
+</tbody>
+</table>
+<p><code>4c29f40e3494ed358c5df5441810c8e20ad56cb8ed14b862d5fed5c656b79ae8</code></p>
+<p>源码取得这一卡点已经解除。目前仍未解压建立原版 Git 基线，未执行测试、编译或应用部署。朋友分享的源码包只留作建设输入，本次没有再次公开分发。</p>
+<h2 id="chapter-6">九阶段施工计划</h2>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>要做什么</th>
+<th>本次状态与通过条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 · 源码基线</td>
+<td>留存原包与校验值，检查路径，建立原版 Git 基线</td>
+<td>进行中：原包和校验已保存，Git 基线尚未建立</td>
+</tr>
+<tr>
+<td>2 · 原版编译</td>
+<td>按实际 go.mod 配置 Go，运行测试并构建</td>
+<td>待实施：测试与构建成功后才算通过</td>
+</tr>
+<tr>
+<td>3 · 隔离试运行</td>
+<td>专用低权限账户、独立数据目录、systemd；只监听回环地址，经 SSH 隧道访问</td>
+<td>待实施：重启、日志、权限及隧道访问验证通过</td>
+</tr>
+<tr>
+<td>4 · 核心工作流</td>
+<td>虚构条目发布、更新、单文件替换、目录、搜索、下载、恢复，覆盖重复与失败情况</td>
+<td>待实施：以实际文件内容和恢复结果验收</td>
+</tr>
+<tr>
+<td>5 · 正式网络入口</td>
+<td>子域 DNS、Caddy、HTTPS，开放 80/443</td>
+<td>待实施：公开读取、写入认证和外网访问通过</td>
+</tr>
+<tr>
+<td>6 · 归档工具接入</td>
+<td>最小 CLI、凭据库、muq-journal；保留主题身份与真实来源</td>
+<td>待实施：避免再次形成规则与写入程序脱节</td>
+</tr>
+<tr>
+<td>7 · 小批真实试迁移</td>
+<td>选定少量主题，检查公开内容与附件，确定单一可写来源</td>
+<td>待实施：正文、文件、来源和链接逐项核对</td>
+</tr>
+<tr>
+<td>8 · muQ 体验适配</td>
+<td>逐步恢复已确认的版式、导航与文件展示要求</td>
+<td>待实施：真实入口桌面和移动端独立审核</td>
+</tr>
+<tr>
+<td>9 · 正式切换</td>
+<td>全量迁移、旧链接映射、主页入口切换，保留只读旧站</td>
+<td>待实施：迁移、恢复与旧链接验收后再切换</td>
+</tr>
+</tbody>
+</table>
+<p>前四阶段不依赖新域名完成配置，也不需要先买手动快照。第五阶段需要核对 DNS 管理权限与现有记录。不要因为基础服务器可连接，就提前宣布新 muQ 建成。</p>
+<h2 id="chapter-7">尚待验证的差异与风险</h2>
+<p>朋友的条目目录与 entry.json 是内容来源；SQLite 还可能保存分享访问等数据，不应把数据库一概当作可丢弃的搜索缓存。具体备份、索引重建和恢复范围需要读实际源码并实验确认。</p>
+<p>说明文档存在版本差异，例如读取口令、回收目录自动清理和当前线上主题样式，不能仅按早期 SPEC 推断现有行为。完整 HTML 直接服务和旧 muQ 的隔离预览也不同：后者已经支持受限交互，并非完全不支持脚本。</p>
+<p>“朋友已经使用半年”能提供采用动机，不能替代本机测试，也不保证归档错误自动消失。新系统仍需明确主题归属、重复更新、文件替换、权限与独立审核，先用小规模真实条目验证是否真的减少维护成本。</p>
+<p>旧 muQ 的主题写入工具、模板维护源收敛等遗留问题仍未完成。迁移期间保留这些记录；待原版试运行后再决定哪些在新系统中实现，避免两套系统同时扩建。</p>
+<h2 id="chapter-8">下一步与阶段资料</h2>
+<p>下一步从已取得的源码建立原版基线，核对 Go 与依赖要求，完成测试和编译，再建立只对本机开放的试运行服务。到真实馆藏迁移和正式域名启用时，分别记录验证结果。</p>
+<p>本页只收录可公开的事实与方案。凭据、完整运维指南、原始会话、主机私钥备份和源码原包没有作为公开附件发布；真实用户原话由主主题的馆主档案保留。</p>
+<ul>
+<li><a href="https://kb.hth-ai.com/e/hth-kb/">朋友的 KB 系统介绍（需要访问授权）</a></li>
+<li><a href="https://kb.hth-ai.com/e/hth-kb/share-kit/">朋友的 share-kit（需要访问授权）</a></li>
+<li><a href="https://koa-ol.com/library/entry.html?id=worklog-library">muQ · 大图书馆主题</a></li>
+</ul>
+<p>本页是 2026-09-13 的阶段快照。后续发生实质进展时，在同一主题下更新迁移资料并保留历史版本。</p></main></html>
