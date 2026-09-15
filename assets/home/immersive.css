@@ -24,3 +24,6 @@ body[data-chapter]:not([data-chapter=home]) .scene-poster,body[data-chapter]:not
 @media(prefers-reduced-motion:reduce){body,.games-decor{transition:none!important}}
 body[data-chapter]:not([data-chapter=games]) .chapter .games-decor{opacity:0;transform:scale(1.05)}
 .hero h1 .title-final{color:var(--page-accent);transition:color .65s}
+
+/* Keep the five homepage navigation links on their own row on phones. */
+@media(max-width:600px){.site-header{height:auto;min-height:96px;flex-wrap:wrap;padding-block:12px;gap:8px}.site-header nav{width:100%;justify-content:space-between;gap:12px;order:3}.site-header nav a{white-space:nowrap;padding-block:5px}}

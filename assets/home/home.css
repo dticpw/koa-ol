@@ -645,6 +645,7 @@ a:focus-visible,iframe:focus-visible {
 }
 .footer-links {
   display:flex;
+  flex-wrap:wrap;
   gap:23px;
   font-size:10px;
   padding-top:7px;
