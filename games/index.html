@@ -7,6 +7,7 @@
 <title>Koa-OL Games</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./lobby.css?v=20260916-playhouse">
 </head>
 <body>
 <div class="page">
@@ -26,23 +27,17 @@
 
   <main class="game-lobby" aria-labelledby="lobby-title">
     <section class="hero-copy lobby-view">
+      <div class="lobby-art" aria-hidden="true"><span class="lobby-orbit"></span><span class="lobby-card card-one">K<small>♣</small></span><span class="lobby-card card-two">A<small>♥</small></span><span class="lobby-chip chip-one"></span><span class="lobby-chip chip-two"></span><span class="lobby-spark">✳</span></div>
       <p class="round-label">TABLETOP & ARCADE · 游戏大厅</p>
-      <h1 id="lobby-title">选择游戏</h1>
-      <p class="hero-line">独自驾驶飞船穿过深空，或输入昵称，与朋友一起开一桌。</p>
-      <div class="quick-rules" aria-label="Join steps">
-        <span>1 选择游戏</span>
-        <span>2 创建或加入房间</span>
-        <span>3 等待玩家开始</span>
-      </div>
+      <h1 id="lobby-title">选择游戏<span class="lobby-title-dot" aria-hidden="true">.</span></h1>
+      <p class="hero-line">和朋友开一桌，或独自驶向深空。<br>这一局，按自己的节奏来。</p>
+      <nav class="lobby-shortcuts" aria-label="游戏分区"><a href="#multiplayer">联机区 ↓</a><a href="#singleplayer">单机区 ↓</a></nav>
     </section>
 
-    <a class="afterglow-card lobby-view" href="./afterglow/" aria-label="试玩Afterglow，可试玩原型，单人太空生存射击">
-      <div class="afterglow-art" aria-hidden="true"><span class="afterglow-planet"></span><span class="afterglow-ship">➤</span></div>
-      <div class="afterglow-copy"><span class="afterglow-badge">可试玩原型 · v0.2</span><h2>Afterglow</h2><p>鼠标驾驶，自动开火。<br>把最后一道光带回家。</p><span class="afterglow-cta">立即试玩 ↗</span></div>
-    </a>
-
-    <section class="play-card lobby-view" aria-label="Create or join a room">
-      <div class="play-card-head" aria-hidden="true"><span>TABLE 01</span><strong>选桌与入场</strong></div>
+    <section class="game-zone lobby-view" id="multiplayer" aria-labelledby="multiplayer-title">
+      <header class="zone-heading"><span class="zone-symbol" aria-hidden="true">♣</span><p>01 / PLAY TOGETHER</p><h2 id="multiplayer-title">联机区</h2><span>约上朋友，开一桌。</span></header>
+    <div class="play-card" aria-label="创建或加入联机房间">
+      <div class="play-card-head"><span>TABLE GAMES</span><strong>选桌与入场</strong></div>
       <div class="game-switch" aria-label="Choose game">
         <button class="game-tile is-disabled" type="button" data-game-card="blackjack" aria-disabled="true" aria-pressed="false">
           <span class="card-stack" aria-hidden="true">
@@ -97,6 +92,15 @@
           <button class="copy-button" type="button" id="copy-link" aria-label="复制房间链接" title="复制房间链接">复制</button>
         </div>
       </div>
+    </div>
+    </section>
+
+    <section class="game-zone lobby-view" id="singleplayer" aria-labelledby="singleplayer-title">
+      <header class="zone-heading"><span class="zone-symbol" aria-hidden="true">✧</span><p>02 / PLAY SOLO</p><h2 id="singleplayer-title">单机区</h2><span>一个人，也能玩得尽兴。</span></header>
+      <a class="afterglow-card lobby-view" href="./afterglow/" aria-label="试玩Afterglow，可试玩原型，单人太空生存射击">
+      <div class="afterglow-art" aria-hidden="true"><span class="afterglow-planet"></span><span class="afterglow-ship">➤</span></div>
+      <div class="afterglow-copy"><span class="afterglow-badge">可试玩原型 · v0.2</span><h3>Afterglow</h3><p>鼠标驾驶，自动开火。<br>把最后一道光带回家。</p><span class="afterglow-cta">立即试玩 ↗</span></div>
+    </a>
     </section>
 
     <section class="room-card room-view" id="room-card" hidden aria-label="Game room">
