@@ -21,6 +21,7 @@
   }
   function setBusy(value, message = '主持正在回应…') {
     busy = value;
+    if (lab) window.dispatchEvent(new CustomEvent('fiction-busy', { detail: value }));
     $('thinking').hidden = !value;
     $('thinking').textContent = message;
     $('adventure').setAttribute('aria-busy', String(value));
@@ -119,7 +120,7 @@
   }
   function render(view, scroll = false) {
     game = view;
-    if (lab) window.dispatchEvent(new CustomEvent('fiction-view', { detail: { sessionId: game?.sessionId || null } }));
+    if (lab) window.dispatchEvent(new CustomEvent('fiction-view', { detail: { sessionId: game?.sessionId || null, game } }));
     $('welcome').hidden = Boolean(game);
     $('adventure').hidden = !game;
     $('start').textContent = lab ? '来到门前 ↗' : '提灯入墓 ↗';

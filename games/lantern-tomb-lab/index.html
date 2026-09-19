@@ -10,7 +10,9 @@
   <link rel="stylesheet" href="../lantern-tomb/style.css">
   <link rel="stylesheet" href="./inspector.css?v=1">
   <script src="./inspector.js?v=1" defer></script>
-  <script src="../lantern-tomb/app.js?v=lab4" defer></script>
+  <link rel="stylesheet" href="./collection.css?v=1">
+  <script src="./collection.js?v=1" defer></script>
+  <script src="../lantern-tomb/app.js?v=lab5" defer></script>
 </head>
 <body data-fiction="lab">
   <a class="skip" href="#story">跳到故事</a>
@@ -18,7 +20,7 @@
     <header class="masthead">
       <a href="/" class="home-link" aria-label="回到 Koa 主页"><span class="home-mark">K.</span><span>KOA · 游艺室</span></a>
       <div class="edition">互动小说 <span>LAB. 01</span></div>
-      <a class="credits-link" href="./credits.html">剧本与制作 <span aria-hidden="true">↗</span></a>
+      <nav class="game-links" aria-label="冒险导航"><button id="collection-open" type="button">冒险收藏</button><a class="credits-link" href="./credits.html">剧本与制作 <span aria-hidden="true">↗</span></a></nav>
     </header>
     <main>
       <section class="cover" aria-labelledby="title">
@@ -41,7 +43,7 @@
           <p id="location-description" class="location-description"></p>
           <article id="story" class="story" aria-label="冒险记录" tabindex="-1"></article>
           <div id="action-notice" class="notice action-notice" role="status" aria-live="polite" hidden></div>
-          <section id="ending" class="ending" hidden aria-labelledby="ending-title"><p class="eyebrow">这一页，写到这里</p><h2 id="ending-title"></h2><p id="ending-text"></p><button id="restart" class="primary" type="button">再试一次 <span aria-hidden="true">↗</span></button></section>
+          <section id="ending" class="ending" hidden aria-labelledby="ending-title"><p class="eyebrow">这一页，写到这里</p><h2 id="ending-title"></h2><p id="ending-text"></p><form id="ending-name-form" class="adventure-naming"><label for="ending-name">给这段冒险一个难忘的名字</label><p>故事可以结束，属于它的名字由你留下。</p><div class="naming-row"><input id="ending-name" maxlength="60" required placeholder="例如：那块没有燃起来的白垩"><button id="ending-save" class="primary" type="submit">命名并收藏</button></div><p id="ending-save-status" role="status" aria-live="polite"></p></form><button id="restart" class="primary" type="button">再试一次 <span aria-hidden="true">↗</span></button></section>
           <section id="action-area" class="action-area" aria-labelledby="action-heading">
             <div class="action-heading"><h3 id="action-heading">接下来，你想怎么做？</h3><span id="thinking" role="status" aria-live="polite" hidden>主持正在回应…</span></div>
             <div id="choices" class="choices"></div>
@@ -58,6 +60,7 @@
           <section id="panel-clues" role="tabpanel" aria-labelledby="tab-clues" hidden><ul id="clues" class="notes-list"></ul></section>
           <div class="notes-bottom"><dl><div><dt>状态</dt><dd id="resolve">—</dd></div><div><dt>记录</dt><dd id="treasure">—</dd></div></dl><p>留意细节，也给自己的直觉一点余地。</p></div>
         </aside>
+        <section class="collection-shortcut" aria-label="保存冒险"><button id="save-adventure" type="button">为这段冒险留名 ↗</button><p>当前进度自动保存；收藏会另外留下可重读的快照。</p></section>
         <details id="trace-panel" class="trace-panel">
           <summary>主持调用详情 <span>学习视图</span></summary>
           <div class="trace-body">
@@ -75,8 +78,11 @@
     </main>
     <footer><p>改编自 <i>Tomb of the Serpent Kings</i> · <a href="./credits.html">来源与许可</a></p><p>AI 主持 <span id="model-label">GPT-5.6 Sol</span><span class="footer-dot">·</span>实验短篇</p></footer>
   </div>
-  <dialog id="reset-dialog" aria-labelledby="reset-title"><form method="dialog"><p class="eyebrow">重新出发</p><h2 id="reset-title">合上这一本手记？</h2><p>重新开始会替换这版试玩的存档，不影响原版《蛇墓余火》。旧试玩进度无法恢复。</p><div class="dialog-actions"><button value="cancel">保留当前冒险</button><button value="confirm" class="primary">开始新冒险</button></div></form></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title"><form method="dialog"><p class="eyebrow">重新出发</p><h2 id="reset-title">合上这一本手记？</h2><p>重新开始会替换这版试玩的存档，不影响原版《蛇墓余火》。未收藏的旧冒险将无法回看；已经收藏的故事会保留。</p><div class="dialog-actions"><button value="archive">先命名收藏</button><button value="cancel">保留当前冒险</button><button value="confirm" class="primary">开始新冒险</button></div></form></dialog>
   <dialog id="trace-dialog" class="trace-dialog" aria-labelledby="trace-dialog-title"><div class="trace-dialog-head"><h2 id="trace-dialog-title">主持调用详情</h2><form method="dialog"><button autofocus>关闭 ×</button></form></div><div id="trace-dialog-content"></div></dialog>
+  <dialog id="collection-dialog" class="collection-dialog" aria-labelledby="collection-title"><div class="collection-heading"><div><p class="eyebrow">那些你走过的故事</p><h2 id="collection-title">冒险收藏</h2></div><form method="dialog"><button autofocus aria-label="关闭冒险收藏">关闭 ×</button></form></div><p class="collection-note">收藏不会随当前进度的七天期限删除，重开新局也会保留。此浏览器的 Cookie 是收藏凭证；清除 Cookie 或换设备后无法直接找回，喜欢的故事请下载备份。</p><p class="collection-note">收藏用于重读，不恢复为当前游戏。主持调用详情仍按原规则保留 7 天，请另行下载。</p><button id="collection-refresh" type="button">刷新收藏</button><p id="collection-status" role="status" aria-live="polite"></p><ol id="collection-list" class="collection-list"></ol></dialog>
+  <dialog id="name-dialog" aria-labelledby="name-dialog-title"><form id="name-form"><div class="collection-heading"><h2 id="name-dialog-title">为这段冒险留名</h2><button id="name-cancel" type="button" aria-label="关闭命名窗口">关闭 ×</button></div><p id="name-context" class="collection-note"></p><label for="adventure-name">冒险名字</label><input id="adventure-name" maxlength="60" required placeholder="一个只属于这段经历的名字"><p id="name-status" role="status" aria-live="polite"></p><button id="name-submit" class="primary" type="submit">保存到冒险收藏</button></form></dialog>
+  <dialog id="archive-reader" class="archive-reader" aria-labelledby="archive-title"><div class="collection-heading"><p class="eyebrow">一段已留下名字的冒险</p><form method="dialog"><button autofocus aria-label="关闭冒险正文">关闭 ×</button></form></div><h2 id="archive-title"></h2><p id="archive-meta" class="collection-note"></p><div class="archive-tools"><button id="archive-rename" type="button">改名</button><button id="archive-export" type="button">下载故事 HTML</button><button id="archive-json" type="button">下载数据 JSON</button><button id="archive-delete" type="button">删除收藏</button></div><p id="archive-status" role="status" aria-live="polite"></p><article id="archive-body" aria-label="收藏的完整冒险"></article></dialog>
   <noscript><p class="noscript">本游戏需要 JavaScript 才能保存进度和与主持交互，请启用后刷新页面。</p></noscript>
 </body>
 </html>
