@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 190" fill="none">
+  <!-- Decorative tabletop: playing cards, a die and a branching adventure trail. -->
+  <ellipse cx="189" cy="164" rx="139" ry="13" fill="#315d52" opacity=".08"/>
+  <path d="M14 144c40-58 76 49 133 0s69-82 154-105" stroke="#708e7f" stroke-width="1.5" stroke-dasharray="4 7"/>
+  <circle cx="14" cy="144" r="4" fill="#b26545"/>
+  <g transform="translate(65 29) rotate(-15 49 61)">
+    <rect x="4" y="7" width="88" height="124" rx="9" fill="#254d44" opacity=".13"/>
+    <rect width="88" height="124" rx="9" fill="#faf3df" stroke="#577365" stroke-width="1.5"/>
+    <rect x="7" y="7" width="74" height="110" rx="5" stroke="#b9bfa9"/>
+    <path d="M44 34c-9 13-23 19-23 32 0 11 14 15 21 5-1 13-5 16-9 19h22c-4-3-8-6-9-19 7 10 21 6 21-5 0-13-14-19-23-32Z" fill="#315d52"/>
+  </g>
+  <g transform="translate(129 16) rotate(12 44 62)">
+    <rect x="4" y="7" width="88" height="124" rx="9" fill="#254d44" opacity=".13"/>
+    <rect width="88" height="124" rx="9" fill="#fff9e9" stroke="#577365" stroke-width="1.5"/>
+    <rect x="7" y="7" width="74" height="110" rx="5" stroke="#d6c5a6"/>
+    <path d="m44 31 20 31-20 31-20-31Z" fill="#b96746"/>
+    <path d="m17 16 4 6-4 6-4-6Zm54 80 4 6-4 6-4-6Z" fill="#b96746"/>
+  </g>
+  <g transform="translate(225 96) rotate(14 32 32)">
+    <rect x="4" y="6" width="61" height="61" rx="13" fill="#173f39" opacity=".12"/>
+    <rect width="61" height="61" rx="13" fill="#427264" stroke="#244e44" stroke-width="1.5"/>
+    <rect x="6" y="6" width="49" height="49" rx="8" stroke="#84a08a"/>
+    <g fill="#f6e8bf"><circle cx="17" cy="17" r="4"/><circle cx="44" cy="17" r="4"/><circle cx="30.5" cy="30.5" r="4"/><circle cx="17" cy="44" r="4"/><circle cx="44" cy="44" r="4"/></g>
+  </g>
+  <path d="m309 22 4 11 11 4-11 4-4 11-4-11-11-4 11-4Z" stroke="#aa7950" stroke-width="1.5"/>
+  <circle cx="42" cy="55" r="3" fill="#aa7950"/>
+  <path d="M319 117v12m-6-6h12" stroke="#708e7f" stroke-width="1.5"/>
+</svg>

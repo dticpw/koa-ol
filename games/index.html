@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0a0b0f">
+<meta name="theme-color" content="#e6eadd">
 <meta name="description" content="Koa-OL Games：多人桌游、单人游戏与 AI 互动小说。">
 <title>Koa-OL Games</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
-<link rel="stylesheet" href="./lobby.css?v=20260920-night">
+<link rel="stylesheet" href="./lobby.css?v=20260920-field">
 </head>
 <body>
 <div class="page">
@@ -28,6 +28,7 @@
 
   <main class="game-lobby" aria-labelledby="lobby-title">
     <section class="hero-copy lobby-view">
+      <img class="tabletop-illustration" src="./fiction/assets/tabletop.svg" alt="" width="360" height="190" aria-hidden="true">
       <p class="round-label">KOA GAMES · 游戏大厅</p>
       <h1 id="lobby-title">今晚，玩点什么？</h1>
       <p class="hero-line">从一段独自探索的故事，到和朋友围坐的一桌。</p>
@@ -35,7 +36,7 @@
     </section>
 
     <section class="game-zone lobby-view" id="ai-fiction" aria-labelledby="fiction-title">
-      <header class="zone-heading"><p>01 / INTERACTIVE FICTION</p><h2 id="fiction-title">AI 互动小说</h2><span>你决定行动，故事留下回声。</span></header>
+      <header class="zone-heading"><span class="zone-symbol" aria-hidden="true">⌖</span><p>01 / INTERACTIVE FICTION</p><h2 id="fiction-title">AI 互动小说</h2><span>你决定行动，故事留下回声。</span></header>
       <a class="fiction-card" href="./fiction/" aria-label="进入 AI 互动小说剧本书架">
         <img class="fiction-scene" src="./fiction/assets/light-beyond.webp" alt="" width="800" height="1200" fetchpriority="high">
         <div class="fiction-copy"><span class="fiction-badge">单人冒险 · AI 主持</span><h3>门后的世界，<br>等你推开。</h3><p>提起灯，走进古墓。<br>先选一篇剧本，再写下你的第一步。</p><span class="fiction-cta">浏览剧本 <span aria-hidden="true">↗</span></span><span class="fiction-meta">2 篇可试玩 · 无需注册</span></div>
