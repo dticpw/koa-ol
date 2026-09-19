@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="450" viewBox="0 0 640 450" fill="none">
+<defs><pattern id="h" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><path d="M0 0v7" stroke="#706b53" stroke-width=".55" opacity=".28"/></pattern><linearGradient id="dark" x1="318" y1="135" x2="318" y2="381" gradientUnits="userSpaceOnUse"><stop stop-color="#292f28"/><stop offset="1" stop-color="#454a37"/></linearGradient><radialGradient id="light"><stop stop-color="#d59d4b" stop-opacity=".52"/><stop offset="1" stop-color="#d59d4b" stop-opacity="0"/></radialGradient></defs>
+<!-- An architectural field sketch, drawn as local SVG. -->
+<path d="M84 372c39-16 47-15 72-18l9-42 24-15-3-38 17-30 2-52 20-8 15-35 34-15 42-4 42 2 30 24 21 8 5 39 15 19 9 40 24 15 1 54 19 13 8 30 52 25" fill="#d6d2bc" opacity=".72"/>
+<path d="m151 354 14-42 24-15-3-38 17-30 2-52 20-8 15-35 34-15 42-4 42 2 30 24 21 8 5 39 15 19 9 40 24 15 1 54 19 13 8 30" stroke="#83836d" stroke-width="1.3"/>
+<path d="M191 359V213l26-15v-35l33-21h124l35 25v33l28 19v144" stroke="#626b56" stroke-width="2" fill="url(#h)"/>
+<path d="M228 348V202l18-19h129l18 19v149" fill="#c6c7b1" stroke="#656d55" stroke-width="1.5"/>
+<path d="M253 354V212h116v143" fill="url(#dark)" stroke="#555e48" stroke-width="2"/>
+<path d="M247 206h128M246 217v139M376 217v140M263 214v131M362 214v132" stroke="#8e9378" stroke-width="1"/>
+<path d="M216 174h188M208 200l33-1M386 199l28 2M192 236l35-3M394 234l38 4M191 272l35-1M394 273h43M191 309h35M395 311h42M214 203v29M205 238v32M215 275v32M204 311v45M407 201v33M422 238v35M407 276v32M425 314v46" stroke="#8a8e73" stroke-width="1.2"/>
+<path d="m201 357 22-13h177l31 15-16 9H187z" fill="#c2c3ac" stroke="#6d755d"/><path d="m188 369-18 11h264l-20-12M169 382l-20 10h311l-26-10" fill="#d0cfb8" stroke="#83876c"/><path d="m249 347 73-5 63 4M274 362l61-2M222 377l59 1M370 380h35" stroke="#8c8d71"/>
+<!-- Paired serpents over the lintel. -->
+<path d="M298 172c-24 0-43-15-35-27 7-12 39-5 34 6-3 7-22 0-18-8 3-9 29-15 38 0 9-15 35-9 38 0 4 8-15 15-18 8-5-11 27-18 34-6 8 12-11 27-35 27" stroke="#59634f" stroke-width="3" stroke-linecap="round"/>
+<path d="m306 154 11-11 10 11-10 13z" stroke="#8d7850" stroke-width="1.7"/><path d="m271 167 6 6m6-4 4 5m57-7-5 7m-7-3-3 5" stroke="#899176"/>
+<!-- Broken surface, root and brush notes. -->
+<path d="m235 143 9 17-9 11 7 12m153-29-10 17 6 10-4 11M179 300l-7 16 7 16-7 15M432 279l9 5-3 18 7 8M368 119l-13 14m-141 86-8 4m195 72 8 9-4 12M259 190l16 2 9-4" stroke="#93917a" stroke-width="1"/>
+<path d="M176 340c-12-34-10-57-4-82m3 46-17-13m12-8 13-23M445 344c9-27 24-43 27-69m-10 43 23-3m-19-9-5-16" stroke="#777e61" stroke-width="1.5"/>
+<path d="M164 287c-10-1-18-9-16-16 10-1 17 6 16 16m14-18c0-11 5-16 13-17 3 8-4 14-13 17m284 33c-9-3-12-10-10-17 7 0 12 7 10 17m16 13c1-10 7-15 15-13 0 9-7 14-15 13" fill="#8f9674"/>
+<!-- Small lantern, the warm focal point at the threshold. -->
+<ellipse cx="329" cy="326" rx="51" ry="57" fill="url(#light)"/><path d="M323 317v-7c0-9 12-9 12 0v7M320 319h18l-2 23h-14z" fill="#6e6749" stroke="#b5a275" stroke-width="1.2"/><path d="M325 322h8l-1 16h-6z" fill="#dfa957"/><path d="M320 319h18m-17 23h16m-13 3h10" stroke="#b5a275" stroke-width="1.5"/>
+<path d="m89 392 53-2m16 12h117m76 0h110m-34-13 65 5m-342-22-18 6m328-5 38 13M136 404h-21m387-7 22 5" stroke="#85866d" stroke-width="1"/>
+<path d="M313 79v29M300 91h26" stroke="#a19c81" stroke-width=".8"/><circle cx="313" cy="91" r="9" stroke="#a19c81" stroke-width=".7"/>
+<path d="M478 160h48v52M481 349h42v-52M117 163h39m-21-18v36" stroke="#aaa58b" stroke-width=".6"/><path d="m498 225 3 5-3 5m0 9 3 5-3 5m0 9 3 5-3 5" stroke="#aaa58b" stroke-width=".8"/>
+<text x="504" y="291" fill="#939179" font-family="Georgia,serif" font-size="10" transform="rotate(-90 504 291)">THRESHOLD · I</text>
+<path d="m112 325 13-8m-16 0 10-6" stroke="#a0987b"/><text x="91" y="347" fill="#999279" font-family="Georgia,serif" font-size="11" font-style="italic">a.</text>
+</svg>
