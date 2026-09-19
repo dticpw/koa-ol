@@ -1,0 +1,15 @@
+# Shared fiction workspace: keep project text in LF on both operating systems.
+.gitattributes text eol=lf
+games/lantern-tomb/** text=auto eol=lf
+games/lantern-tomb-lab/** text=auto eol=lf
+functions/_lib/fiction*.js text eol=lf
+functions/api/fiction*.js text eol=lf
+functions/api/fiction-lab/** text=auto eol=lf
+tests/fiction*.test.mjs text eol=lf
+docs/ai-fiction*.md text eol=lf
+games/lantern-tomb/**/*.png binary
+games/lantern-tomb/**/*.webp binary
+games/lantern-tomb/**/*.jpg binary
+games/lantern-tomb-lab/**/*.png binary
+games/lantern-tomb-lab/**/*.webp binary
+games/lantern-tomb-lab/**/*.jpg binary
