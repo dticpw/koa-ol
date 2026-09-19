@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Atmospheric map ornament, not a map of the playable tomb. -->
+  <g stroke="#6f8974" stroke-width="1" opacity=".3">
+    <path d="M460-40c-135 140 69 173-6 290S143 272 196 434s341 69 350 211"/>
+    <path d="M493-38c-133 148 70 179-8 301S174 285 227 427s300 81 294 212"/>
+    <path d="M526-34c-134 155 72 184-9 310S208 301 258 422s259 86 235 209"/>
+    <path d="M559-30c-132 161 73 189-10 317S242 317 288 420s217 83 178 202"/>
+    <path d="M592-24c-132 163 73 195-12 320S278 335 319 424s174 74 123 189"/>
+    <path d="M712 55c-81 35-84 106-51 179s141 71 166 167"/>
+    <path d="M744 71c-81 35-84 106-51 179s123 64 148 160"/>
+    <path d="M776 87c-81 35-84 106-51 179s105 57 130 153"/>
+  </g>
+  <path d="M167 520c-23-98 156-51 145-148s-122-19-89-94 209-49 259-128" stroke="#ad764b" stroke-width="1.5" stroke-dasharray="4 9" opacity=".65"/>
+  <g fill="#f4eddd" stroke="#ad764b" stroke-width="1.5"><circle cx="167" cy="520" r="5"/><circle cx="292" cy="401" r="5"/><circle cx="238" cy="258" r="5"/></g>
+  <g transform="translate(548 125)" stroke="#6b806c" opacity=".8">
+    <circle r="52"/><circle r="43" stroke-dasharray="1 7"/>
+    <path d="M0-68v15M0 53v15M-68 0h15M53 0h15"/>
+    <path d="m0-38 10 28 28 10-28 10L0 38-10 10-38 0l28-10Z" fill="#e2ddc8"/>
+    <path d="M0-38v38h-10Zm38 38H0v10Z" fill="#6b806c" stroke="none"/>
+    <circle r="4" fill="#ad764b" stroke="none"/>
+  </g>
+  <g transform="translate(474 130)" stroke="#ad764b" stroke-width="1.5"><path d="m-5-5 10 10m0-10L-5 5"/></g>
+</svg>
