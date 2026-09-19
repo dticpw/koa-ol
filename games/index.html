@@ -8,7 +8,7 @@
 <title>Koa-OL Games</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
-<link rel="stylesheet" href="./lobby.css?v=20260920-nocturne">
+<link rel="stylesheet" href="./lobby.css?v=20260920-table">
 </head>
 <body>
 <div class="page">
@@ -48,17 +48,6 @@
     <div class="play-card" aria-label="创建或加入联机房间">
       <div class="play-card-head"><span>TABLE GAMES</span><strong>选桌与入场</strong></div>
       <div class="game-switch" aria-label="Choose game">
-        <button class="game-tile is-disabled" type="button" data-game-card="blackjack" aria-disabled="true" aria-pressed="false">
-          <span class="card-stack" aria-hidden="true">
-            <i>A</i>
-            <i>K</i>
-          </span>
-          <span>
-            <strong>21 点</strong>
-            <small>稍后接入</small>
-          </span>
-        </button>
-
         <button class="game-tile is-selected" type="button" data-game-card="texas" aria-pressed="true">
           <span class="card-stack" aria-hidden="true">
             <i>10</i>
@@ -69,9 +58,21 @@
             <small>Texas Hold'em</small>
           </span>
         </button>
+
+        <button class="game-tile is-disabled" type="button" data-game-card="blackjack" aria-disabled="true" aria-pressed="false">
+          <span class="card-stack" aria-hidden="true">
+            <i>A</i>
+            <i>K</i>
+          </span>
+          <span>
+            <strong>21 点</strong>
+            <small>Blackjack</small>
+          </span>
+        </button>
       </div>
 
-      <form class="room-form" id="room-form">
+      <form class="room-form" id="room-form" aria-labelledby="entry-form-title">
+        <p class="form-heading" id="entry-form-title">入席之前<small>起个昵称，开一桌，或加入朋友的房间。</small></p>
         <input id="game-type" name="gameType" type="hidden" value="texas">
 
         <label class="field">
