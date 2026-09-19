@@ -1,4 +1,4 @@
-# 蛇墓余火 v1 · AI 互动小说 demo
+# 蛇墓余火 v1.1 · AI 互动小说 demo
 
 公开入口：https://koa-ol.com/games/lantern-tomb/ 。免费非商业，改编 Skerples《Tomb of the Serpent Kings》前段。署名与许可见游戏的 credits.html，实际剧本见 story-guide.md。
 
@@ -7,7 +7,7 @@
 - `functions/_lib/fiction-engine.js`：纯规则引擎，7区域、5结局、40轮上限；不可信用户文本不能直接修改状态。
 - `functions/_lib/fiction-service.js` / `functions/api/fiction.js`：同源 JSON API、随机 HttpOnly 会话 cookie、D1 状态、幂等回执、revision比较和带owner的超时锁。
 - `games/lantern-tomb/`：原生 HTML/CSS/JS，当前浏览器自动恢复服务端存档，手机/键盘/减少动态效果支持。
-- 模型：`gpt-5.6-sol`，Responses API，low reasoning，`store:false`。自由输入先结构化分类，再按确定规则结果生成叙事；建议按钮省去分类调用。上下文只含已知信息与最近事件。
+- 模型：`gpt-5.6-sol`，Responses API，low reasoning，`store:false`。自由输入先结构化解析为快捷行动或“对象＋动词＋随身工具”的交互计划；对象与工具按当前场景生成枚举，规则引擎再次验证并结算。建议按钮省去解析调用。叙述目标约360字（通常300—440），输出上限2400 tokens。上下文只含已知信息与最近事件。
 
 ## 配置与计费保护
 
@@ -22,7 +22,7 @@
 需要 Node.js 22（node:sqlite）。运行：
 
 ```sh
-node --test tests/fiction-engine.test.mjs tests/fiction-api.test.mjs
+node --test tests/fiction-*.test.mjs
 node --check games/lantern-tomb/app.js
 ```
 
@@ -40,4 +40,13 @@ node --check games/lantern-tomb/app.js
 
 ## 已知边界
 
-自由输入映射到当前已支持的行动，并非无限开放世界；人物对话围绕该短篇已写事件。AI描述仍可能不严谨，以规则结果及背包/线索为准。未实现账号、跨设备同步、存档导入、实时生图和多人模式。不要在自由输入中提交敏感信息。
+自由输入支持建议按钮之外的对象交互，但对象、工具和物理效果仍由有限规则定义，并非无限开放世界；人物对话围绕该短篇已写事件。AI描述仍可能不严谨，以规则结果及背包/线索为准。未实现账号、跨设备同步、存档导入、实时生图和多人模式。不要在自由输入中提交敏感信息。
+
+## v1.1 行动系统改进
+
+- 建议动作与交互能力分开；新增擦碑文、抄记、路标、定向查看、工具准备和人物追问。旧存档新增字段按需初始化，无需重开。
+- 石镇放置、系绳与真正抬闩/拉动分步保存，避免替玩家补做后续操作。学者墓明确区分壁画与石门实物。
+- 有效探索消耗一轮；无从着手与重复确认只增加revision并保存回应，不扣灯火。澄清保持revision与turn，依然有幂等回执。
+- 对象交互不接受模型任意state补丁。引擎校验对象在场、工具在背包、动作语义和关键结果；真实模型仍可能理解失误，物品与线索以规则结果为准。
+
+本轮验证：28项自动测试通过，其中遍历11种场景状态的所有在场对象/动词/随身工具组合，核对无异常、输入状态不可变和物品不重复。Chrome真实Sol执行12次行动/澄清，覆盖原句压壁画、擦碑文、抄录、标路、定向查看、不存在的工具、准备后开门、刷新与手机布局；全部通过。调整篇幅后的两次正常行动实测276/312字符，篇幅是生成目标，不是每轮固定字数。

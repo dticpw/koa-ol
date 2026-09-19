@@ -179,3 +179,28 @@ test('daily session creation limit permits existing saves and blocks sixth new g
   assert.equal((await f.request({ op: 'start', reset: true })).status, 429);
   assert.equal(f.calls.length, 0);
 });
+
+test('free object actions commit independently of suggestions; no-effect response is idempotent and narration limit doubles', async () => {
+  let proposal = {action_id:'interact',verb:'mark',target_id:'wall',tool_id:'chalk',clarification:''};
+  const f=fixture(async (_url, options)=>model(JSON.parse(options.body).text ? JSON.stringify(proposal) : '你在入口旁留下白色的归路箭头。'));
+  await f.request({op:'start'});
+  const b={op:'turn',requestId:crypto.randomUUID(),expectedRevision:0,action:'用白垩在入口旁画一个指向来路的箭头'};
+  const r=await f.request(b);
+  assert.equal(r.status,200);assert.equal(r.body.game.turn,1);assert.match(r.body.game.location.description,/归路箭头/);
+  assert.equal(f.calls[1].max_output_tokens,2400);
+  assert.deepEqual((await f.request(b)).body,r.body);
+  const repeated=await f.request({...b,requestId:crypto.randomUUID(),expectedRevision:1});
+  assert.equal(repeated.body.game.turn,1);assert.equal(repeated.body.game.revision,2);
+  assert.equal(repeated.body.clarification,undefined);assert.equal(repeated.body.game.log.at(-2).role,'system');
+  proposal={...proposal,target_id:'inscription',verb:'clean',tool_id:'cloth'};
+  const invalid=await f.request({...b,requestId:crypto.randomUUID(),expectedRevision:2});
+  assert.equal(invalid.status,503);assert.equal((await f.request()).body.game.revision,2);
+});
+
+test('narration outage keeps a completed free interaction and receipt instead of losing it', async()=>{
+ const f=fixture(async(_url,options)=>{if(JSON.parse(options.body).text)return model(JSON.stringify({action_id:'interact',verb:'mark',target_id:'wall',tool_id:'chalk',clarification:''}));throw Error('offline');});
+ await f.request({op:'start'});
+ const b={op:'turn',requestId:crypto.randomUUID(),expectedRevision:0,action:'用白垩在墙上标出归路'};
+ const r=await f.request(b);assert.equal(r.body.degraded,true);assert.equal(r.body.game.turn,1);assert.match(r.body.game.location.description,/归路箭头/);
+ assert.deepEqual((await f.request(b)).body,r.body);
+});

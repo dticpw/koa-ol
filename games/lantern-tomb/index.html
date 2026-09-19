@@ -43,7 +43,7 @@
           <section id="action-area" class="action-area" aria-labelledby="action-heading">
             <div class="action-heading"><h3 id="action-heading">接下来，你想怎么做？</h3><span id="thinking" role="status" aria-live="polite" hidden>主持正在回应…</span></div>
             <div id="choices" class="choices"></div>
-            <form id="action-form"><label for="action">或者，描述你自己的行动</label><div class="input-wrap"><textarea id="action" name="action" maxlength="300" rows="2" placeholder="例如：我把灯举近石门，仔细观察刻痕。"></textarea><button id="send" type="submit" class="send-button" aria-label="提交行动">行动 <span aria-hidden="true">↗</span></button></div><div class="input-footer"><span>Ctrl / ⌘ + Enter 提交</span><span><span id="char-count">0</span> / 300</span></div></form>
+            <form id="action-form"><label for="action">自由尝试 · 不限于上面的建议</label><p id="action-help" class="panel-intro">可以观察具体对象、试用随身物品、留下记号，或与在场的人交谈。写清你想对什么做什么。</p><div class="input-wrap"><textarea id="action" name="action" maxlength="300" rows="2" aria-describedby="action-help" placeholder="例如：用厚布轻轻擦拭碑文，看看炭痕下写着什么。"></textarea><button id="send" type="submit" class="send-button" aria-label="提交行动">行动 <span aria-hidden="true">↗</span></button></div><div class="input-footer"><span>Ctrl / ⌘ + Enter 提交</span><span><span id="char-count">0</span> / 300</span></div></form>
             <div id="error" class="error" role="alert" hidden><p id="error-text"></p><button id="retry" type="button">重试这次行动</button><button id="refresh" type="button">重新读取存档</button></div>
           </section>
         </div>
