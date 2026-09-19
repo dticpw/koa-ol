@@ -119,6 +119,7 @@
   }
   function render(view, scroll = false) {
     game = view;
+    if (lab) window.dispatchEvent(new CustomEvent('fiction-view', { detail: { sessionId: game?.sessionId || null } }));
     $('welcome').hidden = Boolean(game);
     $('adventure').hidden = !game;
     $('start').textContent = lab ? '来到门前 ↗' : '提灯入墓 ↗';
@@ -224,7 +225,7 @@
       showError(error.message);
       // A conflict can mean that a reply was already committed. Keep the same
       // request ID; an explicit retry checks GET before replaying the request.
-    } finally { setBusy(false); }
+    } finally { setBusy(false); if (lab) window.dispatchEvent(new Event('fiction-trace-refresh')); }
   }
   async function retryPending() {
     if (busy) return;

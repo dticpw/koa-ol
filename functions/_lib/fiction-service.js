@@ -1,3 +1,4 @@
+import { traceSchema, traceList, traceDetail, saveTrace } from './fiction-trace.js';
 // All authoritative state and spend reservations live in D1. No browser state is trusted.
 const COOKIE = 'koa_fiction';
 const TTL = 7 * 86400000;
@@ -61,7 +62,7 @@ function modelText(data) {
   return (data.output || []).filter(x => x.type === 'message').flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\n');
 }
 
-export async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700, timeoutMs = 30000, deadlineAt = Infinity } = {}) {
+export async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700, timeoutMs = 30000, deadlineAt = Infinity, traceCall } = {}) {
   if (Date.now() >= deadlineAt) throw new ApiError(503, '主持模型本轮已超时，请重试。', 'model_unavailable');
   if (!env.UPSTREAM_API_KEY) throw new ApiError(503, '主持模型尚未配置；你仍可使用建议行动探索。', 'model_unavailable');
   const payload = { model: 'gpt-5.6-sol', store: false, stream: false, reasoning: { effort: 'low' }, input, max_output_tokens: maxTokens };
@@ -81,6 +82,7 @@ export async function callModel(env, db, fetchImpl, input, { format, maxTokens =
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), Math.min(45000, Math.max(1000, timeoutMs), deadlineAt - Date.now()));
   try {
+    if(traceCall)Object.assign(traceCall,{request:structuredClone(payload),startedAt:Date.now(),status:'sent'});
     const response = await fetchImpl(`${(env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')}/responses`, {
       method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.UPSTREAM_API_KEY}` },
       body: JSON.stringify(payload), signal: controller.signal
@@ -88,6 +90,8 @@ export async function callModel(env, db, fetchImpl, input, { format, maxTokens =
     if (!response.ok) throw new ApiError(503, '主持模型暂时没有响应，请重试。', 'model_unavailable');
     const data = await response.json();
     const usage = data.usage;
+    // Explicit allowlist: no headers, upstream URL, raw errors or reasoning items.
+    if(traceCall)traceCall.response={output_text:modelText(data),usage:usage?{input_tokens:usage.input_tokens,output_tokens:usage.output_tokens}:null};
     if (usage && Number.isSafeInteger(usage.input_tokens) && usage.input_tokens >= 0 && Number.isSafeInteger(usage.output_tokens) && usage.output_tokens >= 0) {
       const actual = usage.input_tokens * 4 + usage.output_tokens * 20;
       // Count all output (including reasoning); no optimistic cache discount.
@@ -96,11 +100,13 @@ export async function callModel(env, db, fetchImpl, input, { format, maxTokens =
     if (data.status === 'incomplete' || data.error) throw new ApiError(503, '主持模型本次未完成，请重试。', 'model_unavailable');
     const text = modelText(data).trim();
     if (!text) throw new ApiError(503, '主持模型未返回文字，请重试。', 'model_unavailable');
+    if(traceCall)traceCall.status='received';
     return text;
   } catch (error) {
+    if(traceCall){traceCall.status='failed';traceCall.errorCode='model_unavailable';}
     if (error instanceof ApiError) throw error;
     throw new ApiError(503, '主持模型暂时没有响应，请重试。', 'model_unavailable');
-  } finally { clearTimeout(timer); }
+  } finally { clearTimeout(timer);if(traceCall)traceCall.durationMs=Date.now()-traceCall.startedAt; }
 }
 
 function actionFormat(allowed, world) {
@@ -129,15 +135,30 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
       const body = request.method === 'POST' ? await readBody(request) : null;
       const db = env.DB;
       await db.batch(schema.map(sql => db.prepare(sql)));
+      if(gameKind==='lab')await db.batch(traceSchema.map(sql=>db.prepare(sql)));
       const now = Date.now();
       const ipHash = await hash(`fiction:${request.headers.get('CF-Connecting-IP') || 'unknown'}`);
       const date = new Date(now).toISOString().slice(0, 10);
-      if (!await increment(db, `api:${gameKind}:${date}:${ipHash}`, 100, now + 2 * 86400000)) throw new ApiError(429, '今日请求次数已达上限，请明天再来。', 'rate_limited');
+      const traceQuery=request.method==='GET'&&new URL(request.url).searchParams.get('trace');
+      if (!await increment(db, `${traceQuery?'trace':'api'}:${gameKind}:${date}:${ipHash}`, traceQuery?500:100, now + 2 * 86400000)) throw new ApiError(429, '今日请求次数已达上限，请明天再来。', 'rate_limited');
       const cookie = (request.headers.get('Cookie') || '').split(';').map(x => x.trim()).find(x => x.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
       let tokenHash = cookie && /^[a-f0-9]{64}$/.test(cookie) ? await hash(cookie) : null;
       let session = tokenHash ? await first(db, `SELECT * FROM koa_fiction_sessions WHERE token_hash=? AND expires_at>?`, tokenHash, now) : null;
       if (session && (JSON.parse(session.state_json).gameKind || 'classic') !== gameKind) session = null;
       if (session && engine.normalizeGame) session = {...session,state_json:JSON.stringify(engine.normalizeGame(JSON.parse(session.state_json)))};
+      if(traceQuery){
+        if(gameKind!=='lab'||!session)throw new ApiError(401,'请先进入当前试玩存档。','session_expired');
+        if(traceQuery==='list'){
+          const raw=new URL(request.url).searchParams.get('before');const before=raw===null?Number.MAX_SAFE_INTEGER:Number(raw);
+          if(!Number.isSafeInteger(before)||before<1)throw new ApiError(400,'记录位置无效。','invalid_request');
+          return json(await traceList(db,session.session_id,before,now));
+        }
+        const id=Number(traceQuery);
+        if(!Number.isSafeInteger(id)||id<1)throw new ApiError(400,'记录编号无效。','invalid_request');
+        const trace=await traceDetail(db,session.session_id,id,now);
+        if(!trace)throw new ApiError(404,'这条调用记录不存在或已过期。','trace_not_found');
+        return json({trace});
+      }
       if (request.method === 'GET') return json({ game: session ? engine.getView(JSON.parse(session.state_json)) : null, available: true });
       if (body.op === 'start') {
         if (session && !body.reset) return json({ game: engine.getView(JSON.parse(session.state_json)), available: true });
@@ -161,13 +182,20 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
       const owner = crypto.randomUUID();
       const acquired = await run(db, `UPDATE koa_fiction_sessions SET lock_owner=?,lock_until=? WHERE token_hash=? AND revision=? AND lock_until<? AND expires_at>?`, owner, now + LOCK_MS, tokenHash, state.revision, now, now);
       if (!changes(acquired)) throw new ApiError(409, '另一轮行动仍在处理，请稍后重试。', 'turn_busy');
+      let trace;
       try {
         // A receipt may have committed between the initial read and lock acquisition.
         const raced = await first(db, `SELECT response_json FROM koa_fiction_receipts WHERE token_hash=? AND request_id=?`, tokenHash, body.requestId);
         if (raced) return json(JSON.parse(raced.response_json));
+        if(gameKind==='lab')trace={version:1,revision:state.revision+1,action:body.action?.trim()||allowed.find(a=>a.id===body.choiceId)?.label,createdAt:Date.now(),status:'failed',calls:[],checks:[]};
         let next = state, response;
         if (resolveTurn) {
-          const resolved = await resolveTurn({ state, body, call: (input, options) => callModel(env, db, fetchImpl, input, options) });
+          const resolved = await resolveTurn({ state, body, ...(trace?{diagnostic:entry=>trace.checks.push(entry)}:{}),call: async(input, options) => {
+            const record=trace?{phase:options.format?.name==='host_ruling'?'ruling':'review',status:'not_sent'}:null;
+            if(record)trace.calls.push(record);
+            try{return await callModel(env, db, fetchImpl, input, {...options,traceCall:record});}
+            catch(error){if(record)record.errorCode=error instanceof ApiError?error.code:'model_unavailable';throw error;}
+          } });
           next = resolved.state;
           if (next.sessionId !== state.sessionId || next.revision !== state.revision + 1) throw new ApiError(503, '主持本轮的记录未通过校验，进度未改变。', 'classification_failed');
           response = { game: engine.getView(next), ...(resolved.meta || {}) };
@@ -211,9 +239,14 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
           db.prepare(`UPDATE koa_fiction_sessions SET state_json=?,revision=?,lock_owner=NULL,lock_until=0,expires_at=? WHERE token_hash=? AND lock_owner=? AND revision=?`).bind(JSON.stringify(next), next.revision, Date.now() + TTL, tokenHash, owner, state.revision)
         ]);
         if (!changes(committed[0]) || !changes(committed[1])) throw new ApiError(409, '本轮处理已超时，请刷新存档后重试。', 'lock_expired');
+        if(trace)trace.status='committed';
         return json(response, 200, { 'Set-Cookie': tokenCookie(cookie, cookieName, cookiePath) });
+      } catch(error){
+        if(trace)trace.errorCode=error instanceof ApiError?error.code:'service_unavailable';
+        throw error;
       } finally {
         await run(db, `UPDATE koa_fiction_sessions SET lock_owner=NULL,lock_until=0 WHERE token_hash=? AND lock_owner=?`, tokenHash, owner);
+        if(trace)await saveTrace(db,state.sessionId,trace);
       }
     } catch (error) { return publicError(error); }
   };

@@ -8,7 +8,9 @@
   <title>门后的火光 · 自由行动试玩</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../lantern-tomb/style.css">
-  <script src="../lantern-tomb/app.js?v=lab3" defer></script>
+  <link rel="stylesheet" href="./inspector.css?v=1">
+  <script src="./inspector.js?v=1" defer></script>
+  <script src="../lantern-tomb/app.js?v=lab4" defer></script>
 </head>
 <body data-fiction="lab">
   <a class="skip" href="#story">跳到故事</a>
@@ -47,6 +49,7 @@
             <div id="error" class="error" role="alert" hidden><p id="error-text"></p><button id="retry" type="button">重试这次行动</button><button id="refresh" type="button">重新读取存档</button></div>
           </section>
         </div>
+        <div class="lab-sidebar">
         <aside class="field-notes" aria-label="探险手记">
           <div class="notes-heading"><span class="eyebrow">随身手记</span><span aria-hidden="true">✳</span></div>
           <div class="tabs" role="tablist" aria-label="查看探险资料"><button role="tab" id="tab-map" aria-controls="panel-map" aria-selected="true" data-panel="map">路径</button><button role="tab" id="tab-inventory" aria-controls="panel-inventory" aria-selected="false" tabindex="-1" data-panel="inventory">背包 <span id="inventory-count">0</span></button><button role="tab" id="tab-clues" aria-controls="panel-clues" aria-selected="false" tabindex="-1" data-panel="clues">记录 <span id="clue-count">0</span></button></div>
@@ -55,11 +58,25 @@
           <section id="panel-clues" role="tabpanel" aria-labelledby="tab-clues" hidden><ul id="clues" class="notes-list"></ul></section>
           <div class="notes-bottom"><dl><div><dt>状态</dt><dd id="resolve">—</dd></div><div><dt>记录</dt><dd id="treasure">—</dd></div></dl><p>留意细节，也给自己的直觉一点余地。</p></div>
         </aside>
+        <details id="trace-panel" class="trace-panel">
+          <summary>主持调用详情 <span>学习视图</span></summary>
+          <div class="trace-body">
+            <p class="trace-help">查看实际发送的上下文与模型返回值，包含世界后台信息，可能剧透。仅本局可见，记录保留 7 天；不展示模型内部思考。</p>
+            <p class="trace-help">从此功能上线后的行动开始记录。开局不调用模型，旧轮次无法补录。</p>
+            <div class="trace-tools"><button id="trace-refresh" type="button">刷新记录</button><button id="trace-more" type="button" hidden>更早记录</button></div>
+            <label for="trace-select">选择行动记录</label><select id="trace-select" disabled><option>暂无记录</option></select>
+            <p id="trace-status" class="trace-help" role="status" aria-live="polite"></p>
+            <div class="trace-tools"><button id="trace-wide" type="button" disabled>宽屏阅读 ↗</button><button id="trace-download" type="button" disabled>下载本次 JSON</button></div>
+            <div id="trace-content"></div>
+          </div>
+        </details>
+        </div>
       </section>
     </main>
     <footer><p>改编自 <i>Tomb of the Serpent Kings</i> · <a href="./credits.html">来源与许可</a></p><p>AI 主持 <span id="model-label">GPT-5.6 Sol</span><span class="footer-dot">·</span>实验短篇</p></footer>
   </div>
   <dialog id="reset-dialog" aria-labelledby="reset-title"><form method="dialog"><p class="eyebrow">重新出发</p><h2 id="reset-title">合上这一本手记？</h2><p>重新开始会替换这版试玩的存档，不影响原版《蛇墓余火》。旧试玩进度无法恢复。</p><div class="dialog-actions"><button value="cancel">保留当前冒险</button><button value="confirm" class="primary">开始新冒险</button></div></form></dialog>
+  <dialog id="trace-dialog" class="trace-dialog" aria-labelledby="trace-dialog-title"><div class="trace-dialog-head"><h2 id="trace-dialog-title">主持调用详情</h2><form method="dialog"><button autofocus>关闭 ×</button></form></div><div id="trace-dialog-content"></div></dialog>
   <noscript><p class="noscript">本游戏需要 JavaScript 才能保存进度和与主持交互，请启用后刷新页面。</p></noscript>
 </body>
 </html>
