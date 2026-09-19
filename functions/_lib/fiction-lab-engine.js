@@ -8,7 +8,7 @@ const places = {
 };
 const item = (id,name,nature,place,facts,movable=true)=>({id,name,nature,place,facts,movable,integrity:'intact',source:null});
 export function createGame(){
- return {version:2,gameKind:'lab',sessionId:'',revision:0,turn:0,location:'outside',visited:['outside'],status:'playing',ending:null,resolve:3,doorOpen:true,hammerFallen:false,notes:[],events:[],
+ const state={version:2,gameKind:'lab',sessionId:'',revision:0,turn:0,location:'outside',visited:['outside'],status:'playing',ending:null,resolve:3,doorOpen:true,hammerFallen:false,notes:[],events:[],
  entities:[
  item('lamp','油灯','普通燃油灯，有可打开的玻璃灯罩。火焰有热量，露出火焰可点燃合适的干燥材料。没有备用油，不能凭空补充燃料。','carried','灯罩合着，灯正在正常燃烧。'),
  item('cloth','厚布','普通厚布，可以吸水、遮光、燃烧、撕分或组合使用；不预先限制用途。','carried','干燥、完好。'),
@@ -21,7 +21,10 @@ export function createGame(){
  item('wall','门外石墙','厚实石墙，不会被徒手或小工具击穿；可画记号、投影或固定已有物件。','outside','潮冷，尚无新标记。',false),
  item('tomb','石棺与镀金木冠','伪王墓的固定陈设，木冠露出廉价木头。无可领取的金银奖励或秘密机关。','chamber','陈设原位。',false)
  ],log:[{role:'narrator',turn:0,text:'你停在已经打开的石门外。方形石镇压住双栓，悬锤静静扣在头顶；门内两步远的地面就在灯光可及之处。你还没有进入伪王墓。\n\n手中是一盏带玻璃罩的普通油灯，背包里有干厚布、绳、青铜杯、白垩与手记。雨水在身后滴落，灯油还够二十刻。你可以在门外试探，也可以走进去观察，最后带着自己的发现离开。\n\n把连贯的想法一起说出来。一次尝试可以包含准备、操作与观察；如果途中发生变化，主持会停在那个时刻。'}]};
+ state.knownEntities=knownSnapshot(state.entities);
+ return state;
 }
+const knownSnapshot=entities=>Object.fromEntries(entities.filter(e=>e.movable).map(e=>[e.id,structuredClone(e)]));
 export function getActions(s){
  if(s.status!=='playing')return [];
  return [
@@ -35,20 +38,21 @@ export function getView(s){
  return {title:'门后的火光',sessionId:s.sessionId,revision:s.revision,turn:s.turn,maxTurns:MAX_TURNS,remainingTurns:MAX_TURNS-s.turn,
  location:{id:s.location,name:places[s.location].name,description:description(s)},status:s.status,ending:s.ending,
  inventory:s.entities.filter(e=>e.place==='carried'&&e.integrity!=='consumed').map(e=>({id:e.id,name:e.name,description:e.facts})),
- clues:[...s.entities.filter(e=>e.movable&&e.place!=='carried').map(e=>({id:e.id,title:`${e.name} · ${placeName(e.place)}`,text:e.facts})),...s.notes.map((text,i)=>({id:`note_${i}`,title:'探查记录',text}))],
+ clues:[...Object.values(s.knownEntities||knownSnapshot(s.entities)).filter(e=>e.movable&&e.place!=='carried').map(e=>({id:e.id,title:`${e.name} · ${placeName(e.place)}${visible(s,e)?'':' · 上次所见'}`,text:e.facts})),...s.notes.map((text,i)=>({id:`note_${i}`,title:'探查记录',text}))],
  map:Object.entries(places).map(([id,p])=>({id,name:p.name,visited:s.visited.includes(id),current:s.location===id})),choices:getActions(s),log:s.log,stats:{resolve:s.resolve,treasure:s.notes.length},model:'gpt-5.6-sol'};
 }
 export function hostContext(s){
- return {location:s.location,remaining:MAX_TURNS-s.turn,resolve:s.resolve,doorOpen:s.doorOpen,hammerFallen:s.hammerFallen,
- places,entities:s.entities,notes:s.notes,recent:s.log.slice(-6),recentEvents:s.events.slice(-3),
+ return {location:s.location,time:s.turn,remaining:MAX_TURNS-s.turn,resolve:s.resolve,doorOpen:s.doorOpen,hammerFallen:s.hammerFallen,
+ places,entities:s.entities,knownEntities:Object.values(s.knownEntities||knownSnapshot(s.entities)).map(({id,place,facts})=>({id,place,facts})),notes:s.notes,recent:s.log.slice(-6),recentEvents:s.events.slice(-3),
  laws:['人物所在、视线范围和投掷范围分别判断。outside与threshold相邻，threshold与chamber相邻，门控制outside与threshold。outside包含门槛外边缘和侧面安全站位，门槛边本身在手边，双栓与支撑石镇也在outside可直接触及。threshold特指门内约两步远的落点，不等同门槛边。开门时可从outside向threshold投物而不进入；门外系石镇无需先进入threshold。',
  '油灯是普通有热量的火，罩盖可打开。当前facts优先于初始外观。合理未预写用途由主持裁量，未知细节以不改变关键设定的常识处理。',
  '石镇仅在door_support能压住双栓。移走它会落锤；由程序决定，不能宣称仍安全。布/绳等变化须持续记住，不因换轮恢复。',
  '没有其他房间、宝物、角色或魔法能力。可用现有物品产生有来源的碎片；不可凭空造物。火焰和未触发机关的观察不能证明空气或整座墓安全。']};
 }
-const physicalPlace=(e,location)=>e.place==='carried'?location:e.place==='door_support'?'outside':e.place;
+const physicalPlace=(e,location)=>e.place==='carried'?location:e.place==='door_support'?'outside':e.place==='consumed'?(e.lastPlace||'consumed'):e.place;
 const adjacent=(a,b)=>a===b||(['outside','threshold'].includes(a)&&['outside','threshold'].includes(b))||(['threshold','chamber'].includes(a)&&['threshold','chamber'].includes(b));
 const passageOpen=(s,a,b)=>s.doorOpen||!((a==='outside')!==(b==='outside'));
+const visible=(s,e)=>e.place==='carried'||(adjacent(s.location,physicalPlace(e,s.location))&&passageOpen(s,s.location,physicalPlace(e,s.location)));
 const assert=(v,msg)=>{if(!v)throw Error(`LAB_INVALID:${msg}`);};
 const short=(v,max)=>typeof v==='string'&&v.trim().length>0&&v.length<=max;
 function finish(s,reason){s.status='ended';s.ending={id:reason,title:reason==='time'?'灯火将尽':reason==='hurt'?'及时退回':'带着观察归来',text:reason==='time'?'灯油已经不足以继续探索。你结束了这次试探，留下物品与观察的记录。':reason==='hurt'?'你已经承受太多危险，及时结束探查。':'你结束了这次探查。带走的是仍在手中的物品，以及亲眼确认过的事情。'};}
@@ -57,6 +61,7 @@ export function applyProposal(original,proposal,playerText){
  assert(proposal&&Array.isArray(proposal.steps)&&proposal.steps.length>=1&&proposal.steps.length<=6,'steps');
  assert(short(proposal.intent,500),'intent');
  const s=structuredClone(original), outcomes=[];
+ s.knownEntities ||= knownSnapshot(original.entities); // Existing saves retain their prior public knowledge.
  for(const step of proposal.steps){
   assert(typeof step.requires_previous_success==='boolean','dependency');
   if(step.requires_previous_success&&outcomes.at(-1)?.status==='failed')break;
@@ -97,7 +102,11 @@ export function applyProposal(original,proposal,playerText){
    if(destination!=='consumed')assert(distanceOK(destination),'destination reach');
    if(step.scope==='observe'||step.scope==='time')assert(update.place===e.place,'observe transfer');
    if(update.place==='carried'&&e.place!=='carried')assert(physicalPlace(e,beforeLocation)===beforeLocation||step.scope==='project','pickup reach');
+   const physicallyChanged=e.place!==update.place||e.integrity!==update.integrity||e.facts!==update.facts;
+   if(update.integrity==='consumed')e.lastPlace=physicalPlace(e,beforeLocation);
    e.place=update.place;e.integrity=update.integrity;e.facts=update.facts;
+   if(physicallyChanged)e.updatedAt=s.turn+step.duration;
+   if(e.movable)s.knownEntities[e.id]=structuredClone(e);
   }
   for(const child of step.creates){
    const source=s.entities.find(e=>e.id===child.source);
@@ -107,6 +116,7 @@ export function applyProposal(original,proposal,playerText){
    assert(['carried',...Object.keys(places)].includes(child.place)&&distanceOK(child.place==='carried'?beforeLocation:child.place),'derived place');
    assert(s.entities.length<18,'entity limit');
    s.entities.push({...item(child.id,child.name,`由${source.name}分出，材质和普通性质沿用来源，不能凭空变成其他材料。`,child.place,child.facts),source:source.id});
+   s.knownEntities[child.id]=structuredClone(s.entities.at(-1));
   }
   if(step.move_to!=='stay'){s.location=step.move_to;if(!s.visited.includes(s.location))s.visited.push(s.location);}
   if(step.door!=='unchanged')s.doorOpen=step.door==='open';
@@ -132,8 +142,34 @@ export function applyProposal(original,proposal,playerText){
  }
  if(s.status==='playing'&&s.turn>=MAX_TURNS)finish(s,'time');
  if(s.status==='playing'&&s.resolve<=0)finish(s,'hurt');
+ // Passive changes use actual elapsed story time, independently of actor reach.
+ // They cannot move the player or objects, create resources, or repair damage.
+ const elapsed=s.turn-original.turn;
+ if(proposal.evolution){
+  const evolution=proposal.evolution;
+  assert(evolution.elapsed===elapsed,'evolution elapsed');
+  assert(Array.isArray(evolution.updates)&&evolution.updates.length<=12,'evolution updates');
+  assert(Array.isArray(evolution.observations)&&evolution.observations.length<=4&&evolution.observations.every(t=>short(t,300)),'evolution observations');
+  if(elapsed===0)assert(evolution.updates.length===0&&evolution.observations.length===0,'zero time evolution');
+  const changed=new Set();
+  for(const update of evolution.updates){
+   const e=s.entities.find(x=>x.id===update.id);assert(e&&!changed.has(e.id),'evolution id');changed.add(e.id);
+   assert(short(update.facts,500)&&short(update.reason,400),'evolution facts');
+   assert(['intact','damaged','consumed'].includes(update.integrity),'evolution integrity');
+   assert(e.integrity!=='consumed','evolution resurrection');
+   if(e.integrity==='damaged')assert(update.integrity!=='intact','evolution repair');
+   if(!e.movable||['lamp','weight'].includes(e.id))assert(update.integrity!=='consumed','evolution protected entity');
+   if(update.integrity==='consumed'){e.lastPlace=physicalPlace(e,s.location);e.place='consumed';}
+   e.integrity=update.integrity;e.facts=update.facts;e.updatedAt=s.turn;
+  }
+  for(const note of evolution.observations)if(!s.notes.includes(note))s.notes.push(note);
+  s.notes=s.notes.slice(-16);
+ }
+ // Facts can evolve off-screen. The player's notebook keeps the last witnessed
+ // snapshot until returning within sight; it is not a live world inspector.
+ for(const entity of s.entities)if(entity.movable&&visible(s,entity))s.knownEntities[entity.id]=structuredClone(entity);
  s.revision+=1;
  s.log.push({role:'player',turn:s.turn,text:playerText});
- s.events.push({revision:s.revision,intent:proposal.intent,steps:outcomes});s.events=s.events.slice(-30);
- return {state:s,outcomes};
+ s.events.push({revision:s.revision,intent:proposal.intent,steps:outcomes,...(proposal.evolution?{evolution:proposal.evolution}:{})});s.events=s.events.slice(-30);
+ return {state:s,outcomes,evolution:proposal.evolution||{elapsed,updates:[],observations:[]}};
 }

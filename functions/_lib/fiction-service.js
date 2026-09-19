@@ -61,7 +61,8 @@ function modelText(data) {
   return (data.output || []).filter(x => x.type === 'message').flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\n');
 }
 
-export async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700, timeoutMs = 30000 } = {}) {
+export async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700, timeoutMs = 30000, deadlineAt = Infinity } = {}) {
+  if (Date.now() >= deadlineAt) throw new ApiError(503, '主持模型本轮已超时，请重试。', 'model_unavailable');
   if (!env.UPSTREAM_API_KEY) throw new ApiError(503, '主持模型尚未配置；你仍可使用建议行动探索。', 'model_unavailable');
   const payload = { model: 'gpt-5.6-sol', store: false, stream: false, reasoning: { effort: 'low' }, input, max_output_tokens: maxTokens };
   if (format) payload.text = { format };
@@ -72,8 +73,13 @@ export async function callModel(env, db, fetchImpl, input, { format, maxTokens =
   const day = new Date().toISOString().slice(0, 10);
   const reservation = await run(db, `INSERT INTO koa_fiction_budget(day,spent_micro) SELECT ?,? WHERE ? <= ? ON CONFLICT(day) DO UPDATE SET spent_micro=spent_micro+excluded.spent_micro WHERE spent_micro+excluded.spent_micro <= ?`, day, reserved, reserved, cap, cap);
   if (!changes(reservation)) throw new ApiError(429, '今日 AI 主持额度已用完；你仍可使用建议行动探索。', 'budget_exhausted');
+  if (Date.now() >= deadlineAt) {
+    // No upstream request was made; release this unused reservation.
+    await run(db, `UPDATE koa_fiction_budget SET spent_micro=MAX(0,spent_micro-?) WHERE day=?`, reserved, day);
+    throw new ApiError(503, '主持模型本轮已超时，请重试。', 'model_unavailable');
+  }
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), Math.min(45000, Math.max(1000, timeoutMs)));
+  const timer = setTimeout(() => controller.abort(), Math.min(45000, Math.max(1000, timeoutMs), deadlineAt - Date.now()));
   try {
     const response = await fetchImpl(`${(env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')}/responses`, {
       method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.UPSTREAM_API_KEY}` },
