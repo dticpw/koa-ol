@@ -1,6 +1,6 @@
 // Small authored world + generic ledger. Physical interpretation belongs to the
-// host; these checks bound resources, topology, time and the authored hammer.
-export const MAX_TURNS = 20;
+// host; these checks bound resources, topology and the authored hammer.
+export const MAX_TURNS = null; // No in-world turn or fuel limit.
 const places = {
   outside: {name:'石门外',description:'雨水落在身后的墓口。门槛边就在脚前，双栓和石镇在门外触手可及处；门内近处是越过门槛后约两步远的地面。门打开时，可以从外面照看或投物到那里。'},
   threshold: {name:'门内近处',description:'这里在门槛内约两步，是门外可以看见并投到的石地；往里可步入伪王墓。双栓释放时，门槛附近是悬锤的落点。'},
@@ -8,9 +8,9 @@ const places = {
 };
 const item = (id,name,nature,place,facts,movable=true)=>({id,name,nature,place,facts,movable,integrity:'intact',source:null});
 export function createGame(){
- const state={version:2,gameKind:'lab',sessionId:'',revision:0,turn:0,location:'outside',visited:['outside'],status:'playing',ending:null,resolve:3,doorOpen:true,hammerFallen:false,notes:[],events:[],
+ const state={version:3,gameKind:'lab',sessionId:'',revision:0,turn:0,location:'outside',visited:['outside'],status:'playing',ending:null,resolve:3,doorOpen:true,hammerFallen:false,notes:[],events:[],pendingDecision:null,
  entities:[
- item('lamp','油灯','普通燃油灯，有可打开的玻璃灯罩。火焰有热量，露出火焰可点燃合适的干燥材料。没有备用油，不能凭空补充燃料。','carried','灯罩合着，灯正在正常燃烧。'),
+ item('lamp','油灯','普通燃油灯，有可打开的玻璃灯罩。火焰有热量，露出火焰可点燃合适的干燥材料。本试玩不模拟灯油耗尽，不因输入次数使它熄灭；主动熄灯等实际操作仍有后果。','carried','灯罩合着，灯正在正常燃烧。'),
  item('cloth','厚布','普通厚布，可以吸水、遮光、燃烧、撕分或组合使用；不预先限制用途。','carried','干燥、完好。'),
  item('rope','探路绳','一捆普通结实的绳，约五步长；可以系结、牵引，过火会受损。','carried','完好，卷起。'),
  item('cup','青铜杯','手掌大的空青铜杯，能盛少量水，金属不燃；倒扣可以隔绝杯口覆盖的小范围空气。','carried','空杯，完好。'),
@@ -20,11 +20,22 @@ export function createGame(){
  item('rain','墓口雨水','普通雨水，可用于浸湿物品或用已有容器盛取。','outside','持续有雨水滴落。',false),
  item('wall','门外石墙','厚实石墙，不会被徒手或小工具击穿；可画记号、投影或固定已有物件。','outside','潮冷，尚无新标记。',false),
  item('tomb','石棺与镀金木冠','伪王墓的固定陈设，木冠露出廉价木头。无可领取的金银奖励或秘密机关。','chamber','陈设原位。',false)
- ],log:[{role:'narrator',turn:0,text:'你停在已经打开的石门外。方形石镇压住双栓，悬锤静静扣在头顶；门内两步远的地面就在灯光可及之处。你还没有进入伪王墓。\n\n手中是一盏带玻璃罩的普通油灯，背包里有干厚布、绳、青铜杯、白垩与手记。雨水在身后滴落，灯油还够二十刻。你可以在门外试探，也可以走进去观察，最后带着自己的发现离开。\n\n把连贯的想法一起说出来。一次尝试可以包含准备、操作与观察；如果途中发生变化，主持会停在那个时刻。'}]};
+ ],log:[{role:'narrator',turn:0,text:'你停在已经打开的石门外。方形石镇压住双栓，悬锤静静扣在头顶；门内两步远的地面就在灯光可及之处。你还没有进入伪王墓。\n\n手中是一盏带玻璃罩的普通油灯，背包里有干厚布、绳、青铜杯、白垩与手记。雨水在身后滴落，灯焰稳定。这里没有灯油倒计时。你可以在门外试探，也可以走进去观察，最后带着自己的发现离开。\n\n把连贯的想法一起说出来。一次尝试可以包含准备、操作与观察；如果途中发生变化，主持会停在那个时刻。'}]};
  state.knownEntities=knownSnapshot(state.entities);
  return state;
 }
 const knownSnapshot=entities=>Object.fromEntries(entities.filter(e=>e.movable).map(e=>[e.id,structuredClone(e)]));
+// Read-compatible migration; persisted atomically with the next successful turn.
+export function normalizeGame(saved){
+ if(saved.version===3)return saved;
+ const s=structuredClone(saved);s.version=3;s.turn=s.revision;s.pendingDecision=null;
+ if(s.ending?.id==='time'){s.status='playing';s.ending=null;}
+ for(const e of s.entities)delete e.updatedAt;
+ for(const e of Object.values(s.knownEntities||{}))delete e.updatedAt;
+ // Keep historical prose, but never feed obsolete timing contracts as recent rulings.
+ s.events=[];
+ return s;
+}
 export function getActions(s){
  if(s.status!=='playing')return [];
  return [
@@ -34,15 +45,17 @@ export function getActions(s){
 }
 const placeName=p=>p==='carried'?'随身':p==='consumed'?'已消耗':p==='door_support'?'双栓上':places[p]?.name||p;
 const description=s=>`${places[s.location].description}${s.doorOpen?'石门敞开。':'石门已经关上，阻断门两侧的视线和投掷。'}${s.hammerFallen?'悬锤已落下，不能再次触发。':'悬锤仍被双栓扣住；移走支撑石镇会触发它。'}`;
-export function getView(s){
- return {title:'门后的火光',sessionId:s.sessionId,revision:s.revision,turn:s.turn,maxTurns:MAX_TURNS,remainingTurns:MAX_TURNS-s.turn,
+export function getView(saved){
+ const s=normalizeGame(saved);
+ return {title:'门后的火光',sessionId:s.sessionId,revision:s.revision,turn:s.turn,pendingDecision:s.pendingDecision,
  location:{id:s.location,name:places[s.location].name,description:description(s)},status:s.status,ending:s.ending,
  inventory:s.entities.filter(e=>e.place==='carried'&&e.integrity!=='consumed').map(e=>({id:e.id,name:e.name,description:e.facts})),
  clues:[...Object.values(s.knownEntities||knownSnapshot(s.entities)).filter(e=>e.movable&&e.place!=='carried').map(e=>({id:e.id,title:`${e.name} · ${placeName(e.place)}${visible(s,e)?'':' · 上次所见'}`,text:e.facts})),...s.notes.map((text,i)=>({id:`note_${i}`,title:'探查记录',text}))],
  map:Object.entries(places).map(([id,p])=>({id,name:p.name,visited:s.visited.includes(id),current:s.location===id})),choices:getActions(s),log:s.log,stats:{resolve:s.resolve,treasure:s.notes.length},model:'gpt-5.6-sol'};
 }
-export function hostContext(s){
- return {location:s.location,time:s.turn,remaining:MAX_TURNS-s.turn,resolve:s.resolve,doorOpen:s.doorOpen,hammerFallen:s.hammerFallen,
+export function hostContext(saved){
+ const s=normalizeGame(saved);
+ return {rulesVersion:3,mode:"causal_no_clock",pendingDecision:s.pendingDecision,location:s.location,resolve:s.resolve,doorOpen:s.doorOpen,hammerFallen:s.hammerFallen,
  places,entities:s.entities,knownEntities:Object.values(s.knownEntities||knownSnapshot(s.entities)).map(({id,place,facts})=>({id,place,facts})),notes:s.notes,recent:s.log.slice(-6),recentEvents:s.events.slice(-3),
  laws:['人物所在、视线范围和投掷范围分别判断。outside与threshold相邻，threshold与chamber相邻，门控制outside与threshold。outside包含门槛外边缘和侧面安全站位，门槛边本身在手边，双栓与支撑石镇也在outside可直接触及。threshold特指门内约两步远的落点，不等同门槛边。开门时可从outside向threshold投物而不进入；门外系石镇无需先进入threshold。',
  '油灯是普通有热量的火，罩盖可打开。当前facts优先于初始外观。合理未预写用途由主持裁量，未知细节以不改变关键设定的常识处理。',
@@ -55,32 +68,40 @@ const passageOpen=(s,a,b)=>s.doorOpen||!((a==='outside')!==(b==='outside'));
 const visible=(s,e)=>e.place==='carried'||(adjacent(s.location,physicalPlace(e,s.location))&&passageOpen(s,s.location,physicalPlace(e,s.location)));
 const assert=(v,msg)=>{if(!v)throw Error(`LAB_INVALID:${msg}`);};
 const short=(v,max)=>typeof v==='string'&&v.trim().length>0&&v.length<=max;
-function finish(s,reason){s.status='ended';s.ending={id:reason,title:reason==='time'?'灯火将尽':reason==='hurt'?'及时退回':'带着观察归来',text:reason==='time'?'灯油已经不足以继续探索。你结束了这次试探，留下物品与观察的记录。':reason==='hurt'?'你已经承受太多危险，及时结束探查。':'你结束了这次探查。带走的是仍在手中的物品，以及亲眼确认过的事情。'};}
+function finish(s,reason){s.status='ended';s.ending={id:reason,title:reason==='hurt'?'及时退回':'带着观察归来',text:reason==='hurt'?'你已经承受太多危险，及时结束探查。':'你结束了这次探查。带走的是仍在手中的物品，以及亲眼确认过的事情。'};}
 export function applyProposal(original,proposal,playerText){
- assert(original.version===2&&original.status==='playing','session');
+ original=normalizeGame(original);
+ assert(original.version===3&&original.status==='playing','session');
  assert(proposal&&Array.isArray(proposal.steps)&&proposal.steps.length>=1&&proposal.steps.length<=6,'steps');
  assert(short(proposal.intent,500),'intent');
+ const decision=proposal.decision;
+ assert(decision&&typeof decision.needed==='boolean'&&['none','keep','replace','resolve','cancel'].includes(decision.disposition),'decision');
+ assert(decision.needed===['keep','replace'].includes(decision.disposition),'decision disposition');
+ if(['keep','resolve','cancel'].includes(decision.disposition))assert(original.pendingDecision,'missing pending decision');
+ if(decision.disposition==='none')assert(!original.pendingDecision,'unresolved decision');
+ if(decision.needed)assert(short(decision.question,300)&&short(decision.pending_action,500)&&short(decision.reason,400),'decision detail');
  const s=structuredClone(original), outcomes=[];
+ let forcedPause=false;
  s.knownEntities ||= knownSnapshot(original.entities); // Existing saves retain their prior public knowledge.
  for(const step of proposal.steps){
   assert(typeof step.requires_previous_success==='boolean','dependency');
   if(step.requires_previous_success&&outcomes.at(-1)?.status==='failed')break;
   assert(short(step.attempt,400)&&short(step.outcome,700),'text');
   assert(['completed','partial','failed','clarify'].includes(step.status),'status');
-  assert(Number.isInteger(step.duration)&&step.duration>=0&&step.duration<=MAX_TURNS,'time');
+  assert(['action','wait','confirmation'].includes(step.beat),'beat');
   assert(Array.isArray(step.updates)&&step.updates.length<=12&&Array.isArray(step.creates)&&step.creates.length<=3,'updates');
   assert(Array.isArray(step.refs)&&step.refs.length<=12,'refs');
   assert(Array.isArray(step.observations)&&step.observations.length<=4&&step.observations.every(t=>short(t,300)),'observations');
   assert(['stay',...Object.keys(places)].includes(step.move_to)&&['unchanged','open','closed'].includes(step.door)&&['continue','leave'].includes(step.end),'controls');
-  assert(['near','project','observe','travel','time'].includes(step.scope),'scope');
-  if(step.duration>MAX_TURNS-s.turn){const remaining=MAX_TURNS-s.turn;s.turn=MAX_TURNS;outcomes.push({attempt:step.attempt,status:'interrupted',outcome:'你来不及完成这段需要更长时间的行动，灯油先耗尽了；本步尚未完成的变化没有发生。',observations:[],duration:remaining});finish(s,'time');break;}
+  assert(['near','project','observe','travel','wait'].includes(step.scope),'scope');
   const beforeLocation=s.location;
-  const distanceOK=p=>p===beforeLocation||(step.scope!=='near'&&step.scope!=='time'&&adjacent(beforeLocation,p)&&passageOpen(s,beforeLocation,p));
+  const distanceOK=p=>p===beforeLocation||(step.scope!=='near'&&step.scope!=='wait'&&adjacent(beforeLocation,p)&&passageOpen(s,beforeLocation,p));
   for(const id of step.refs){
    const entity=s.entities.find(e=>e.id===id);assert(entity,'unknown ref');
    // Remembering a consumed/distant object is fine; physically changing it isn't.
   }
-  if(step.status==='clarify')assert(step.duration===0&&step.updates.length===0&&step.creates.length===0&&step.move_to==='stay'&&step.door==='unchanged'&&step.end==='continue','clarify effects');
+  if(step.status==='clarify')assert(step.beat==='confirmation'&&step.updates.length===0&&step.creates.length===0&&step.move_to==='stay'&&step.door==='unchanged'&&step.end==='continue','clarify effects');
+  if(step.beat==='confirmation')assert(step.updates.length===0&&step.creates.length===0&&step.move_to==='stay'&&step.door==='unchanged'&&step.end==='continue','confirmation effects');
   // The release is immediate. Combining it with actor movement would make the
   // injury position ambiguous; the host must express their order as two steps.
   if(!s.hammerFallen&&step.move_to!=='stay')assert(!step.updates.some(u=>u.id==='weight'&&u.place!=='door_support'),'split support release and travel');
@@ -100,12 +121,12 @@ export function applyProposal(original,proposal,playerText){
    if(update.place==='door_support')assert(e.id==='weight'&&['outside','threshold'].includes(beforeLocation),'support');
    const destination=update.place==='carried'?beforeLocation:update.place==='door_support'?'outside':update.place;
    if(destination!=='consumed')assert(distanceOK(destination),'destination reach');
-   if(step.scope==='observe'||step.scope==='time')assert(update.place===e.place,'observe transfer');
+   if(step.scope==='observe'||step.scope==='wait')assert(update.place===e.place,'observe transfer');
    if(update.place==='carried'&&e.place!=='carried')assert(physicalPlace(e,beforeLocation)===beforeLocation||step.scope==='project','pickup reach');
    const physicallyChanged=e.place!==update.place||e.integrity!==update.integrity||e.facts!==update.facts;
    if(update.integrity==='consumed')e.lastPlace=physicalPlace(e,beforeLocation);
    e.place=update.place;e.integrity=update.integrity;e.facts=update.facts;
-   if(physicallyChanged)e.updatedAt=s.turn+step.duration;
+   if(physicallyChanged)e.updatedAtRevision=original.revision+1;
    if(e.movable)s.knownEntities[e.id]=structuredClone(e);
   }
   for(const child of step.creates){
@@ -120,8 +141,7 @@ export function applyProposal(original,proposal,playerText){
   }
   if(step.move_to!=='stay'){s.location=step.move_to;if(!s.visited.includes(s.location))s.visited.push(s.location);}
   if(step.door!=='unchanged')s.doorOpen=step.door==='open';
-  s.turn+=step.duration;
-  const event={attempt:step.attempt,status:step.status,outcome:step.outcome,observations:step.observations,duration:step.duration};outcomes.push(event);
+  const event={attempt:step.attempt,status:step.status,outcome:step.outcome,observations:step.observations,beat:step.beat};outcomes.push(event);
   for(const note of step.observations)if(!s.notes.includes(note))s.notes.push(note);
   s.notes=s.notes.slice(-16);
   if(!s.hammerFallen&&s.entities.find(e=>e.id==='weight').place!=='door_support'){
@@ -129,28 +149,25 @@ export function applyProposal(original,proposal,playerText){
    if(s.location==='threshold')s.resolve=Math.max(0,s.resolve-1);
    event.outcome+=' 【规则结算】石镇离开双栓，悬锤立刻落在门槛附近。'+(s.location==='threshold'?'你在落点边受伤，状态减一。':'你不在门槛落点内，没有受伤。');
    event.observations.push('悬锤已经落下，不能再次释放。');
+   forcedPause=true;
    break; // An authored unexpected event interrupts the proposed chain.
   }
-  if(s.turn>=MAX_TURNS){finish(s,'time');break;}
   if(s.resolve<=0){finish(s,'hurt');break;}
   if(step.end==='leave'){assert(s.location==='outside','exit');finish(s,'leave');break;}
   if(step.status==='clarify'||step.status==='partial')break;
  }
- // A physical change cannot become a free turn just by labeling every preparation zero.
- if(s.turn===original.turn&&(JSON.stringify(s.entities)!==JSON.stringify(original.entities)||s.location!==original.location||s.doorOpen!==original.doorOpen)){
-  s.turn+=1;outcomes.at(-1).duration+=1;
- }
- if(s.status==='playing'&&s.turn>=MAX_TURNS)finish(s,'time');
- if(s.status==='playing'&&s.resolve<=0)finish(s,'hurt');
- // Passive changes use actual elapsed story time, independently of actor reach.
- // They cannot move the player or objects, create resources, or repair damage.
- const elapsed=s.turn-original.turn;
+ // Decisions and confirmation do not advance ongoing events. Other changes
+ // require a causal action or explicit wait, never a numeric fuel/time budget.
+ const paused=forcedPause||decision.needed||outcomes.some(e=>['partial','clarify'].includes(e.status));
+ if(decision.disposition==='replace')assert(['partial','failed','clarify'].includes(outcomes.at(-1)?.status),'decision stopping point');
+ if(decision.disposition==='resolve')assert(outcomes.some(e=>e.beat!=='confirmation'),'decision resolution');
  if(proposal.evolution){
   const evolution=proposal.evolution;
-  assert(evolution.elapsed===elapsed,'evolution elapsed');
+  assert(['none','action','wait'].includes(evolution.basis),'evolution basis');
+  if(evolution.basis!=='none')assert(!paused&&outcomes.some(e=>e.beat===evolution.basis),'evolution cause');
   assert(Array.isArray(evolution.updates)&&evolution.updates.length<=12,'evolution updates');
   assert(Array.isArray(evolution.observations)&&evolution.observations.length<=4&&evolution.observations.every(t=>short(t,300)),'evolution observations');
-  if(elapsed===0)assert(evolution.updates.length===0&&evolution.observations.length===0,'zero time evolution');
+  if(paused||evolution.basis==='none')assert(evolution.updates.length===0&&evolution.observations.length===0,'paused evolution');
   const changed=new Set();
   for(const update of evolution.updates){
    const e=s.entities.find(x=>x.id===update.id);assert(e&&!changed.has(e.id),'evolution id');changed.add(e.id);
@@ -160,7 +177,7 @@ export function applyProposal(original,proposal,playerText){
    if(e.integrity==='damaged')assert(update.integrity!=='intact','evolution repair');
    if(!e.movable||['lamp','weight'].includes(e.id))assert(update.integrity!=='consumed','evolution protected entity');
    if(update.integrity==='consumed'){e.lastPlace=physicalPlace(e,s.location);e.place='consumed';}
-   e.integrity=update.integrity;e.facts=update.facts;e.updatedAt=s.turn;
+   e.integrity=update.integrity;e.facts=update.facts;e.updatedAtRevision=original.revision+1;
   }
   for(const note of evolution.observations)if(!s.notes.includes(note))s.notes.push(note);
   s.notes=s.notes.slice(-16);
@@ -168,8 +185,14 @@ export function applyProposal(original,proposal,playerText){
  // Facts can evolve off-screen. The player's notebook keeps the last witnessed
  // snapshot until returning within sight; it is not a live world inspector.
  for(const entity of s.entities)if(entity.movable&&visible(s,entity))s.knownEntities[entity.id]=structuredClone(entity);
- s.revision+=1;
+ s.pendingDecision=decision.disposition==='keep'?structuredClone(original.pendingDecision):decision.needed?{...decision,intent:proposal.intent,originalAction:playerText}:null;
+ if(forcedPause){
+  const remaining=proposal.steps.slice(outcomes.length).map(step=>step.attempt).join('；');
+  const pending=s.pendingDecision;
+  s.pendingDecision={needed:true,disposition:'replace',question:'悬锤已经落下。接下来你想怎么做？',pending_action:[...new Set([remaining,pending?.pending_action].filter(Boolean))].join('；')||'根据落锤后的现场重新决定下一步',reason:'悬锤意外打断行动，未执行的后续步骤不会自动继续。',intent:pending?.intent||proposal.intent,originalAction:pending?.originalAction||playerText};
+ }
+ s.revision+=1;s.turn=s.revision;
  s.log.push({role:'player',turn:s.turn,text:playerText});
  s.events.push({revision:s.revision,intent:proposal.intent,steps:outcomes,...(proposal.evolution?{evolution:proposal.evolution}:{})});s.events=s.events.slice(-30);
- return {state:s,outcomes,evolution:proposal.evolution||{elapsed,updates:[],observations:[]}};
+ return {state:s,outcomes,evolution:proposal.evolution||{basis:'none',updates:[],observations:[]}};
 }

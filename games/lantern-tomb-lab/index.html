@@ -8,7 +8,7 @@
   <title>门后的火光 · 自由行动试玩</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../lantern-tomb/style.css">
-  <script src="../lantern-tomb/app.js?v=lab1" defer></script>
+  <script src="../lantern-tomb/app.js?v=lab3" defer></script>
 </head>
 <body data-fiction="lab">
   <a class="skip" href="#story">跳到故事</a>
@@ -24,7 +24,7 @@
           <p class="eyebrow"><span class="tiny-line"></span>从一个想法，到留下的后果</p>
           <h1 id="title">门后的<span>火光</span><i aria-hidden="true">。</i></h1>
           <p class="cover-description">门已打开，你还站在外面。<br>一盏灯，一块布，这次由你想办法。</p>
-          <div class="cover-meta"><span>单人冒险</span><span>自由行动</span><span>二十刻灯火</span></div>
+          <div class="cover-meta"><span>单人冒险</span><span>自由行动</span><span>按自己的节奏</span></div>
         </div>
         <div class="cover-art" aria-hidden="true"><img src="../lantern-tomb/assets/tomb.svg" alt="" width="640" height="450"><span class="art-caption">FIELD NOTES — THE LIGHT BEYOND</span></div>
       </section>
@@ -43,7 +43,7 @@
           <section id="action-area" class="action-area" aria-labelledby="action-heading">
             <div class="action-heading"><h3 id="action-heading">接下来，你想怎么做？</h3><span id="thinking" role="status" aria-live="polite" hidden>主持正在回应…</span></div>
             <div id="choices" class="choices"></div>
-            <form id="action-form"><label for="action">自由尝试 · 不限于上面的建议</label><p id="action-help" class="panel-intro">可以把一串连贯动作一起说出来，也可以说明条件或停止点。准备和短操作通常合计一刻，长时间等待会消耗更多灯火。</p><div class="input-wrap"><textarea id="action" name="action" maxlength="300" rows="2" aria-describedby="action-help" placeholder="例如：打开灯罩，点燃厚布的一角，再把它投到门内近处观察。"></textarea><button id="send" type="submit" class="send-button" aria-label="提交行动">行动 <span aria-hidden="true">↗</span></button></div><div class="input-footer"><span>Ctrl / ⌘ + Enter 提交</span><span><span id="char-count">0</span> / 300</span></div></form>
+            <form id="action-form"><label for="action">自由尝试 · 不限于上面的建议</label><p id="action-help" class="panel-intro">可以把一串连贯动作一起说出来，也可以说明条件或停止点。遇到影响下一步选择的变化，主持会暂停询问；确认本身不会消耗物品或推动事件。</p><div class="input-wrap"><textarea id="action" name="action" maxlength="300" rows="2" aria-describedby="action-help" placeholder="例如：打开灯罩，点燃厚布的一角，再把它投到门内近处观察。"></textarea><button id="send" type="submit" class="send-button" aria-label="提交行动">行动 <span aria-hidden="true">↗</span></button></div><div class="input-footer"><span>Ctrl / ⌘ + Enter 提交</span><span><span id="char-count">0</span> / 300</span></div></form>
             <div id="error" class="error" role="alert" hidden><p id="error-text"></p><button id="retry" type="button">重试这次行动</button><button id="refresh" type="button">重新读取存档</button></div>
           </section>
         </div>

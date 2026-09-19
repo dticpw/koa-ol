@@ -137,6 +137,7 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
       let tokenHash = cookie && /^[a-f0-9]{64}$/.test(cookie) ? await hash(cookie) : null;
       let session = tokenHash ? await first(db, `SELECT * FROM koa_fiction_sessions WHERE token_hash=? AND expires_at>?`, tokenHash, now) : null;
       if (session && (JSON.parse(session.state_json).gameKind || 'classic') !== gameKind) session = null;
+      if (session && engine.normalizeGame) session = {...session,state_json:JSON.stringify(engine.normalizeGame(JSON.parse(session.state_json)))};
       if (request.method === 'GET') return json({ game: session ? engine.getView(JSON.parse(session.state_json)) : null, available: true });
       if (body.op === 'start') {
         if (session && !body.reset) return json({ game: engine.getView(JSON.parse(session.state_json)), available: true });
@@ -152,7 +153,8 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
       if (previous) return json(JSON.parse(previous.response_json));
       const state = JSON.parse(session.state_json);
       if (body.expectedRevision !== state.revision) throw new ApiError(409, '存档已更新，请刷新后再行动。', 'revision_conflict');
-      if (state.turn >= (engine.MAX_TURNS || MAX_TURNS) || state.status !== 'playing') throw new ApiError(409, '本局已结束，请查看结局或重新开始。', 'game_finished');
+      const turnLimit=engine.MAX_TURNS===undefined?MAX_TURNS:engine.MAX_TURNS;
+      if ((Number.isFinite(turnLimit)&&state.turn>=turnLimit) || state.status !== 'playing') throw new ApiError(409, '本局已结束，请查看结局或重新开始。', 'game_finished');
       const allowed = engine.getActions(state);
       if (body.choiceId && !allowed.some(x => x.id === body.choiceId)) throw new ApiError(400, '当前不能执行这个行动。', 'invalid_choice');
       if (!await increment(db, `turn:${gameKind}:${Math.floor(now / 60000)}:${ipHash}`, 10, now + 120000)) throw new ApiError(429, '行动太快了，请稍等一分钟。', 'rate_limited');
