@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Koa-OL Games：多人桌游与可试玩独立游戏原型。">
+<meta name="description" content="Koa-OL Games：多人桌游、单人游戏与 AI 互动小说。">
 <title>Koa-OL Games</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
-<link rel="stylesheet" href="./lobby.css?v=20260919-fiction">
+<link rel="stylesheet" href="./lobby.css?v=20260920-shelf">
 </head>
 <body>
 <div class="page">
@@ -31,7 +31,7 @@
       <p class="round-label">TABLETOP & ARCADE · 游戏大厅</p>
       <h1 id="lobby-title">选择游戏<span class="lobby-title-dot" aria-hidden="true">.</span></h1>
       <p class="hero-line">和朋友开一桌，或独自走进一个故事。<br>这一局，按自己的节奏来。</p>
-      <nav class="lobby-shortcuts" aria-label="游戏分区"><a href="#multiplayer">联机区 ↓</a><a href="#singleplayer">单人区 ↓</a></nav>
+      <nav class="lobby-shortcuts" aria-label="游戏分区"><a href="#multiplayer">联机区 ↓</a><a href="#singleplayer">单人区 ↓</a><a href="#ai-fiction">AI 互动小说 ↓</a></nav>
     </section>
 
     <section class="game-zone lobby-view" id="multiplayer" aria-labelledby="multiplayer-title">
@@ -97,18 +97,18 @@
 
     <section class="game-zone lobby-view" id="singleplayer" aria-labelledby="singleplayer-title">
       <header class="zone-heading"><span class="zone-symbol" aria-hidden="true">✧</span><p>02 / PLAY SOLO</p><h2 id="singleplayer-title">单人区</h2><span>一个人，也能玩得尽兴。</span></header>
-      <a class="fiction-card" href="./lantern-tomb-lab/" aria-label="试玩门后的火光，自由行动实验短篇">
-        <div class="fiction-copy"><span class="fiction-badge">AI 互动小说 · 新试玩</span><h3>门后的火光</h3><p>门已打开，你还站在外面。<br>试试火、水与绳，让一个想法接着发生。</p><span class="fiction-cta">来到门前 ↗</span></div>
-        <img src="./lantern-tomb/assets/tomb.svg" alt="" width="640" height="450" loading="lazy">
-      </a>
-      <a class="fiction-card" href="./lantern-tomb/" aria-label="试玩蛇墓余火，AI 主持的单人古墓冒险">
-        <div class="fiction-copy"><span class="fiction-badge">AI 互动小说 · 免费短篇</span><h3>蛇墓余火</h3><p>带上一盏灯，走进被遗忘的蛇墓。<br>观察、交谈、解谜，让选择留下回声。</p><span class="fiction-cta">提灯入墓 ↗</span></div>
-        <img src="./lantern-tomb/assets/tomb.svg" alt="" width="640" height="450" loading="lazy">
-      </a>
       <a class="afterglow-card lobby-view" href="./afterglow/" aria-label="试玩Afterglow，可试玩原型，单人太空生存射击">
       <div class="afterglow-art" aria-hidden="true"><span class="afterglow-planet"></span><span class="afterglow-ship">➤</span></div>
       <div class="afterglow-copy"><span class="afterglow-badge">可试玩原型 · v0.2</span><h3>Afterglow</h3><p>鼠标驾驶，自动开火。<br>把最后一道光带回家。</p><span class="afterglow-cta">立即试玩 ↗</span></div>
     </a>
+    </section>
+
+    <section class="game-zone lobby-view" id="ai-fiction" aria-labelledby="fiction-title">
+      <header class="zone-heading"><span class="zone-symbol" aria-hidden="true">✎</span><p>03 / INTERACTIVE FICTION</p><h2 id="fiction-title">AI 互动小说</h2><span>挑选剧本，用自己的行动续写故事。</span></header>
+      <a class="fiction-card" href="./fiction/" aria-label="进入 AI 互动小说剧本书架">
+        <div class="fiction-copy"><span class="fiction-badge">剧本书架 · 单人冒险</span><h3>翻开一段冒险</h3><p>古墓里的灯还亮着。<br>先选一个故事，再决定你的下一步。</p><span class="fiction-cta">浏览剧本 ↗</span></div>
+        <img src="./lantern-tomb/assets/tomb.svg" alt="" width="640" height="450" loading="lazy">
+      </a>
     </section>
 
     <section class="room-card room-view" id="room-card" hidden aria-label="Game room">
