@@ -5,9 +5,10 @@
   let busy = false;
   let pending = null;
   let available = true;
-  const API = '/api/fiction';
+  const lab = document.body.dataset.fiction === 'lab';
+  const API = lab ? '/api/fiction-lab' : '/api/fiction';
   const uncommittedErrors = new Set([
-    'budget_exhausted', 'model_unavailable', 'classification_failed', 'rate_limited',
+    'budget_exhausted', 'model_unavailable', 'classification_failed', 'adjudication_failed', 'rate_limited',
     'invalid_request', 'invalid_choice', 'invalid_origin', 'start_limited', 'game_finished',
   ]);
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -120,11 +121,11 @@
     game = view;
     $('welcome').hidden = Boolean(game);
     $('adventure').hidden = !game;
-    $('start').textContent = '提灯入墓 ↗';
+    $('start').textContent = lab ? '来到门前 ↗' : '提灯入墓 ↗';
     if (!game) return;
     $('location').textContent = game.location.name;
     $('location-description').textContent = game.location.description;
-    $('turn-count').textContent = `第 ${game.turn} 轮 · 余 ${game.remainingTurns} 轮`;
+    $('turn-count').textContent = lab ? `已用 ${game.turn} 刻 · 余 ${game.remainingTurns} 刻` : `第 ${game.turn} 轮 · 余 ${game.remainingTurns} 轮`;
     $('model-label').textContent = game.model || 'GPT-5.6 Sol';
     renderLog(game.log);
     $('choices').replaceChildren();

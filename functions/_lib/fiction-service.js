@@ -10,7 +10,7 @@ const schema = [
   `CREATE TABLE IF NOT EXISTS koa_fiction_budget (day TEXT PRIMARY KEY, spent_micro INTEGER NOT NULL)`
 ];
 
-class ApiError extends Error {
+export class ApiError extends Error {
   constructor(status, message, code) { super(message); this.status = status; this.code = code; }
 }
 const json = (body, status = 200, headers = {}) => new Response(JSON.stringify(body), {
@@ -21,7 +21,7 @@ const changes = result => Number(result.meta?.changes || 0);
 const run = (db, sql, ...args) => db.prepare(sql).bind(...args).run();
 const first = (db, sql, ...args) => db.prepare(sql).bind(...args).first();
 const publicError = error => error instanceof ApiError ? json({ error: error.message, code: error.code }, error.status) : json({ error: '游戏服务暂时不可用，请稍后重试。', code: 'service_unavailable' }, 503);
-const tokenCookie = token => `${COOKIE}=${token}; Path=/api/fiction; HttpOnly; Secure; SameSite=Lax; Max-Age=${TTL / 1000}`;
+const tokenCookie = (token, name = COOKIE, path = "/api/fiction") => `${name}=${token}; Path=${path}; HttpOnly; Secure; SameSite=Lax; Max-Age=${TTL / 1000}`;
 
 async function increment(db, bucket, max, expires) {
   return changes(await run(db, `INSERT INTO koa_fiction_limits(bucket,count,expires_at) VALUES (?,1,?) ON CONFLICT(bucket) DO UPDATE SET count=count+1 WHERE count < ?`, bucket, expires, max)) > 0;
@@ -61,7 +61,7 @@ function modelText(data) {
   return (data.output || []).filter(x => x.type === 'message').flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\n');
 }
 
-async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700 } = {}) {
+export async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700, timeoutMs = 30000 } = {}) {
   if (!env.UPSTREAM_API_KEY) throw new ApiError(503, '主持模型尚未配置；你仍可使用建议行动探索。', 'model_unavailable');
   const payload = { model: 'gpt-5.6-sol', store: false, stream: false, reasoning: { effort: 'low' }, input, max_output_tokens: maxTokens };
   if (format) payload.text = { format };
@@ -73,7 +73,7 @@ async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700 } 
   const reservation = await run(db, `INSERT INTO koa_fiction_budget(day,spent_micro) SELECT ?,? WHERE ? <= ? ON CONFLICT(day) DO UPDATE SET spent_micro=spent_micro+excluded.spent_micro WHERE spent_micro+excluded.spent_micro <= ?`, day, reserved, reserved, cap, cap);
   if (!changes(reservation)) throw new ApiError(429, '今日 AI 主持额度已用完；你仍可使用建议行动探索。', 'budget_exhausted');
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 30000);
+  const timer = setTimeout(() => controller.abort(), Math.min(45000, Math.max(1000, timeoutMs)));
   try {
     const response = await fetchImpl(`${(env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')}/responses`, {
       method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.UPSTREAM_API_KEY}` },
@@ -110,7 +110,7 @@ function actionFormat(allowed, world) {
   };
 }
 
-export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(...args) } = {}) {
+export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(...args), gameKind = 'classic', cookieName = COOKIE, cookiePath = '/api/fiction', resolveTurn } = {}) {
   return async ({ request, env }) => {
     try {
       if (!['GET', 'POST'].includes(request.method)) return json({ error: '不支持的请求方式。' }, 405, { Allow: 'GET, POST' });
@@ -126,29 +126,30 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
       const now = Date.now();
       const ipHash = await hash(`fiction:${request.headers.get('CF-Connecting-IP') || 'unknown'}`);
       const date = new Date(now).toISOString().slice(0, 10);
-      if (!await increment(db, `api:${date}:${ipHash}`, 100, now + 2 * 86400000)) throw new ApiError(429, '今日请求次数已达上限，请明天再来。', 'rate_limited');
-      const cookie = (request.headers.get('Cookie') || '').split(';').map(x => x.trim()).find(x => x.startsWith(`${COOKIE}=`))?.slice(COOKIE.length + 1);
+      if (!await increment(db, `api:${gameKind}:${date}:${ipHash}`, 100, now + 2 * 86400000)) throw new ApiError(429, '今日请求次数已达上限，请明天再来。', 'rate_limited');
+      const cookie = (request.headers.get('Cookie') || '').split(';').map(x => x.trim()).find(x => x.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
       let tokenHash = cookie && /^[a-f0-9]{64}$/.test(cookie) ? await hash(cookie) : null;
       let session = tokenHash ? await first(db, `SELECT * FROM koa_fiction_sessions WHERE token_hash=? AND expires_at>?`, tokenHash, now) : null;
+      if (session && (JSON.parse(session.state_json).gameKind || 'classic') !== gameKind) session = null;
       if (request.method === 'GET') return json({ game: session ? engine.getView(JSON.parse(session.state_json)) : null, available: true });
       if (body.op === 'start') {
         if (session && !body.reset) return json({ game: engine.getView(JSON.parse(session.state_json)), available: true });
-        if (!await increment(db, `start:${date}:${ipHash}`, 5, now + 2 * 86400000)) throw new ApiError(429, '今天已创建 5 局，请继续现有存档或明天再来。', 'start_limited');
+        if (!await increment(db, `start:${gameKind}:${date}:${ipHash}`, 5, now + 2 * 86400000)) throw new ApiError(429, '今天已创建 5 局，请继续现有存档或明天再来。', 'start_limited');
         const token = [...crypto.getRandomValues(new Uint8Array(32))].map(x => x.toString(16).padStart(2, '0')).join('');
         tokenHash = await hash(token);
-        const state = engine.createGame(); state.sessionId = crypto.randomUUID();
+        const state = engine.createGame(); state.sessionId = crypto.randomUUID(); state.gameKind = gameKind;
         await run(db, `INSERT INTO koa_fiction_sessions(token_hash,session_id,state_json,revision,expires_at) VALUES (?,?,?,?,?)`, tokenHash, state.sessionId, JSON.stringify(state), state.revision, now + TTL);
-        return json({ game: engine.getView(state), available: true }, 200, { 'Set-Cookie': tokenCookie(token) });
+        return json({ game: engine.getView(state), available: true }, 200, { 'Set-Cookie': tokenCookie(token, cookieName, cookiePath) });
       }
       if (!session) throw new ApiError(401, '存档已过期，请重新开始。', 'session_expired');
       const previous = await first(db, `SELECT response_json FROM koa_fiction_receipts WHERE token_hash=? AND request_id=?`, tokenHash, body.requestId);
       if (previous) return json(JSON.parse(previous.response_json));
       const state = JSON.parse(session.state_json);
       if (body.expectedRevision !== state.revision) throw new ApiError(409, '存档已更新，请刷新后再行动。', 'revision_conflict');
-      if (state.turn >= MAX_TURNS || state.status !== 'playing') throw new ApiError(409, '本局已结束，请查看结局或重新开始。', 'game_finished');
+      if (state.turn >= (engine.MAX_TURNS || MAX_TURNS) || state.status !== 'playing') throw new ApiError(409, '本局已结束，请查看结局或重新开始。', 'game_finished');
       const allowed = engine.getActions(state);
       if (body.choiceId && !allowed.some(x => x.id === body.choiceId)) throw new ApiError(400, '当前不能执行这个行动。', 'invalid_choice');
-      if (!await increment(db, `turn:${Math.floor(now / 60000)}:${ipHash}`, 10, now + 120000)) throw new ApiError(429, '行动太快了，请稍等一分钟。', 'rate_limited');
+      if (!await increment(db, `turn:${gameKind}:${Math.floor(now / 60000)}:${ipHash}`, 10, now + 120000)) throw new ApiError(429, '行动太快了，请稍等一分钟。', 'rate_limited');
       const owner = crypto.randomUUID();
       const acquired = await run(db, `UPDATE koa_fiction_sessions SET lock_owner=?,lock_until=? WHERE token_hash=? AND revision=? AND lock_until<? AND expires_at>?`, owner, now + LOCK_MS, tokenHash, state.revision, now, now);
       if (!changes(acquired)) throw new ApiError(409, '另一轮行动仍在处理，请稍后重试。', 'turn_busy');
@@ -156,6 +157,13 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
         // A receipt may have committed between the initial read and lock acquisition.
         const raced = await first(db, `SELECT response_json FROM koa_fiction_receipts WHERE token_hash=? AND request_id=?`, tokenHash, body.requestId);
         if (raced) return json(JSON.parse(raced.response_json));
+        let next = state, response;
+        if (resolveTurn) {
+          const resolved = await resolveTurn({ state, body, call: (input, options) => callModel(env, db, fetchImpl, input, options) });
+          next = resolved.state;
+          if (next.sessionId !== state.sessionId || next.revision !== state.revision + 1) throw new ApiError(503, '主持本轮的记录未通过校验，进度未改变。', 'classification_failed');
+          response = { game: engine.getView(next), ...(resolved.meta || {}) };
+        } else {
         let actionId = body.choiceId;
         let interaction;
         let clarification;
@@ -172,7 +180,7 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
           else if (allowed.some(x => x.id === parsed.action_id)) actionId = parsed.action_id;
           else throw new ApiError(503, '主持未能理解这次行动，请重试或选择建议行动。', 'classification_failed');
         }
-        let next = state; let degraded = false; let degradationReason;
+        next = state; let degraded = false; let degradationReason;
         if (!clarification) {
           const playerAction = body.action?.trim() || allowed.find(x => x.id === actionId).label;
           const applied = interaction ? engine.applyInteraction(state, interaction, playerAction) : engine.applyAction(state, actionId, playerAction);
@@ -186,7 +194,8 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
             next.log.push({ role: 'narrator', text: narration.slice(0, 1800), turn: next.turn });
           } catch (error) { degraded = true; degradationReason = error.code === 'budget_exhausted' ? '今日 AI 额度已用完，本轮使用规则叙事。' : '主持暂时离线，本轮使用规则叙事，存档已保存。'; }
         }
-        const response = { game: engine.getView(next), ...(clarification ? { clarification } : {}), ...(degraded ? { degraded: true, message: degradationReason } : {}) };
+        response = { game: engine.getView(next), ...(clarification ? { clarification } : {}), ...(degraded ? { degraded: true, message: degradationReason } : {}) };
+        }
         // D1 batch is transactional. The owner predicate prevents stale requests committing
         // after timeout recovery, and receipts commit atomically with the new state.
         const committed = await db.batch([
@@ -194,7 +203,7 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
           db.prepare(`UPDATE koa_fiction_sessions SET state_json=?,revision=?,lock_owner=NULL,lock_until=0,expires_at=? WHERE token_hash=? AND lock_owner=? AND revision=?`).bind(JSON.stringify(next), next.revision, Date.now() + TTL, tokenHash, owner, state.revision)
         ]);
         if (!changes(committed[0]) || !changes(committed[1])) throw new ApiError(409, '本轮处理已超时，请刷新存档后重试。', 'lock_expired');
-        return json(response, 200, { 'Set-Cookie': tokenCookie(cookie) });
+        return json(response, 200, { 'Set-Cookie': tokenCookie(cookie, cookieName, cookiePath) });
       } finally {
         await run(db, `UPDATE koa_fiction_sessions SET lock_owner=NULL,lock_until=0 WHERE token_hash=? AND lock_owner=?`, tokenHash, owner);
       }

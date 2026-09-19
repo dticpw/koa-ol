@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#eee8da">
+  <meta name="description" content="门后的火光：用火、水、绳与自己的想法探索墓门，一次可以包含连贯的准备与行动。">
+  <title>门后的火光 · 自由行动试玩</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../lantern-tomb/style.css">
+  <script src="../lantern-tomb/app.js?v=lab1" defer></script>
+</head>
+<body data-fiction="lab">
+  <a class="skip" href="#story">跳到故事</a>
+  <div class="page-shell">
+    <header class="masthead">
+      <a href="/" class="home-link" aria-label="回到 Koa 主页"><span class="home-mark">K.</span><span>KOA · 游艺室</span></a>
+      <div class="edition">互动小说 <span>LAB. 01</span></div>
+      <a class="credits-link" href="./credits.html">剧本与制作 <span aria-hidden="true">↗</span></a>
+    </header>
+    <main>
+      <section class="cover" aria-labelledby="title">
+        <div class="cover-copy">
+          <p class="eyebrow"><span class="tiny-line"></span>从一个想法，到留下的后果</p>
+          <h1 id="title">门后的<span>火光</span><i aria-hidden="true">。</i></h1>
+          <p class="cover-description">门已打开，你还站在外面。<br>一盏灯，一块布，这次由你想办法。</p>
+          <div class="cover-meta"><span>单人冒险</span><span>自由行动</span><span>二十刻灯火</span></div>
+        </div>
+        <div class="cover-art" aria-hidden="true"><img src="../lantern-tomb/assets/tomb.svg" alt="" width="640" height="450"><span class="art-caption">FIELD NOTES — THE LIGHT BEYOND</span></div>
+      </section>
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      <section id="welcome" class="welcome" aria-labelledby="welcome-title">
+        <div><p class="eyebrow">探险之前</p><h2 id="welcome-title">先试一试你的办法。</h2><p>这里是一段围绕墓门的小型探查。可以连着准备、操作、观察，也可以先说条件再行动。物品用过、投出、烧损的后果会留到下一轮；出现意外时，故事会停下来等你决定。</p><p class="save-note">试玩单独存档，不影响《蛇墓余火》的进度。关闭页面可以回来续玩；清除 Cookie 后无法恢复。</p></div>
+        <div class="start-actions"><button id="start" class="primary" type="button" disabled>正在读取存档…</button><p>独立试玩 · <a href="../lantern-tomb/">返回蛇墓余火</a></p></div>
+      </section>
+      <section id="adventure" class="adventure" hidden aria-label="冒险正文">
+        <div class="reading-column">
+          <div class="chapter-head"><div><p class="eyebrow">当前所在</p><h2 id="location">墓门外</h2></div><p id="turn-count" class="turn-count"></p></div>
+          <p id="location-description" class="location-description"></p>
+          <article id="story" class="story" aria-label="冒险记录" tabindex="-1"></article>
+          <div id="action-notice" class="notice action-notice" role="status" aria-live="polite" hidden></div>
+          <section id="ending" class="ending" hidden aria-labelledby="ending-title"><p class="eyebrow">这一页，写到这里</p><h2 id="ending-title"></h2><p id="ending-text"></p><button id="restart" class="primary" type="button">再试一次 <span aria-hidden="true">↗</span></button></section>
+          <section id="action-area" class="action-area" aria-labelledby="action-heading">
+            <div class="action-heading"><h3 id="action-heading">接下来，你想怎么做？</h3><span id="thinking" role="status" aria-live="polite" hidden>主持正在回应…</span></div>
+            <div id="choices" class="choices"></div>
+            <form id="action-form"><label for="action">自由尝试 · 不限于上面的建议</label><p id="action-help" class="panel-intro">可以把一串连贯动作一起说出来，也可以说明条件或停止点。准备和短操作通常合计一刻，长时间等待会消耗更多灯火。</p><div class="input-wrap"><textarea id="action" name="action" maxlength="300" rows="2" aria-describedby="action-help" placeholder="例如：打开灯罩，点燃厚布的一角，再把它投到门内近处观察。"></textarea><button id="send" type="submit" class="send-button" aria-label="提交行动">行动 <span aria-hidden="true">↗</span></button></div><div class="input-footer"><span>Ctrl / ⌘ + Enter 提交</span><span><span id="char-count">0</span> / 300</span></div></form>
+            <div id="error" class="error" role="alert" hidden><p id="error-text"></p><button id="retry" type="button">重试这次行动</button><button id="refresh" type="button">重新读取存档</button></div>
+          </section>
+        </div>
+        <aside class="field-notes" aria-label="探险手记">
+          <div class="notes-heading"><span class="eyebrow">随身手记</span><span aria-hidden="true">✳</span></div>
+          <div class="tabs" role="tablist" aria-label="查看探险资料"><button role="tab" id="tab-map" aria-controls="panel-map" aria-selected="true" data-panel="map">路径</button><button role="tab" id="tab-inventory" aria-controls="panel-inventory" aria-selected="false" tabindex="-1" data-panel="inventory">背包 <span id="inventory-count">0</span></button><button role="tab" id="tab-clues" aria-controls="panel-clues" aria-selected="false" tabindex="-1" data-panel="clues">记录 <span id="clue-count">0</span></button></div>
+          <section id="panel-map" role="tabpanel" aria-labelledby="tab-map"><p class="panel-intro">石门外 → 门内近处 → 伪王墓。门开时，可以站在外面向门内近处投物。</p><ol id="map" class="map-list"></ol><p class="map-note">本次试玩仅包含这三处相邻位置</p></section>
+          <section id="panel-inventory" role="tabpanel" aria-labelledby="tab-inventory" hidden><ul id="inventory" class="notes-list"></ul></section>
+          <section id="panel-clues" role="tabpanel" aria-labelledby="tab-clues" hidden><ul id="clues" class="notes-list"></ul></section>
+          <div class="notes-bottom"><dl><div><dt>状态</dt><dd id="resolve">—</dd></div><div><dt>记录</dt><dd id="treasure">—</dd></div></dl><p>留意细节，也给自己的直觉一点余地。</p></div>
+        </aside>
+      </section>
+    </main>
+    <footer><p>改编自 <i>Tomb of the Serpent Kings</i> · <a href="./credits.html">来源与许可</a></p><p>AI 主持 <span id="model-label">GPT-5.6 Sol</span><span class="footer-dot">·</span>实验短篇</p></footer>
+  </div>
+  <dialog id="reset-dialog" aria-labelledby="reset-title"><form method="dialog"><p class="eyebrow">重新出发</p><h2 id="reset-title">合上这一本手记？</h2><p>重新开始会替换这版试玩的存档，不影响原版《蛇墓余火》。旧试玩进度无法恢复。</p><div class="dialog-actions"><button value="cancel">保留当前冒险</button><button value="confirm" class="primary">开始新冒险</button></div></form></dialog>
+  <noscript><p class="noscript">本游戏需要 JavaScript 才能保存进度和与主持交互，请启用后刷新页面。</p></noscript>
+</body>
+</html>
