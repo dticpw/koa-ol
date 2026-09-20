@@ -1,3 +1,4 @@
+import { numberStory, numberImage } from './number-deck.js?v=080';
 import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=070';
 import { timeoutNotice } from './timeout-notice.js?v=060';
 import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe } from './engine.js?v=070';
@@ -29,6 +30,8 @@ function trumpHTML(c) {
 }
 function numberHTML(c, owner, index) {
   const hidden = owner === 1 && index === 0 && state.phase === 'playing';
+  const story = !hidden && !c.generated ? numberStory(c.value) : null;
+  if (story) return `<button type="button" class="num-card story-card ${index === 0 ? 'hole' : ''}" data-cid="${index === 0 ? `hole-${state.round}-${owner}` : c.id}" data-face="front" data-number-story="${c.value}" aria-label="${index === 0 ? '底牌' : '明牌'} ${c.value} 点 · ${story.title}，查看卡面故事"><img class="number-illustration" src="${numberImage(story)}" alt="" decoding="async" draggable="false"><span class="corner">${c.value}</span><span class="pip">${c.value}</span><span class="number-title">${story.title}</span>${index === 0 ? '<span class="hole-label">底牌</span>' : ''}</button>`;
   return `<div class="num-card ${hidden ? 'back' : ''} ${index === 0 ? 'hole' : ''} ${c.generated ? 'generated' : ''}" data-cid="${index === 0 ? `hole-${state.round}-${owner}` : c.id}" data-face="${hidden ? 'back' : 'front'}" aria-label="${hidden ? esc(enemyName()) + '的底牌，未知' : `${c.generated ? '创造牌' : index === 0 ? '底牌' : '明牌'} ${c.value} 点`}">${hidden ? '<span class="pip">?</span><span class="card-suit">底牌</span>' : `<span class="corner">${c.value}<br>♠</span><span class="pip">${c.value}</span><span class="corner bottom">${c.value}<br>♠</span>${c.generated ? '<span class="hole-label">创造</span>' : index === 0 ? '<span class="hole-label">底牌</span>' : ''}`}</div>`;
 }
 
@@ -131,7 +134,7 @@ function cardFeedback(card, actor) {
 }
 
 const metricTimers = new Map();
-let unreadPlays = 0;
+let unreadPlays = 0, inspectedNumber = null;
 function clearMetrics() {
   for (const [id, timer] of metricTimers) { clearTimeout(timer); $(id).classList.remove('metric-flash'); }
   metricTimers.clear();
@@ -190,6 +193,7 @@ $('log').addEventListener('click', e => {
 function render() {
   if (!state) return;
   const focused = document.activeElement?.dataset.hand, logFocus = document.activeElement?.dataset.logCard;
+  const numberFocus = document.activeElement?.dataset.numberStory;
   const revealed = state.phase !== 'playing', target = targetOf(state);
   $('round-label').textContent = `第 ${String(state.round).padStart(2, '0')} 局`;
   $('target').textContent = target;
@@ -213,6 +217,7 @@ function render() {
     $('slots-' + actor).textContent = `桌面王牌 ${slots(p)}/5`;
     $('effects-' + actor).innerHTML = p.table.map(c => `<button class="effect-chip ${CATALOG[c.type].special ? 'special-effect' : ''}" data-effect="${c.id}" data-cid="${c.id}" aria-label="查看 ${esc(cardName(c))} 效果">${esc(cardName(c))}<small>${'◇'.repeat(CATALOG[c.type].cost)}</small></button>`).join('') + Array.from({ length: 5 - slots(p) }, () => '<span class="effect-slot" aria-hidden="true">·</span>').join('');
   }
+  if (numberFocus) document.querySelector(`[data-number-story="${numberFocus}"]`)?.focus({ preventScroll: true });
   const hand = state.players[0].hand;
   if (!hand.some(c => c.id === selected)) selected = null;
   $('hand').innerHTML = hand.length ? hand.map(trumpHTML).join('') : '<p class="empty-hand">手中暂时没有王牌。下一局会补充一张。</p>';
@@ -295,6 +300,19 @@ $('hand').addEventListener('click', e => {
   if (selected && !matchMedia('(max-width:600px)').matches) $('selection').scrollIntoView({ block: 'nearest', behavior: reduced.matches ? 'instant' : 'smooth' });
 });
 $('table').addEventListener('click', e => {
+  const number = e.target.closest('[data-number-story]');
+  if (number) {
+    const card = numberStory(Number(number.dataset.numberStory));
+    if (!card) return;
+    inspectedNumber = card.value;
+    $('number-picture').src = numberImage(card, true);
+    $('number-detail-value').textContent = card.value;
+    $('number-chapter').textContent = `午夜赌局 · 第 ${String(card.value).padStart(2, '0')} 幕 / 十一幕`;
+    $('number-detail-title').textContent = card.title;
+    $('number-story-text').textContent = card.story;
+    $('number-point-label').textContent = `${card.value} 点 · 数牌`;
+    openDialog('number-detail');
+  }
   const button = e.target.closest('[data-effect]');
   if (button) {
     const c = state.players.flatMap(p => p.table).find(c => c.id === button.dataset.effect);
@@ -328,6 +346,9 @@ $('sound').addEventListener('click', async () => {
 });
 document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => $(b.dataset.close).close()));
 document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', () => { scheduleAI(); broadcasts.resume(); }));
+$('number-detail').addEventListener('close', () => {
+  (document.querySelector(`[data-number-story="${inspectedNumber}"]`) || $('turn-title')).focus({ preventScroll: true });
+});
 $('welcome').addEventListener('cancel', e => e.preventDefault());
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { broadcasts.suspend(); clearTimeout(aiTimer); animations.forEach(a => a.cancel()); if (audioContext) audioContext.suspend().catch(() => {}); }

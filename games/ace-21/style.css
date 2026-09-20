@@ -361,3 +361,41 @@
     .log-card { min-height:44px; }
   }
 }
+
+/* Midnight Wager: illustrated ordinary number deck. */
+@layer components {
+  .story-card { padding:0; isolation:isolate; background:#39272a; color:#fff0d5; }
+  .number-illustration { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:4px; z-index:-2; }
+  .story-card::after { content:''; position:absolute; inset:0; border-radius:4px; z-index:-1; background:linear-gradient(180deg,#110d0d16 30%,#130a09aa 75%,#170c0aee); box-shadow:inset 0 0 0 3px #e2bb7940; }
+  .story-card .corner { top:3px; left:3px; min-width:20px; padding:2px 3px; background:#f0dfbd; color:#301c1a; border-radius:2px; font:bold 15px/1 Georgia,serif; text-align:center; box-shadow:0 1px 4px #0006; }
+  .story-card .pip { position:absolute; bottom:5px; left:6px; font:600 30px/1 Georgia,serif; color:#fff2ce; text-shadow:0 2px 5px #000; }
+  .number-title { position:absolute; bottom:7px; right:5px; max-width:34px; font:500 9px/1.3 var(--serif); color:#f2ddb9; text-shadow:0 1px 3px #000; }
+  .story-card:hover { border-color:#fff0bc; box-shadow:0 0 0 2px #e5bb6555,0 5px 12px #0008; }
+  .story-card:focus-visible { outline:2px solid #fff0bc; outline-offset:3px; }
+  .story-card .hole-label { z-index:1; }
+  .number-dialog { width:min(680px,calc(100vw - 28px)); padding:26px; max-height:90dvh; overflow:auto; }
+  .number-dialog[open] { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.85fr); gap:28px; align-items:center; }
+  .number-dialog>.close { position:absolute; top:6px; right:6px; z-index:2; background:#251b24ed; border-radius:50%; }
+  .number-portrait { position:relative; aspect-ratio:2/3; padding:7px; border:1px solid #c6a16b; border-radius:8px; background:#30201d; box-shadow:0 12px 30px #0007,inset 0 0 0 3px #ad854335; }
+  .number-portrait img { display:block; width:100%; height:100%; object-fit:cover; border-radius:3px; }
+  .portrait-pip { position:absolute; left:14px; top:14px; min-width:40px; padding:6px; font:600 33px/1 Georgia,serif; text-align:center; color:#301c1a; background:#f0dfbd; border:1px solid #bb955a; border-radius:3px; box-shadow:0 2px 8px #0005; }
+  .number-story-copy h2 { font:500 34px/1.5 var(--serif); color:#f2dfb9; margin:14px 0 18px; }
+  .number-story-copy p { font:16px/2 var(--serif); color:#e3d7c6; }
+  .number-point-label { display:inline-block; margin-top:24px; padding:5px 10px; border:1px solid var(--line); border-radius:3px; color:var(--gold); font-size:12px; }
+  .number-story-copy small { display:block; margin-top:20px; font-size:10px; line-height:1.8; color:var(--muted); }
+}
+@layer responsive {
+  @media (min-width:601px) { .num-card { width:74px; flex-basis:74px; height:108px; } .numbers { min-height:122px; } }
+  @media (max-width:600px) {
+    .num-card { width:60px; flex-basis:60px; height:88px; } .numbers { min-height:102px; }
+    .story-card .corner { top:3px; left:3px; font-size:13px; min-width:18px; }
+    .story-card .pip { font-size:27px; bottom:5px; left:5px; }
+    .number-title { font-size:8px; right:4px; max-width:24px; bottom:6px; }
+    .number-dialog { padding:24px 22px; max-height:92dvh; }
+    .number-dialog[open] { grid-template-columns:1fr; gap:16px; }
+    .number-portrait { width:min(100%,260px,32dvh); margin:auto; }
+    .number-story-copy h2 { font-size:27px; margin:7px 0 10px; }
+    .number-story-copy p { font-size:14px; line-height:1.8; }
+    .number-point-label { margin-top:14px; } .number-story-copy small { margin-top:12px; }
+  }
+}
