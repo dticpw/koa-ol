@@ -2,8 +2,10 @@ const STORAGE = 'ace21-room-v1';
 const API = location.hostname === '127.0.0.1' || location.hostname === 'localhost'
   ? 'http://127.0.0.1:4183' : 'https://muq.koa-ol.com/ace21-api';
 export function savedRoom() {
-  const code = new URL(location.href).searchParams.get('table');
-  if (!/^10[01]0[0-3]$/.test(code || '')) return null;
+  const params = new URL(location.href).searchParams;
+  if (!params.has('table')) return null;
+  const code = params.get('table');
+  if (!/^10[01]0[0-3]$/.test(code || '')) { location.replace('./lobby/'); return null; }
   try { const token = sessionStorage.getItem('koa-table-token'); return token ? {code,token} : (location.replace('./lobby/'),null); } catch { location.replace('./lobby/');return null; }
 }
 export class RoomClient {

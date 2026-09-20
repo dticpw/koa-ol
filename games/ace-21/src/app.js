@@ -1,12 +1,14 @@
 import { CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe } from './engine.js';
 import { chooseAction } from './ai.js';
-import { RoomClient, savedRoom } from './network.js';
+import { RoomClient, savedRoom } from './network.js?v=041';
 
 const $ = id => document.getElementById(id);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const artMap = { shield: 'shield', sword: 'sword', star: 'crown', crown: 'crown', eye: 'eye', moon: 'moon', harvest: 'moon', cycle: 'scales', return: 'scales', swap: 'scales', break: 'sword', number: 'scales' };
 const seed = () => crypto.getRandomValues(new Uint32Array(1))[0];
-let state = createGame(seed()), started = false, paused = false, selected = null;
+// Choose the mode before showing any UI; a failed online connection is never solo.
+const multiplayerEntry = new URL(location.href).searchParams.has('table');
+let state = multiplayerEntry ? null : createGame(seed()), started = false, paused = false, selected = null;
 let aiTimer, toastTimer, fxTimer, fast = false, sound = false, audioContext;
 const animations = new Set();
 let online = null, room = null, connected = false, networkBusy = false;
@@ -128,6 +130,7 @@ function cardFeedback(old, action) {
 }
 
 function render() {
+  if (!state) return;
   const focused = document.activeElement?.dataset.hand;
   const revealed = state.phase !== 'playing', target = targetOf(state);
   $('round-label').textContent = `第 ${String(state.round).padStart(2, '0')} 局`;
@@ -220,7 +223,7 @@ function perform(action) {
 
 function openDialog(id) { clearTimeout(aiTimer); $(id).showModal(); }
 function start() {
-  if (online) return;
+  if (multiplayerEntry || online) return;
   clearTimeout(aiTimer); animations.forEach(a => a.cancel());
   state = createGame(seed()); selected = null; paused = false; started = true;
   document.querySelectorAll('dialog[open]').forEach(d => d.close());
@@ -277,14 +280,13 @@ document.addEventListener('visibilitychange', () => {
 reduced.addEventListener('change', () => { if (reduced.matches) animations.forEach(a => a.cancel()); });
 document.addEventListener('keydown', e => {
   if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || anyDialog() || ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable) return;
-  if (state.actor !== 0 || !started || paused || state.phase !== 'playing') return;
+  if (!started || state.actor !== 0 || paused || state.phase !== 'playing') return;
   if (e.key.toLowerCase() === 'd') { e.preventDefault(); perform({ type: 'draw', actor: 0 }); }
   if (e.key.toLowerCase() === 's') { e.preventDefault(); perform({ type: 'stand', actor: 0 }); }
 });
 
 $('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article class="${c.special ? 'special-catalog' : ''}"><h4>${c.name}${type === 'number' ? ' 1～11' : type === 'challenge' ? ' 22～30' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格${c.special ? ' · 场上最多一张' : ''}</small></article>`).join('');
 if (matchMedia('(max-width: 920px)').matches) document.querySelector('.chronicle').open = false;
-render(); openDialog('welcome');
 
 
 function confirmRestart() {
@@ -297,18 +299,28 @@ function networkStatus(status, data, message) {
   const wasConnected = connected; connected = status === 'connected';
   const text = connected ? data.opponentOnline ? '双方在线' : '等待对手连接' : '连接中断，正在重连…';
   $('room-connection').textContent = `${data?.code || room?.code || online?.session.code || ''} 号桌 · ${text}`;
+  if (!started) {
+    $('joining-status').textContent = connected ? '牌局已连接，正在接收你的手牌…' : '暂时无法连接牌桌，正在自动重试。连接恢复后会直接进入对局。';
+  }
   if (wasConnected !== connected && started) render();
   if (status === 'expired') { toast(message || '座位已释放'); exitOnline(); }
 }
 function receiveRoom(data) {
-  const changed = !room || data.revision > room.revision, hadState = Boolean(room?.state), old = state;
+  const hadState = started, changed = !hadState || !room || data.revision > room.revision, old = state;
   room = data;
   $('room-bar').hidden = false;
   if (!data.you || !data.state) { exitOnline(); return; }
-  if (!hadState) { document.querySelectorAll('dialog[open]').forEach(d => d.close()); paused = false; started = true; }
   if (changed) {
     const before = captureCards(); state = data.state;
-    render(); transitionCards(before);
+    paused = false; started = true;
+    render();
+    if (!hadState) {
+      document.querySelectorAll('dialog[open]').forEach(d => d.close());
+      $('joining').hidden = true; $('game-layout').hidden = false;
+      $('turn-title').focus({ preventScroll: true });
+      $('announcement').textContent = '已进入双人牌局，你的底牌和王牌已发放。';
+    }
+    transitionCards(before);
     if (hadState && state.eventId !== old.eventId) {
       soundEffect(state.phase !== 'playing' ? 'result' : 'play');
       $('announcement').textContent = state.log.filter(e => e.id > old.eventId).map(e => e.text).join(' ');
@@ -327,8 +339,14 @@ function exitOnline() { online?.stop(); location.assign('./lobby/'); }
 $('selection').addEventListener('click', e => { if (e.target.closest('#clear-selection')) { selected = null; render(); } });
 $('multiplayer').addEventListener('click', () => location.assign('./lobby/'));
 const saved = savedRoom();
-if (saved) {
-  $('start').disabled = true; $('multiplayer').textContent = '返回游戏大厅';
-  online = new RoomClient(receiveRoom, networkStatus, saved); online.poll();
+if (multiplayerEntry) {
+  $('start').disabled = true; $('pace').hidden = true;
+  $('joining').hidden = false;
+  if (saved) {
+    $('joining-title').textContent = `正在进入 ${saved.code} 号桌`;
+    online = new RoomClient(receiveRoom, networkStatus, saved); online.poll();
+  } else $('joining-status').textContent = '正在返回大厅，请重新入座。';
+} else {
+  render(); $('game-layout').hidden = false; openDialog('welcome');
 }
 new ResizeObserver(([entry]) => document.documentElement.style.setProperty('--dock-height', `${entry.target.getBoundingClientRect().height}px`)).observe($('controls'));

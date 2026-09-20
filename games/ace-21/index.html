@@ -7,8 +7,8 @@
   <meta name="description" content="王牌21点：共享1至11数牌池，用改变规则的王牌与希儿进行一场命运牌局。">
   <title>王牌21点 · Midnight Table</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css?v=040">
-  <script type="module" src="./src/app.js?v=040"></script>
+  <link rel="stylesheet" href="./style.css?v=041">
+  <script type="module" src="./src/app.js?v=041"></script>
 </head>
 <body>
   <a class="skip-link" href="#controls">跳到操作区</a>
@@ -22,11 +22,17 @@
     </nav>
   </header>
 
-  <main class="layout">
+  <section id="joining" class="joining" aria-labelledby="joining-title" hidden>
+    <span class="eyebrow">ACE 21 · 双人联机</span>
+    <h1 id="joining-title">正在进入牌桌</h1>
+    <p id="joining-status" role="status">正在连接牌桌，接收你的底牌和王牌…</p>
+    <a class="stand-button" href="./lobby/">返回游戏大厅</a>
+  </section>
+  <main id="game-layout" class="layout" hidden>
     <aside class="sidebar" aria-label="对局概况">
       <div class="title-lockup"><p class="eyebrow">ACE TWENTY-ONE</p><h1>王牌<span>21点<span class="title-diamond" aria-hidden="true">♦</span></span></h1><p class="tagline">胜负，在下一张之外。</p></div>
       <div class="session-heading"><span id="round-label">第一局</span><span class="small-tag" id="mode-label">单人对战</span></div>
-      <div class="turn-box" id="turn-box"><span class="turn-light"></span><div><b id="turn-title">等待入席</b><p id="turn-description">准备开始你的牌局</p></div></div>
+      <div class="turn-box" id="turn-box"><span class="turn-light"></span><div><b id="turn-title" tabindex="-1">等待入席</b><p id="turn-description">准备开始你的牌局</p></div></div>
       <div class="turn-rule"><span>01 / 抽牌或使用王牌</span><span>02 / 停牌，交出行动权</span><span>03 / 双方停牌，开牌结算</span></div>
       <details class="chronicle" open><summary>牌局记录 <span>LIVE LOG</span></summary><ol id="log" aria-label="行动记录"></ol></details>
       <div class="sidebar-bottom"><button id="pause" class="quiet">暂停对局</button><button id="restart" class="quiet">重新开局</button></div>
