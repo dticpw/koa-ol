@@ -1,10 +1,12 @@
-// Koa-OL Chinese single-player adaptations. Adventure text: CC BY-SA 4.0.
+import {meijieStories} from './meijie-stories.js';
+// Koa-OL Chinese single-player adaptations. License is specified per story.
 // Full attribution and change notes are published with each scenario.
 const entity=(id,name,nature,place,facts,movable=true,kind='object')=>({id,name,nature,place,facts,movable,kind,integrity:'intact',source:null});
 const npc=(id,name,place,facts,nature)=>entity(id,name,nature,place,facts,true,'npc');
 const room=(name,description,exits)=>({name,description,exits});
 const common=[entity('light','提灯','普通有热量的油灯，可打开灯罩；不模拟燃油倒计时。','carried','完好，亮着。'),entity('rope','绳索','普通结实长绳，可系结、牵引或拆分。','carried','完好，盘起。'),entity('journal','手记','纸本与炭笔；可记载已获知事实。','carried','空白页充足。')];
 export const stories={
+ ...meijieStories,
  'library-delve':{
   id:'library-delve',title:'深入图书馆',original:'The Library Delve',author:'Willem-Jan / 1pagedungeons.com',source:'https://1pagedungeons.itch.io/leyebrary-opd',license:'https://creativecommons.org/licenses/by-sa/4.0/',
   tagline:'有些门，要用你记得的东西来打开。',summary:'五位管理员失踪，古老图书馆紧闭。会飞的书、无声的猫头鹰与不肯离去的守书人，等待你回答：知识值得怎样的代价？',tags:['奇幻探索','记忆代价','交谈与选择'],start:'entry',

@@ -24,3 +24,6 @@
 两张各一次生成请求，使用已授权的 model-library 通道，请求模型名 `gpt-image-2.5-sunburst` / high。请求尺寸1536×1024，实际返回横幅尺寸分别为2172×724和1916×821；Pillow等比缩放至宽1600、WebP quality84。原图、提示词与请求记录保存在 `/mnt/e/PG/imGen/20260920-game-nocturne/`。模型名是客户端请求参数，不能独立证明第三方实际后端身份。背景是氛围场景，不是地图或玩法承诺。
 
 早期 `tabletop.svg` 与 `trail-map.svg` 保留为素材历史，当前页面不再引用。
+
+
+2026-09-21 additions: `bindi-shang.webp` and `downtown-island.webp` are newly generated covers requested through GPT Image 2.5 Sunburst (high), not the original author's maps or artwork. Local originals and exact prompts: `/mnt/e/PG/imGen/20260921-fiction-imports/`. Original outputs were 1024×1536, compressed separately to WebP. `atlas-mystery.svg` and `atlas-city.svg` are original decorative geometry, not navigable story maps and not secret-route diagrams.

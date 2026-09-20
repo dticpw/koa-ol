@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1016">
+  <meta name="description" content="生日宴前，一名侍从死在酒店。你受托调查神定家的秘密：两张相似的面孔、一段被抹去的往事，以及尚有机会阻止的下一桩悲剧。">
+  <title>并蒂殇 · 自由行动试玩</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/games/lantern-tomb/style.css">
+  <link rel="stylesheet" href="/games/lantern-tomb-lab/inspector.css?v=batch1">
+  <script src="/games/lantern-tomb-lab/inspector.js?v=batch1" defer></script>
+  <link rel="stylesheet" href="/games/lantern-tomb-lab/collection.css?v=batch1">
+  <script src="/games/lantern-tomb-lab/collection.js?v=batch1" defer></script>
+  <script src="/games/lantern-tomb/app.js?v=batch1" defer></script>
+<link rel="stylesheet" href="/games/fiction/adventure.css?v=batch1">
+<link rel="stylesheet" href="/games/fiction/play-atmosphere.css?v=20260921-atlas">
+</head>
+<body data-fiction="lab" data-story="bindi-shang" data-api="/api/adventures/bindi-shang" data-start-label="开始这段冒险 ↗">
+  <a class="skip" href="#story">跳到故事</a>
+  <div class="page-shell">
+    <header class="masthead">
+      <a href="/games/fiction/" class="home-link" aria-label="返回百页行剧本书架"><span class="home-mark">K.</span><span>百页行</span></a>
+      <div class="edition">互动小说 <span>并蒂殇</span></div>
+      <nav class="game-links" aria-label="冒险导航"><button id="collection-open" type="button">冒险收藏</button><a class="credits-link" href="/games/fiction/bindi-shang/">剧本介绍 <span aria-hidden="true">↗</span></a></nav>
+    </header>
+    <main>
+      <section class="cover" aria-labelledby="title">
+        <div class="cover-copy">
+          <p class="eyebrow"><span class="tiny-line"></span>从一个想法，到留下的后果</p>
+          <h1 id="title">并蒂殇<i aria-hidden="true">。</i></h1>
+          <p class="cover-description">相同的面容，能否成为同一个人的证词？</p>
+          <div class="cover-meta"><span>单人冒险</span><span>自由行动</span><span>按自己的节奏</span></div>
+        </div>
+        <div class="cover-art" aria-hidden="true"><img src="/games/fiction/assets/bindi-shang.webp" alt="" width="800" height="1200"><span class="art-caption">并蒂殇</span></div>
+      </section>
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      <section id="welcome" class="welcome" aria-labelledby="welcome-title">
+        <div><p class="eyebrow">探险之前</p><h2 id="welcome-title">故事，等你写下下一步。</h2><p>生日宴前，一名侍从死在酒店。你受托调查神定家的秘密：两张相似的面孔、一段被抹去的往事，以及尚有机会阻止的下一桩悲剧。 可以连着准备、操作与观察；后果会留下来，遇到新的选择时故事会停下来等你。</p><p class="save-note">本篇独立存档，不影响其他剧本的进度。关闭页面可以回来续玩；清除 Cookie 后无法恢复。</p></div>
+        <div class="start-actions"><button id="start" class="primary" type="button" disabled>正在读取存档…</button><p>独立试玩 · <a href="/games/fiction/">返回剧本书架</a></p></div>
+      </section>
+      <section id="adventure" class="adventure" hidden aria-label="冒险正文">
+        <div class="reading-column">
+          <div class="chapter-head"><div><p class="eyebrow">当前所在</p><h2 id="location">神里酒店大堂</h2></div><p id="turn-count" class="turn-count"></p></div>
+          <p id="location-description" class="location-description"></p>
+          <article id="story" class="story" aria-label="冒险记录" tabindex="-1"></article>
+          <div id="action-notice" class="notice action-notice" role="status" aria-live="polite" hidden></div>
+          <section id="ending" class="ending" hidden aria-labelledby="ending-title"><p class="eyebrow">这一页，写到这里</p><h2 id="ending-title"></h2><p id="ending-text"></p><form id="ending-name-form" class="adventure-naming"><label for="ending-name">给这段冒险一个难忘的名字</label><p>故事可以结束，属于它的名字由你留下。</p><div class="naming-row"><input id="ending-name" maxlength="60" required placeholder="一个只属于这段经历的名字"><button id="ending-save" class="primary" type="submit">命名并收藏</button></div><p id="ending-save-status" role="status" aria-live="polite"></p></form><button id="restart" class="primary" type="button">再试一次 <span aria-hidden="true">↗</span></button></section>
+          <section id="action-area" class="action-area" aria-labelledby="action-heading">
+            <div class="action-heading"><h3 id="action-heading">接下来，你想怎么做？</h3><span id="thinking" role="status" aria-live="polite" hidden>主持正在回应…</span></div>
+            <div id="choices" class="choices"></div>
+            <form id="action-form"><label for="action">自由尝试 · 不限于上面的建议</label><p id="action-help" class="panel-intro">可以把一串连贯动作一起说出来，也可以说明条件或停止点。遇到影响下一步选择的变化，主持会暂停询问；确认本身不会消耗物品或推动事件。</p><div class="input-wrap"><textarea id="action" name="action" maxlength="300" rows="2" aria-describedby="action-help" placeholder="例如：先观察周围，和遇到的人谈谈，再决定是否继续深入。"></textarea><button id="send" type="submit" class="send-button" aria-label="提交行动">行动 <span aria-hidden="true">↗</span></button></div><div class="input-footer"><span>Ctrl / ⌘ + Enter 提交</span><span><span id="char-count">0</span> / 300</span></div></form>
+            <div id="error" class="error" role="alert" hidden><p id="error-text"></p><button id="retry" type="button">重试这次行动</button><button id="refresh" type="button">重新读取存档</button></div>
+          </section>
+        </div>
+        <div class="lab-sidebar">
+        <aside class="field-notes" aria-label="探险手记">
+          <div class="notes-heading"><span class="eyebrow">随身手记</span><span aria-hidden="true">✳</span></div>
+          <div class="tabs" role="tablist" aria-label="查看探险资料"><button role="tab" id="tab-map" aria-controls="panel-map" aria-selected="true" data-panel="map">路径</button><button role="tab" id="tab-inventory" aria-controls="panel-inventory" aria-selected="false" tabindex="-1" data-panel="inventory">背包 <span id="inventory-count">0</span></button><button role="tab" id="tab-clues" aria-controls="panel-clues" aria-selected="false" tabindex="-1" data-panel="clues">记录 <span id="clue-count">0</span></button></div>
+          <section id="panel-map" role="tabpanel" aria-labelledby="tab-map"><p class="panel-intro">这里列出已经到过与当前相邻的地点。门锁、危险与人物可能影响通行。</p><ol id="map" class="map-list"></ol><p class="map-note">路径会随探索逐渐展开</p></section>
+          <section id="panel-inventory" role="tabpanel" aria-labelledby="tab-inventory" hidden><ul id="inventory" class="notes-list"></ul></section>
+          <section id="panel-clues" role="tabpanel" aria-labelledby="tab-clues" hidden><ul id="clues" class="notes-list"></ul></section>
+          <div class="notes-bottom"><dl><div><dt>状态</dt><dd id="resolve">—</dd></div><div><dt>记录</dt><dd id="treasure">—</dd></div></dl><p>留意细节，也给自己的直觉一点余地。</p></div>
+        </aside>
+        <section class="collection-shortcut" aria-label="保存冒险"><button id="save-adventure" type="button">为这段冒险留名 ↗</button><p>当前进度自动保存；收藏会另外留下可重读的快照。</p></section>
+        <details id="trace-panel" class="trace-panel">
+          <summary>主持调用详情 <span>学习视图</span></summary>
+          <div class="trace-body">
+            <p class="trace-help">查看实际发送的上下文与模型返回值，包含世界后台信息，可能剧透。仅本局可见，记录保留 7 天；不展示模型内部思考。</p>
+            <p class="trace-help">从此功能上线后的行动开始记录。开局不调用模型，旧轮次无法补录。</p>
+            <div class="trace-tools"><button id="trace-refresh" type="button">刷新记录</button><button id="trace-more" type="button" hidden>更早记录</button></div>
+            <label for="trace-select">选择行动记录</label><select id="trace-select" disabled><option>暂无记录</option></select>
+            <p id="trace-status" class="trace-help" role="status" aria-live="polite"></p>
+            <div class="trace-tools"><button id="trace-wide" type="button" disabled>宽屏阅读 ↗</button><button id="trace-download" type="button" disabled>下载本次 JSON</button></div>
+            <div id="trace-content"></div>
+          </div>
+        </details>
+        </div>
+      </section>
+    </main>
+    <footer><p>改编自 <i>并蒂殇</i> · 原作：梅姐 · <a href="/games/fiction/bindi-shang/credits.html">来源与许可</a></p><p>AI 主持 <span id="model-label">GPT-5.6 Sol</span><span class="footer-dot">·</span>单人冒险</p></footer>
+  </div>
+  <dialog id="reset-dialog" aria-labelledby="reset-title"><form method="dialog"><p class="eyebrow">重新出发</p><h2 id="reset-title">合上这一本手记？</h2><p>重新开始会替换本篇的当前进度，不影响其他剧本。未收藏的旧冒险将无法回看；已经收藏的故事会保留。</p><div class="dialog-actions"><button value="archive">先命名收藏</button><button value="cancel">保留当前冒险</button><button value="confirm" class="primary">开始新冒险</button></div></form></dialog>
+  <dialog id="trace-dialog" class="trace-dialog" aria-labelledby="trace-dialog-title"><div class="trace-dialog-head"><h2 id="trace-dialog-title">主持调用详情</h2><form method="dialog"><button autofocus>关闭 ×</button></form></div><div id="trace-dialog-content"></div></dialog>
+  <dialog id="collection-dialog" class="collection-dialog" aria-labelledby="collection-title"><div class="collection-heading"><div><p class="eyebrow">那些你走过的故事</p><h2 id="collection-title">冒险收藏</h2></div><form method="dialog"><button autofocus aria-label="关闭冒险收藏">关闭 ×</button></form></div><p class="collection-note">收藏不会随当前进度的七天期限删除，重开新局也会保留。此浏览器的 Cookie 是收藏凭证；清除 Cookie 或换设备后无法直接找回，喜欢的故事请下载备份。</p><p class="collection-note">收藏用于重读，不恢复为当前游戏。主持调用详情仍按原规则保留 7 天，请另行下载。</p><button id="collection-refresh" type="button">刷新收藏</button><p id="collection-status" role="status" aria-live="polite"></p><ol id="collection-list" class="collection-list"></ol></dialog>
+  <dialog id="name-dialog" aria-labelledby="name-dialog-title"><form id="name-form"><div class="collection-heading"><h2 id="name-dialog-title">为这段冒险留名</h2><button id="name-cancel" type="button" aria-label="关闭命名窗口">关闭 ×</button></div><p id="name-context" class="collection-note"></p><label for="adventure-name">冒险名字</label><input id="adventure-name" maxlength="60" required placeholder="一个只属于这段经历的名字"><p id="name-status" role="status" aria-live="polite"></p><button id="name-submit" class="primary" type="submit">保存到冒险收藏</button></form></dialog>
+  <dialog id="archive-reader" class="archive-reader" aria-labelledby="archive-title"><div class="collection-heading"><p class="eyebrow">一段已留下名字的冒险</p><form method="dialog"><button autofocus aria-label="关闭冒险正文">关闭 ×</button></form></div><h2 id="archive-title"></h2><p id="archive-meta" class="collection-note"></p><div class="archive-tools"><button id="archive-rename" type="button">改名</button><button id="archive-export" type="button">下载故事 HTML</button><button id="archive-json" type="button">下载数据 JSON</button><button id="archive-delete" type="button">删除收藏</button></div><p id="archive-status" role="status" aria-live="polite"></p><article id="archive-body" aria-label="收藏的完整冒险"></article></dialog>
+  <noscript><p class="noscript">本游戏需要 JavaScript 才能保存进度和与主持交互，请启用后刷新页面。</p></noscript>
+</body>
+</html>
