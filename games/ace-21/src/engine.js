@@ -20,15 +20,23 @@ export const CATALOG = {
   challenge: { name: '挑战', icon: 'crown', family: '规则', cost: 1, stay: true, text: '将目标改为本牌点数，并移除双方桌上的其他挑战牌。此牌离场后恢复目标 21。' },
   perfect: { name: '完美', icon: 'star', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 3；从牌池抽取不使你爆牌的最大数牌。没有安全牌时不抽。' },
   perfect2: { name: '完美加', icon: 'crown', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 5；从牌池抽取不使你爆牌的最大数牌。没有安全牌时不抽。' },
+  seelieCute: { name: '希儿很可爱', icon: 'moon', family: '希儿专属', special: true, cost: 1, stay: true, text: '在牌桌上时，本轮结束不进行任何血量结算，直接进入下一轮发牌。' },
+  seelieAngry: { name: '希儿生气了', icon: 'sword', family: '希儿专属', special: true, cost: 1, stay: true, text: '在牌桌上时，双方所有普通及专属王牌均无法打出。本轮真人玩家输掉对局的血量损失最高为 3 点；仍可抽数牌和停牌。' },
+  seelieInsight: { name: '希儿看破一切', icon: 'eye', family: '希儿专属', special: true, cost: 1, stay: true, text: '在牌桌上时，对手输掉本局的伤害增加 1。打出时无视牌池，创造一张「当前目标 − 希儿点数总和」的数牌，可超过 11，也可为 0 或负数。创造牌被洗回、交换或本牌被破坏时直接消失，不进入牌池。' },
+  seelieWant: { name: '希儿想要那个', icon: 'star', family: '希儿专属', special: true, cost: 1, stay: true, text: '打出时获得 3 张随机普通王牌；在牌桌上被破坏时，再获得 2 张随机普通王牌。自然换局清场不触发。' },
+  seelieForget: { name: '希儿忘记了', icon: 'cycle', family: '希儿专属', special: true, cost: 1, stay: true, text: '打出时，双方将底牌之外的全部数牌洗回牌池；创造牌直接消失。在牌桌上被破坏时，对手抽取牌池中点数最小的数牌；空池时不抽。' },
+  seelieDecision: { name: '希儿的决定权', icon: 'crown', family: '希儿专属', special: true, cost: 1, stay: true, text: '在牌桌上时，目标固定为打出时希儿的数牌总和，后续点数变化不改变该目标；双方均不能打出挑战牌。本牌离场后恢复场上挑战牌的目标，若无则恢复 21。' },
 };
 
-export const DRAW_POOL = Object.keys(CATALOG).flatMap(type => type === 'number'
+export const DRAW_POOL = Object.keys(CATALOG).filter(type => !CATALOG[type].special).flatMap(type => type === 'number'
   ? Array.from({ length: 11 }, (_, i) => ({ type, value: i + 1 }))
   : [{ type }]);
+export const SPECIAL_POOL = Object.keys(CATALOG).filter(type => CATALOG[type].special);
+const tableCard = (s, type) => s.players.flatMap(p => p.table).find(c => c.type === type);
 export const cardName = c => c.type === 'number' ? `数字 ${c.value}` : c.type === 'challenge' ? `挑战 ${c.value}` : CATALOG[c.type].name;
 export const total = p => p.numbers.reduce((n, c) => n + (c?.value || 0), 0);
 export const slots = p => p.table.reduce((n, c) => n + CATALOG[c.type].cost, 0);
-export const targetOf = s => s.players.flatMap(p => p.table).find(c => c.type === 'challenge')?.value || 21;
+export const targetOf = s => tableCard(s, 'seelieDecision')?.value ?? tableCard(s, 'challenge')?.value ?? 21;
 const shields = p => p.table.filter(c => ['shield', 'shield2'].includes(c.type));
 
 function random(s) {
@@ -46,6 +54,27 @@ function newTrump(s) {
   return card;
 }
 function grant(s, actor, n) { for (let i = 0; i < n; i++) s.players[actor].hand.push(newTrump(s)); }
+function grantSpecial(s) {
+  const available = SPECIAL_POOL.filter(type => !s.players[1].hand.some(c => c.type === type));
+  if (!available.length) return;
+  s.players[1].hand.push({ type: available[pick(s, available)], id: `t${++s.serial}` });
+}
+function recycleNumber(s, card) { if (!card.generated) s.deck.push(card.value); }
+function destroyTrumps(s, owner, all = false) {
+  const p = s.players[owner];
+  const removed = all ? p.table.splice(0) : p.table.splice(-1, 1);
+  for (const card of removed) {
+    if (card.type === 'seelieInsight') {
+      for (const player of s.players) player.numbers = player.numbers.filter(n => n.createdBy !== card.id);
+      addLog(s, '「希儿看破一切」被破坏，其创造的数牌消失。');
+    }
+    if (card.type === 'seelieWant') { grant(s, owner, 2); addLog(s, '「希儿想要那个」被破坏，希儿获得 2 张普通王牌。', 'bonus'); }
+    if (card.type === 'seelieForget' && s.deck.length) {
+      const n = drawNumber(s, 1 - owner, Math.min(...s.deck));
+      addLog(s, `「希儿忘记了」被破坏，${s.players[1 - owner].name}抽到最小数牌 ${n}。`, 'draw');
+    }
+  }
+}
 function drawNumber(s, actor, specified) {
   const at = specified === undefined ? pick(s, s.deck) : s.deck.indexOf(specified);
   if (!s.deck.length || at < 0) return null;
@@ -60,25 +89,31 @@ function beginRound(s) {
   for (const p of s.players) { p.numbers = []; p.table = []; }
   for (let pass = 0; pass < 2; pass++) for (let actor = 1; actor >= 0; actor--) drawNumber(s, actor);
   for (let actor = 0; actor < 2; actor++) grant(s, actor, s.round === 1 ? 2 : 1);
-  addLog(s, `第 ${s.round} 局开始。双方${s.round === 1 ? '各获得 2 张' : '各补充 1 张'}王牌，${s.players[s.actor].name}先手。`, 'round');
+  const beforeSpecials = s.players[1].hand.length;
+  if (s.specials) for (let i = 0, count = s.round === 1 ? 2 : s.round % 2 === 1 ? 1 : 0; i < count; i++) grantSpecial(s);
+  addLog(s, `第 ${s.round} 局开始。双方${s.round === 1 ? '各获得 2 张' : '各补充 1 张'}普通王牌，${s.players[s.actor].name}先手。`, 'round');
+  const addedSpecials = s.players[1].hand.length - beforeSpecials;
+  if (addedSpecials) addLog(s, `希儿额外获得 ${addedSpecials} 张手中尚未持有的专属王牌。`, 'bonus');
 }
 export function createGame(seed = Date.now(), options = {}) {
   const s = { version: 1, firstActor: options.multiplayer ? 0 : 1, rng: seed >>> 0, serial: 0, eventId: 0, round: 0, log: [], players: [
     { name: options.names?.[0] || '你', hp: 10, maxHp: 10, hand: [], table: [], numbers: [] },
     { name: options.names?.[1] || '希儿', hp: options.multiplayer ? 10 : 20, maxHp: options.multiplayer ? 10 : 20, hand: [], table: [], numbers: [] },
   ] };
+  s.specials = !options.multiplayer && options.specials !== false;
   beginRound(s); return s;
 }
 
 export function damage(s, victim) {
+  if (tableCard(s, 'seelieCute')) return 0;
   const p = s.players[victim], enemy = s.players[1 - victim];
   let n = 1;
   for (const c of enemy.table) {
-    n += ({ add1: 1, add2: 2, slam: 3, perfect: 3, perfect2: 5 }[c.type] || 0);
+    n += ({ add1: 1, add2: 2, slam: 3, perfect: 3, perfect2: 5, seelieInsight: 1 }[c.type] || 0);
     if (c.type === 'desire') n += Math.floor(p.hand.length / 2);
   }
   for (const c of p.table) n += ({ shield: -1, shield2: -2, devil: 1 }[c.type] || 0);
-  return Math.max(0, n);
+  return Math.max(0, tableCard(s, 'seelieAngry') && victim === 0 ? Math.min(3, n) : n);
 }
 
 export function playError(s, actor, id) {
@@ -86,6 +121,12 @@ export function playError(s, actor, id) {
   if (s.actor !== actor) return '还没轮到你。';
   const p = s.players[actor], enemy = s.players[1 - actor], card = p.hand.find(c => c.id === id);
   if (!card) return '这张王牌已经不在手中。';
+  if (tableCard(s, 'seelieAngry')) return '「希儿生气了」在场，双方均不能打出任何王牌。';
+  if (CATALOG[card.type].special) {
+    if (!s.specials || actor !== 1) return '只有单人对战的希儿可以使用专属牌。';
+    if (s.players.some(p => p.table.some(c => CATALOG[c.type].special))) return '场上最多存在 1 张希儿专属牌。';
+  }
+  if (card.type === 'challenge' && tableCard(s, 'seelieDecision')) return '「希儿的决定权」在场，不能打出挑战牌。';
   if (slots(p) + CATALOG[card.type].cost > 5) return `桌面空位不足，需要 ${CATALOG[card.type].cost} 格。`;
   if (card.type === 'cycle' && p.hand.length < 3) return '需要另外 2 张手牌王牌。';
   if (card.type === 'curse' && p.hand.length < 2) return '需要另外 1 张手牌王牌。';
@@ -98,6 +139,10 @@ export function playError(s, actor, id) {
 }
 
 function settle(s) {
+  if (tableCard(s, 'seelieCute')) {
+    addLog(s, '「希儿很可爱」生效：本轮不结算血量，直接重新发牌。', 'result');
+    beginRound(s); return;
+  }
   const target = targetOf(s), sums = s.players.map(total), bust = sums.map(n => n > target);
   let winner = null;
   if (!(bust[0] && bust[1]) && sums[0] !== sums[1]) {
@@ -108,7 +153,7 @@ function settle(s) {
   if (victim !== null) s.players[victim].hp = Math.max(0, s.players[victim].hp - hit);
   s.result = { winner, victim, damage: hit, sums, bust, target };
   s.phase = s.players.some(p => p.hp === 0) ? 'finished' : 'roundEnd';
-  addLog(s, `开牌：你 ${sums[0]} 点，希儿 ${sums[1]} 点。${winner === null ? '平局，双方不受伤害。' : `${s.players[winner].name}获胜，${s.players[victim].name}受到 ${hit} 点伤害。`}`, 'result');
+  addLog(s, `开牌：${s.players[0].name} ${sums[0]} 点，${s.players[1].name} ${sums[1]} 点。${winner === null ? '平局，双方不受伤害。' : `${s.players[winner].name}获胜，${s.players[victim].name}受到 ${hit} 点伤害。`}`, 'result');
 }
 
 export function dispatch(state, action) {
@@ -140,6 +185,18 @@ export function dispatch(state, action) {
     let stay = CATALOG[card.type].stay;
     addLog(s, `${p.name}使用「${cardName(card)}」。`, 'trump');
     switch (card.type) {
+      case 'seelieInsight': {
+        const value = targetOf(s) - total(p);
+        p.numbers.push({ id: `created-${card.id}`, value, generated: true, createdBy: card.id });
+        addLog(s, `希儿创造并获得 ${value} 点数牌，当前总和 ${total(p)}。`, 'draw'); break;
+      }
+      case 'seelieWant': grant(s, actor, 3); addLog(s, '希儿获得 3 张普通王牌。', 'bonus'); break;
+      case 'seelieForget':
+        for (const owner of s.players) for (const n of owner.numbers.splice(1)) recycleNumber(s, n);
+        addLog(s, '双方底牌保留，所有普通明牌洗回牌池，创造牌直接消失。'); break;
+      case 'seelieDecision': card.value = total(p); addLog(s, `希儿将目标锁定为 ${card.value} 点。`); break;
+      case 'seelieAngry': addLog(s, '双方王牌已封锁，仍可抽数牌或停牌；本轮玩家败北伤害最多 3 点。'); break;
+      case 'seelieCute': addLog(s, '本轮结束将跳过血量结算，直接发下一局。'); break;
       case 'joy': grant(s, actor, 1); grant(s, 1 - actor, 1); break;
       case 'add1': case 'add2': grant(s, actor, 1); break;
       case 'cycle':
@@ -147,14 +204,14 @@ export function dispatch(state, action) {
         grant(s, actor, 3); break;
       case 'return': case 'remove': {
         const owner = card.type === 'return' ? p : enemy;
-        const n = owner.numbers.pop(); s.deck.push(n.value);
-        addLog(s, `${owner.name}的数牌 ${n.value} 回到牌池。`); break;
+        const n = owner.numbers.pop(); recycleNumber(s, n);
+        addLog(s, `${owner.name}的${n.generated ? '创造牌' : '数牌'} ${n.value} ${n.generated ? '直接消失' : '回到牌池'}。`); break;
       }
-      case 'destroy': enemy.table.pop(); break;
-      case 'destroyAll': enemy.table = []; break;
+      case 'destroy': destroyTrumps(s, 1 - actor); break;
+      case 'destroyAll': destroyTrumps(s, 1 - actor, true); break;
       case 'swap': {
-        const a = p.numbers.pop(), b = enemy.numbers.pop(); p.numbers.push(b); enemy.numbers.push(a);
-        addLog(s, `双方交换数牌 ${a.value} 与 ${b.value}。`); break;
+        const a = p.numbers.pop(), b = enemy.numbers.pop(); if (!b.generated) p.numbers.push(b); if (!a.generated) enemy.numbers.push(a);
+        addLog(s, `双方交换数牌 ${a.value} 与 ${b.value}。${a.generated || b.generated ? '创造牌在交换时直接消失。' : ''}`); break;
       }
       case 'devil': grant(s, actor, 3); break;
       case 'slam':

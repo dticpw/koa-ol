@@ -3,7 +3,7 @@ import { total, slots } from './engine.js';
 export function chooseAction(view) {
   const actor = view.actor, p = view.players[actor], other = view.players[1 - actor];
   const sum = total(p), target = view.target;
-  const known = view.players.flatMap(x => x.numbers).filter(Boolean).map(c => c.value);
+  const known = view.players.flatMap(x => x.numbers).filter(c => c && !c.generated).map(c => c.value);
   const unknown = Array.from({ length: 11 }, (_, i) => i + 1).filter(n => !known.includes(n));
   const otherOpen = total(other);
   const plausible = unknown.map(n => otherOpen + n);
@@ -16,12 +16,18 @@ export function chooseAction(view) {
   if (view.turnActions < 7) for (const c of p.hand.filter(c => view.legal.includes(c.id))) {
     let v = -1;
     switch (c.type) {
+      case 'seelieCute': v = (sum > target || (chanceAhead < .3 && safeChance < .5)) && view.damage[actor] > 0 ? 13 : -1; break;
+      case 'seelieAngry': v = sum <= target && chanceAhead > .75 ? 8 : -1; break;
+      case 'seelieInsight': v = sum !== target ? 15 : 3; break;
+      case 'seelieWant': v = p.handCount < 6 ? 6 : 1; break;
+      case 'seelieForget': v = sum > target ? 14 : otherOpen >= target - 3 && sum < target - 6 ? 8 : -1; break;
+      case 'seelieDecision': v = sum > 0 && sum >= otherOpen ? (sum > target ? 14 : sum >= target - 4 ? 10 : 4) : -1; break;
       case 'shield': case 'shield2': v = view.damage[actor] > 0 ? (chanceAhead < .6 ? 3 : 1) : -.5; break;
       case 'add1': case 'add2': v = sum <= target && chanceAhead > .35 ? 2.5 : .3; break;
       case 'perfect': case 'perfect2': v = sum <= target ? (safe.length ? 7 : chanceAhead > .6 ? 3 : -1) : -1; break;
       case 'number': v = unknown.includes(c.value) ? valueOfSum(sum + c.value) - valueOfSum(sum) : -1; break;
       case 'return': v = valueOfSum(sum - last) - valueOfSum(sum); break;
-      case 'swap': v = valueOfSum(sum - last + theirs) - valueOfSum(sum); break;
+      case 'swap': v = valueOfSum(sum - last + (other.numbers.at(-1)?.generated ? 0 : theirs)) - valueOfSum(sum); break;
       case 'remove': v = otherOpen >= target - 8 && otherOpen <= target ? 2 : -1; break;
       case 'destroy': case 'destroyAll': v = other.table.length * (c.type === 'destroyAll' ? 2 : 1.5); break;
       case 'desire': v = sum <= target && chanceAhead > .55 && other.handCount >= 2 ? 2.5 : -1; break;

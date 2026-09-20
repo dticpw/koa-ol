@@ -24,7 +24,7 @@ function trumpHTML(c) {
 }
 function numberHTML(c, owner, index) {
   const hidden = owner === 1 && index === 0 && state.phase === 'playing';
-  return `<div class="num-card ${hidden ? 'back' : ''} ${index === 0 ? 'hole' : ''}" data-cid="${index === 0 ? `hole-${state.round}-${owner}` : c.id}" data-face="${hidden ? 'back' : 'front'}" aria-label="${hidden ? esc(enemyName()) + '的底牌，未知' : `${index === 0 ? '底牌' : '明牌'} ${c.value} 点`}">${hidden ? '<span class="pip">?</span><span class="card-suit">底牌</span>' : `<span class="corner">${c.value}<br>♠</span><span class="pip">${c.value}</span><span class="corner bottom">${c.value}<br>♠</span>${index === 0 ? '<span class="hole-label">底牌</span>' : ''}`}</div>`;
+  return `<div class="num-card ${hidden ? 'back' : ''} ${index === 0 ? 'hole' : ''} ${c.generated ? 'generated' : ''}" data-cid="${index === 0 ? `hole-${state.round}-${owner}` : c.id}" data-face="${hidden ? 'back' : 'front'}" aria-label="${hidden ? esc(enemyName()) + '的底牌，未知' : `${c.generated ? '创造牌' : index === 0 ? '底牌' : '明牌'} ${c.value} 点`}">${hidden ? '<span class="pip">?</span><span class="card-suit">底牌</span>' : `<span class="corner">${c.value}<br>♠</span><span class="pip">${c.value}</span><span class="corner bottom">${c.value}<br>♠</span>${c.generated ? '<span class="hole-label">创造</span>' : index === 0 ? '<span class="hole-label">底牌</span>' : ''}`}</div>`;
 }
 
 function scheduleAI() {
@@ -66,6 +66,10 @@ function transitionCards(before) {
   const boxes = elements.map(el => ({ el, box: el.getBoundingClientRect(), old: before.get(el.dataset.cid) }));
   const current = new Set(elements.map(el => el.dataset.cid));
   for (const { el, box, old } of boxes) {
+    if (!old && el.classList.contains('generated')) {
+      animate(el, [{ opacity: 0, transform: 'scale(.7)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 450, easing: 'ease-out' });
+      continue;
+    }
     if (old?.face === 'back' && el.dataset.face === 'front') {
       animate(el, [{ transform: 'perspective(600px) rotateY(88deg)', opacity: .5 }, { transform: 'perspective(600px) rotateY(0)', opacity: 1 }], { duration: 450, easing: 'cubic-bezier(.2,.7,.2,1)' });
     } else {
@@ -114,6 +118,9 @@ function cardFeedback(old, action) {
     add1: [1 - actor, '↑', '败北伤害 +1', 'red'], add2: [1 - actor, '↑', '败北伤害 +2', 'red'],
     desire: [1 - actor, '◉', '欲望生效', 'red'], curse: [1 - actor, '◉', '强制抽牌', 'red'],
     harvest: [actor, '☾', '收割生效', 'gold'], devil: [actor, '☾', '王牌 +3', 'gold'],
+    seelieCute: [actor, '♡', '本轮免结算', 'silver'], seelieAngry: [actor, '╳', '双方王牌封锁', 'red'],
+    seelieInsight: [actor, '◉', '创造数牌', 'gold'], seelieWant: [actor, '✧', '普通王牌 +3', 'gold'],
+    seelieForget: [actor, '↺', '双方明牌洗回', 'silver'], seelieDecision: [actor, '♛', '目标已锁定', 'gold'],
     perfect: [actor, '✧', '完美时机', 'gold'], perfect2: [actor, '✧', '完美时机', 'gold'],
   }[card.type];
   if (def) impact(...def);
@@ -125,6 +132,9 @@ function render() {
   const revealed = state.phase !== 'playing', target = targetOf(state);
   $('round-label').textContent = `第 ${String(state.round).padStart(2, '0')} 局`;
   $('target').textContent = target;
+  const special = state.players.flatMap(p => p.table).find(c => CATALOG[c.type].special);
+  $('special-status').hidden = !special;
+  $('special-status').innerHTML = special ? `<div><span class="eyebrow">希儿专属 · 已生效</span><strong>${esc(cardName(special))}${special.type === 'seelieDecision' ? ` · 目标 ${special.value}` : ''}</strong></div><p>${esc(CATALOG[special.type].text)}</p>` : '';
   $('deck-count').textContent = `牌池剩余 ${deckCount()} 张`;
   $('enemy-hand').textContent = `手牌王牌 ${state.players[1].handCount ?? state.players[1].hand.length} 张`;
   for (let actor = 0; actor < 2; actor++) {
@@ -140,7 +150,7 @@ function render() {
     $('score-' + actor).classList.toggle('bust', (actor === 0 || revealed) && sum > target);
     $('numbers-' + actor).innerHTML = p.numbers.map((c, i) => numberHTML(c, actor, i)).join('');
     $('slots-' + actor).textContent = `桌面王牌 ${slots(p)}/5`;
-    $('effects-' + actor).innerHTML = p.table.map(c => `<button class="effect-chip" data-effect="${c.id}" data-cid="${c.id}" aria-label="查看 ${esc(cardName(c))} 效果">${esc(cardName(c))}<small>${'◇'.repeat(CATALOG[c.type].cost)}</small></button>`).join('') + Array.from({ length: 5 - slots(p) }, () => '<span class="effect-slot" aria-hidden="true">·</span>').join('');
+    $('effects-' + actor).innerHTML = p.table.map(c => `<button class="effect-chip ${CATALOG[c.type].special ? 'special-effect' : ''}" data-effect="${c.id}" data-cid="${c.id}" aria-label="查看 ${esc(cardName(c))} 效果">${esc(cardName(c))}<small>${'◇'.repeat(CATALOG[c.type].cost)}</small></button>`).join('') + Array.from({ length: 5 - slots(p) }, () => '<span class="effect-slot" aria-hidden="true">·</span>').join('');
   }
   const hand = state.players[0].hand;
   if (!hand.some(c => c.id === selected)) selected = null;
@@ -152,6 +162,7 @@ function render() {
   $('turn-title').textContent = !started ? '等待入席' : paused ? '牌局已暂停' : revealed ? state.phase === 'finished' ? '本场结束' : '本局已开牌' : state.actor === 1 ? `${enemyName()}的回合` : '轮到你了';
   $('turn-description').textContent = !started ? '准备开始你的牌局' : paused ? '继续时从当前状态恢复' : revealed ? '底牌揭晓，查看结算结果' : state.actor === 1 ? online ? '等待对手行动，可以查看牌效' : '思考中，你可以查看手牌效果' : '可以连续行动，停牌才交出回合';
   $('center-message').textContent = state.stood[1] && !revealed ? `${enemyName()}已停牌，现在由你决定。` : total(state.players[0]) > target && !revealed ? '你已爆牌，王牌仍能扭转局势。' : '离目标近一点，离危险远一点。';
+  if (special && !revealed) $('center-message').textContent = ({seelieCute:'本轮结束不扣血，直接重新发牌。',seelieAngry:'王牌已封锁 · 仍可抽数牌或停牌',seelieDecision:`目标锁定 ${special.value} · 挑战牌不可用`,seelieInsight:'创造牌离场即消失，不进入共用牌池。',seelieWant:'破坏此牌会让希儿再获得 2 张普通王牌。',seelieForget:'破坏此牌，你将抽到池中最小数牌。'})[special.type];
   const card = hand.find(c => c.id === selected);
   const reason = card ? !started ? '开始对局后可以使用。' : paused ? '请先继续对局。' : cardError(card.id) : '';
   $('selection').classList.toggle('has-card', Boolean(card));
@@ -190,6 +201,7 @@ function perform(action) {
   if (result.error) { toast(result.error); return; }
   state = result.state;
   render(); transitionCards(before); cardFeedback(old, action);
+  if (state.round > old.round && action.type === 'stand') toast('「希儿很可爱」：本轮不扣血，已发下一局。');
   soundEffect(state.phase !== 'playing' ? 'result' : action.type);
   if (targetOf(old) !== targetOf(state)) { $('target').classList.remove('target-changed'); void $('target').offsetWidth; $('target').classList.add('target-changed'); }
   for (let actor = 0; actor < 2; actor++) if (state.players[actor].hp < old.players[actor].hp) {
@@ -228,7 +240,7 @@ $('table').addEventListener('click', e => {
   if (button) {
     const c = state.players.flatMap(p => p.table).find(c => c.id === button.dataset.effect);
     if (!c) return;
-    $('detail-content').innerHTML = `${art(c)}<span class="eyebrow">${CATALOG[c.type].family}</span><h2 id="detail-title">${esc(cardName(c))}</h2><p>${esc(CATALOG[c.type].text)}</p><small>桌面持续效果 · ${CATALOG[c.type].cost} 格</small>`;
+    $('detail-content').innerHTML = `${art(c)}<span class="eyebrow">${CATALOG[c.type].family}</span><h2 id="detail-title">${esc(cardName(c))}</h2><p>${esc(CATALOG[c.type].text)}</p><small>${CATALOG[c.type].special ? '希儿专属 · 场上最多一张' : '桌面持续效果'} · ${CATALOG[c.type].cost} 格</small>`;
     openDialog('card-detail');
   }
   if (e.target.closest('#next-round')) { if (online) { if (room.status === 'closed' || state.phase === 'finished') exitOnline(); else sendOnline({ type: 'ready' }); } else if (state.phase === 'finished') start(); else perform({ type: 'next' }); }
@@ -270,7 +282,7 @@ document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 's') { e.preventDefault(); perform({ type: 'stand', actor: 0 }); }
 });
 
-$('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article><h4>${c.name}${type === 'number' ? ' 1～11' : type === 'challenge' ? ' 22～30' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格</small></article>`).join('');
+$('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article class="${c.special ? 'special-catalog' : ''}"><h4>${c.name}${type === 'number' ? ' 1～11' : type === 'challenge' ? ' 22～30' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格${c.special ? ' · 场上最多一张' : ''}</small></article>`).join('');
 if (matchMedia('(max-width: 920px)').matches) document.querySelector('.chronicle').open = false;
 render(); openDialog('welcome');
 
