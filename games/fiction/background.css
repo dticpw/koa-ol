@@ -43,7 +43,7 @@ body::before {
   font-size:clamp(64px,8vw,112px); font-weight:400; letter-spacing:.14em;
   margin:18px 0; white-space:nowrap;
 }
-.fiction-shelf .shelf-heading h1 span { display:inline-block; transform:rotate(-5deg) translateY(-.06em); color:#efc996; }
+.fiction-shelf .shelf-heading h1 span { margin-inline-start:.5em; display:inline-block; transform:rotate(-5deg) translateY(-.06em); color:#efc996; }
 .fiction-shelf .shelf-heading .lead { color:#eee1ce; }
 .shelf-enter {
   display:inline-flex; gap:28px; align-items:center; margin-top:30px; padding:11px 18px;

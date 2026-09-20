@@ -1,0 +1,57 @@
+/* Decorative GM atlas: no hidden routes, labels or unrevealed story information. */
+body[data-fiction="lab"] {
+  position:relative; isolation:isolate;
+  --play-atlas:url("./assets/atlas-library.svg");
+  --play-panel:#f3eddfed;
+  --play-shadow:#67533818;
+}
+body[data-story] { --play-panel:#0e1922ee; --play-shadow:#0003; }
+body[data-story="ghosts-of-aramoor"] { --play-atlas:url("./assets/atlas-coast.svg"); }
+body[data-story="goodbye-shooting-star"] { --play-atlas:url("./assets/atlas-orbit.svg"); }
+body[data-fiction="lab"]::before {
+  content:""; position:fixed; inset:60px 0 0; z-index:-1;
+  pointer-events:none; opacity:.34;
+  background:var(--play-atlas) center top / max(1200px,100vw) auto no-repeat;
+}
+body[data-story]::before { opacity:.48; }
+.cover { position:relative; }
+.cover-copy { position:relative; }
+.cover-copy::before {
+  content:""; display:block; width:38px; height:38px;
+  margin:0 0 19px; background:url("./assets/tabletop-seal.svg") center / contain no-repeat;
+  opacity:.8;
+}
+.cover-copy .eyebrow { letter-spacing:.12em; }
+.cover-meta { flex-wrap:wrap; }
+.welcome, .reading-column {
+  background:var(--play-panel); border:1px solid var(--line);
+  box-shadow:0 15px 45px var(--play-shadow); border-radius:10px;
+}
+.welcome { position:relative; padding:30px; margin:30px 0 45px; }
+.adventure { gap:34px; }
+.reading-column { min-width:0; padding:30px; }
+.chapter-head { padding-bottom:15px; border-bottom:1px solid var(--line); }
+.chapter-head::after {
+  content:""; width:30px; height:30px; flex-shrink:0;
+  background:url("./assets/tabletop-seal.svg") center / contain no-repeat; opacity:.65;
+}
+.location-description { font-size:12px; margin-top:18px; }
+.field-notes { border-top:3px solid var(--copper); }
+.story { line-height:2.1; }
+body[data-story] .cover-copy { text-shadow:0 2px 18px #071017; }
+body[data-story] .cover-description { color:#c4cdd0; }
+@media(max-width:760px) {
+  body[data-fiction="lab"]::before {
+    inset:40px 0 0; background-size:1050px auto; background-position:68% top; opacity:.23;
+  }
+  body[data-story]::before { opacity:.35; }
+  .cover-copy::before { width:25px; height:25px; margin-bottom:12px; }
+  .welcome { padding:24px 18px; margin:22px 0 32px; }
+  .reading-column { padding:23px 18px; }
+  .adventure { gap:28px; }
+  .chapter-head { gap:10px; flex-wrap:wrap; }
+  .chapter-head h2 { font-size:24px; }
+  .chapter-head::after { display:none; }
+  .story { font-size:16px; }
+}
+
