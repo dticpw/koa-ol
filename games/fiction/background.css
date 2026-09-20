@@ -1,0 +1,89 @@
+/* Shared Baiyexing scenery. Decorative only; no story/session state is involved. */
+body {
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  background:#10131c;
+}
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  height:auto;
+  z-index:-2;
+  pointer-events:none;
+  opacity:1;
+  background:
+    linear-gradient(0deg,#10131c94,transparent 65%),
+    linear-gradient(90deg,#10131c9e, #10131c30 60%, #10131c14),
+    url("./assets/baiyexing-library.webp") center / cover no-repeat;
+}
+.fiction-header, .masthead { text-shadow:0 2px 12px #000; }
+.fiction-header { border-color:#d6b78533; }
+.fiction-shell { --accent:#efc996; --line:#76644f66; --muted:#c8c6c3; }
+.fiction-shell .brand-mark { background:#e5bf8b; color:#251e1c; box-shadow:0 0 22px #e8b36d20; }
+.fiction-shell .story-card { background:#121b25ed; }
+.fiction-shell .story-card:hover { background:#1b2632f5; }
+.fiction-shell .story-bottom .text-link, .fiction-shell .play-link {
+  background:#e7c397; color:#251e1d; border-color:#f2d5b04d; box-shadow:0 5px 24px #0002;
+}
+.fiction-shell .detail-copy::before { background:#101720eb; border:1px solid #d6b7851f; }
+.fiction-shell .detail-sections section { background:#111923f2; }
+.fiction-shell .shelf-note, .fiction-shell .fiction-footer {
+  background:#101720ed; padding:26px; border:1px solid #d6b78522; border-radius:10px;
+}
+.fiction-footer { margin-bottom:24px; }
+.fiction-shell .breadcrumb, .fiction-shell .shelf-heading { text-shadow:0 2px 16px #07080b; }
+.fiction-shell .breadcrumb { color:#eee1ce; }
+.fiction-shelf .shelf-heading { min-height:clamp(480px,80svh,780px); align-items:center; }
+.fiction-shelf .shelf-heading > div { max-width:58%; }
+.fiction-shelf .shelf-heading .eyebrow { color:#e6c39a; letter-spacing:.18em; }
+.fiction-shelf .shelf-heading h1 {
+  font-family:"Noto Serif CJK SC","Songti SC",STSong,SimSun,serif;
+  font-size:clamp(64px,8vw,112px); font-weight:400; letter-spacing:.14em;
+  margin:18px 0; white-space:nowrap;
+}
+.fiction-shelf .shelf-heading h1 span { display:inline-block; transform:rotate(-5deg) translateY(-.06em); color:#efc996; }
+.fiction-shelf .shelf-heading .lead { color:#eee1ce; }
+.shelf-enter {
+  display:inline-flex; gap:28px; align-items:center; margin-top:30px; padding:11px 18px;
+  text-decoration:none; color:#251e1d; background:#e7c397; text-shadow:none;
+  border:1px solid #f2d5b0; border-radius:4px; font-size:13px;
+}
+.shelf-enter:hover { background:#f3d4ae; }
+.fiction-shelf .shelf-count { align-self:end; margin-bottom:30px; background:#101720e8; }
+#stories { scroll-margin-top:24px; }
+/* Play pages keep the image outside quiet, opaque-enough reading surfaces. */
+body[data-fiction="lab"], body[data-fiction="lab"][data-story] { background:#10131c; }
+.page-shell { --muted:#b5bfc4; }
+.page-shell .cover-copy { text-shadow:0 2px 14px #07080b; }
+.page-shell .cover-description, .page-shell .cover-meta { color:#e1d6c8; }
+.page-shell .cover-copy .eyebrow { color:#ddc5a7; }
+.page-shell .welcome, .page-shell .reading-column, .page-shell .credits-body {
+  background:#101923f5; border:1px solid #8f78513d; border-radius:12px;
+}
+.page-shell .welcome { padding:32px; margin:28px 0 40px; }
+.page-shell .adventure { gap:36px; }
+.page-shell .reading-column { padding:28px; min-width:0; }
+.page-shell .credits-body { padding:32px; }
+.page-shell footer { background:#101720e8; padding:20px; border-radius:8px; margin-bottom:24px; }
+.page-shell .home-mark { color:#efc996; }
+.page-shell .home-link, .page-shell .game-links, .page-shell .edition { color:#eee1ce; }
+.page-shell .document-link { background:#25313c; }
+@media(max-width:700px) {
+  body::before {
+    background:
+      linear-gradient(0deg,#10131ccb,transparent 68%),
+      linear-gradient(90deg,#10131c6b,#10131c12),
+      url("./assets/baiyexing-library-mobile.webp") center / cover no-repeat;
+  }
+  .fiction-shelf .shelf-heading { min-height:80svh; align-items:start; padding-top:65px; }
+  .fiction-shelf .shelf-heading > div { max-width:100%; }
+  .fiction-shelf .shelf-heading h1 { font-size:64px; }
+  .fiction-shelf .shelf-count { position:absolute; right:0; bottom:14px; margin:0; }
+  .fiction-shell .shelf-note, .fiction-shell .fiction-footer { padding:20px; }
+  .fiction-shell .detail-copy::before { inset:-12px -10px -16px; }
+  .page-shell .welcome, .page-shell .reading-column, .page-shell .credits-body { padding:22px 18px; }
+  .page-shell .adventure { gap:28px; }
+}
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
