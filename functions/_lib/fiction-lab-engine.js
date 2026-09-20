@@ -1,3 +1,4 @@
+import { initializeMemory, recordObservations, applyMemories, retrieveHistory } from './fiction-lab-memory.js';
 // Small authored world + generic ledger. Physical interpretation belongs to the
 // host; these checks bound resources, topology and the authored hammer.
 export const MAX_TURNS = null; // No in-world turn or fuel limit.
@@ -22,19 +23,19 @@ export function createGame(){
  item('tomb','石棺与镀金木冠','伪王墓的固定陈设，木冠露出廉价木头。无可领取的金银奖励或秘密机关。','chamber','陈设原位。',false)
  ],log:[{role:'narrator',turn:0,text:'你停在已经打开的石门外。方形石镇压住双栓，悬锤静静扣在头顶；门内两步远的地面就在灯光可及之处。你还没有进入伪王墓。\n\n手中是一盏带玻璃罩的普通油灯，背包里有干厚布、绳、青铜杯、白垩与手记。雨水在身后滴落，灯焰稳定。这里没有灯油倒计时。你可以在门外试探，也可以走进去观察，最后带着自己的发现离开。\n\n把连贯的想法一起说出来。一次尝试可以包含准备、操作与观察；如果途中发生变化，主持会停在那个时刻。'}]};
  state.knownEntities=knownSnapshot(state.entities);
- return state;
+ return initializeMemory(state);
 }
 const knownSnapshot=entities=>Object.fromEntries(entities.filter(e=>e.movable).map(e=>[e.id,structuredClone(e)]));
 // Read-compatible migration; persisted atomically with the next successful turn.
 export function normalizeGame(saved){
- if(saved.version===3)return saved;
+ if(saved.version===3)return saved.memoryVersion===1?saved:initializeMemory(structuredClone(saved));
  const s=structuredClone(saved);s.version=3;s.turn=s.revision;s.pendingDecision=null;
  if(s.ending?.id==='time'){s.status='playing';s.ending=null;}
  for(const e of s.entities)delete e.updatedAt;
  for(const e of Object.values(s.knownEntities||{}))delete e.updatedAt;
  // Keep historical prose, but never feed obsolete timing contracts as recent rulings.
  s.events=[];
- return s;
+ return initializeMemory(s);
 }
 export function getActions(s){
  if(s.status!=='playing')return [];
@@ -48,15 +49,15 @@ const description=s=>`${places[s.location].description}${s.doorOpen?'石门敞�
 export function getView(saved){
  const s=normalizeGame(saved);
  return {title:'门后的火光',sessionId:s.sessionId,revision:s.revision,turn:s.turn,pendingDecision:s.pendingDecision,
- location:{id:s.location,name:places[s.location].name,description:description(s)},status:s.status,ending:s.ending,
+ location:{id:s.location,name:(s.status==='ended'?'最后所在 · ':'')+places[s.location].name,description:s.status==='ended'?'探查已经结束。这里标记你离开前最后经过的地点。':description(s)},status:s.status,ending:s.ending,
  inventory:s.entities.filter(e=>e.place==='carried'&&e.integrity!=='consumed').map(e=>({id:e.id,name:e.name,description:e.facts})),
- clues:[...Object.values(s.knownEntities||knownSnapshot(s.entities)).filter(e=>e.movable&&e.place!=='carried').map(e=>({id:e.id,title:`${e.name} · ${placeName(e.place)}${visible(s,e)?'':' · 上次所见'}`,text:e.facts})),...s.notes.map((text,i)=>({id:`note_${i}`,title:'探查记录',text}))],
+ clues:[...Object.values(s.knownEntities||knownSnapshot(s.entities)).filter(e=>e.movable&&e.place!=='carried').map(e=>({id:e.id,title:`${e.name} · ${placeName(e.place)}${visible(s,e)?'':' · 上次所见'}`,text:e.facts})),...s.observationHistory.slice(-16).map(note=>({id:note.id,title:`历史观察 · ${note.revision===null?'旧存档，段次未知':'第 '+note.revision+' 段'}`,text:note.text}))],
  map:Object.entries(places).map(([id,p])=>({id,name:p.name,visited:s.visited.includes(id),current:s.location===id})),choices:getActions(s),log:s.log,stats:{resolve:s.resolve,treasure:s.notes.length},model:'gpt-5.6-sol'};
 }
-export function hostContext(saved){
+export function hostContext(saved,action=''){
  const s=normalizeGame(saved);
- return {rulesVersion:3,mode:"causal_no_clock",pendingDecision:s.pendingDecision,location:s.location,resolve:s.resolve,doorOpen:s.doorOpen,hammerFallen:s.hammerFallen,
- places,entities:s.entities,knownEntities:Object.values(s.knownEntities||knownSnapshot(s.entities)).map(({id,place,facts})=>({id,place,facts})),notes:s.notes,recent:s.log.slice(-6),recentEvents:s.events.slice(-3),
+ return {rulesVersion:3,mode:"causal_no_clock",pendingDecision:s.pendingDecision,status:s.status,ending:s.ending,location:s.location,resolve:s.resolve,doorOpen:s.doorOpen,hammerFallen:s.hammerFallen,
+ places,entities:s.entities,knownEntities:Object.values(s.knownEntities||knownSnapshot(s.entities)).map(({id,place,facts})=>({id,place,facts})),notes:s.observationHistory.slice(-16),...retrieveHistory(s,action),recent:s.log.slice(-6),recentEvents:s.events.slice(-3),
  laws:['人物所在、视线范围和投掷范围分别判断。outside与threshold相邻，threshold与chamber相邻，门控制outside与threshold。outside包含门槛外边缘和侧面安全站位，门槛边本身在手边，双栓与支撑石镇也在outside可直接触及。threshold特指门内约两步远的落点，不等同门槛边。开门时可从outside向threshold投物而不进入；门外系石镇无需先进入threshold。',
  '油灯是普通有热量的火，罩盖可打开。当前facts优先于初始外观。合理未预写用途由主持裁量，未知细节以不改变关键设定的常识处理。',
  '石镇仅在door_support能压住双栓。移走它会落锤；由程序决定，不能宣称仍安全。布/绳等变化须持续记住，不因换轮恢复。',
@@ -141,14 +142,14 @@ export function applyProposal(original,proposal,playerText){
   }
   if(step.move_to!=='stay'){s.location=step.move_to;if(!s.visited.includes(s.location))s.visited.push(s.location);}
   if(step.door!=='unchanged')s.doorOpen=step.door==='open';
-  const event={attempt:step.attempt,status:step.status,outcome:step.outcome,observations:step.observations,beat:step.beat};outcomes.push(event);
-  for(const note of step.observations)if(!s.notes.includes(note))s.notes.push(note);
-  s.notes=s.notes.slice(-16);
+  const event={attempt:step.attempt,status:step.status,outcome:step.outcome,observations:[...step.observations],beat:step.beat,refs:[...step.refs],changes:step.updates.map(u=>({...u}))};outcomes.push(event);
+  recordObservations(s,step.observations,original.revision+1,'step');
   if(!s.hammerFallen&&s.entities.find(e=>e.id==='weight').place!=='door_support'){
    s.hammerFallen=true;
    if(s.location==='threshold')s.resolve=Math.max(0,s.resolve-1);
    event.outcome+=' 【规则结算】石镇离开双栓，悬锤立刻落在门槛附近。'+(s.location==='threshold'?'你在落点边受伤，状态减一。':'你不在门槛落点内，没有受伤。');
    event.observations.push('悬锤已经落下，不能再次释放。');
+   recordObservations(s,['悬锤已经落下，不能再次释放。'],original.revision+1,'engine');
    forcedPause=true;
    break; // An authored unexpected event interrupts the proposed chain.
   }
@@ -179,8 +180,7 @@ export function applyProposal(original,proposal,playerText){
    if(update.integrity==='consumed'){e.lastPlace=physicalPlace(e,s.location);e.place='consumed';}
    e.integrity=update.integrity;e.facts=update.facts;e.updatedAtRevision=original.revision+1;
   }
-  for(const note of evolution.observations)if(!s.notes.includes(note))s.notes.push(note);
-  s.notes=s.notes.slice(-16);
+  recordObservations(s,evolution.observations,original.revision+1,'observed_evolution');
  }
  // Facts can evolve off-screen. The player's notebook keeps the last witnessed
  // snapshot until returning within sight; it is not a live world inspector.
@@ -189,10 +189,12 @@ export function applyProposal(original,proposal,playerText){
  if(forcedPause){
   const remaining=proposal.steps.slice(outcomes.length).map(step=>step.attempt).join('；');
   const pending=s.pendingDecision;
-  s.pendingDecision={needed:true,disposition:'replace',question:'悬锤已经落下。接下来你想怎么做？',pending_action:[...new Set([remaining,pending?.pending_action].filter(Boolean))].join('；')||'根据落锤后的现场重新决定下一步',reason:'悬锤意外打断行动，未执行的后续步骤不会自动继续。',intent:pending?.intent||proposal.intent,originalAction:pending?.originalAction||playerText};
+  if(remaining||pending?.pending_action)s.pendingDecision={needed:true,disposition:'replace',question:'悬锤已经落下。接下来你想怎么做？',pending_action:[...new Set([remaining,pending?.pending_action].filter(Boolean))].join('；'),reason:'悬锤意外打断行动，未执行的后续步骤不会自动继续。',intent:pending?.intent||proposal.intent,originalAction:pending?.originalAction||playerText};
  }
+ if(s.status==='ended')s.pendingDecision=null;
+ applyMemories(s,proposal.memory_updates||[],playerText,outcomes,original.revision+1);
  s.revision+=1;s.turn=s.revision;
  s.log.push({role:'player',turn:s.turn,text:playerText});
- s.events.push({revision:s.revision,intent:proposal.intent,steps:outcomes,...(proposal.evolution?{evolution:proposal.evolution}:{})});s.events=s.events.slice(-30);
+ s.events.push({revision:s.revision,intent:proposal.intent,steps:outcomes,...(proposal.evolution?{evolution:proposal.evolution}:{})});
  return {state:s,outcomes,evolution:proposal.evolution||{basis:'none',updates:[],observations:[]}};
 }
