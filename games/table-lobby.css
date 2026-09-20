@@ -2,3 +2,9 @@
 @media(max-width:1050px){.tables{grid-template-columns:1fr}.table-card{max-width:730px;width:100%;margin:auto}.poker-players{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.hall{padding:20px 16px}.hall-title{display:block;padding-top:28px}.nickname{width:100%;margin-top:24px;display:block}.hall-title h1{font-size:29px}.hall-top>span{font-size:10px}.hall-meta{font-size:11px}.table-card{padding:18px 12px}.seat-button{width:76px;font-size:12px;min-height:58px}.seat-map{margin-inline:2px;min-height:290px}.felt{inset:64px 22px;border-width:6px}.ace21 .seat-button{width:86px}.ace21 .felt{inset:45px 57px}.felt b{font-size:12px}.felt span{font-size:10px}.table-controls{padding-inline:5px}#poker{padding:18px 12px}.poker-head{align-items:start}.poker-head h2{font-size:18px}.poker-players{gap:8px}.poker-player{padding:12px 6px}.poker-actions{gap:8px}.poker-actions label{max-width:150px}.poker-actions button{flex-grow:1}}
 @media(prefers-reduced-motion:no-preference){.seat-button{transition:border-color .15s,background .15s}.table-entry{transition:border-color .15s}}
 [hidden]{display:none!important}
+
+/* Face one another across the broad sides of the oval. Existing table art
+   supplies the velvet and gold ornament without obscuring the seat controls. */
+.ace21 .seat-map{min-height:300px}.ace21 .felt{inset:58px 38px;border-radius:50%;background:linear-gradient(#41232b99,#23131acc),url('/games/ace-21/assets/table.webp') center/cover;box-shadow:0 7px 0 #100b0e,inset 0 0 0 2px #b49d6555,inset 0 0 25px #12060d}
+.ace21 .felt b{font-size:18px}.ace21 .seat-button{width:124px;background:#2b1d24}.ace21 .seat-button.mine{background:#403529}.ace21 .seat-button.occupied{background:#3c2830}.ace21 .seat-button.mine.occupied{background:#403529}
+@media(max-width:600px){.ace21 .seat-map{min-height:280px}.ace21 .felt{inset:54px 15px}.ace21 .seat-button{width:112px}.ace21 .felt b{font-size:15px}}

@@ -3,7 +3,7 @@ const API = location.hostname === '127.0.0.1' || location.hostname === 'localhos
   ? 'http://127.0.0.1:4183' : 'https://muq.koa-ol.com/ace21-api';
 export function savedRoom() {
   const code = new URL(location.href).searchParams.get('table');
-  if (!/^1000[0-3]$/.test(code || '')) return null;
+  if (!/^10[01]0[0-3]$/.test(code || '')) return null;
   try { const token = sessionStorage.getItem('koa-table-token'); return token ? {code,token} : (location.replace('./lobby/'),null); } catch { location.replace('./lobby/');return null; }
 }
 export class RoomClient {

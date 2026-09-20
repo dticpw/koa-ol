@@ -8,7 +8,7 @@
 <title>Koa-OL Games</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
-<link rel="stylesheet" href="./lobby.css?v=030">
+<link rel="stylesheet" href="./lobby.css?v=031">
 </head>
 <body>
 <div class="page">
@@ -35,6 +35,8 @@
       <nav class="lobby-shortcuts" aria-label="游戏分区"><a href="#ai-fiction">AI 互动小说</a><a href="#multiplayer">联机区</a><a href="#singleplayer">单人区</a></nav>
     </section>
 
+    <div class="visitor-profile lobby-view" aria-label="玩家昵称"><span class="visitor-mark" aria-hidden="true">♠</span><label class="field nickname-field"><span>你的昵称</span><input id="player-name" autocomplete="nickname" maxlength="24" placeholder="例如 Koa" required><small id="nickname-note">浏览器会记住昵称，联机游戏通用。</small></label></div>
+
     <section class="game-zone lobby-view" id="ai-fiction" aria-labelledby="fiction-title">
       <header class="zone-heading"><span class="zone-symbol" aria-hidden="true">⌖</span><p>01 / INTERACTIVE FICTION</p><h2 id="fiction-title">AI 互动小说</h2><span>你决定行动，故事留下回声。</span></header>
       <a class="fiction-card" href="./fiction/" aria-label="进入 AI 互动小说剧本书架">
@@ -46,10 +48,9 @@
     <section class="game-zone lobby-view" id="multiplayer" aria-labelledby="multiplayer-title">
       <header class="zone-heading"><span class="zone-symbol" aria-hidden="true">♣</span><p>02 / PLAY TOGETHER</p><h2 id="multiplayer-title">联机区</h2><span>约上朋友，开一桌。</span></header>
     <div class="play-card" aria-label="选择联机游戏">
-      <label class="field nickname-field"><span>你的昵称</span><input id="player-name" autocomplete="nickname" maxlength="24" placeholder="例如 Koa" required><small id="nickname-note">浏览器会记住昵称，进入大厅后点空座入席。</small></label>
-      <div class="table-entries">
-        <a class="table-entry texas-entry" href="./texas/"><span class="entry-symbol" aria-hidden="true">♣</span><span><strong>德州扑克</strong><small>8 人桌 · 2 人起开局</small></span><b>进入大厅 ↗</b></a>
-        <a class="table-entry ace-entry" href="./ace-21/lobby/"><span class="entry-symbol" aria-hidden="true">21♠</span><span><strong>王牌21点</strong><small>2 人桌 · 王牌改写规则</small></span><b>进入大厅 ↗</b></a>
+      <div class="game-switch restored-entries" aria-label="选择游戏大厅">
+        <a class="game-tile is-selected table-entry" href="./texas/" aria-label="进入德州扑克大厅"><span class="card-stack" aria-hidden="true"><i>10</i><i>J</i></span><span><strong>德州扑克</strong><small>Texas Hold’em · 2～8 人</small></span><span class="entrance-link">进入大厅 ↗</span></a>
+        <a class="game-tile ace21-tile table-entry" href="./ace-21/lobby/" aria-label="进入王牌21点大厅"><span class="ace21-seal" aria-hidden="true">21<span>♠</span></span><span><strong>王牌21点</strong><small>ACE 21 · 双人王牌对战</small></span><span class="entrance-link">进入大厅 ↗</span></a>
       </div>
     </div>
     </section>
@@ -65,6 +66,6 @@
   </main>
 </div>
 
-<script type="module" src="./entry.js?v=030"></script>
+<script type="module" src="./entry.js?v=031"></script>
 </body>
 </html>

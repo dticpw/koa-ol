@@ -2,7 +2,7 @@ import {esc,nickname,request,act} from './table-client.js';
 const game=document.body.dataset.game, $=id=>document.getElementById(id);
 let initialLoaded=false, tables=[],busy=false,current=null,lastSignature='',pokerSignature='',polling=false,noticeTimer;
 const name=$('nickname');name.value=nickname();name.addEventListener('input',()=>nickname(name.value));
-const positions=game==='texas'?[[18,14],[50,12],[82,14],[89,50],[82,86],[50,88],[18,86],[11,50]]:[[17,50],[83,50]];
+const positions=game==='texas'?[[18,14],[50,12],[82,14],[89,50],[82,86],[50,88],[18,86],[11,50]]:[[50,14],[50,86]];
 function notice(text){$('notice').textContent=text;$('notice').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').hidden=true,7000);}
 function playLink(t){return `/games/ace-21/?table=${t.id}`;}
 function render(){
