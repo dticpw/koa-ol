@@ -24,10 +24,10 @@ function database() {
   };
   return db;
 }
-function fixture(fetchImpl = async () => model('灯光沿着石壁缓缓移动。')) {
+function fixture(fetchImpl = async () => model('灯光沿着石壁缓缓移动。'), handlerOptions = {}) {
   const env = { DB: database(), UPSTREAM_API_KEY: 'test-only', UPSTREAM_BASE_URL: 'https://upstream.invalid/v1' };
   const calls = [];
-  const handler = createFictionHandler(engine, { fetchImpl: async (...args) => { calls.push(JSON.parse(args[1].body)); return fetchImpl(...args); } });
+  const handler = createFictionHandler(engine, { ...handlerOptions, fetchImpl: async (...args) => { calls.push(JSON.parse(args[1].body)); return fetchImpl(...args); } });
   let cookie;
   return {
     env, calls,
@@ -203,4 +203,21 @@ test('narration outage keeps a completed free interaction and receipt instead of
  const b={op:'turn',requestId:crypto.randomUUID(),expectedRevision:0,action:'用白垩在墙上标出归路'};
  const r=await f.request(b);assert.equal(r.body.degraded,true);assert.equal(r.body.game.turn,1);assert.match(r.body.game.location.description,/归路箭头/);
  assert.deepEqual((await f.request(b)).body,r.body);
+});
+
+test('retired story blocks fresh starts and resets but lets existing sessions restore and continue', async () => {
+ const retired=fixture(undefined,{allowNewGames:false});
+ assert.equal((await retired.request()).body.available,false);
+ assert.equal((await retired.request({op:'start'})).status,410);
+ assert.equal(retired.calls.length,0);
+ assert.equal(retired.env.DB.sql.prepare('SELECT COUNT(*) AS n FROM koa_fiction_sessions').get().n,0);
+ const active=fixture();const started=await active.request({op:'start'});
+ const handler=createFictionHandler(engine,{allowNewGames:false,fetchImpl:async()=>model('你沿着已有的线索继续观察。')});
+ const cookie=started.headers.get('Set-Cookie').split(';')[0];
+ const request=async body=>{const response=await handler({env:active.env,request:new Request('https://game.test/api/fiction',{method:body?'POST':'GET',headers:{Cookie:cookie,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})})});return {status:response.status,body:await response.json()};};
+ assert.equal((await request()).body.available,true);
+ assert.equal((await request({op:'start'})).body.game.sessionId,started.body.game.sessionId);
+ assert.equal((await request({op:'start',reset:true})).status,410);
+ const result=await request(turn());assert.equal(result.status,200);assert.equal(result.body.game.revision,1);
+ assert.equal((await request()).body.game.revision,1);
 });

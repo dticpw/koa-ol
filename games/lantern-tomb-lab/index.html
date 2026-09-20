@@ -34,7 +34,7 @@
       </section>
       <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
       <section id="welcome" class="welcome" aria-labelledby="welcome-title">
-        <div><p class="eyebrow">探险之前</p><h2 id="welcome-title">先试一试你的办法。</h2><p>这里是一段围绕墓门的小型探查。可以连着准备、操作、观察，也可以先说条件再行动。物品用过、投出、烧损的后果会留到下一轮；出现意外时，故事会停下来等你决定。</p><p class="save-note">试玩单独存档，不影响《蛇墓余火》的进度。关闭页面可以回来续玩；清除 Cookie 后无法恢复。</p></div>
+        <div><p class="eyebrow">探险之前</p><h2 id="welcome-title">先试一试你的办法。</h2><p>这里是一段围绕墓门的小型探查。可以连着准备、操作、观察，也可以先说条件再行动。物品用过、投出、烧损的后果会留到下一轮；出现意外时，故事会停下来等你决定。</p><p class="save-note">本篇独立存档，不影响其他剧本的进度。关闭页面可以回来续玩；清除 Cookie 后无法恢复。</p></div>
         <div class="start-actions"><button id="start" class="primary" type="button" disabled>正在读取存档…</button><p>独立试玩 · <a href="/games/fiction/">返回剧本书架</a></p></div>
       </section>
       <section id="adventure" class="adventure" hidden aria-label="冒险正文">
@@ -78,7 +78,7 @@
     </main>
     <footer><p>改编自 <i>Tomb of the Serpent Kings</i> · <a href="./credits.html">来源与许可</a></p><p>AI 主持 <span id="model-label">GPT-5.6 Sol</span><span class="footer-dot">·</span>实验短篇</p></footer>
   </div>
-  <dialog id="reset-dialog" aria-labelledby="reset-title"><form method="dialog"><p class="eyebrow">重新出发</p><h2 id="reset-title">合上这一本手记？</h2><p>重新开始会替换这版试玩的存档，不影响原版《蛇墓余火》。未收藏的旧冒险将无法回看；已经收藏的故事会保留。</p><div class="dialog-actions"><button value="archive">先命名收藏</button><button value="cancel">保留当前冒险</button><button value="confirm" class="primary">开始新冒险</button></div></form></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-title"><form method="dialog"><p class="eyebrow">重新出发</p><h2 id="reset-title">合上这一本手记？</h2><p>重新开始会替换本篇的当前进度，不影响其他剧本。未收藏的旧冒险将无法回看；已经收藏的故事会保留。</p><div class="dialog-actions"><button value="archive">先命名收藏</button><button value="cancel">保留当前冒险</button><button value="confirm" class="primary">开始新冒险</button></div></form></dialog>
   <dialog id="trace-dialog" class="trace-dialog" aria-labelledby="trace-dialog-title"><div class="trace-dialog-head"><h2 id="trace-dialog-title">主持调用详情</h2><form method="dialog"><button autofocus>关闭 ×</button></form></div><div id="trace-dialog-content"></div></dialog>
   <dialog id="collection-dialog" class="collection-dialog" aria-labelledby="collection-title"><div class="collection-heading"><div><p class="eyebrow">那些你走过的故事</p><h2 id="collection-title">冒险收藏</h2></div><form method="dialog"><button autofocus aria-label="关闭冒险收藏">关闭 ×</button></form></div><p class="collection-note">收藏不会随当前进度的七天期限删除，重开新局也会保留。此浏览器的 Cookie 是收藏凭证；清除 Cookie 或换设备后无法直接找回，喜欢的故事请下载备份。</p><p class="collection-note">收藏用于重读，不恢复为当前游戏。主持调用详情仍按原规则保留 7 天，请另行下载。</p><button id="collection-refresh" type="button">刷新收藏</button><p id="collection-status" role="status" aria-live="polite"></p><ol id="collection-list" class="collection-list"></ol></dialog>
   <dialog id="name-dialog" aria-labelledby="name-dialog-title"><form id="name-form"><div class="collection-heading"><h2 id="name-dialog-title">为这段冒险留名</h2><button id="name-cancel" type="button" aria-label="关闭命名窗口">关闭 ×</button></div><p id="name-context" class="collection-note"></p><label for="adventure-name">冒险名字</label><input id="adventure-name" maxlength="60" required placeholder="一个只属于这段经历的名字"><p id="name-status" role="status" aria-live="polite"></p><button id="name-submit" class="primary" type="submit">保存到冒险收藏</button></form></dialog>

@@ -122,7 +122,7 @@ function actionFormat(allowed, world) {
   };
 }
 
-export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(...args), gameKind = 'classic', cookieName = COOKIE, cookiePath = '/api/fiction', resolveTurn, traceEnabled = gameKind === 'lab' } = {}) {
+export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(...args), gameKind = 'classic', cookieName = COOKIE, cookiePath = '/api/fiction', resolveTurn, traceEnabled = gameKind === 'lab', allowNewGames = true } = {}) {
   return async ({ request, env }) => {
     try {
       if (!['GET', 'POST'].includes(request.method)) return json({ error: '不支持的请求方式。' }, 405, { Allow: 'GET, POST' });
@@ -159,9 +159,10 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
         if(!trace)throw new ApiError(404,'这条调用记录不存在或已过期。','trace_not_found');
         return json({trace});
       }
-      if (request.method === 'GET') return json({ game: session ? engine.getView(JSON.parse(session.state_json)) : null, available: true });
+      if (request.method === 'GET') return json({ game: session ? engine.getView(JSON.parse(session.state_json)) : null, available: allowNewGames || Boolean(session) });
       if (body.op === 'start') {
         if (session && !body.reset) return json({ game: engine.getView(JSON.parse(session.state_json)), available: true });
+        if (!allowNewGames) throw new ApiError(410, '这个剧本已下架，不再开放新冒险；已经开始的冒险仍可在原页面继续。', 'game_retired');
         if (!await increment(db, `start:${gameKind}:${date}:${ipHash}`, 5, now + 2 * 86400000)) throw new ApiError(429, '今天已创建 5 局，请继续现有存档或明天再来。', 'start_limited');
         const token = [...crypto.getRandomValues(new Uint8Array(32))].map(x => x.toString(16).padStart(2, '0')).join('');
         tokenHash = await hash(token);
