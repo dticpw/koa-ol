@@ -21,13 +21,16 @@ function render(){
 const phaseNames={pre_flop:'翻牌前',flop:'翻牌',turn:'转牌',river:'河牌',showdown:'摊牌',finished:'本手结束'};
 function cards(list){return `<div class="cards">${list.map(c=>`<span class="playing-card ${c==='XX'?'back':/[HD]$/.test(c)?'red':''}" aria-label="${c==='XX'?'隐藏底牌':esc(c)}">${c==='XX'?'♠':esc((c[0]==='T'?'10':c[0])+({H:'♥',D:'♦',C:'♣',S:'♠'}[c[1]]||''))}</span>`).join('')}</div>`;}
 function renderPoker(data){
- current=data;const g=data?.poker;if(!g){$('poker').hidden=true;pokerSignature='';return;}
+ const previous=current;current=data;const g=data?.poker;if(!g){$('poker').hidden=true;pokerSignature='';return;}
+ const entering=!previous?.poker||previous.id!==data.id||previous.poker.hand!==g.hand;
  const sig=JSON.stringify(data);if(sig===pokerSignature)return;pokerSignature=sig;
  const own=g.players[data.you],turn=g.current_player===data.you,call=Math.max(0,g.current_bet-(own?.current_bet||0));
  const min=call+(g.current_bet?g.min_raise:g.big_blind),max=Math.max(0,Math.min(own?.chips||0,g.max_bet_per_hand-(own?.total_bet||0)));
  const amount=$('bet-amount')?.value,hadFocus=document.activeElement?.id==='bet-amount';
  $('poker').hidden=false;$('poker').innerHTML=`<header class="poker-head"><div><h2>${data.id} 号桌 · ${phaseNames[g.phase]||g.phase}</h2><small>第 ${data.hand} 手 · 盲注 ${g.small_blind} / ${g.big_blind}</small></div><a href="#tables">返回座位区 ↑</a></header><div class="board"><span class="pot">底池 ${g.pot}</span>${cards(g.community_cards.length?g.community_cards:['XX','XX','XX','XX','XX'])}</div><div class="poker-players">${Object.entries(g.players).map(([id,p],i)=>`<section class="poker-player ${g.current_player===id?'is-turn':''} ${p.status==='folded'?'folded':''}"><h3>${esc(p.username)} ${id===data.you?'· 你':''} ${i===g.dealer_position?'ⓓ':''}</h3>${cards(p.hole_cards)}<p>筹码 ${p.chips} · 本轮下注 ${p.current_bet}</p><span class="is-turn-tag">${g.current_player===id?'▶ 正在行动':p.status==='folded'?'已弃牌':p.last_action?({call:'跟注',check:'过牌',raise:'加注',bet:'下注',fold:'弃牌'}[p.last_action]||p.last_action):'等待'}</span></section>`).join('')}</div>${g.phase==='finished'?`<div class="poker-results">${Object.values(g.game_results).filter(p=>p.is_winner).map(p=>`${esc(p.username)} 赢得 ${p.winnings} 筹码${p.hand_name?' · '+esc(p.hand_name):''}`).join('<br>')}</div><p>本手已结束，返回座位区，由房主开始下一手。</p>`:`<p class="turn-banner" role="status">${turn?'轮到你行动':`等待 ${esc(g.players[g.current_player]?.username)} 行动`} · <span id="countdown"></span></p><div class="poker-actions"><button data-move="fold" ${turn?'':'disabled'}>弃牌</button><button data-move="${call?'call':'check'}" ${turn?'':'disabled'}>${call?'跟注 '+call:'过牌'}</button><label>本次投入筹码<input id="bet-amount" type="number" min="${min}" max="${max}" value="${min}" step="1" ${turn&&max>=min?'':'disabled'}></label><button class="primary" data-move="${g.current_bet?'raise':'bet'}" ${turn&&max>=min?'':'disabled'}>${g.current_bet?'加注':'下注'}</button></div>`}<p class="poker-rules">本手最多投入 ${g.max_bet_per_hand} 筹码（取房主设置与最短起手筹码的较小值）。不提供主动全下。每次行动 30 秒，超时弃牌。</p>`;
  if(amount&&$('bet-amount'))$('bet-amount').value=amount;if(hadFocus)$('bet-amount')?.focus({preventScroll:true});countdown();
+ // Bring every seated player to a new hand once; heartbeats must not steal scroll.
+ if(entering)$('poker').scrollIntoView({behavior:'auto'});
 }
 function countdown(){if($('countdown'))$('countdown').textContent=`${Math.max(0,Math.ceil((current?.poker?.deadline||0)-Date.now()/1000))} 秒`;}
 setInterval(countdown,500);

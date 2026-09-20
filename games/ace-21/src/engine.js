@@ -2,24 +2,24 @@
 export const CATALOG = {
   shield: { name: '护盾', icon: 'shield', family: '守护', cost: 1, stay: true, text: '在桌上时，你输掉本局的伤害减少 1。' },
   joy: { name: '幸福', icon: 'star', family: '命运', cost: 1, text: '双方各获得 1 张王牌。' },
-  add1: { name: '加一', icon: 'sword', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 1；打出时获得 1 张王牌。' },
+  add1: { name: '+1', icon: 'sword', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 1；打出时获得 1 张王牌。' },
   cycle: { name: '王牌变换', icon: 'cycle', family: '命运', cost: 1, text: '随机弃掉另外 2 张手牌王牌，再获得 3 张。至少需要另外 2 张手牌。' },
   return: { name: '退回', icon: 'return', family: '操控', cost: 1, text: '将自己最右侧的明牌洗回数牌池，不能退回底牌。' },
   destroy: { name: '破坏', icon: 'break', family: '操控', cost: 1, text: '移除对手桌上最右侧的王牌。' },
   swap: { name: '交换', icon: 'swap', family: '操控', cost: 1, text: '交换双方最右侧的明牌，不影响底牌。' },
   remove: { name: '撤除', icon: 'return', family: '操控', cost: 1, text: '将对手最右侧的明牌洗回数牌池，不影响底牌。' },
   desire: { name: '欲望', icon: 'eye', family: '进攻', cost: 2, stay: true, text: '对手输掉本局时，额外受到其手牌王牌数量一半的伤害，向下取整。占 2 格。' },
-  shield2: { name: '护盾加', icon: 'shield', family: '守护', cost: 1, stay: true, text: '在桌上时，你输掉本局的伤害减少 2。' },
-  add2: { name: '加二', icon: 'sword', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 2；打出时获得 1 张王牌。' },
-  destroyAll: { name: '破坏加', icon: 'break', family: '操控', cost: 1, text: '移除对手桌上的所有王牌。' },
+  shield2: { name: '护盾+', icon: 'shield', family: '守护', cost: 1, stay: true, text: '在桌上时，你输掉本局的伤害减少 2。' },
+  add2: { name: '+2', icon: 'sword', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 2；打出时获得 1 张王牌。' },
+  destroyAll: { name: '破坏+', icon: 'break', family: '操控', cost: 1, text: '移除对手桌上的所有王牌。' },
   devil: { name: '魔抽', icon: 'moon', family: '命运', cost: 1, stay: true, text: '立即获得 3 张王牌；在桌上时，你输掉本局的伤害增加 1。' },
-  slam: { name: '盾击', icon: 'sword', family: '进攻', cost: 1, stay: true, text: '移除自己桌上所有护盾和护盾加，令对手输掉本局的伤害增加 3。护盾牌不足 2 张时，本牌直接弃置。' },
+  slam: { name: '盾击', icon: 'sword', family: '进攻', cost: 1, stay: true, text: '移除自己桌上所有护盾和护盾+，令对手输掉本局的伤害增加 3。护盾牌不足 2 张时，本牌直接弃置。' },
   harvest: { name: '收割', icon: 'harvest', family: '命运', cost: 3, stay: true, text: '在桌上时，此后每使用 1 张王牌就获得 1 张新王牌。打出自身不触发。占 3 格。' },
   curse: { name: '诅咒', icon: 'eye', family: '进攻', cost: 1, text: '随机弃掉另外 1 张手牌王牌，强迫对手抽 1 张数牌。至少需要另外 1 张手牌。' },
   number: { name: '数字', icon: 'number', family: '操控', cost: 1, text: '抽取指定数牌；它已不在牌池时无事发生。' },
   challenge: { name: '挑战', icon: 'crown', family: '规则', cost: 1, stay: true, text: '将目标改为本牌点数，并移除双方桌上的其他挑战牌。此牌离场后恢复目标 21。' },
   perfect: { name: '完美', icon: 'star', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 3；从牌池抽取不使你爆牌的最大数牌。没有安全牌时不抽。' },
-  perfect2: { name: '完美加', icon: 'crown', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 5；从牌池抽取不使你爆牌的最大数牌。没有安全牌时不抽。' },
+  perfect2: { name: '完美+', icon: 'crown', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 5；从牌池抽取不使你爆牌的最大数牌。没有安全牌时不抽。' },
   seelieCute: { name: '希儿很可爱', icon: 'moon', family: '希儿专属', special: true, cost: 1, stay: true, text: '在牌桌上时，本轮结束不进行任何血量结算，直接进入下一轮发牌。' },
   seelieAngry: { name: '希儿生气了', icon: 'sword', family: '希儿专属', special: true, cost: 1, stay: true, text: '在牌桌上时，双方所有普通及专属王牌均无法打出。本轮真人玩家输掉对局的血量损失最高为 3 点；仍可抽数牌和停牌。' },
   seelieInsight: { name: '希儿看破一切', icon: 'eye', family: '希儿专属', special: true, cost: 1, stay: true, text: '在牌桌上时，对手输掉本局的伤害增加 1。打出时无视牌池，创造一张「当前目标 − 希儿点数总和」的数牌，可超过 11，也可为 0 或负数。创造牌被洗回、交换或本牌被破坏时直接消失，不进入牌池。' },
@@ -28,9 +28,17 @@ export const CATALOG = {
   seelieDecision: { name: '希儿的决定权', icon: 'crown', family: '希儿专属', special: true, cost: 1, stay: true, text: '在牌桌上时，目标固定为打出时希儿的数牌总和，后续点数变化不改变该目标；双方均不能打出挑战牌。本牌离场后恢复场上挑战牌的目标，若无则恢复 21。' },
 };
 
-export const DRAW_POOL = Object.keys(CATALOG).filter(type => !CATALOG[type].special).flatMap(type => type === 'number'
-  ? Array.from({ length: 11 }, (_, i) => ({ type, value: i + 1 }))
-  : [{ type }]);
+// With-replacement ordinary draw weights; physical number cards remain 1–11.
+export const TRUMP_WEIGHTS = {
+  shield: 6, shield2: 4, add1: 8, add2: 7, desire: 6, slam: 3,
+  perfect: 3, perfect2: 3, joy: 6, cycle: 6, devil: 3, harvest: 2,
+  return: 6, swap: 6, remove: 6, curse: 3, destroy: 6, destroyAll: 3,
+};
+export const DRAW_POOL = [
+  ...Object.entries(TRUMP_WEIGHTS).flatMap(([type, count]) => Array.from({ length: count }, () => ({ type }))),
+  ...[17, 24, 27].flatMap(value => Array.from({ length: 3 }, () => ({ type: 'challenge', value }))),
+  ...[2, 3, 4, 5, 6, 7].flatMap(value => Array.from({ length: 2 }, () => ({ type: 'number', value }))),
+];
 export const SPECIAL_POOL = Object.keys(CATALOG).filter(type => CATALOG[type].special);
 const tableCard = (s, type) => s.players.flatMap(p => p.table).find(c => c.type === type);
 export const cardName = c => c.type === 'number' ? `数字 ${c.value}` : c.type === 'challenge' ? `挑战 ${c.value}` : CATALOG[c.type].name;
@@ -50,7 +58,6 @@ function addLog(s, text, kind = 'info') {
 }
 function newTrump(s) {
   const card = { ...DRAW_POOL[pick(s, DRAW_POOL)], id: `t${++s.serial}` };
-  if (card.type === 'challenge') card.value = 22 + Math.floor(random(s) * 9);
   return card;
 }
 function grant(s, actor, n) { for (let i = 0; i < n; i++) s.players[actor].hand.push(newTrump(s)); }

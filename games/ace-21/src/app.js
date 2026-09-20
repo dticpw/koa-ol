@@ -1,5 +1,5 @@
-import { CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe } from './engine.js';
-import { chooseAction } from './ai.js';
+import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe } from './engine.js?v=050';
+import { chooseAction } from './ai.js?v=050';
 import { RoomClient, savedRoom } from './network.js?v=041';
 
 const $ = id => document.getElementById(id);
@@ -285,7 +285,7 @@ document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 's') { e.preventDefault(); perform({ type: 'stand', actor: 0 }); }
 });
 
-$('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article class="${c.special ? 'special-catalog' : ''}"><h4>${c.name}${type === 'number' ? ' 1～11' : type === 'challenge' ? ' 22～30' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格${c.special ? ' · 场上最多一张' : ''}</small></article>`).join('');
+$('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article class="${c.special ? 'special-catalog' : ''}"><h4>${c.name}${type === 'number' ? ' 2～7' : type === 'challenge' ? ' 17 / 24 / 27' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格${c.special ? ' · 场上最多一张' : ` · ${type === 'number' ? '每种 2' : type === 'challenge' ? '每种 3' : DRAW_POOL.filter(card => card.type === type).length}/108 抽取权重`}</small></article>`).join('');
 if (matchMedia('(max-width: 920px)').matches) document.querySelector('.chronicle').open = false;
 
 
