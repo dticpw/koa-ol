@@ -8,6 +8,8 @@ body[data-fiction="lab"] {
 body[data-story] { --play-panel:#0e1922ee; --play-shadow:#0003; }
 body[data-story="ghosts-of-aramoor"] { --play-atlas:url("./assets/atlas-coast.svg"); }
 body[data-story="goodbye-shooting-star"] { --play-atlas:url("./assets/atlas-orbit.svg"); }
+body[data-story="bindi-shang"] { --play-atlas:url("./assets/atlas-mystery.svg"); }
+body[data-story="downtown-island"] { --play-atlas:url("./assets/atlas-city.svg"); }
 body[data-fiction="lab"]::before {
   content:""; position:fixed; inset:60px 0 0; z-index:-1;
   pointer-events:none; opacity:.34;
@@ -54,4 +56,3 @@ body[data-story] .cover-description { color:#c4cdd0; }
   .chapter-head::after { display:none; }
   .story { font-size:16px; }
 }
-

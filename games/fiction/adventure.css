@@ -1,4 +1,6 @@
 /* Colors follow the cover art; reading surfaces stay calm and legible. */
+body[data-story="bindi-shang"]{--copper:#dfb196;--moss:#ccacac;background:radial-gradient(ellipse at 85% 5%,#49323477,transparent 45%),var(--paper)}
+body[data-story="downtown-island"]{--copper:#d8ae77;--moss:#9bbebb;background:radial-gradient(ellipse at 85% 5%,#22474977,transparent 45%),var(--paper)}
 :root{color-scheme:dark;--paper:#0b1117;--ink:#e3dfd5;--muted:#9aa9b0;--line:#364149;--copper:#dfb680;--moss:#99bda9;--white:#0b1117}
 body{background:radial-gradient(ellipse at 85% 5%,#28323888,transparent 40%),var(--paper)}
 body[data-story="ghosts-of-aramoor"]{--copper:#89c7b7;--moss:#aad4c7;background:radial-gradient(ellipse at 85% 5%,#1d3e4288,transparent 45%),var(--paper)}
