@@ -38,3 +38,9 @@ Adventure text adaptations are CC BY-SA 4.0. Each credits page names the author,
 Run `node --test tests/fiction*.test.mjs` with a Node release supporting `node:sqlite`. Build Cloudflare Pages Functions with `wrangler pages functions build functions --outfile <artifact-path>`.
 
 The first-batch real-model validation reached a library exit after a voluntary memory exchange and thief negotiation, a research-evidence withdrawal from the spaceship, and the pirate ship's departure followed by a report in town. It also exercised an early retreat from the cave. These samples validate selected routes, not every possible branch or an entire novel-length campaign. During validation, the missing consent evidence in review, remote radio interaction and incomplete cargo-unloading guards were corrected. Semantic identity disclosure and multi-step reach errors remain important regression targets.
+
+## Retired stories and live updates
+
+The classic serpent-tomb story is retired: its shelf card is removed, former introduction/play URLs show a retirement notice, and `/api/fiction` rejects fresh starts or resets with `410 game_retired`. Existing session reads and turns remain accepted so already-open play pages are not forcibly interrupted. The `games/lantern-tomb/` scripts, styles and credited assets also serve active stories and must not be deleted as if they were exclusive to the retired title.
+
+Adding a distinct story does not recreate existing D1 sessions. A visitor's loaded document remains until navigation/reload; later API calls use the current deployment. Sessions currently do not pin an immutable story/rules version, so changes to shared logic or an existing story's authored configuration require backward compatibility. The daily model-spend budget is shared across stories.
