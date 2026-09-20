@@ -150,3 +150,13 @@ body:not(.is-room-view) .home-link:hover { background:#1b1f27; color:#fff; }
 @media(min-width:561px) and (max-width:1200px) { .game-lobby>.hero-copy .lobby-art-night { right:0; max-width:100%; } }
 @media(max-width:380px) { .game-zone .play-card { padding:16px; } .game-zone .actions { grid-template-columns:1fr; } }
 @media(prefers-reduced-motion:reduce) { .fiction-card>.fiction-scene { transition:none; } .fiction-card:hover>.fiction-scene,.game-zone .game-tile:hover,.game-zone .game-tile.is-selected:hover .card-stack { transform:none; } }
+
+/* Ace 21 occupies the former Blackjack entrance; Texas keeps its existing form. */
+.game-zone .game-tile.ace21-tile { display:flex; align-items:center; min-height:118px; padding:20px; gap:16px; text-decoration:none; background:linear-gradient(90deg,#281822f2,#281822bb),url('./ace-21/assets/table.webp') center/cover; border-color:#a68654; text-align:left; }
+.game-zone .game-tile.ace21-tile::before,.game-zone .game-tile.ace21-tile::after { display:none; }
+.ace21-seal { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:0 0 47px; height:66px; border:1px solid #bd9e63; color:#e8ca92; border-radius:5px; font:27px/1 Georgia,serif; transform:rotate(-7deg); }
+.ace21-seal>span { font-size:20px; margin-top:5px; }
+.game-zone .ace21-tile strong { font-size:20px; color:#f6e5c6; }
+.game-zone .ace21-tile small { display:block; font-size:11px; color:#d3bfa3; margin-top:6px; }
+.ace21-enter { margin-left:auto; color:#e2bc7d; font-size:12px; white-space:nowrap; }
+@media (max-width:480px) { .game-zone .game-tile.ace21-tile { padding:16px 12px; gap:12px; } .game-zone .ace21-tile strong { font-size:18px; } .game-zone .ace21-tile small { font-size:10px; } .ace21-enter { font-size:10px; } }

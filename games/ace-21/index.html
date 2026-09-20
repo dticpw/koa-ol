@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#180f15">
+  <meta name="description" content="王牌21点：共享1至11数牌池，用改变规则的王牌与希儿进行一场命运牌局。">
+  <title>王牌21点 · Midnight Table</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#controls">跳到操作区</a>
+  <header class="topbar">
+    <a class="wordmark" href="https://koa-ol.com/games/" aria-label="返回 Koa-OL Games"><span class="brand-seal">A</span><span>KOA-OL <b>GAMES</b></span></a>
+    <span class="edition">THE MIDNIGHT TABLE <i></i> 王牌牌局</span>
+    <nav aria-label="游戏设置">
+      <button id="sound" class="quiet" aria-pressed="false" title="开启音效">音效：关</button>
+      <button id="pace" class="quiet" aria-pressed="false" title="切换电脑行动速度">节奏：标准</button>
+      <button id="help" class="quiet">规则 <span aria-hidden="true">↗</span></button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar" aria-label="对局概况">
+      <div class="title-lockup"><p class="eyebrow">ACE TWENTY-ONE</p><h1>王牌<span>21点<span class="title-diamond" aria-hidden="true">♦</span></span></h1><p class="tagline">胜负，在下一张之外。</p></div>
+      <div class="session-heading"><span id="round-label">第一局</span><span class="small-tag" id="mode-label">单人对战</span></div>
+      <div class="turn-box" id="turn-box"><span class="turn-light"></span><div><b id="turn-title">等待入席</b><p id="turn-description">准备开始你的牌局</p></div></div>
+      <div class="turn-rule"><span>01 / 抽牌或使用王牌</span><span>02 / 停牌，交出行动权</span><span>03 / 双方停牌，开牌结算</span></div>
+      <details class="chronicle" open><summary>牌局记录 <span>LIVE LOG</span></summary><ol id="log" aria-label="行动记录"></ol></details>
+      <div class="sidebar-bottom"><button id="pause" class="quiet">暂停对局</button><button id="restart" class="quiet">重新开局</button></div>
+    </aside>
+
+    <section class="game-space" aria-label="王牌21点牌桌">
+      <div id="room-bar" class="room-bar" hidden><span id="room-connection" role="status"></span><button id="room-copy" class="quiet">复制邀请链接</button></div>
+      <div class="table-meta"><span><i class="live-dot"></i> <span id="opponent-label">YOU × 希儿</span></span><span>共用牌池 · 1—11 各一张</span></div>
+      <section id="table" class="table" aria-label="双方牌桌">
+        <div class="table-inscription" aria-hidden="true">FORTUNE FAVOURS THE BOLD</div>
+        <section class="seat enemy" id="seat-1" aria-label="希儿的牌">
+          <div class="player-bar"><div class="identity"><span class="avatar ai-avatar" aria-hidden="true">☾</span><div><h2><b id="opponent-name">希儿</b> <span>对手</span></h2><div class="health-line"><span id="hp-1"></span><span id="loss-1" class="loss"></span></div></div></div><div class="score" id="score-1"></div></div>
+          <div class="life-track" aria-hidden="true"><span id="life-1"></span></div>
+          <div class="numbers" id="numbers-1" aria-label="希儿的数牌"></div>
+          <div class="effects-row"><span class="effects-label" id="slots-1">桌面王牌</span><div class="effects" id="effects-1"></div><span class="opponent-hand" id="enemy-hand"></span></div>
+        </section>
+
+        <div class="table-center">
+          <div class="deck-wrap"><div id="deck" class="deck" aria-hidden="true"><span>♠</span></div><span id="deck-count"></span></div>
+          <div class="target-lockup"><span class="eyebrow">当前目标点数</span><strong id="target">21</strong><span id="center-message">离目标近一点，离危险远一点。</span></div>
+          <div class="table-note"><span class="diamond" aria-hidden="true">◇</span><span>底牌保密<br>王牌改写命运</span></div>
+        </div>
+
+        <section class="seat human" id="seat-0" aria-label="你的牌">
+          <div class="player-bar"><div class="identity"><span class="avatar" aria-hidden="true">♠</span><div><h2>你 <span>挑战者</span></h2><div class="health-line"><span id="hp-0"></span><span id="loss-0" class="loss"></span></div></div></div><div class="score" id="score-0"></div></div>
+          <div class="life-track" aria-hidden="true"><span id="life-0"></span></div>
+          <div class="numbers" id="numbers-0" aria-label="你的数牌"></div>
+          <div class="effects-row"><span class="effects-label" id="slots-0">桌面王牌</span><div class="effects" id="effects-0"></div></div>
+        </section>
+        <div id="result" class="result-panel" hidden></div>
+        <div id="pause-overlay" class="pause-overlay" hidden><span class="eyebrow">TAKE YOUR TIME</span><strong>牌局已暂停</strong><button id="resume" class="gold-button">继续对局</button></div>
+      </section>
+
+      <section class="hand-zone" aria-labelledby="hand-title">
+        <div class="hand-header"><h2 id="hand-title">你的王牌 <span id="hand-count"></span></h2><span>点击选牌，查看效果后打出 <i>·</i> 跨局保留</span></div>
+        <div class="hand-rack" id="hand" role="group" aria-label="王牌手牌"></div>
+        <div class="action-dock" id="controls">
+          <div id="selection" class="selection" aria-live="polite" aria-atomic="true"><span class="selection-label">行动提示</span><p>选一张王牌，改写这场牌局。</p></div>
+          <div class="buttons"><button id="play" class="play-button" disabled>打出王牌</button><button id="draw" class="gold-button">抽一张 <kbd>D</kbd></button><button id="stand" class="stand-button">停牌 <kbd>S</kbd></button></div>
+        </div>
+      </section>
+      <footer class="game-footer"><span>每次抽数牌，有 1/6 概率额外获得一张王牌</span><span>ACE 21 <i>／</i> 初版 0.2</span></footer>
+    </section>
+  </main>
+
+  <div id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="toast" class="toast" role="alert" hidden></div>
+
+  <dialog id="welcome" class="welcome-dialog" aria-labelledby="welcome-title">
+    <div class="welcome-art"><span class="eyebrow">KOA-OL · ORIGINAL TABLE</span><div class="welcome-mark" aria-hidden="true">A<span>♠</span></div><p>ONE MORE CARD.<br>ONE MORE POSSIBILITY.</p></div>
+    <div class="welcome-copy"><span class="eyebrow">欢迎来到午夜牌桌</span><h2 id="welcome-title">王牌<span>21点</span></h2><p class="welcome-lead">接近 21，或改写规则。</p><p>一副共用的数牌，两张起手王牌。与希儿轮流行动，用护盾、交换和挑战牌，扭转下一次开牌的结局。</p><div class="welcome-stats"><div><strong>10</strong><span>你的生命</span></div><span class="versus">VS</span><div><strong>20</strong><span>希儿的生命</span></div></div><button id="start" class="gold-button" autofocus>与希儿对战 <span aria-hidden="true">→</span></button><button id="multiplayer" class="stand-button">与朋友联机 · 两人对战</button><button id="welcome-rules" class="quiet">先了解玩法</button><small>单人 / 双人联机 · 无需登录 · 音效默认关闭</small></div>
+    <section id="online-entry" class="online-entry" hidden aria-label="联机入场">
+      <h3>约一位朋友，开一桌。</h3><p>双方 10 点生命 · 房主每局先手</p>
+      <form id="online-form">
+        <label>你的昵称<input id="online-name" maxlength="16" autocomplete="nickname" placeholder="牌友" required></label>
+        <label>房间号或邀请链接<input id="online-code" maxlength="200" autocomplete="off" spellcheck="false" placeholder="加入时填写 8 位房间号"></label>
+        <div class="buttons"><button id="create-online" type="button" class="gold-button">创建房间</button><button id="join-online" type="submit" class="stand-button">加入房间</button></div>
+      </form>
+      <div id="online-wait" hidden><span>房间号</span><strong id="waiting-code"></strong><p>等朋友加入后自动开局</p><input id="invite-link" readonly aria-label="邀请链接"><button id="copy-invite" class="gold-button">复制邀请链接</button><button id="cancel-room" class="quiet">离开房间</button></div>
+      <p id="online-message" role="status"></p><small>当前标签页刷新可重连；请保留此标签页。24 小时无操作的房间过期。联机时查看说明不会暂停对手。</small>
+    </section>
+  </dialog>
+
+  <dialog id="rules" class="rules-dialog" aria-labelledby="rules-title"><header class="dialog-heading"><div><span class="eyebrow">THE HOUSE RULES</span><h2 id="rules-title">牌桌上的规则</h2></div><button class="close" data-close="rules" aria-label="关闭规则">×</button></header><div class="rules-body">
+    <section><h3>01 · 赢下这一手</h3><p>双方共用 1～11 各一张的数牌池，1 只算 1 点。每局重洗，各发一张底牌、一张明牌。你的底牌仅对你显示。</p><p>不超过目标时，点数较大者胜；一方爆牌则另一方胜。同点或双方爆牌都不扣血。输家受到基础 1 点伤害，叠加王牌后最低为 0。生命归零时整场结束。</p></section>
+    <section><h3>02 · 停牌才交出行动权</h3><p>单人时每局希儿先手；联机时双方各 10 点生命，房主每局先手。轮到你时，可以连续抽牌和使用王牌，再停牌。任何一次成功的抽牌或用牌都会取消此前的停牌状态；双方连续停牌才结算。爆牌后仍可用王牌补救。</p></section>
+    <section><h3>03 · 你的另一副牌</h3><p>首局每人获得 2 张王牌，以后每局各获得 1 张。手牌跨局保留，没有数量上限。每次主动抽数牌有 1/6 概率额外获得 1 张王牌，不会自动连抽。</p><p>每人的桌面有 5 格。欲望占 2 格，收割占 3 格，其余占 1 格。瞬时王牌也必须有空位才能使用，但用后不占位。每局结束清空桌面王牌，目标恢复为 21。</p></section>
+    <section><h3>04 · 初版约定</h3><p>王牌按下方 38 个具体牌种等概率、有放回抽取，挑战牌获得时确定为 22～30。王牌效果附带的抽数牌不触发额外王牌奖励；空牌池和缺少操作目标时不能执行相关操作。</p><p>完美只抽取不会爆牌的最大可用数牌，没有安全牌就不抽。挑战牌被破坏后目标恢复 21。牌位在用牌前检查，不能预支将要移除的牌位。盾击不足两张护盾时仍会弃置，请谨慎确认。</p><p>希儿暂不使用专属牌。电脑策略只依据其自己的手牌与公开信息；单人对局在本地运行。联机由服务器发牌并结算，只向你发送自己的私牌；双方确认后进入下一局。刷新当前标签页可重连，离开房间视为结束本场。没有账号或跨设备存档。</p></section>
+    <section><h3>05 · 操作与设置</h3><p>点击王牌查看说明，再点“打出王牌”。桌面王牌也可以点开查看。电脑行动时仍可查阅牌效。键盘 D 抽牌、S 停牌；Tab 浏览控件、Enter 确认。打开说明、暂停或切到其他标签页时，单人对局暂停推进。系统减少动态效果设置会跳过位移和震动。</p></section>
+    <section><h3>王牌图鉴</h3><div id="catalog" class="catalog"></div></section>
+  </div></dialog>
+  <dialog id="card-detail" class="card-dialog" aria-labelledby="detail-title"><button class="close" data-close="card-detail" aria-label="关闭牌效">×</button><div id="detail-content"></div></dialog>
+  <dialog id="restart-dialog" class="confirm-dialog" aria-labelledby="restart-title"><h2 id="restart-title">重新入席？</h2><p id="restart-description">当前生命、手牌和牌局记录将清空。</p><div class="buttons"><button class="stand-button" data-close="restart-dialog">继续这场</button><button id="confirm-restart" class="gold-button">重新开局</button></div></dialog>
+  <noscript><div class="noscript">王牌21点需要启用 JavaScript 才能游玩。</div></noscript>
+</body>
+</html>
