@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-  const $=id=>document.getElementById(id), API='/api/fiction-lab/archives';
+  const $=id=>document.getElementById(id), API=(document.body.dataset.api||'/api/fiction-lab')+'/archives';
   let game=null,busy=false,saving=false,libraryReady=false,initializing=null,selected=null,naming=null,readGeneration=0,listGeneration=0;
   const node=(tag,text,cls)=>{const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el;};
   const date=value=>new Date(value).toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});
@@ -81,13 +81,13 @@
     catch(error){$('archive-status').textContent=error.message;}
     finally{saving=false;controls();}
   });
-  $('archive-json').addEventListener('click',()=>{if(selected)download(JSON.stringify({format:'koa-fiction-adventure',version:1,attribution:{scenario:'门后的火光，改编自 Skerples《Tomb of the Serpent Kings》',source:'https://coinsandscrolls.blogspot.com/2017/06/osr-tomb-of-serpent-kings-megapost.html',license:'https://creativecommons.org/licenses/by-nc-sa/4.0/'},...selected},null,2),'application/json','.json');});
+  $('archive-json').addEventListener('click',()=>{if(selected)download(JSON.stringify({format:'koa-fiction-adventure',version:1,attribution:selected.game.credits||{scenario:'门后的火光，改编自 Skerples《Tomb of the Serpent Kings》',source:'https://coinsandscrolls.blogspot.com/2017/06/osr-tomb-of-serpent-kings-megapost.html',license:'https://creativecommons.org/licenses/by-nc-sa/4.0/'},...selected},null,2),'application/json','.json');});
   $('archive-export').addEventListener('click',()=>{
     if(!selected)return;const doc=document.implementation.createHTMLDocument(selected.title);doc.documentElement.lang='zh-CN';
     const charset=doc.createElement('meta');charset.setAttribute('charset','UTF-8');doc.head.prepend(charset);
     const viewport=doc.createElement('meta');viewport.name='viewport';viewport.content='width=device-width,initial-scale=1';doc.head.append(viewport);
     const style=doc.createElement('style');style.textContent='body{max-width:760px;margin:40px auto;padding:0 24px;background:#f4efe4;color:#292d27;font:17px/2 Georgia,"Songti SC",serif}h1{line-height:1.5;overflow-wrap:anywhere}.archive-entry{white-space:pre-wrap;overflow-wrap:anywhere}.player{border-left:2px solid #a6936c;padding-left:16px;color:#706448;font-size:14px}.archive-facts{border-top:1px solid #ccc7b7;margin-top:32px;padding-top:20px;font-size:14px}.archive-facts p{white-space:pre-wrap;overflow-wrap:anywhere}footer{margin-top:40px;border-top:1px solid #ccc7b7;padding-top:20px;font-size:12px}';doc.head.append(style);
-    doc.body.append(node('h1',selected.title),node('p',titleFor(selected)));const article=node('article');story(article,selected.game);article.querySelectorAll('details').forEach(d=>d.open=true);doc.body.append(article,node('footer','门后的火光 · Koa 游艺室 · '+location.origin+'/games/lantern-tomb-lab/ · 场景改编自 Skerples《Tomb of the Serpent Kings》，CC BY-NC-SA 4.0（https://creativecommons.org/licenses/by-nc-sa/4.0/）。原作：https://coinsandscrolls.blogspot.com/2017/06/osr-tomb-of-serpent-kings-megapost.html'));
+    doc.body.append(node('h1',selected.title),node('p',titleFor(selected)));const article=node('article');story(article,selected.game);article.querySelectorAll('details').forEach(d=>d.open=true);doc.body.append(article,node('footer',selected.game.credits?`${selected.game.title} · ${selected.game.credits.adaptation} · ${selected.game.credits.author} · ${selected.game.credits.original} · ${selected.game.credits.license} · ${selected.game.credits.source}`:'门后的火光 · Koa 游艺室 · '+location.origin+'/games/lantern-tomb-lab/ · 场景改编自 Skerples《Tomb of the Serpent Kings》，CC BY-NC-SA 4.0（https://creativecommons.org/licenses/by-nc-sa/4.0/）。原作：https://coinsandscrolls.blogspot.com/2017/06/osr-tomb-of-serpent-kings-megapost.html'));
     download('<!doctype html>\n'+doc.documentElement.outerHTML,'text/html;charset=utf-8','.html');
   });
   window.addEventListener('fiction-view',event=>{

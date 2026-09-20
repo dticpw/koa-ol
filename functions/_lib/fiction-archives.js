@@ -1,4 +1,4 @@
-import { getView, normalizeGame } from './fiction-lab-engine.js';
+import * as labEngine from './fiction-lab-engine.js';
 import { ApiError } from './fiction-service.js';
 
 const COOKIE='koa_fiction_collection';
@@ -12,8 +12,6 @@ const hash=async value=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',
 const cookie=(request,name)=>(request.headers.get('Cookie')||'').split(';').map(v=>v.trim()).find(v=>v.startsWith(name+'='))?.slice(name.length+1);
 const validToken=value=>/^[a-f0-9]{64}$/.test(value||'');
 const newToken=()=>[...crypto.getRandomValues(new Uint8Array(32))].map(b=>b.toString(16).padStart(2,'0')).join('');
-const tokenHeader=token=>`${COOKIE}=${token}; Path=${COOKIE_PATH}; HttpOnly; Secure; SameSite=Lax; Max-Age=31536000`;
-const reply=(data,status=200,token)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...(token?{'Set-Cookie':tokenHeader(token)}:{})}});
 const first=(db,sql,...args)=>db.prepare(sql).bind(...args).first();
 const pack=row=>({id:row.id,title:row.title,createdAt:row.created_at,updatedAt:row.updated_at,game:JSON.parse(row.snapshot_json)});
 const validId=id=>typeof id==='string'&&/^[a-f0-9-]{36}$/.test(id);
@@ -37,7 +35,11 @@ async function bodyOf(request){
   return body;
 }
 
-export async function onArchiveRequest({request,env}){
+export function createArchiveHandler({engine=labEngine,collectionCookie=COOKIE,collectionPath=COOKIE_PATH,gameCookie='koa_fiction_lab',gameKind='lab'}={}){
+ const {getView,normalizeGame}=engine;
+ const tokenHeader=token=>`${collectionCookie}=${token}; Path=${collectionPath}; HttpOnly; Secure; SameSite=Lax; Max-Age=31536000`;
+ const reply=(data,status=200,token)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...(token?{'Set-Cookie':tokenHeader(token)}:{})}});
+ return async function onArchiveRequest({request,env}){
   try{
     if(!['GET','POST'].includes(request.method))return reply({error:'不支持的请求方式。'},405);
     if(!env.DB)throw new ApiError(503,'收藏服务暂时不可用。','storage_unavailable');
@@ -52,14 +54,14 @@ export async function onArchiveRequest({request,env}){
     const allowance=request.method==='POST'?100:600;
     const quota=await db.prepare(`INSERT INTO koa_fiction_limits(bucket,count,expires_at) VALUES (?,1,?) ON CONFLICT(bucket) DO UPDATE SET count=count+1 WHERE count<?`).bind(`archives:${request.method}:${day}:${ip}`,now+2*86400000,allowance).run();
     if(!quota.meta?.changes)throw new ApiError(429,'今天的收藏操作次数已达上限，请明天再来。','rate_limited');
-    let token=cookie(request,COOKIE);
+    let token=cookie(request,collectionCookie);
     if(!validToken(token)){
       if(request.method==='POST')throw new ApiError(401,'请先打开“冒险收藏”，再保存这段冒险。','collection_required');
       if(new URL(request.url).searchParams.has('id'))throw new ApiError(401,'请使用保存这段冒险的浏览器打开收藏。','collection_required');
       // Establish a separate browser collection; starting a game never replaces it.
       token=newToken();return reply({entries:[]},200,token);
     }
-    const owner=await hash(token);
+    const owner=await hash(gameKind==='lab'?token:gameKind+':'+token);
     if(request.method==='GET'){
       const id=new URL(request.url).searchParams.get('id');
       if(id){
@@ -72,12 +74,12 @@ export async function onArchiveRequest({request,env}){
       return reply({entries:JSON.parse(row?.entries||'[]')},200,token);
     }
     if(body.op==='save'){
-      const gameToken=cookie(request,'koa_fiction_lab');
+      const gameToken=cookie(request,gameCookie);
       if(!validToken(gameToken))throw new ApiError(401,'当前冒险已过期，请先读取存档。','session_expired');
       const session=await first(db,'SELECT * FROM koa_fiction_sessions WHERE token_hash=? AND expires_at>?',await hash(gameToken),now);
       if(!session)throw new ApiError(401,'当前冒险已过期，请先读取存档。','session_expired');
       const saved=JSON.parse(session.state_json);
-      if(saved.gameKind!=='lab'||saved.sessionId!==body.sessionId||saved.revision!==body.expectedRevision)throw new ApiError(409,'冒险进度已变化，请刷新后保存。','revision_conflict');
+      if(saved.gameKind!==gameKind||saved.sessionId!==body.sessionId||saved.revision!==body.expectedRevision)throw new ApiError(409,'冒险进度已变化，请刷新后保存。','revision_conflict');
       if(session.lock_until>now)throw new ApiError(409,'主持仍在处理行动，请等回复完成再保存。','turn_busy');
       const view=getView(normalizeGame(saved)),id=crypto.randomUUID();
       // Snapshot only the server's saved public view. No supplied story/state is trusted.
@@ -101,3 +103,6 @@ export async function onArchiveRequest({request,env}){
     return reply({archive:pack({...row,title:body.title,updated_at:now})},200,token);
   }catch(error){return error instanceof ApiError?reply({error:error.message,code:error.code},error.status):reply({error:'收藏服务暂时不可用，请稍后重试。',code:'storage_unavailable'},503);}
 }
+
+}
+export const onArchiveRequest=createArchiveHandler();

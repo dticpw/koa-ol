@@ -6,7 +6,7 @@
   const pretty=value=>typeof value==='string'?value:JSON.stringify(value,null,2);
   const parsed=value=>{try{return JSON.parse(value);}catch{return value;}};
   async function request(query){
-    const response=await fetch('/api/fiction-lab?'+query,{credentials:'same-origin',cache:'no-store',signal:AbortSignal.timeout(20000)});
+    const response=await fetch((document.body.dataset.api||'/api/fiction-lab')+'?'+query,{credentials:'same-origin',cache:'no-store',signal:AbortSignal.timeout(20000)});
     const data=await response.json();if(!response.ok)throw Error(data.error||'暂时无法读取调用记录。');return data;
   }
   function section(parent,label,value){

@@ -80,7 +80,7 @@ export async function callModel(env, db, fetchImpl, input, { format, maxTokens =
     throw new ApiError(503, '主持模型本轮已超时，请重试。', 'model_unavailable');
   }
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), Math.min(45000, Math.max(1000, timeoutMs), deadlineAt - Date.now()));
+  const timer = setTimeout(() => controller.abort(), Math.min(60000, Math.max(1000, timeoutMs), deadlineAt - Date.now()));
   try {
     if(traceCall)Object.assign(traceCall,{request:structuredClone(payload),startedAt:Date.now(),status:'sent'});
     const response = await fetchImpl(`${(env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')}/responses`, {
@@ -122,7 +122,7 @@ function actionFormat(allowed, world) {
   };
 }
 
-export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(...args), gameKind = 'classic', cookieName = COOKIE, cookiePath = '/api/fiction', resolveTurn } = {}) {
+export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(...args), gameKind = 'classic', cookieName = COOKIE, cookiePath = '/api/fiction', resolveTurn, traceEnabled = gameKind === 'lab' } = {}) {
   return async ({ request, env }) => {
     try {
       if (!['GET', 'POST'].includes(request.method)) return json({ error: '不支持的请求方式。' }, 405, { Allow: 'GET, POST' });
@@ -135,7 +135,7 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
       const body = request.method === 'POST' ? await readBody(request) : null;
       const db = env.DB;
       await db.batch(schema.map(sql => db.prepare(sql)));
-      if(gameKind==='lab')await db.batch(traceSchema.map(sql=>db.prepare(sql)));
+      if(traceEnabled)await db.batch(traceSchema.map(sql=>db.prepare(sql)));
       const now = Date.now();
       const ipHash = await hash(`fiction:${request.headers.get('CF-Connecting-IP') || 'unknown'}`);
       const date = new Date(now).toISOString().slice(0, 10);
@@ -147,7 +147,7 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
       if (session && (JSON.parse(session.state_json).gameKind || 'classic') !== gameKind) session = null;
       if (session && engine.normalizeGame) session = {...session,state_json:JSON.stringify(engine.normalizeGame(JSON.parse(session.state_json)))};
       if(traceQuery){
-        if(gameKind!=='lab'||!session)throw new ApiError(401,'请先进入当前试玩存档。','session_expired');
+        if(!traceEnabled||!session)throw new ApiError(401,'请先进入当前试玩存档。','session_expired');
         if(traceQuery==='list'){
           const raw=new URL(request.url).searchParams.get('before');const before=raw===null?Number.MAX_SAFE_INTEGER:Number(raw);
           if(!Number.isSafeInteger(before)||before<1)throw new ApiError(400,'记录位置无效。','invalid_request');
@@ -187,11 +187,11 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
         // A receipt may have committed between the initial read and lock acquisition.
         const raced = await first(db, `SELECT response_json FROM koa_fiction_receipts WHERE token_hash=? AND request_id=?`, tokenHash, body.requestId);
         if (raced) return json(JSON.parse(raced.response_json));
-        if(gameKind==='lab')trace={version:1,revision:state.revision+1,action:body.action?.trim()||allowed.find(a=>a.id===body.choiceId)?.label,createdAt:Date.now(),status:'failed',calls:[],checks:[]};
+        if(traceEnabled)trace={version:1,revision:state.revision+1,action:body.action?.trim()||allowed.find(a=>a.id===body.choiceId)?.label,createdAt:Date.now(),status:'failed',calls:[],checks:[]};
         let next = state, response;
         if (resolveTurn) {
           const resolved = await resolveTurn({ state, body, ...(trace?{diagnostic:entry=>trace.checks.push(entry)}:{}),call: async(input, options) => {
-            const record=trace?{phase:options.format?.name==='host_ruling'?'ruling':'review',status:'not_sent'}:null;
+            const record=trace?{phase:['host_ruling','adventure_ruling'].includes(options.format?.name)?'ruling':'review',status:'not_sent'}:null;
             if(record)trace.calls.push(record);
             try{return await callModel(env, db, fetchImpl, input, {...options,traceCall:record});}
             catch(error){if(record)record.errorCode=error instanceof ApiError?error.code:'model_unavailable';throw error;}

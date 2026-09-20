@@ -6,7 +6,7 @@
   let pending = null;
   let available = true;
   const lab = document.body.dataset.fiction === 'lab';
-  const API = lab ? '/api/fiction-lab' : '/api/fiction';
+  const API = document.body.dataset.api || (lab ? '/api/fiction-lab' : '/api/fiction');
   const uncommittedErrors = new Set([
     'budget_exhausted', 'model_unavailable', 'classification_failed', 'adjudication_failed', 'rate_limited',
     'invalid_request', 'invalid_choice', 'invalid_origin', 'start_limited', 'game_finished',
@@ -59,7 +59,7 @@
   function clearError() { $('error').hidden = true; }
   async function request(body) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 100000);
+    const timer = setTimeout(() => controller.abort(), document.body.dataset.api ? 130000 : 100000);
     try {
       const response = await fetch(API, {
         method: body ? 'POST' : 'GET',
@@ -123,7 +123,7 @@
     if (lab) window.dispatchEvent(new CustomEvent('fiction-view', { detail: { sessionId: game?.sessionId || null, game } }));
     $('welcome').hidden = Boolean(game);
     $('adventure').hidden = !game;
-    $('start').textContent = lab ? '来到门前 ↗' : '提灯入墓 ↗';
+    $('start').textContent = document.body.dataset.startLabel || (lab ? '来到门前 ↗' : '提灯入墓 ↗');
     if (!game) return;
     $('location').textContent = game.location.name;
     $('location-description').textContent = game.location.description;

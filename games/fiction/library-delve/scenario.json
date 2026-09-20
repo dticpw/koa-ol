@@ -1,0 +1,408 @@
+{
+  "attribution": {
+    "author": "Willem-Jan / 1pagedungeons.com",
+    "source": "https://1pagedungeons.itch.io/leyebrary-opd",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "adapter": "Koa-OL",
+    "changes": "中文单人化；固定盗贼所在区域，简化平面通道为四扇分区门；随机遭遇改为因果事件；战斗改为叙事冲突，不复刻职业数值；以调查与离开收束，不扩展区域外藏宝地图。记忆必须由玩家自愿指定。"
+  },
+  "story": {
+    "id": "library-delve",
+    "title": "深入图书馆",
+    "original": "The Library Delve",
+    "author": "Willem-Jan / 1pagedungeons.com",
+    "source": "https://1pagedungeons.itch.io/leyebrary-opd",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "tagline": "有些门，要用你记得的东西来打开。",
+    "summary": "五位管理员失踪，古老图书馆紧闭。会飞的书、无声的猫头鹰与不肯离去的守书人，等待你回答：知识值得怎样的代价？",
+    "tags": [
+      "奇幻探索",
+      "记忆代价",
+      "交谈与选择"
+    ],
+    "start": "entry",
+    "opening": "图书馆已经闭门数日。你受托来查明管理员的下落，却在入口大厅看见五具倒在散乱书架间的尸体。五道苍白人影徘徊在它们上方，低低的耳语与纸页摩擦声混在一起。\n\n左右的门都关着。门框刻着一句尚能辨识的话：“献上一段重要的记忆，方可通行。”你带着提灯、绳索、手记与一套小撬锁工具。你可以先问清代价，也可以寻找别的办法；没有人会替你决定要舍弃什么。",
+    "places": {
+      "entry": {
+        "name": "入口大厅",
+        "description": "五具管理员尸体与五道幽影留在遭洗劫的书架间；门框刻着以重要记忆换取通行的铭文。",
+        "exits": [
+          "conjuration",
+          "necromancy"
+        ]
+      },
+      "conjuration": {
+        "name": "咒唤书区",
+        "description": "书籍悬浮，边墙燃着魔法火；门边有可以站立的石地。",
+        "exits": [
+          "entry",
+          "divination"
+        ]
+      },
+      "necromancy": {
+        "name": "死灵书区",
+        "description": "泥土覆盖书区，书埋在地下六英尺。",
+        "exits": [
+          "entry",
+          "transmutation"
+        ]
+      },
+      "divination": {
+        "name": "占卜书区",
+        "description": "中央玻璃球中悬着一只幽灵眼睛；四周排满书架。",
+        "exits": [
+          "conjuration"
+        ]
+      },
+      "transmutation": {
+        "name": "变化书区",
+        "description": "书籍由不同的基本材料制成，许多沉重得难以搬动。",
+        "exits": [
+          "necromancy"
+        ]
+      }
+    },
+    "gates": [
+      {
+        "a": "entry",
+        "b": "conjuration",
+        "flag": "open_conjuration"
+      },
+      {
+        "a": "entry",
+        "b": "necromancy",
+        "flag": "open_necromancy"
+      },
+      {
+        "a": "conjuration",
+        "b": "divination",
+        "flag": "open_divination"
+      },
+      {
+        "a": "necromancy",
+        "b": "transmutation",
+        "flag": "open_transmutation"
+      }
+    ],
+    "entities": [
+      {
+        "id": "light",
+        "name": "提灯",
+        "nature": "普通有热量的油灯，可打开灯罩；不模拟燃油倒计时。",
+        "place": "carried",
+        "facts": "完好，亮着。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "rope",
+        "name": "绳索",
+        "nature": "普通结实长绳，可系结、牵引或拆分。",
+        "place": "carried",
+        "facts": "完好，盘起。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "journal",
+        "name": "手记",
+        "nature": "纸本与炭笔；可记载已获知事实。",
+        "place": "carried",
+        "facts": "空白页充足。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "picks",
+        "name": "撬锁工具",
+        "nature": "细钩与张力扳手；可尝试困难的开锁，非万能钥匙。",
+        "place": "carried",
+        "facts": "完好。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "spirits",
+        "name": "五位守书幽灵",
+        "nature": "生前的管理员，数日前被盗贼杀害，死后受束缚守护图书馆。知晓记忆门及盗书事件。使用或偷书会恶化态度，归还被盗书或惩罚凶手会改善；不会轻易提供无限帮助。",
+        "place": "entry",
+        "facts": "徘徊于尸体上方，低声说话，警惕来者。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "memory_archive",
+        "name": "记忆档案",
+        "nature": "献出的角色记忆归档在此。只有玩家明确自愿指定的重要角色记忆才能被收走；无需提供现实隐私。",
+        "place": "entry",
+        "facts": "尚未收取玩家的任何记忆。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "owls",
+        "name": "智慧猫头鹰",
+        "nature": "有智慧与自由意志，害怕幽灵；不是自动听命的宠物。",
+        "place": "conjuration",
+        "facts": "安静地栖在高处。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "sarah",
+        "name": "盗贼 Sarah",
+        "nature": "与同伙杀死管理员；不能解锁门，每人持一本偷书，愿为新偷书付100金，有胜算时伏击，面对劣势或交易可谈判。",
+        "place": "conjuration",
+        "facts": "藏在门边书架背后，持有一本被盗书。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "jay",
+        "name": "盗贼 Jay",
+        "nature": "盗贼同伙，逐利、自保；不能开门。",
+        "place": "conjuration",
+        "facts": "与 Sarah 躲在一起。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "matthias",
+        "name": "盗贼 Matthias",
+        "nature": "盗贼同伙，逐利、自保；不能开门。",
+        "place": "necromancy",
+        "facts": "在泥土地边看守赃物。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "quill",
+        "name": "盗贼 Quill",
+        "nature": "盗贼同伙，逐利、自保；不能开门。",
+        "place": "divination",
+        "facts": "躲避中央眼睛的视线。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "needle",
+        "name": "盗贼 Needle",
+        "nature": "盗贼同伙，逐利、自保；不能开门。",
+        "place": "transmutation",
+        "facts": "靠着沉重书架歇脚。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "stolen_sarah",
+        "name": "被盗书·sarah",
+        "nature": "属于图书馆，内容以死语言写就；不能无代价使用。",
+        "place": "conjuration",
+        "facts": "由对应盗贼持有，必须通过真实交涉或行动才能取得。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "stolen_jay",
+        "name": "被盗书·jay",
+        "nature": "属于图书馆，内容以死语言写就；不能无代价使用。",
+        "place": "conjuration",
+        "facts": "由对应盗贼持有，必须通过真实交涉或行动才能取得。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "stolen_matthias",
+        "name": "被盗书·matthias",
+        "nature": "属于图书馆，内容以死语言写就；不能无代价使用。",
+        "place": "necromancy",
+        "facts": "由对应盗贼持有，必须通过真实交涉或行动才能取得。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "stolen_quill",
+        "name": "被盗书·quill",
+        "nature": "属于图书馆，内容以死语言写就；不能无代价使用。",
+        "place": "divination",
+        "facts": "由对应盗贼持有，必须通过真实交涉或行动才能取得。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "stolen_needle",
+        "name": "被盗书·needle",
+        "nature": "属于图书馆，内容以死语言写就；不能无代价使用。",
+        "place": "transmutation",
+        "facts": "由对应盗贼持有，必须通过真实交涉或行动才能取得。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "eye",
+        "name": "幽灵之眼",
+        "nature": "中央玻璃球，守书幽灵能借它观察此区。",
+        "place": "divination",
+        "facts": "静静注视房间。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "books_conjuration",
+        "name": "馆藏·conjuration",
+        "nature": "死语言注明效果，书籍属于图书馆；使用立即生效并影响幽灵态度。",
+        "place": "conjuration",
+        "facts": "仍在本区；死灵书埋在地下六英尺，变化书材质各异。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "books_necromancy",
+        "name": "馆藏·necromancy",
+        "nature": "死语言注明效果，书籍属于图书馆；使用立即生效并影响幽灵态度。",
+        "place": "necromancy",
+        "facts": "仍在本区；死灵书埋在地下六英尺，变化书材质各异。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "books_divination",
+        "name": "馆藏·divination",
+        "nature": "死语言注明效果，书籍属于图书馆；使用立即生效并影响幽灵态度。",
+        "place": "divination",
+        "facts": "仍在本区；死灵书埋在地下六英尺，变化书材质各异。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "books_transmutation",
+        "name": "馆藏·transmutation",
+        "nature": "死语言注明效果，书籍属于图书馆；使用立即生效并影响幽灵态度。",
+        "place": "transmutation",
+        "facts": "仍在本区；死灵书埋在地下六英尺，变化书材质各异。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      }
+    ],
+    "milestones": {
+      "open_conjuration": {
+        "places": [
+          "entry"
+        ],
+        "refsAny": [
+          "picks",
+          "memory_archive"
+        ],
+        "rule": "解开对应门锁：实际困难撬锁成功，或玩家明确献出一段重要角色记忆。献记忆须同步更新memory_archive并填写memory_offer。只解开这一扇门。"
+      },
+      "open_necromancy": {
+        "places": [
+          "entry"
+        ],
+        "refsAny": [
+          "picks",
+          "memory_archive"
+        ],
+        "rule": "解开对应门锁：实际困难撬锁成功，或玩家明确献出一段重要角色记忆。献记忆须同步更新memory_archive并填写memory_offer。只解开这一扇门。"
+      },
+      "open_divination": {
+        "places": [
+          "conjuration"
+        ],
+        "refsAny": [
+          "picks",
+          "memory_archive"
+        ],
+        "rule": "解开对应门锁：实际困难撬锁成功，或玩家明确献出一段重要角色记忆。献记忆须同步更新memory_archive并填写memory_offer。只解开这一扇门。"
+      },
+      "open_transmutation": {
+        "places": [
+          "necromancy"
+        ],
+        "refsAny": [
+          "picks",
+          "memory_archive"
+        ],
+        "rule": "解开对应门锁：实际困难撬锁成功，或玩家明确献出一段重要角色记忆。献记忆须同步更新memory_archive并填写memory_offer。只解开这一扇门。"
+      },
+      "investigated": {
+        "places": [
+          "entry",
+          "conjuration",
+          "necromancy",
+          "divination",
+          "transmutation"
+        ],
+        "refsAny": [
+          "spirits",
+          "sarah",
+          "jay",
+          "matthias",
+          "quill",
+          "needle"
+        ],
+        "rule": "经过调查或交谈，确认管理员被盗贼所杀，幽灵因守书职责滞留；不能从后台直接得知。"
+      }
+    },
+    "endings": {
+      "leave": {
+        "title": "带着答案离开",
+        "text": "你离开图书馆。已经献出的记忆仍留在档案中；书籍与守书人的命运，取决于你实际做过的事。",
+        "places": [
+          "entry"
+        ]
+      }
+    },
+    "laws": [
+      "全部四扇区间门初始上锁；未取得对应open标记不能通行。撬锁困难但并非绝对禁止，失败应给可用线索而非无穷重复。盗贼被困各区，没有解锁能力。",
+      "开局未授权献记忆。绝不代选或捏造玩家的珍贵经历；玩家可虚构角色记忆。先说明不可随意取回，再由玩家明确同意。每段记忆只开一扇门。",
+      "书籍效果选用原作范围：学派魔法、放逐一个幽灵、世界传闻、工具熟练、藏宝信息，或变化书变银、咒唤书召三只友好猫头鹰、死灵书会见亡者、占卜书窥视某地一分钟。不得变出本图之外可探索的新地图；本版不结算外部藏宝支线。",
+      "书籍尖叫、幽灵敌意、附身威胁等仅在偷用书或挑衅等因果触发后发展。不要每轮随机惩罚。不能凭取一书宣称所有幽灵获救；可选择离开，不强制献出记忆。"
+    ],
+    "changes": "中文单人化；固定盗贼所在区域，简化平面通道为四扇分区门；随机遭遇改为因果事件；战斗改为叙事冲突，不复刻职业数值；以调查与离开收束，不扩展区域外藏宝地图。记忆必须由玩家自愿指定。"
+  }
+}

@@ -1,0 +1,492 @@
+{
+  "attribution": {
+    "author": "Jason Renslow",
+    "source": "https://junkyardtornado.itch.io/goodbye-shooting-star",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "adapter": "Koa-OL",
+    "changes": "中文单人改编，保留原船舱网络、实验犬真相与钢铁猎犬回收整船的动机；对接艇作为一号气闸离场方式；战斗改为规避、工具和协商；新增明确撤离与交易结局；应急生命维持不设统一倒计时。不复用原稿图片。"
+  },
+  "story": {
+    "id": "goodbye-shooting-star",
+    "title": "再见，流星",
+    "original": "Goodbye Shooting Star",
+    "author": "Jason Renslow",
+    "source": "https://junkyardtornado.itch.io/goodbye-shooting-star",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "tagline": "失联一年后，流星号又出现了。",
+    "summary": "一艘无人应答的科研船，一份价值不明的实验资料，还有另一支赶来回收它的队伍。进入冷暗的船舱，决定哪些东西值得带回。",
+    "tags": [
+      "科幻悬疑",
+      "派系交涉",
+      "探索撤离"
+    ],
+    "start": "airlock_a",
+    "opening": "对接锁响了三下，你踏进失联一年的“流星号”。气闸后的空气冰冷，但读数显示应急生命维持与人工重力仍在工作。走廊深处没有应答。\n\n委托只说这是一艘研究超级士兵血清的科学船，资料与样品可能很值钱。你有头灯、通信终端、手记与一根安全绳；回航接驳艇就在身后的气闸外。往前是货舱一，另一道门标着研究实验室。",
+    "places": {
+      "airlock_a": {
+        "name": "一号气闸",
+        "description": "你的接驳艇仍对接在外，门内通向货舱一与实验室。",
+        "exits": [
+          "cargo_a",
+          "lab"
+        ]
+      },
+      "cargo_a": {
+        "name": "货舱一",
+        "description": "科研耗材箱沿货舱两侧排列，走廊通往引擎。",
+        "exits": [
+          "airlock_a",
+          "cargo_b",
+          "engine"
+        ]
+      },
+      "cargo_b": {
+        "name": "货舱二",
+        "description": "通用货物、工具与维修零件留在架上。",
+        "exits": [
+          "cargo_a",
+          "airlock_b",
+          "engine"
+        ]
+      },
+      "airlock_b": {
+        "name": "二号气闸",
+        "description": "另一端的对接口，通向货舱二与实验室。",
+        "exits": [
+          "cargo_b",
+          "lab"
+        ]
+      },
+      "lab": {
+        "name": "研究实验室",
+        "description": "试验台、资料终端和封存柜处在冷暗中；多个舱门通向别处。",
+        "exits": [
+          "airlock_a",
+          "airlock_b",
+          "living",
+          "weapons",
+          "sensors"
+        ]
+      },
+      "living": {
+        "name": "居住舱",
+        "description": "寂静的休息区连着舰桥，通风格栅散在墙上。",
+        "exits": [
+          "lab",
+          "bridge"
+        ]
+      },
+      "bridge": {
+        "name": "舰桥",
+        "description": "主控制台大部离线，透过舷窗只能看见星空。",
+        "exits": [
+          "living"
+        ]
+      },
+      "engine": {
+        "name": "引擎室",
+        "description": "主引擎待修，窄廊连接生命维持与机器人库。",
+        "exits": [
+          "cargo_a",
+          "cargo_b",
+          "life_support",
+          "robots"
+        ]
+      },
+      "life_support": {
+        "name": "生命维持室",
+        "description": "应急循环仍工作；正常温控、照明支持等系统待修。",
+        "exits": [
+          "engine"
+        ]
+      },
+      "robots": {
+        "name": "机器人库",
+        "description": "几台简易作业机器人停在充电槽中。",
+        "exits": [
+          "engine"
+        ]
+      },
+      "weapons": {
+        "name": "武器控制室",
+        "description": "武器系统离线，维修面板闭合。",
+        "exits": [
+          "lab"
+        ]
+      },
+      "sensors": {
+        "name": "传感器室",
+        "description": "传感器主阵列离线。",
+        "exits": [
+          "lab"
+        ]
+      }
+    },
+    "gates": [],
+    "entities": [
+      {
+        "id": "headlamp",
+        "name": "头灯",
+        "nature": "电灯，没有可点燃物品的明火，不模拟固定电量倒计时。",
+        "place": "carried",
+        "facts": "完好，亮着。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "rope",
+        "name": "绳索",
+        "nature": "普通结实长绳，可系结、牵引或拆分。",
+        "place": "carried",
+        "facts": "完好，盘起。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "journal",
+        "name": "手记",
+        "nature": "纸本与炭笔；可记载已获知事实。",
+        "place": "carried",
+        "facts": "空白页充足。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "terminal",
+        "name": "通信终端",
+        "nature": "可通信、保存已经取得的资料和维修手册，不具备万能黑客功能。",
+        "place": "carried",
+        "facts": "工作正常，尚未下载舰内资料。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "research",
+        "name": "实验记录",
+        "nature": "科研日志，实际查阅可知狗接受血清后失控并杀死船员；从未证明人体安全，可下载到terminal。",
+        "place": "lab",
+        "facts": "留在实验台终端，可访问的资料目录仍有供电。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "samples",
+        "name": "血清样品",
+        "nature": "超级士兵实验制剂；危险，未证明人体安全。拿取需观察封存情况，不可凭闻气味判断无害。",
+        "place": "lab",
+        "facts": "少量样品封存在容器里。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "chemicals",
+        "name": "科研耗材",
+        "nature": "杂乱试剂，乱配血清危险，不能凭空制造解药。",
+        "place": "cargo_a",
+        "facts": "装在材料箱里。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "toolkit",
+        "name": "维修工具与零件",
+        "nature": "普通船用维修工具、少量备用件和对应操作手册。可据手册实施有限维修，不代表主角突然具备所有专业知识。",
+        "place": "cargo_b",
+        "facts": "一套可搬动的工具箱，完整。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "dog",
+        "name": "变异实验犬",
+        "nature": "血清试验后的狗，极顽强、凶猛，杀死并吞食船员；保护飞船尤其居住舱，熟悉通风管可很快移动。不是邪神或会说人话的怪物。可隔门观察、诱导、避开；不能被一击消灭或一句话驯服。",
+        "place": "living",
+        "facts": "在居住舱守着骨头和杂物，警觉。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "bones",
+        "name": "船员遗骸与杂物",
+        "nature": "全体船员已死，遗骸被狗藏在居住舱。须实际进入或有视线探查才能看见。",
+        "place": "living",
+        "facts": "堆在犬巢附近。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "hounds",
+        "name": "钢铁猎犬佣兵队",
+        "nature": "由 Cyrus Janno 率领，想修好整艘船并拖回出售。玩家探索后才从另一气闸登舰；不自动知道玩家所知。可就资料、样品和船权交易，不是无条件敌人。",
+        "place": "airlock_b",
+        "facts": "尚在接近飞船，未登舰。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "engine_system",
+        "name": "主引擎",
+        "nature": "需在本室使用工具、零件和操作手册完成实际维修；基础应急生命维持始终独立运行。",
+        "place": "engine",
+        "facts": "待修，尚未恢复正常功能。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "life_support_system",
+        "name": "常规生命维持",
+        "nature": "需在本室使用工具、零件和操作手册完成实际维修；基础应急生命维持始终独立运行。",
+        "place": "life_support",
+        "facts": "待修，尚未恢复正常功能。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "weapons_system",
+        "name": "武器系统",
+        "nature": "需在本室使用工具、零件和操作手册完成实际维修；基础应急生命维持始终独立运行。",
+        "place": "weapons",
+        "facts": "待修，尚未恢复正常功能。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "sensors_system",
+        "name": "传感器系统",
+        "nature": "需在本室使用工具、零件和操作手册完成实际维修；基础应急生命维持始终独立运行。",
+        "place": "sensors",
+        "facts": "待修，尚未恢复正常功能。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "robots_unit",
+        "name": "简易作业机器人",
+        "nature": "能执行简单搬运和有限检修辅助，不能代替科学家，也不能完成未确认危险的复杂任务。",
+        "place": "robots",
+        "facts": "停机待指令。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "console",
+        "name": "舰桥控制台",
+        "nature": "只能控制已经修好的系统，不能通过按键隔空修复故障。",
+        "place": "bridge",
+        "facts": "待机，可查询有限故障清单。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      }
+    ],
+    "milestones": {
+      "research_read": {
+        "places": [
+          "lab"
+        ],
+        "refsAny": [
+          "research"
+        ],
+        "rule": "实际查阅实验日志，揭示犬实验及全员死亡线索。"
+      },
+      "data_saved": {
+        "places": [
+          "lab"
+        ],
+        "requires": [
+          "research_read"
+        ],
+        "refsAny": [
+          "research",
+          "terminal"
+        ],
+        "entityRules": [
+          {
+            "id": "terminal",
+            "place": "carried"
+          }
+        ],
+        "rule": "实际将科研资料复制到随身终端，同步更新terminal事实；只看过不等于已复制。"
+      },
+      "hounds_arrived": {
+        "places": [
+          "airlock_b",
+          "cargo_b",
+          "lab",
+          "airlock_a",
+          "cargo_a",
+          "engine",
+          "living",
+          "bridge",
+          "life_support",
+          "robots",
+          "weapons",
+          "sensors"
+        ],
+        "rule": "玩家已开始探索后以对接震动或无线电宣告钢铁猎犬到来；他们从二号气闸登舰，不瞬移至玩家身边。"
+      },
+      "fixed_engine": {
+        "places": [
+          "engine"
+        ],
+        "refsAny": [
+          "engine_system",
+          "toolkit"
+        ],
+        "entityRules": [
+          {
+            "id": "toolkit",
+            "place": "carried",
+            "intact": true
+          }
+        ],
+        "rule": "在对应系统现场按照手册进行实际维修，需要工具与材料，同步更新系统实体；遥控台点击不算维修。"
+      },
+      "fixed_life_support": {
+        "places": [
+          "life_support"
+        ],
+        "refsAny": [
+          "life_support_system",
+          "toolkit"
+        ],
+        "entityRules": [
+          {
+            "id": "toolkit",
+            "place": "carried",
+            "intact": true
+          }
+        ],
+        "rule": "在对应系统现场按照手册进行实际维修，需要工具与材料，同步更新系统实体；遥控台点击不算维修。"
+      },
+      "fixed_weapons": {
+        "places": [
+          "weapons"
+        ],
+        "refsAny": [
+          "weapons_system",
+          "toolkit"
+        ],
+        "entityRules": [
+          {
+            "id": "toolkit",
+            "place": "carried",
+            "intact": true
+          }
+        ],
+        "rule": "在对应系统现场按照手册进行实际维修，需要工具与材料，同步更新系统实体；遥控台点击不算维修。"
+      },
+      "fixed_sensors": {
+        "places": [
+          "sensors"
+        ],
+        "refsAny": [
+          "sensors_system",
+          "toolkit"
+        ],
+        "entityRules": [
+          {
+            "id": "toolkit",
+            "place": "carried",
+            "intact": true
+          }
+        ],
+        "rule": "在对应系统现场按照手册进行实际维修，需要工具与材料，同步更新系统实体；遥控台点击不算维修。"
+      },
+      "deal": {
+        "places": [
+          "airlock_b",
+          "lab",
+          "bridge",
+          "cargo_b"
+        ],
+        "requires": [
+          "hounds_arrived",
+          "fixed_engine"
+        ],
+        "refsAny": [
+          "hounds"
+        ],
+        "rule": "实际与佣兵谈妥船只回收及玩家离开的条件，玩家明确同意；意向或单方口头宣称不算协议。"
+      }
+    },
+    "endings": {
+      "evidence": {
+        "title": "带回来的证据",
+        "text": "你乘接驳艇离开流星号，保存了实际复制的研究记录。血清没有因此被证明安全；关于它的下一步仍需谨慎决定。",
+        "places": [
+          "airlock_a"
+        ],
+        "requires": [
+          "data_saved"
+        ],
+        "entityRules": [
+          {
+            "id": "terminal",
+            "place": "carried",
+            "intact": true
+          }
+        ]
+      },
+      "salvage": {
+        "title": "一艘船的价码",
+        "text": "你按已谈妥的回收协议离开，流星号交给了钢铁猎犬。协议和带走的物品以这次真实交涉为准。",
+        "places": [
+          "airlock_a"
+        ],
+        "requires": [
+          "deal"
+        ]
+      },
+      "leave": {
+        "title": "回航信号",
+        "text": "你返回接驳艇，结束登舰。带走的是实际取得的物品与发现；没有查明的舱室仍然沉默。",
+        "places": [
+          "airlock_a"
+        ]
+      }
+    },
+    "laws": [
+      "完整船员均已死，不能新增幸存者。真相需查阅记录或观察犬与遗骸后发现；玩家开局仅知研究目的。",
+      "玩家行动开始推动探索后可让佣兵到来；澄清、询问与思考不触发惩罚倒计时。hounds_arrived之前佣兵尚未登舰，不能近距离交谈或转移物件。",
+      "犬可经通风管移动，但人爬管很困难，玩家正常移动必须遵循房间连接。狗的秘密和远处位置不可当作玩家实时知识。",
+      "修复分别在各室完成，需toolkit、手册与真实操作；有专业门槛时可请机器人辅助或谈判佣兵帮助。bridge只能控制已修复系统，fixed_engine不等于全舰恢复。",
+      "基础应急空气循环和重力始终有效，不制造问几轮就缺氧的期限。主要光照和温控失修导致冷暗。",
+      "血清没有安全的人体结论；不能凭一次试验或模型叙述创造解药。NPC不能突然知道玩家秘密。"
+    ],
+    "changes": "中文单人改编，保留原船舱网络、实验犬真相与钢铁猎犬回收整船的动机；对接艇作为一号气闸离场方式；战斗改为规避、工具和协商；新增明确撤离与交易结局；应急生命维持不设统一倒计时。不复用原稿图片。"
+  }
+}

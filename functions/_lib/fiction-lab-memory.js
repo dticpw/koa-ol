@@ -32,7 +32,7 @@ export function applyMemories(s,updates,playerText,outcomes,revision){
   check(typeof u.id==='string'&&validText(u.quote,400),'quote');
   check(['player','observation'].includes(u.source)&&Number.isInteger(u.step),'source');
   check(Array.isArray(u.entity_ids)&&u.entity_ids.length<=8&&u.entity_ids.every(id=>s.entities.some(e=>e.id===id)),'entities');
-  check(Array.isArray(u.place_ids)&&u.place_ids.length<=3&&u.place_ids.every(id=>['outside','threshold','chamber'].includes(id)),'places');
+  check(Array.isArray(u.place_ids)&&u.place_ids.length<=3&&u.place_ids.every(id=>(s.placeIds||['outside','threshold','chamber']).includes(id)),'places');
   const previous=u.id?latestMemories(s).find(m=>m.id===u.id):null;
   if(u.source==='player')check(u.step===-1&&playerText.includes(u.quote)&&u.kind!=='discovery','player source');
   else check(u.step>=0&&u.step<outcomes.length&&outcomes[u.step].observations.some(text=>text.includes(u.quote))&&(u.kind==='discovery'||previous),'observation source');
