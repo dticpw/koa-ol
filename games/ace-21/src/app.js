@@ -145,26 +145,20 @@ function metricChange(id, before, after, detailId) {
   animate($(id), [{ transform: 'scale(1.13)' }, { transform: 'scale(1)' }], { duration: 420, easing: 'ease-out' });
   metricTimers.set(id, setTimeout(() => { $(id).classList.remove('metric-flash'); $(detailId).hidden = true; metricTimers.delete(id); }, 3000));
 }
-function positionBroadcast() {
-  const rect = $('table').getBoundingClientRect();
-  const width = Math.min(460, innerWidth - 24);
-  $('play-broadcast').style.left = `${Math.max(width / 2 + 12, Math.min(innerWidth - width / 2 - 12, rect.left + rect.width / 2))}px`;
-}
 const broadcasts = new BroadcastQueue((event, remaining) => {
   const card = event.card, tone = toneOf(card.type), def = CATALOG[card.type], box = $('play-broadcast');
-  positionBroadcast(); box.className = `play-broadcast tone-${tone}`;
-  box.innerHTML = `<div class="broadcast-card">${art(card)}<strong>${esc(cardName(card))}</strong><span>${toneLabel[tone]} · ${def.stay ? '持续' : '瞬时'}</span></div><div class="broadcast-copy"><span class="broadcast-who">对手打出王牌</span><h2>${esc(cardName(card))}</h2><p>${esc(event.note || opponentEffect(card) || def.text)}</p>${changeText(event) ? `<b class="broadcast-change">${esc(changeText(event))}</b>` : ''}<small>${remaining ? `后续还有 ${remaining} 张 · ` : ''}详情已记入牌局记录</small></div>`;
+  $('broadcast-last').textContent = `最近：${cardName(card)}`; box.className = `play-broadcast tone-${tone}`;
+  box.innerHTML = `<div class="broadcast-card">${art(card)}<strong>${esc(cardName(card))}</strong><span>${toneLabel[tone]} · ${def.stay ? '持续' : '瞬时'}</span></div><div class="broadcast-copy"><span class="broadcast-who">对手打出 · ${toneLabel[tone]} · ${def.stay ? '持续' : '瞬时'}</span><h2>${esc(cardName(card))}</h2><p>${esc(event.note || opponentEffect(card) || def.text)}</p>${changeText(event) ? `<b class="broadcast-change">${esc(changeText(event))}</b>` : ''}<small>${remaining ? `后续还有 ${remaining} 张 · ` : ''}详情已记入牌局记录</small></div>`;
   box.hidden = false; box.dataset.eventId = event.id;
   animate(box, [{ opacity: 0, translate: '0 12px' }, { opacity: 1, translate: '0 0' }], { duration: 220, easing: 'ease-out' });
 }, () => { $('play-broadcast').hidden = true; }, () => document.hidden || anyDialog());
-addEventListener('resize', positionBroadcast);
 function logHTML(event) {
   if (!event.card || !CATALOG[event.card.type]) return `<li class="log-${esc(event.kind)}">${esc(event.text)}</li>`;
   const tone = toneOf(event.card.type), who = state.players[event.actor]?.name || '';
   return `<li class="log-trump tone-${tone}"><span class="log-speaker">${event.actor === 0 ? '你' : '对手'}${event.actor === 0 ? '' : ` · ${esc(who)}`}打出</span><button class="log-card" data-log-card="${event.id}" aria-label="查看 ${esc(cardName(event.card))} 的效果">${esc(cardName(event.card))}</button><span class="log-category">${toneLabel[tone]}</span>${event.note ? `<p class="log-note">${esc(event.note)}</p>` : ''}${changeText(event) ? `<p class="log-change">${esc(changeText(event))}</p>` : ''}</li>`;
 }
 function presentFeedback(old) {
-  if (old.round !== state.round || state.eventId < old.eventId) { broadcasts.clear(); clearMetrics(); }
+  if (old.round !== state.round || state.eventId < old.eventId) { broadcasts.clear(); $('broadcast-last').textContent = '等待对手出牌'; clearMetrics(); }
   const events = newPlays(old, state);
   for (const event of events) if (event.round === state.round) cardFeedback(event.card, event.actor);
   broadcasts.push(events.filter(e => e.actor === 1 && e.round === state.round));
@@ -286,7 +280,7 @@ function perform(action) {
 function openDialog(id) { clearTimeout(aiTimer); broadcasts.suspend(); $(id).showModal(); }
 function start() {
   if (multiplayerEntry || online) return;
-  clearTimeout(aiTimer); animations.forEach(a => a.cancel()); broadcasts.clear(); clearMetrics();
+  clearTimeout(aiTimer); animations.forEach(a => a.cancel()); broadcasts.clear(); $('broadcast-last').textContent = '等待对手出牌'; clearMetrics();
   state = createGame(seed()); selected = null; paused = false; started = true;
   document.querySelectorAll('dialog[open]').forEach(d => d.close());
   render(); scheduleAI(); $('help').focus({ preventScroll: true });
