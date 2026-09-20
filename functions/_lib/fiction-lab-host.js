@@ -1,5 +1,5 @@
-import { ApiError } from './fiction-service.js';
-import { applyProposal, hostContext, getActions } from './fiction-lab-engine.js';
+import { createTurnResolver } from './fiction-turn.js';
+import * as engine from './fiction-lab-engine.js';
 const str={type:'string'};
 const enumeration=(...values)=>({type:'string',enum:values});
 const array=items=>({type:'array',items});
@@ -30,61 +30,4 @@ const NARRATOR=`你是本轮的忠实叙述者兼一致性复核者。读取原�
 记忆复核：after.memories是选中的部分记忆，不是整个记忆账本；其中优先包含本轮全部变更。它们是带来源的玩家约定/计划/发现，检查本轮新增或状态变更（memory_changes逐条列出）是否忠于原话和实际已执行观察；不能把未执行意图变成完成事实，不能把后台秘密变成玩家知识，不能借记忆改变规则。history/notes带轮次，先后不同的地点本身不是冲突；口头约定不因未写手记失效。检索不完整时不宣称过去从未发生。
 字段合同复核：逐个检查拿起、收好、提着带离的物品是否place=carried，放下是否为房间位置，不能只靠facts说已经持有。ending.id=leave且status=ended就是成功结束，location允许保留最后地图位置outside；不得要求Schema里不存在的地点。主动步骤中的移动/操作无需在evolution重复记录，basis=none合法。历史notes/recentEvents/recent表示当时的观察或发生的事，不是同时成立的当前状态；旧的无绳结记录不能否定本轮新系结。只因历史与现在不同不得拒绝。
 通过时consistent=true，issue为空、issue_code=none。正文先回应本次动作，再写具体反馈、发现与值得注意的变化；篇幅随信息量调整：重要发现、危险或复杂连贯行动约300—440汉字、2—4段；简单收物、解结或取消约80—180字、1—2段；纯询问/确认约40—120字，直接回答。不要为了达到字数扩写未变化的物件。篇幅来自本次过程中的动作、感官反馈与可观察结果，不靠复述背景凑字，也不虚构新工具、机关或未发生的动作。石门、石镇、悬锤、油灯等未变状态仅在与本次动作有关、玩家询问或需要提醒新危险时提及，不要每轮列完整状态清单；没有时间与灯油倒计时，不播报任何剩余刻数。只从已结算事实展开，保留部分完成和停止点；不擅自执行未提交动作，不复活消耗品，不新增暗门/奖品/NPC。物品事实是当前快照，不是下一步建议。火焰观察只能说明落点有限情况，不能证明空气安全或所有机关已排除。若只有澄清或简短客观失败，直接自然地说明即可。全局状态不等于玩家的视野，不要确认玩家此刻未观察的远处陈设。只在玩家本轮探查空气或机关时解释有限观察的边界，不必每轮重复安全说明。不要重复一大段旧环境，不列选项，不提JSON、验证器、规则引擎。当前规则3已取消历史灯油期限。若decision需要确认，用场景内的问题结尾，不泄露后台字段；保留已完成部分，不擅自完成pending_action，不因玩家补答制造损失。若玩家明确结束则收束。`;
-// At most one corrected proposal. Every attempt starts from the same saved state.
-// Diagnostics deliberately omit player text, narrative, credentials and cookie tokens.
-export async function resolveLabTurn({state,body,call,diagnostic=entry=>console.warn('fiction_lab_adjudication',JSON.stringify(entry))}){
- const action=body.action?.trim()||getActions(state).find(a=>a.id===body.choiceId)?.label;
- if(!action)throw new ApiError(400,'这条建议已经过时，请刷新后再试。','invalid_choice');
- const before=hostContext(state,action),deadline=Date.now()+90000;
- let correction;
- const invoke=async(input,options)=>{
-  const remaining=deadline-Date.now();
-  if(remaining<1500)throw new ApiError(503,'主持暂时没有回应，进度未改变。请稍后重试。','model_unavailable');
-  const result=await call(input,{...options,timeoutMs:Math.min(45000,remaining),deadlineAt:deadline});
-  if(Date.now()>=deadline)throw new ApiError(503,'主持暂时没有回应，进度未改变。请稍后重试。','model_unavailable');
-  return result;
- };
- const report=(attempt,phase,code)=>diagnostic({requestId:body.requestId,revision:state.revision,attempt:attempt+1,phase,code});
- try{
-  for(let attempt=0;attempt<2;attempt++){
-   const raw=await invoke([{role:'developer',content:HOST},{role:'user',content:JSON.stringify({world:before,player_action:action,...(correction?{correction:{instruction:'上次候选未提交。仅纠正指出的问题，从同一行动前世界重新裁定；不重复结算、不改变玩家目的，也不杜撰道具来迎合复核。',...correction}}:{})})}],{format:proposalFormat,maxTokens:4200});
-   let proposal,applied;
-   try{
-    proposal=JSON.parse(raw);
-    if(!proposal.decision)throw Error('LAB_INVALID:missing decision');
-    if(!Array.isArray(proposal.memory_updates))throw Error('LAB_INVALID:missing memories');
-    if(!proposal.evolution)throw Error('LAB_INVALID:missing evolution');
-    applied=applyProposal(state,proposal,action);
-   }catch(error){
-    const code=/^LAB_INVALID:[a-z ]+$/.test(error.message)?error.message:'invalid proposal format';
-    report(attempt,'proposal',code);
-    correction={previous_proposal:proposal||null,issue:code};
-    if(attempt===0)continue;
-    throw new ApiError(503,'主持本轮的行动记录仍未通过检查，进度未改变。请重试这次尝试。','adjudication_failed');
-   }
-   const memoryChanges=applied.state.memoryJournal.slice(state.memoryJournal?.length||0);
-   const after=hostContext(applied.state,action);
-   // The reviewer must see every change even when it is unrelated to the query.
-   // Selected memory is not the entire ledger; keep the same bounded context.
-   after.memories=[...new Map([...memoryChanges,...after.memories].map(m=>[m.id,m])).values()].slice(0,12);
-   after.retrieval.selectedMemories=after.memories.length;
-   const rawNarrative=await invoke([{role:'developer',content:NARRATOR},{role:'user',content:JSON.stringify({player_action:action,before,confirmed_steps:applied.outcomes,decision:applied.state.pendingDecision,memory_changes:memoryChanges,evolution:applied.evolution,after,ending:applied.state.ending})}],{format:narrationFormat,maxTokens:2200});
-   let result;try{result=JSON.parse(rawNarrative);}catch{result={consistent:false,issue:'复核响应不是完整JSON',issue_code:'other'};}
-   if(!result||Array.isArray(result)||typeof result!=='object')result={consistent:false,issue:'复核响应不是有效对象',issue_code:'other'};
-   if(result.consistent!==true||typeof result.narration!=='string'||!result.narration.trim()){
-    const allowed=['intent','causality','time','state','agency','observation','other'];
-    report(attempt,'review',allowed.includes(result.issue_code)?result.issue_code:'other');
-    correction={previous_proposal:proposal,issue:typeof result.issue==='string'?result.issue.slice(0,1200):'复核缺少有效叙述'};
-    if(attempt===0)continue;
-    throw new ApiError(503,'主持对本轮后果的描述仍有矛盾，进度未改变，请重试。','adjudication_failed');
-   }
-   applied.state.log.push({role:'narrator',turn:applied.state.turn,text:result.narration.slice(0,2400)});
-   if(Date.now()>=deadline)throw new ApiError(503,'主持暂时没有回应，进度未改变。请稍后重试。','model_unavailable');
-   return {state:applied.state};
-  }
- }catch(error){
-  if(error.code==='budget_exhausted')throw new ApiError(429,'今日主持额度已用完，当前存档保留。请明天继续。','budget_exhausted');
-  if(error.code==='model_unavailable')throw new ApiError(503,'主持暂时没有回应，进度未改变。请稍后重试。','model_unavailable');
-  throw error;
- }
-}
+export const resolveLabTurn=createTurnResolver({engine,HOST,NARRATOR,proposalFormat,narrationFormat});

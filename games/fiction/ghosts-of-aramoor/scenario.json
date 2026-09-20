@@ -1,0 +1,311 @@
+{
+  "attribution": {
+    "author": "Jason Renslow",
+    "source": "https://junkyardtornado.itch.io/the-ghosts-of-aramoor",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "adapter": "Koa-OL",
+    "changes": "增加小镇交谈起点；保留原作六处海洞区域与卸重离港的核心解法；不使用战斗数值及固定倒计时，以单人可实施的工具、谈判和搬运处理冲突；明确离港不等于净化亡魂。"
+  },
+  "story": {
+    "id": "ghosts-of-aramoor",
+    "title": "阿拉穆尔的亡魂",
+    "original": "The Ghosts of Aramoor",
+    "author": "Jason Renslow",
+    "source": "https://junkyardtornado.itch.io/the-ghosts-of-aramoor",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "tagline": "海盗已经死了，小镇却仍在被劫掠。",
+    "summary": "地震之后，旧海盗的鬼魂开始偷走镇上的金银。沿着海岸新出现的裂口进入洞窟，寻找让亡魂停止归来的办法。",
+    "tags": [
+      "海岸怪谈",
+      "环境解谜",
+      "调查冒险"
+    ],
+    "start": "town",
+    "opening": "阿拉穆尔的镇长把一只被撬空的首饰盒放到桌上。地震之后，每逢夜色降临，穿着旧式海盗服的鬼魂便进镇搜走金银。有人已经准备搬家。\n\n“海岸裂开了一道新洞口。那些东西，就是从那一带来的。”镇长请你调查，却无法告诉你怎样驱逐幽灵。你带上提灯、绳索、手记和撬杆，面前的路通向新露出的海滩。",
+    "places": {
+      "town": {
+        "name": "阿拉穆尔镇",
+        "description": "居民正在清点失物，镇长留在镇口等消息。",
+        "exits": [
+          "beach"
+        ]
+      },
+      "beach": {
+        "name": "洞外海滩",
+        "description": "地震露出的洞口通向地下，潮线上散着几件镇民失物。",
+        "exits": [
+          "town",
+          "passage",
+          "sea"
+        ]
+      },
+      "passage": {
+        "name": "湿滑斜道",
+        "description": "石道向洞内倾斜，下去容易，攀回海滩需要留心支点。",
+        "exits": [
+          "beach",
+          "camp"
+        ]
+      },
+      "camp": {
+        "name": "洞内沙滩",
+        "description": "废弃营地与一艘搁浅海盗船挤在岩洞中；跳板通向甲板，海水通向洞外。",
+        "exits": [
+          "passage",
+          "deck",
+          "sea"
+        ]
+      },
+      "deck": {
+        "name": "海盗船甲板",
+        "description": "旧船的甲板开着一扇通往货舱的活板门，四周连着洞内沙滩与海水。",
+        "exits": [
+          "camp",
+          "hold",
+          "sea"
+        ]
+      },
+      "hold": {
+        "name": "船下货舱",
+        "description": "拥挤的旧货舱没有独立出口，必须沿梯子返回甲板。",
+        "exits": [
+          "deck"
+        ]
+      },
+      "sea": {
+        "name": "洞内海水与出海口",
+        "description": "狭长水道通向外海；水下阴影难以辨清。",
+        "exits": [
+          "camp",
+          "deck",
+          "beach"
+        ]
+      }
+    },
+    "gates": [],
+    "entities": [
+      {
+        "id": "light",
+        "name": "提灯",
+        "nature": "普通有热量的油灯，可打开灯罩；不模拟燃油倒计时。",
+        "place": "carried",
+        "facts": "完好，亮着。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "rope",
+        "name": "绳索",
+        "nature": "普通结实长绳，可系结、牵引或拆分。",
+        "place": "carried",
+        "facts": "完好，盘起。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "journal",
+        "name": "手记",
+        "nature": "纸本与炭笔；可记载已获知事实。",
+        "place": "carried",
+        "facts": "空白页充足。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "crowbar",
+        "name": "撬杆",
+        "nature": "普通金属杠杆，可撬动木箱、帮助搬运，不能徒手抬船。",
+        "place": "carried",
+        "facts": "完好。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "mayor",
+        "name": "镇长",
+        "nature": "知道地震、洞口、旧海盗传闻、失窃金银和出现时序，不知道船沉重搁浅的内幕。",
+        "place": "town",
+        "facts": "担忧居民离开，希望找到失物与骚扰根源。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "lost_trinkets",
+        "name": "海滩失物",
+        "nature": "镇民可辨认的小件金银物饰。",
+        "place": "beach",
+        "facts": "散落在潮线，沾沙。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "camp_gear",
+        "name": "旧营具",
+        "nature": "旧绳、锈灯与锅；可以实际拆分取用，锈灯没有可用燃油。",
+        "place": "camp",
+        "facts": "陈旧，留在沙上。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "skeletons",
+        "name": "海盗骷髅",
+        "nature": "骷髅会复起；击碎后的骨头会汇入船长，使其更强，杀死骷髅不解除骚扰。",
+        "place": "camp",
+        "facts": "半埋沙中，受惊扰可苏醒。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "chest",
+        "name": "半埋的旧箱",
+        "nature": "藏有好朗姆、镶宝石弯刀与海盗帽，挖出打开才看见内容；可用creates分出实体，箱子因此damaged。",
+        "place": "camp",
+        "facts": "半埋洞壁下方，箱盖闭合。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "captain",
+        "name": "亡魂船长",
+        "nature": "守着船甲板，绝不会离开甲板；击碎骷髅会使其变强，箱中的宝石弯刀能更有效伤害它。骷髅和船长可重生，不是最终解法。",
+        "place": "deck",
+        "facts": "幽灵在骨堆上方盘旋，骨头渐渐拼成怪物。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "loot",
+        "name": "失窃金银货物",
+        "nature": "大量镇民金银重压船体，使船搁浅。可逐批移出，不可一手收入背包；完全移出用place=camp/beach/town或consumed表示已弃海，须有搬运过程。",
+        "place": "hold",
+        "facts": "沉重货堆压住船；全部留在货舱。",
+        "movable": true,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "snakes",
+        "name": "货舱毒蛇",
+        "nature": "惊扰会防御攻击；可用工具驱离、隔开或绕行。",
+        "place": "hold",
+        "facts": "藏在货堆间。",
+        "movable": true,
+        "kind": "npc",
+        "integrity": "intact",
+        "source": null
+      },
+      {
+        "id": "ship",
+        "name": "搁浅的海盗船",
+        "nature": "旧船仍可漂浮，卸下货舱重物后能离开海洞。",
+        "place": "deck",
+        "facts": "搁浅，未驶离。",
+        "movable": false,
+        "kind": "object",
+        "integrity": "intact",
+        "source": null
+      }
+    ],
+    "milestones": {
+      "unburdened": {
+        "places": [
+          "hold",
+          "deck",
+          "camp"
+        ],
+        "refsAny": [
+          "loot"
+        ],
+        "entityRules": [
+          {
+            "id": "loot",
+            "notPlaces": [
+              "hold",
+              "deck",
+              "carried"
+            ]
+          }
+        ],
+        "rule": "货舱金银已通过实际搬运移到船外或弃海，确实减重；只说调查、抬几枚金币不算。"
+      },
+      "sailed": {
+        "places": [
+          "deck",
+          "sea",
+          "camp"
+        ],
+        "requires": [
+          "unburdened"
+        ],
+        "refsAny": [
+          "ship"
+        ],
+        "rule": "实际让减重的船浮起并沿海水离开洞穴，不只是制定计划。更新ship事实说明船已经离洞。"
+      },
+      "returned": {
+        "places": [
+          "town"
+        ],
+        "refsAny": [
+          "loot"
+        ],
+        "entityRules": [
+          {
+            "id": "loot",
+            "place": "town"
+          }
+        ],
+        "rule": "把移出的金银实际送还镇民；知道所在不等于归还。"
+      }
+    },
+    "endings": {
+      "resolved": {
+        "title": "离港的亡魂",
+        "text": "海盗船已离开洞穴，当地的夜袭源头随之远去。海盗没有被永久净化；外海可能还会听到它的传闻。",
+        "places": [
+          "town"
+        ],
+        "requires": [
+          "sailed"
+        ]
+      },
+      "leave": {
+        "title": "暂别海岸",
+        "text": "你带着实际获得的线索回到镇上，结束了这次调查。未解决的事情仍留在海岸。",
+        "places": [
+          "town"
+        ]
+      }
+    },
+    "laws": [
+      "原作真相：货舱被偷来的金银压得过重，船搁浅。真正解除当地骚扰需卸重让船重新浮起并驶离，不是打倒船长或骷髅。",
+      "sailed之后不可再次从camp登上已远去的船。若玩家随船而行，叙述其从出海口安全上岸到sea/beach，不能隔空操纵船。",
+      "船长不能离开deck。骷髅被打散会复起并强化船长；不能以击杀结算永久超度。镇长不能告诉玩家尚未调查的真相。",
+      "可以通过观察吃水、货舱重物、旧绳等逐步推断，无需战斗。单人搬运需绳、杠杆或协商帮助，可用一段连续劳动完成，不按轮数扣生命；若途中出现新危险则停下。船外可以向邻近甲板投物，但不能隔墙取货。",
+      "金银体量太大，不得装入随身carried；已运到camp/beach后可沿走过的路线送往town，须逐地点移送。"
+    ],
+    "changes": "增加小镇交谈起点；保留原作六处海洞区域与卸重离港的核心解法；不使用战斗数值及固定倒计时，以单人可实施的工具、谈判和搬运处理冲突；明确离港不等于净化亡魂。"
+  }
+}
