@@ -8,7 +8,7 @@
 <title>Koa-OL Games</title>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./style.css">
-<link rel="stylesheet" href="./lobby.css?v=20260920-table">
+<link rel="stylesheet" href="./lobby.css?v=030">
 </head>
 <body>
 <div class="page">
@@ -45,57 +45,11 @@
 
     <section class="game-zone lobby-view" id="multiplayer" aria-labelledby="multiplayer-title">
       <header class="zone-heading"><span class="zone-symbol" aria-hidden="true">♣</span><p>02 / PLAY TOGETHER</p><h2 id="multiplayer-title">联机区</h2><span>约上朋友，开一桌。</span></header>
-    <div class="play-card" aria-label="创建或加入联机房间">
-      <div class="play-card-head"><span>TABLE GAMES</span><strong>选桌与入场</strong></div>
-      <div class="game-switch" aria-label="Choose game">
-        <button class="game-tile is-selected" type="button" data-game-card="texas" aria-pressed="true">
-          <span class="card-stack" aria-hidden="true">
-            <i>10</i>
-            <i>J</i>
-          </span>
-          <span>
-            <strong>德州扑克</strong>
-            <small>Texas Hold'em</small>
-          </span>
-        </button>
-
-        <a class="game-tile ace21-tile" href="./ace-21/" aria-label="进入王牌21点，支持单人和双人联机">
-          <span class="ace21-seal" aria-hidden="true">21<span>♠</span></span>
-          <span><strong>王牌21点</strong><small>单人挑战希儿 · 双人房间对战</small></span>
-          <span class="ace21-enter" aria-hidden="true">入席 ↗</span>
-        </a>
-      </div>
-
-      <form class="room-form" id="room-form" aria-labelledby="entry-form-title">
-        <p class="form-heading" id="entry-form-title">入席之前<small>起个昵称，开一桌，或加入朋友的房间。</small></p>
-        <input id="game-type" name="gameType" type="hidden" value="texas">
-
-        <label class="field">
-          <span>你的昵称</span>
-          <input id="player-name" name="playerName" autocomplete="nickname" maxlength="24" placeholder="例如 Koa" required>
-        </label>
-
-        <label class="field">
-          <span>房间码</span>
-          <input id="room-code" name="roomCode" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="128" placeholder="粘贴房间码或房间链接">
-        </label>
-
-        <div class="actions">
-          <button class="button primary" type="button" id="create-room">开新房</button>
-          <button class="button secondary" type="submit" data-action="join">加入房间</button>
-        </div>
-      </form>
-
-      <div class="room-result" aria-live="polite">
-        <div class="result-top">
-          <span id="room-status">待开局</span>
-          <strong id="status-title">准备好就点「开新房」</strong>
-        </div>
-        <p id="status-copy">如果朋友已经发你房间码，填入后直接加入。</p>
-        <div class="link-box" id="link-box" hidden>
-          <input id="room-link" readonly aria-label="Room link">
-          <button class="copy-button" type="button" id="copy-link" aria-label="复制房间链接" title="复制房间链接">复制</button>
-        </div>
+    <div class="play-card" aria-label="选择联机游戏">
+      <label class="field nickname-field"><span>你的昵称</span><input id="player-name" autocomplete="nickname" maxlength="24" placeholder="例如 Koa" required><small id="nickname-note">浏览器会记住昵称，进入大厅后点空座入席。</small></label>
+      <div class="table-entries">
+        <a class="table-entry texas-entry" href="./texas/"><span class="entry-symbol" aria-hidden="true">♣</span><span><strong>德州扑克</strong><small>8 人桌 · 2 人起开局</small></span><b>进入大厅 ↗</b></a>
+        <a class="table-entry ace-entry" href="./ace-21/lobby/"><span class="entry-symbol" aria-hidden="true">21♠</span><span><strong>王牌21点</strong><small>2 人桌 · 王牌改写规则</small></span><b>进入大厅 ↗</b></a>
       </div>
     </div>
     </section>
@@ -108,40 +62,9 @@
     </a>
     </section>
 
-    <section class="room-card room-view" id="room-card" hidden aria-label="Game room">
-      <div class="room-head">
-        <div>
-          <span id="room-badge">ROOM</span>
-          <h2 id="room-title">等待进入房间</h2>
-        </div>
-        <div class="room-actions">
-          <span class="connection-pill" id="connection-status">连接中</span>
-          <button class="button secondary start-button" id="copy-room-link" type="button">复制邀请</button>
-          <button class="button secondary start-button" id="leave-room" type="button">离开房间</button>
-          <button class="button primary start-button" id="start-game" type="button" disabled>开始游戏</button>
-        </div>
-      </div>
-
-      <div class="room-meta">
-        <span id="player-count">0 / 8 玩家</span>
-        <span id="host-state">等待房主</span>
-      </div>
-
-      <div class="player-list" id="player-list" aria-label="Players"></div>
-
-      <div class="game-state" id="game-state" hidden>
-        <h3>第一手牌</h3>
-        <div id="game-state-body"></div>
-      </div>
-
-      <section class="game-log" id="game-log" aria-label="Game log">
-        <h3>游戏日志</h3>
-        <div id="game-log-list"></div>
-      </section>
-    </section>
   </main>
 </div>
 
-<script src="./app.js"></script>
+<script type="module" src="./entry.js?v=030"></script>
 </body>
 </html>

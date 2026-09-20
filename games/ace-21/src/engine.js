@@ -24,7 +24,7 @@ export const CATALOG = {
 
 export const DRAW_POOL = Object.keys(CATALOG).flatMap(type => type === 'number'
   ? Array.from({ length: 11 }, (_, i) => ({ type, value: i + 1 }))
-  : type === 'challenge' ? Array.from({ length: 9 }, (_, i) => ({ type, value: i + 22 })) : [{ type }]);
+  : [{ type }]);
 export const cardName = c => c.type === 'number' ? `数字 ${c.value}` : c.type === 'challenge' ? `挑战 ${c.value}` : CATALOG[c.type].name;
 export const total = p => p.numbers.reduce((n, c) => n + (c?.value || 0), 0);
 export const slots = p => p.table.reduce((n, c) => n + CATALOG[c.type].cost, 0);
@@ -40,7 +40,11 @@ function addLog(s, text, kind = 'info') {
   s.log.push({ id: ++s.eventId, round: s.round, text, kind });
   if (s.log.length > 160) s.log.shift();
 }
-function newTrump(s) { return { ...DRAW_POOL[pick(s, DRAW_POOL)], id: `t${++s.serial}` }; }
+function newTrump(s) {
+  const card = { ...DRAW_POOL[pick(s, DRAW_POOL)], id: `t${++s.serial}` };
+  if (card.type === 'challenge') card.value = 22 + Math.floor(random(s) * 9);
+  return card;
+}
 function grant(s, actor, n) { for (let i = 0; i < n; i++) s.players[actor].hand.push(newTrump(s)); }
 function drawNumber(s, actor, specified) {
   const at = specified === undefined ? pick(s, s.deck) : s.deck.indexOf(specified);

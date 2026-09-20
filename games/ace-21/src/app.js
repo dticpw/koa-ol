@@ -129,6 +129,9 @@ function render() {
   $('enemy-hand').textContent = `手牌王牌 ${state.players[1].handCount ?? state.players[1].hand.length} 张`;
   for (let actor = 0; actor < 2; actor++) {
     const p = state.players[actor];
+    const active = started && !paused && state.phase === 'playing' && state.actor === actor;
+    $('seat-' + actor).classList.toggle('is-active-turn', active);
+    $('turn-badge-' + actor).textContent = active ? (actor === 0 ? '▶ 轮到你行动' : '▶ 正在行动') : '';
     $('hp-' + actor).innerHTML = `<strong>${p.hp}</strong> / ${p.maxHp} 生命`;
     $('loss-' + actor).textContent = `败北 −${loss(actor)}`;
     $('life-' + actor).style.width = `${p.hp / p.maxHp * 100}%`;
@@ -170,14 +173,14 @@ function render() {
     const r = state.result, finished = state.phase === 'finished';
     const heading = finished ? state.players[0].hp > 0 ? '这场命运，属于你。' : `这一场，${esc(enemyName())}胜出。` : r.winner === null ? '平局 · 无人受伤' : r.winner === 0 ? '你赢下了这一手' : `${esc(enemyName())}赢下了这一手`;
     const description = r.forfeit ? '对手或你已离开房间，本场结束。' : `你 ${r.sums[0]}${r.bust[0] ? '（爆牌）' : ''} · ${esc(enemyName())} ${r.sums[1]}${r.bust[1] ? '（爆牌）' : ''}${r.victim === null ? '' : ` ／ ${r.victim === 0 ? '你' : esc(enemyName())} −${r.damage} 生命`}`;
-    $('result').innerHTML = `<span class="eyebrow">${finished ? 'MATCH COMPLETE' : 'CARDS REVEALED'}</span><h2>${heading}</h2><p>${description}</p><button id="next-round" class="gold-button">${online ? room.status === 'closed' ? '返回入场页' : room.ready[0] ? '已准备，等待对手' : finished ? '准备再来一场' : '准备下一局' : finished ? '再来一场' : '下一局'} <span aria-hidden="true">→</span></button>`;
-    if (online) $('next-round').disabled = room.status !== 'closed' && (room.ready[0] || networkBusy || !connected);
+    $('result').innerHTML = `<span class="eyebrow">${finished ? 'MATCH COMPLETE' : 'CARDS REVEALED'}</span><h2>${heading}</h2><p>${description}</p><button id="next-round" class="gold-button">${online ? room.status === 'closed' ? '返回入场页' : room.ready[0] ? '已准备，等待对手' : finished ? '返回大厅' : '准备下一局' : finished ? '再来一场' : '下一局'} <span aria-hidden="true">→</span></button>`;
+    if (online) $('next-round').disabled = room.status !== 'closed' && (!finished && room.ready[0] || networkBusy || !connected);
   }
   $('opponent-name').textContent = enemyName();
   $('opponent-label').textContent = `YOU × ${enemyName()}`;
   $('mode-label').textContent = online ? '双人联机' : '单人对战';
   $('pause').hidden = Boolean(online); $('pace').hidden = Boolean(online);
-  $('restart').textContent = online ? '离开房间' : '重新开局';
+  $('restart').textContent = online ? '离座' : '重新开局';
 }
 
 function perform(action) {
@@ -228,7 +231,7 @@ $('table').addEventListener('click', e => {
     $('detail-content').innerHTML = `${art(c)}<span class="eyebrow">${CATALOG[c.type].family}</span><h2 id="detail-title">${esc(cardName(c))}</h2><p>${esc(CATALOG[c.type].text)}</p><small>桌面持续效果 · ${CATALOG[c.type].cost} 格</small>`;
     openDialog('card-detail');
   }
-  if (e.target.closest('#next-round')) { if (online) { if (room.status === 'closed') exitOnline(); else sendOnline({ type: 'ready' }); } else if (state.phase === 'finished') start(); else perform({ type: 'next' }); }
+  if (e.target.closest('#next-round')) { if (online) { if (room.status === 'closed' || state.phase === 'finished') exitOnline(); else sendOnline({ type: 'ready' }); } else if (state.phase === 'finished') start(); else perform({ type: 'next' }); }
 });
 $('play').addEventListener('click', () => perform({ type: 'play', actor: 0, id: selected }));
 $('draw').addEventListener('click', () => perform({ type: 'draw', actor: 0 }));
@@ -273,32 +276,23 @@ render(); openDialog('welcome');
 
 
 function confirmRestart() {
-  $('restart-title').textContent = online ? '离开这间牌室？' : '重新入席？';
-  $('restart-description').textContent = online ? '离开会结束本场对局，对手获胜。断线时可保留当前标签页，稍后自动重连。' : '当前生命、手牌和牌局记录将清空。';
-  $('confirm-restart').textContent = online ? '确认离开' : '重新开局';
+  $('restart-title').textContent = online ? '确认离座？' : '重新入席？';
+  $('restart-description').textContent = online ? '离座会结束本场对局并释放座位。只想看看大厅，可使用上方「返回大厅」。' : '当前生命、手牌和牌局记录将清空。';
+  $('confirm-restart').textContent = online ? '确认离座' : '重新开局';
   openDialog('restart-dialog');
-}
-function inviteLink() { const url = new URL(location.href); url.search = ''; url.hash = ''; url.searchParams.set('room', room.code); return url.href; }
-async function copyInvite() {
-  try { await navigator.clipboard.writeText(inviteLink()); toast('邀请链接已复制，发给一位朋友即可。'); }
-  catch { $('invite-link').value = inviteLink(); if ($('welcome').open) { $('invite-link').focus(); $('invite-link').select(); } else toast(`房间号：${room.code}`); }
 }
 function networkStatus(status, data, message) {
   const wasConnected = connected; connected = status === 'connected';
-  const text = connected ? data.status === 'waiting' ? '等待朋友加入' : data.status === 'closed' ? '房间已结束' : data.opponentOnline ? '已连接 · 双方在线' : '已连接 · 等待对手重连' : status === 'expired' ? message || '房间已过期' : '连接中断，正在重连…';
-  $('room-connection').textContent = `房间 ${data?.code || room?.code || online?.session.code || ''} · ${text}`;
-  $('online-message').textContent = online?.storageAvailable === false ? `${text}。浏览器无法保存重连凭证，请勿刷新。` : text;
+  const text = connected ? data.opponentOnline ? '双方在线' : '等待对手连接' : '连接中断，正在重连…';
+  $('room-connection').textContent = `${data?.code || room?.code || online?.session.code || ''} 号桌 · ${text}`;
   if (wasConnected !== connected && started) render();
-  if (status === 'expired') { toast(message || '房间已过期'); exitOnline(); }
+  if (status === 'expired') { toast(message || '座位已释放'); exitOnline(); }
 }
 function receiveRoom(data) {
   const changed = !room || data.revision > room.revision, hadState = Boolean(room?.state), old = state;
   room = data;
   $('room-bar').hidden = false;
-  $('waiting-code').textContent = data.code; $('invite-link').value = inviteLink();
-  $('online-form').hidden = true; $('online-wait').hidden = false;
-  $('start').disabled = true; $('multiplayer').disabled = true;
-  if (!data.state) return;
+  if (!data.you || !data.state) { exitOnline(); return; }
   if (!hadState) { document.querySelectorAll('dialog[open]').forEach(d => d.close()); paused = false; started = true; }
   if (changed) {
     const before = captureCards(); state = data.state;
@@ -317,42 +311,12 @@ async function sendOnline(action) {
   catch (error) { toast(error.message || '连接暂时不可用，请稍后再试。'); return false; }
   finally { networkBusy = false; render(); }
 }
-function exitOnline() {
-  online?.stop(); online = null; room = null; connected = false; networkBusy = false;
-  clearTimeout(aiTimer); started = false; selected = null; state = createGame(seed());
-  $('room-bar').hidden = true; $('online-form').hidden = false; $('online-wait').hidden = true;
-  $('start').disabled = false; $('multiplayer').disabled = false;
-  $('online-message').textContent = ''; $('online-code').value = '';
-  const url = new URL(location.href); url.searchParams.delete('room'); history.replaceState(null, '', url);
-  document.querySelectorAll('dialog[open]').forEach(d => d.close()); render(); openDialog('welcome');
-}
-async function enterOnline(create) {
-  if (networkBusy || online) return;
-  if (!$('online-name').reportValidity()) return;
-  let code = $('online-code').value.trim();
-  if (!create) {
-    try { if (code.includes('://')) code = new URL(code).searchParams.get('room') || ''; } catch { code = ''; }
-    code = code.toUpperCase();
-    if (!/^[A-F0-9]{8}$/.test(code)) { $('online-message').textContent = '请填写 8 位房间号，或粘贴完整邀请链接。'; return; }
-  }
-  clearTimeout(aiTimer); networkBusy = true;
-  $('create-online').disabled = true; $('join-online').disabled = true;
-  $('online-message').textContent = '正在连接牌室…';
-  online = new RoomClient(receiveRoom, networkStatus);
-  try { await online.enter(create ? null : code, $('online-name').value.trim()); }
-  catch (error) { online?.stop(); online = null; $('online-message').textContent = error.message || '暂时无法连接牌室，请稍后重试。'; }
-  finally { networkBusy = false; $('create-online').disabled = false; $('join-online').disabled = false; if (started) render(); }
-}
+function exitOnline() { online?.stop(); location.assign('./lobby/'); }
 $('selection').addEventListener('click', e => { if (e.target.closest('#clear-selection')) { selected = null; render(); } });
-$('multiplayer').addEventListener('click', () => { $('online-entry').hidden = !$('online-entry').hidden; if (!$('online-entry').hidden) { $('online-name').focus(); $('online-entry').scrollIntoView({ block: 'nearest' }); } });
-$('create-online').addEventListener('click', () => enterOnline(true));
-$('online-form').addEventListener('submit', e => { e.preventDefault(); enterOnline(false); });
-$('copy-invite').addEventListener('click', copyInvite); $('room-copy').addEventListener('click', copyInvite);
-$('cancel-room').addEventListener('click', confirmRestart);
-const saved = savedRoom(), invited = new URL(location.href).searchParams.get('room');
+$('multiplayer').addEventListener('click', () => location.assign('./lobby/'));
+const saved = savedRoom();
 if (saved) {
-  $('online-entry').hidden = false; $('online-form').hidden = true; $('online-message').textContent = '正在恢复房间…';
-  $('start').disabled = true; $('multiplayer').disabled = true;
+  $('start').disabled = true; $('multiplayer').textContent = '返回游戏大厅';
   online = new RoomClient(receiveRoom, networkStatus, saved); online.poll();
-} else if (invited) { $('online-entry').hidden = false; $('online-code').value = invited; $('online-name').focus(); }
+}
 new ResizeObserver(([entry]) => document.documentElement.style.setProperty('--dock-height', `${entry.target.getBoundingClientRect().height}px`)).observe($('controls'));

@@ -290,3 +290,8 @@
     body { padding-bottom:calc(var(--dock-height, 165px) + 20px); }
   }
 }
+
+/* Action ownership is visible at the table, including on small screens. */
+.seat{position:relative;border:2px solid transparent;border-radius:12px;padding:14px 12px}.seat.is-active-turn{border-color:#e0bf78;background:linear-gradient(110deg,#d5aa5520,#d5aa5507);box-shadow:0 0 0 3px #c99b4810,inset 0 0 30px #bd90440a}.turn-badge{display:block;min-height:20px;font-size:12px;font-weight:700;letter-spacing:1px;color:#f3d495;margin-bottom:5px}.is-active-turn .avatar{box-shadow:0 0 0 3px #cda25755}.room-bar a{color:#e2c98e;text-decoration:none;padding:10px}.seat:not(.is-active-turn) .turn-badge{visibility:hidden}@media(max-width:600px){.seat{padding:10px 8px}.turn-badge{font-size:11px}}
+
+.seat .life-track{position:static;margin:8px 0 0 46px}.skip-link{width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.skip-link:focus{width:auto;height:auto;clip-path:none}@media(max-width:600px){.seat .life-track{margin-left:39px}}

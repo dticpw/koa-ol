@@ -2,7 +2,9 @@ const STORAGE = 'ace21-room-v1';
 const API = location.hostname === '127.0.0.1' || location.hostname === 'localhost'
   ? 'http://127.0.0.1:4183' : 'https://muq.koa-ol.com/ace21-api';
 export function savedRoom() {
-  try { const data = JSON.parse(sessionStorage.getItem(STORAGE)); return data?.code && data?.token ? data : null; } catch { return null; }
+  const code = new URL(location.href).searchParams.get('table');
+  if (!/^1000[0-3]$/.test(code || '')) return null;
+  try { const token = sessionStorage.getItem('koa-table-token'); return token ? {code,token} : (location.replace('./lobby/'),null); } catch { location.replace('./lobby/');return null; }
 }
 export class RoomClient {
   constructor(onUpdate, onStatus, session = null) {
@@ -21,17 +23,11 @@ export class RoomClient {
     try { sessionStorage.setItem(STORAGE, JSON.stringify(this.session)); this.storageAvailable = true; } catch { this.storageAvailable = false; }
     this.onStatus('connected', data); this.onUpdate(data);
   }
-  async enter(code, name) {
-    this.busy = true;
-    try { this.receive(await this.request(code ? `/rooms/${code}/join` : '/rooms', { name })); }
-    finally { this.busy = false; }
-    this.poll();
-  }
   async poll() {
     clearTimeout(this.timer);
     if (this.closed) return;
     if (!this.busy) {
-      try { this.receive(await this.request(`/rooms/${this.session.code}`)); }
+      try { this.receive(await this.request(`/tables/ace21/${this.session.code}`)); }
       catch (e) { if (this.closed) return; this.onStatus([401, 403, 404].includes(e.status) ? 'expired' : 'offline', null, e.message); }
     }
     if (!this.closed) this.timer = setTimeout(() => this.poll(), document.hidden ? 5000 : 1100);
@@ -39,10 +35,21 @@ export class RoomClient {
   async act(action) {
     if (this.closed || this.busy) return;
     this.busy = true;
-    try { this.receive(await this.request(`/rooms/${this.session.code}/action`, { revision: this.revision, requestId: crypto.randomUUID(), action })); }
+    const requestId = crypto.randomUUID();
+    const submit = () => this.request(`/tables/ace21/${this.session.code}/action`, { revision: this.revision, requestId, action });
+    try {
+      let data;
+      try { data = await submit(); }
+      catch(e) {
+        if(e.status !== 409 || e.message !== '桌面刚刚更新，请重试。') throw e;
+        this.receive(await this.request(`/tables/ace21/${this.session.code}`));
+        data = await submit();
+      }
+      this.receive(data);
+    }
     catch (e) {
       // Refresh after an uncertain write, never replay a game action automatically.
-      try { this.receive(await this.request(`/rooms/${this.session.code}`)); }
+      try { this.receive(await this.request(`/tables/ace21/${this.session.code}`)); }
       catch { this.onStatus('offline'); }
       throw e;
     } finally { this.busy = false; }

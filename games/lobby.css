@@ -160,3 +160,7 @@ body:not(.is-room-view) .home-link:hover { background:#1b1f27; color:#fff; }
 .game-zone .ace21-tile small { display:block; font-size:11px; color:#d3bfa3; margin-top:6px; }
 .ace21-enter { margin-left:auto; color:#e2bc7d; font-size:12px; white-space:nowrap; }
 @media (max-width:480px) { .game-zone .game-tile.ace21-tile { padding:16px 12px; gap:12px; } .game-zone .ace21-tile strong { font-size:18px; } .game-zone .ace21-tile small { font-size:10px; } .ace21-enter { font-size:10px; } }
+
+/* Equal-size game entrances; nickname is shared by both lobbies. */
+.nickname-field {max-width:480px;margin-bottom:24px}.nickname-field small{color:#a9b9b1;font-size:13px}
+.table-entries{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.table-entry{min-height:170px;box-sizing:border-box;display:flex;align-items:center;gap:22px;padding:28px;border:1px solid #607e6d;border-radius:16px;background:linear-gradient(130deg,#183d32,#111e20);text-decoration:none;color:#f6eedf}.table-entry.ace-entry{background:linear-gradient(130deg,#4a2630,#201a23);border-color:#936d53}.entry-symbol{font:40px Georgia,serif;color:#d4bb83}.table-entry strong{display:block;font-size:24px}.table-entry small{display:block;margin-top:10px;color:#c6c3b9}.table-entry b{font-size:12px;margin-left:auto;white-space:nowrap}.table-entry:hover{border-color:#e6d5a6}.table-entry:focus-visible{outline:3px solid #edce8b;outline-offset:4px}@media(max-width:760px){.table-entries{grid-template-columns:1fr}.table-entry{min-height:142px;padding:22px;gap:18px}.table-entry strong{font-size:21px}}
