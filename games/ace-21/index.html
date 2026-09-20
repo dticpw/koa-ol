@@ -7,8 +7,8 @@
   <meta name="description" content="王牌21点：共享1至11数牌池，用改变规则的王牌与希儿进行一场命运牌局。">
   <title>王牌21点 · Midnight Table</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css?v=060">
-  <script type="module" src="./src/app.js?v=060"></script>
+  <link rel="stylesheet" href="./style.css?v=070">
+  <script type="module" src="./src/app.js?v=070"></script>
 </head>
 <body>
   <a class="skip-link" href="#controls">跳到操作区</a>
@@ -34,7 +34,7 @@
       <div class="session-heading"><span id="round-label">第一局</span><span class="small-tag" id="mode-label">单人对战</span></div>
       <div class="turn-box" id="turn-box"><span class="turn-light"></span><div><b id="turn-title" tabindex="-1">等待入席</b><p id="turn-description">准备开始你的牌局</p></div></div>
       <div class="turn-rule"><span>01 / 抽牌或使用王牌</span><span>02 / 停牌，交出行动权</span><span>03 / 双方停牌，开牌结算</span></div>
-      <details class="chronicle" open><summary>牌局记录 <span>LIVE LOG</span></summary><ol id="log" aria-label="行动记录"></ol></details>
+      <details class="chronicle" open><summary>牌局记录 <span id="log-unread" hidden></span><span>LIVE LOG</span></summary><ol id="log" aria-label="行动记录"></ol></details>
       <div class="sidebar-bottom"><button id="pause" class="quiet">暂停对局</button><button id="restart" class="quiet">重新开局</button></div>
     </aside>
 
@@ -46,7 +46,7 @@
       <section id="table" class="table" aria-label="双方牌桌">
         <div class="table-inscription" aria-hidden="true">FORTUNE FAVOURS THE BOLD</div>
         <section class="seat enemy" id="seat-1" aria-label="希儿的牌">
-          <span class="turn-badge" id="turn-badge-1"></span><div class="player-bar"><div class="identity"><span class="avatar ai-avatar" aria-hidden="true">☾</span><div><h2><b id="opponent-name">希儿</b> <span>对手</span></h2><div class="health-line"><span id="hp-1"></span><span id="loss-1" class="loss"></span></div></div></div><div class="score" id="score-1"></div></div>
+          <span class="turn-badge" id="turn-badge-1"></span><div class="player-bar"><div class="identity"><span class="avatar ai-avatar" aria-hidden="true">☾</span><div><h2><b id="opponent-name">希儿</b> <span>对手</span></h2><div class="health-line"><span id="hp-1"></span><span id="loss-1" class="loss"></span><span id="loss-change-1" class="metric-change" hidden></span></div></div></div><div class="score" id="score-1"></div></div>
           <div class="life-track" aria-hidden="true"><span id="life-1"></span></div>
           <div class="numbers" id="numbers-1" aria-label="希儿的数牌"></div>
           <div class="effects-row"><span class="effects-label" id="slots-1">桌面王牌</span><div class="effects" id="effects-1"></div><span class="opponent-hand" id="enemy-hand"></span></div>
@@ -54,12 +54,12 @@
 
         <div class="table-center">
           <div class="deck-wrap"><div id="deck" class="deck" aria-hidden="true"><span>♠</span></div><span id="deck-count"></span></div>
-          <div class="target-lockup"><span class="eyebrow">当前目标点数</span><strong id="target">21</strong><span id="center-message">离目标近一点，离危险远一点。</span></div>
+          <div class="target-lockup"><span class="eyebrow">当前目标点数</span><strong id="target">21</strong><span id="target-change" class="metric-change" hidden></span><span id="center-message">离目标近一点，离危险远一点。</span></div>
           <div class="table-note"><span class="diamond" aria-hidden="true">◇</span><span>底牌保密<br>王牌改写命运</span></div>
         </div>
 
         <section class="seat human" id="seat-0" aria-label="你的牌">
-          <span class="turn-badge" id="turn-badge-0"></span><div class="player-bar"><div class="identity"><span class="avatar" aria-hidden="true">♠</span><div><h2>你 <span>挑战者</span></h2><div class="health-line"><span id="hp-0"></span><span id="loss-0" class="loss"></span></div></div></div><div class="score" id="score-0"></div></div>
+          <span class="turn-badge" id="turn-badge-0"></span><div class="player-bar"><div class="identity"><span class="avatar" aria-hidden="true">♠</span><div><h2>你 <span>挑战者</span></h2><div class="health-line"><span id="hp-0"></span><span id="loss-0" class="loss"></span><span id="loss-change-0" class="metric-change" hidden></span></div></div></div><div class="score" id="score-0"></div></div>
           <div class="life-track" aria-hidden="true"><span id="life-0"></span></div>
           <div class="numbers" id="numbers-0" aria-label="你的数牌"></div>
           <div class="effects-row"><span class="effects-label" id="slots-0">桌面王牌</span><div class="effects" id="effects-0"></div></div>
@@ -76,10 +76,11 @@
           <div class="buttons"><button id="play" class="play-button" disabled>打出王牌</button><button id="draw" class="gold-button">抽一张 <kbd>D</kbd></button><button id="stand" class="stand-button">停牌 <kbd>S</kbd></button></div>
         </div>
       </section>
-      <footer class="game-footer"><span>每次抽数牌，有 1/6 概率额外获得一张王牌</span><span>ACE 21 <i>／</i> 版本 0.6</span></footer>
+      <footer class="game-footer"><span>每次抽数牌，有 1/6 概率额外获得一张王牌</span><span>ACE 21 <i>／</i> 版本 0.7</span></footer>
     </section>
   </main>
 
+  <aside id="play-broadcast" class="play-broadcast" hidden aria-hidden="true"></aside>
   <div id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
   <div id="toast" class="toast" role="alert" hidden></div>
 

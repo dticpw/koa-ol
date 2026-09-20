@@ -53,8 +53,10 @@ function random(s) {
 }
 function pick(s, array) { return Math.floor(random(s) * array.length); }
 function addLog(s, text, kind = 'info') {
-  s.log.push({ id: ++s.eventId, round: s.round, text, kind });
+  const entry = { id: ++s.eventId, round: s.round, text, kind };
+  s.log.push(entry);
   if (s.log.length > 160) s.log.shift();
+  return entry;
 }
 function newTrump(s) {
   const card = { ...DRAW_POOL[pick(s, DRAW_POOL)], id: `t${++s.serial}` };
@@ -190,7 +192,7 @@ export function dispatch(state, action) {
     const index = p.hand.findIndex(c => c.id === action.id), [card] = p.hand.splice(index, 1);
     const harvestCount = p.table.filter(c => c.type === 'harvest').length;
     let stay = CATALOG[card.type].stay;
-    addLog(s, `${p.name}使用「${cardName(card)}」。`, 'trump');
+    const played = addLog(s, `${p.name}使用「${cardName(card)}」。`, 'trump');
     switch (card.type) {
       case 'seelieInsight': {
         const value = targetOf(s) - total(p);
@@ -243,6 +245,13 @@ export function dispatch(state, action) {
     }
     if (stay) p.table.push(card);
     if (harvestCount) { grant(s, actor, harvestCount); addLog(s, `${p.name}的收割补充了 ${harvestCount} 张王牌。`, 'bonus'); }
+    // Public facts only: never attach a hand, hole card, deck or RNG snapshot.
+    Object.assign(played, {
+      actor, card: { type: card.type, ...(card.value !== undefined ? { value: card.value } : {}) },
+      changes: { target: [targetOf(state), targetOf(s)], damage: [0, 1].map(i => [damage(state, i), damage(s, i)]) },
+    });
+    if (card.type === 'slam' && !stay) played.note = '护盾不足，盾击已弃置，未增加伤害。';
+    if (card.type === 'number' && !state.deck.includes(card.value)) played.note = '指定数牌不在牌池，本牌没有抽到数牌。';
   }
   return { state: s, error: '' };
 }

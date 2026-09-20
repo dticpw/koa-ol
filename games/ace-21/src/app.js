@@ -1,6 +1,7 @@
+import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=070';
 import { timeoutNotice } from './timeout-notice.js?v=060';
-import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe } from './engine.js?v=050';
-import { chooseAction } from './ai.js?v=050';
+import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe } from './engine.js?v=070';
+import { chooseAction } from './ai.js?v=070';
 import { RoomClient, savedRoom } from './network.js?v=041';
 
 const $ = id => document.getElementById(id);
@@ -92,6 +93,7 @@ function transitionCards(before) {
     Object.assign(ghost.style, { position: 'fixed', top: `${old.rect.top}px`, left: `${old.rect.left}px`, width: `${old.rect.width}px`, height: `${old.rect.height}px`, margin: '0', zIndex: '12', pointerEvents: 'none' });
     document.body.append(ghost);
     const isNumber = ghost.classList.contains('num-card');
+    if (!isNumber) ghost.classList.add('effect-removed');
     const a = animate(ghost, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: isNumber ? `translate(${deck.left - old.rect.left}px,${deck.top - old.rect.top}px) scale(.4) rotate(-8deg)` : 'translateY(-20px) scale(.8)' }], { duration: 350, easing: 'ease-out' });
     if (a) a.finished.catch(() => {}).finally(() => ghost.remove()); else ghost.remove();
   }
@@ -112,10 +114,7 @@ function impact(actor, symbol, label, tone = 'gold') {
   if (a) a.finished.catch(() => {}).finally(() => el.remove()); else el.remove();
 }
 
-function cardFeedback(old, action) {
-  if (action.type !== 'play') return;
-  const actor = action.actor ?? old.actor, card = old.players[actor].hand.find(c => c.id === action.id);
-  if (!card) return;
+function cardFeedback(card, actor) {
   const def = {
     shield: [actor, '◇', '护盾展开', 'silver'], shield2: [actor, '◇', '护盾强化', 'silver'],
     destroy: [1 - actor, '╳', '王牌破坏', 'red'], destroyAll: [1 - actor, '╳', '桌面清除', 'red'],
@@ -131,9 +130,72 @@ function cardFeedback(old, action) {
   if (card.type === 'joy') { impact(0, '✧', '王牌 +1'); impact(1, '✧', '王牌 +1'); }
 }
 
+const metricTimers = new Map();
+let unreadPlays = 0;
+function clearMetrics() {
+  for (const [id, timer] of metricTimers) { clearTimeout(timer); $(id).classList.remove('metric-flash'); }
+  metricTimers.clear();
+  for (const id of ['loss-change-0', 'loss-change-1', 'target-change']) $(id).hidden = true;
+}
+function metricChange(id, before, after, detailId) {
+  if (before === after) return;
+  clearTimeout(metricTimers.get(id));
+  $(id).classList.add('metric-flash');
+  $(detailId).textContent = `${before} → ${after}`; $(detailId).hidden = false;
+  animate($(id), [{ transform: 'scale(1.13)' }, { transform: 'scale(1)' }], { duration: 420, easing: 'ease-out' });
+  metricTimers.set(id, setTimeout(() => { $(id).classList.remove('metric-flash'); $(detailId).hidden = true; metricTimers.delete(id); }, 3000));
+}
+function positionBroadcast() {
+  const rect = $('table').getBoundingClientRect();
+  const width = Math.min(460, innerWidth - 24);
+  $('play-broadcast').style.left = `${Math.max(width / 2 + 12, Math.min(innerWidth - width / 2 - 12, rect.left + rect.width / 2))}px`;
+}
+const broadcasts = new BroadcastQueue((event, remaining) => {
+  const card = event.card, tone = toneOf(card.type), def = CATALOG[card.type], box = $('play-broadcast');
+  positionBroadcast(); box.className = `play-broadcast tone-${tone}`;
+  box.innerHTML = `<div class="broadcast-card">${art(card)}<strong>${esc(cardName(card))}</strong><span>${toneLabel[tone]} · ${def.stay ? '持续' : '瞬时'}</span></div><div class="broadcast-copy"><span class="broadcast-who">对手打出王牌</span><h2>${esc(cardName(card))}</h2><p>${esc(event.note || opponentEffect(card) || def.text)}</p>${changeText(event) ? `<b class="broadcast-change">${esc(changeText(event))}</b>` : ''}<small>${remaining ? `后续还有 ${remaining} 张 · ` : ''}详情已记入牌局记录</small></div>`;
+  box.hidden = false; box.dataset.eventId = event.id;
+  animate(box, [{ opacity: 0, translate: '0 12px' }, { opacity: 1, translate: '0 0' }], { duration: 220, easing: 'ease-out' });
+}, () => { $('play-broadcast').hidden = true; }, () => document.hidden || anyDialog());
+addEventListener('resize', positionBroadcast);
+function logHTML(event) {
+  if (!event.card || !CATALOG[event.card.type]) return `<li class="log-${esc(event.kind)}">${esc(event.text)}</li>`;
+  const tone = toneOf(event.card.type), who = state.players[event.actor]?.name || '';
+  return `<li class="log-trump tone-${tone}"><span class="log-speaker">${event.actor === 0 ? '你' : '对手'}${event.actor === 0 ? '' : ` · ${esc(who)}`}打出</span><button class="log-card" data-log-card="${event.id}" aria-label="查看 ${esc(cardName(event.card))} 的效果">${esc(cardName(event.card))}</button><span class="log-category">${toneLabel[tone]}</span>${event.note ? `<p class="log-note">${esc(event.note)}</p>` : ''}${changeText(event) ? `<p class="log-change">${esc(changeText(event))}</p>` : ''}</li>`;
+}
+function presentFeedback(old) {
+  if (old.round !== state.round || state.eventId < old.eventId) { broadcasts.clear(); clearMetrics(); }
+  const events = newPlays(old, state);
+  for (const event of events) if (event.round === state.round) cardFeedback(event.card, event.actor);
+  broadcasts.push(events.filter(e => e.actor === 1 && e.round === state.round));
+  if (events.length && !document.querySelector('.chronicle').open) {
+    unreadPlays += events.length; $('log-unread').textContent = `${unreadPlays} 条新王牌`; $('log-unread').hidden = false;
+  }
+  if (old.round === state.round) {
+    metricChange('target', targetOf(old), targetOf(state), 'target-change');
+    for (let actor = 0; actor < 2; actor++) {
+      metricChange('loss-' + actor, online ? old.damage[actor] : damage(old, actor), loss(actor), 'loss-change-' + actor);
+      if (state.players[actor].hp < old.players[actor].hp) {
+        $('seat-' + actor).classList.add('hit');
+        clearTimeout(fxTimer); fxTimer = setTimeout(() => document.querySelectorAll('.hit').forEach(e => e.classList.remove('hit')), 450);
+      }
+    }
+  }
+}
+document.querySelector('.chronicle').addEventListener('toggle', () => {
+  if (document.querySelector('.chronicle').open) { unreadPlays = 0; $('log-unread').hidden = true; }
+});
+$('log').addEventListener('click', e => {
+  const button = e.target.closest('[data-log-card]'); if (!button) return;
+  const event = state.log.find(item => item.id === Number(button.dataset.logCard)); if (!event?.card) return;
+  const card = event.card, def = CATALOG[card.type];
+  $('detail-content').innerHTML = `${art(card)}<span class="eyebrow">${toneLabel[toneOf(card.type)]} · 牌局记录</span><h2 id="detail-title">${esc(cardName(card))}</h2><p>${esc(event.actor === 1 ? opponentEffect(card) || def.text : def.text)}</p>${event.note ? `<p>${esc(event.note)}</p>` : ''}<small>${esc(changeText(event))}</small>`;
+  openDialog('card-detail');
+});
+
 function render() {
   if (!state) return;
-  const focused = document.activeElement?.dataset.hand;
+  const focused = document.activeElement?.dataset.hand, logFocus = document.activeElement?.dataset.logCard;
   const revealed = state.phase !== 'playing', target = targetOf(state);
   $('round-label').textContent = `第 ${String(state.round).padStart(2, '0')} 局`;
   $('target').textContent = target;
@@ -182,7 +244,10 @@ function render() {
   $('pause').textContent = paused ? '继续对局' : '暂停对局';
   $('pause-overlay').hidden = !paused;
   const log = $('log'), wasBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 50;
-  log.innerHTML = state.log.map(e => `<li class="log-${e.kind}">${esc(e.text)}</li>`).join('');
+  const logTop = log.scrollTop;
+  log.innerHTML = state.log.map(logHTML).join('');
+  if (!wasBottom) log.scrollTop = logTop;
+  if (logFocus) log.querySelector(`[data-log-card="${logFocus}"]`)?.focus({ preventScroll: true });
   if (wasBottom) log.scrollTop = log.scrollHeight;
   $('result').hidden = !revealed;
   if (revealed) {
@@ -205,14 +270,9 @@ function perform(action) {
   const old = state, before = captureCards(), result = dispatch(state, action);
   if (result.error) { toast(result.error); return; }
   state = result.state;
-  render(); transitionCards(before); cardFeedback(old, action);
+  render(); transitionCards(before); presentFeedback(old);
   if (state.round > old.round && action.type === 'stand') toast('「希儿很可爱」：本轮不扣血，已发下一局。');
   soundEffect(state.phase !== 'playing' ? 'result' : action.type);
-  if (targetOf(old) !== targetOf(state)) { $('target').classList.remove('target-changed'); void $('target').offsetWidth; $('target').classList.add('target-changed'); }
-  for (let actor = 0; actor < 2; actor++) if (state.players[actor].hp < old.players[actor].hp) {
-    $('seat-' + actor).classList.add('hit');
-    clearTimeout(fxTimer); fxTimer = setTimeout(() => document.querySelectorAll('.hit').forEach(e => e.classList.remove('hit')), 400);
-  }
   if (state.result && old.phase === 'playing' && state.result.victim !== null) {
     const victim = state.result.victim;
     if (state.players[victim].table.some(c => c.type === 'shield' || c.type === 'shield2')) impact(victim, '◇', state.result.damage === 0 ? '护盾抵消了伤害' : '护盾减伤', 'silver');
@@ -223,10 +283,10 @@ function perform(action) {
   scheduleAI();
 }
 
-function openDialog(id) { clearTimeout(aiTimer); $(id).showModal(); }
+function openDialog(id) { clearTimeout(aiTimer); broadcasts.suspend(); $(id).showModal(); }
 function start() {
   if (multiplayerEntry || online) return;
-  clearTimeout(aiTimer); animations.forEach(a => a.cancel());
+  clearTimeout(aiTimer); animations.forEach(a => a.cancel()); broadcasts.clear(); clearMetrics();
   state = createGame(seed()); selected = null; paused = false; started = true;
   document.querySelectorAll('dialog[open]').forEach(d => d.close());
   render(); scheduleAI(); $('help').focus({ preventScroll: true });
@@ -273,11 +333,11 @@ $('sound').addEventListener('click', async () => {
   } catch { sound = false; $('sound').textContent = '音效：关'; $('sound').setAttribute('aria-pressed', false); toast('音效暂时不可用，牌局可以继续。'); }
 });
 document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => $(b.dataset.close).close()));
-document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', scheduleAI));
+document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', () => { scheduleAI(); broadcasts.resume(); }));
 $('welcome').addEventListener('cancel', e => e.preventDefault());
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) { clearTimeout(aiTimer); animations.forEach(a => a.cancel()); if (audioContext) audioContext.suspend().catch(() => {}); }
-  else { if (sound && audioContext) audioContext.resume().catch(() => {}); scheduleAI(); }
+  if (document.hidden) { broadcasts.suspend(); clearTimeout(aiTimer); animations.forEach(a => a.cancel()); if (audioContext) audioContext.suspend().catch(() => {}); }
+  else { if (sound && audioContext) audioContext.resume().catch(() => {}); scheduleAI(); broadcasts.resume(); }
 });
 reduced.addEventListener('change', () => { if (reduced.matches) animations.forEach(a => a.cancel()); });
 document.addEventListener('keydown', e => {
@@ -326,6 +386,7 @@ function receiveRoom(data) {
       $('announcement').textContent = '已进入双人牌局，你的底牌和王牌已发放。';
     }
     transitionCards(before);
+    if (hadState) presentFeedback(old);
     if (hadState && state.eventId !== old.eventId) {
       soundEffect(state.phase !== 'playing' ? 'result' : 'play');
       $('announcement').textContent = state.log.filter(e => e.id > old.eventId).map(e => e.text).join(' ');
