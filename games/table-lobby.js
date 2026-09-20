@@ -1,9 +1,12 @@
+import {timeoutNotice} from './ace-21/src/timeout-notice.js?v=060';
 import {esc,nickname,request,act} from './table-client.js';
 const game=document.body.dataset.game, $=id=>document.getElementById(id);
-let initialLoaded=false, tables=[],busy=false,current=null,lastSignature='',pokerSignature='',polling=false,noticeTimer;
+let initialLoaded=false, tables=[],busy=false,current=null,lastSignature='',pokerSignature='',polling=false,noticeTimer,clockOffset=0;
+const timeout=timeoutNotice($('timeout-notice'),id=>action(id,{type:'stay'}));
 const name=$('nickname');name.value=nickname();name.addEventListener('input',()=>nickname(name.value));
 const positions=game==='texas'?[[18,14],[50,12],[82,14],[89,50],[82,86],[50,88],[18,86],[11,50]]:[[50,14],[50,86]];
 function notice(text){$('notice').textContent=text;$('notice').hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('notice').hidden=true,7000);}
+try{const message=sessionStorage.getItem('koa-seat-notice');if(message){notice(message);sessionStorage.removeItem('koa-seat-notice');}}catch{}
 function playLink(t){return `/games/ace-21/?table=${t.id}`;}
 function render(){
  const signature=JSON.stringify(tables);if(signature===lastSignature)return;
@@ -21,9 +24,10 @@ function render(){
 const phaseNames={pre_flop:'翻牌前',flop:'翻牌',turn:'转牌',river:'河牌',showdown:'摊牌',finished:'本手结束'};
 function cards(list){return `<div class="cards">${list.map(c=>`<span class="playing-card ${c==='XX'?'back':/[HD]$/.test(c)?'red':''}" aria-label="${c==='XX'?'隐藏底牌':esc(c)}">${c==='XX'?'♠':esc((c[0]==='T'?'10':c[0])+({H:'♥',D:'♦',C:'♣',S:'♠'}[c[1]]||''))}</span>`).join('')}</div>`;}
 function renderPoker(data){
+ if(Number.isFinite(data?.serverNow))clockOffset=Date.now()-data.serverNow;
  const previous=current;current=data;const g=data?.poker;if(!g){$('poker').hidden=true;pokerSignature='';return;}
  const entering=!previous?.poker||previous.id!==data.id||previous.poker.hand!==g.hand;
- const sig=JSON.stringify(data);if(sig===pokerSignature)return;pokerSignature=sig;
+ const sig=JSON.stringify({...data,serverNow:undefined});if(sig===pokerSignature)return;pokerSignature=sig;
  const own=g.players[data.you],turn=g.current_player===data.you,call=Math.max(0,g.current_bet-(own?.current_bet||0));
  const min=call+(g.current_bet?g.min_raise:g.big_blind),max=Math.max(0,Math.min(own?.chips||0,g.max_bet_per_hand-(own?.total_bet||0)));
  const amount=$('bet-amount')?.value,hadFocus=document.activeElement?.id==='bet-amount';
@@ -32,17 +36,18 @@ function renderPoker(data){
  // Bring every seated player to a new hand once; heartbeats must not steal scroll.
  if(entering)$('poker').scrollIntoView({behavior:'auto'});
 }
-function countdown(){if($('countdown'))$('countdown').textContent=`${Math.max(0,Math.ceil((current?.poker?.deadline||0)-Date.now()/1000))} 秒`;}
+function countdown(){if($('countdown'))$('countdown').textContent=`${Math.max(0,Math.ceil((current?.poker?.deadline||0)-(Date.now()-clockOffset)/1000))} 秒 · 超时自动弃牌`;}
 setInterval(countdown,500);
 async function refresh(){
  if(polling||busy)return;polling=true;
- try{const previous=tables;const wasLoaded=initialLoaded;const data=await request(`/tables/${game}`);tables=data.tables;initialLoaded=true;render();$('connection').textContent='● 大厅已连接 · 座位实时更新';const mine=tables.find(t=>t.seats.some(p=>p?.you));
+ try{const previous=tables;const wasLoaded=initialLoaded;const data=await request(`/tables/${game}`);tables=data.tables;initialLoaded=true;render();$('connection').textContent='● 大厅已连接 · 座位实时更新';const mine=tables.find(t=>t.seats.some(p=>p?.you));timeout.update(mine,data.serverNow);
+ if(previous.some(t=>t.seats.some(p=>p?.you))&&!mine)notice('你的座位已释放，请重新选择空座。');
  if(game==='texas'){if(mine)renderPoker(await request(`/tables/${game}/${mine.id}`));else renderPoker(null);}
  else if(mine?.status==='playing'&&wasLoaded&&previous.find(t=>t.id===mine.id)?.status==='waiting')location.assign(playLink(mine));
  }catch(e){$('connection').textContent='连接中断，正在重试；座位暂时保留。';}finally{polling=false;}
 }
 async function action(id,a){if(busy)return;const t=tables.find(t=>t.id===id);if(!t)return;busy=true;
- try{const data=await act(game,t,a);tables=tables.map(v=>v.id===id?{...v,...data,host:data.seats.find(p=>p?.host)?.id}:v);lastSignature='';render();if(game==='texas'){renderPoker(data);if(a.type==='start')$('poker').scrollIntoView({behavior:'auto'});}else if(data.status==='playing')location.assign(playLink(data));if(a.type==='settings')notice('设置已保存，下一手生效。');}
+ try{const data=await act(game,t,a);tables=tables.map(v=>v.id===id?{...v,...data,host:data.seats.find(p=>p?.host)?.id}:v);lastSignature='';render();timeout.update(tables.find(t=>t.seats.some(p=>p?.you)),data.serverNow);if(game==='texas'){renderPoker(data);if(a.type==='start')$('poker').scrollIntoView({behavior:'auto'});}else if(data.status==='playing'&&a.type!=='stay')location.assign(playLink(data));if(a.type==='settings')notice('设置已保存，下一手生效。');}
  catch(e){notice(e.message);}finally{busy=false;await refresh();}}
 $('tables').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.sit!==undefined){if(!name.value.trim()){name.value='';name.reportValidity();name.focus();return;}nickname(name.value);action(b.dataset.table,{type:'sit',seat:Number(b.dataset.sit),name:name.value.trim()});}

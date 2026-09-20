@@ -302,3 +302,12 @@
 
 /* Seelie's active rule stays readable while the table remains interactive. */
 .special-status{display:flex;align-items:center;gap:24px;padding:16px 20px;margin:0 0 12px;border:1px solid #ad98d477;border-left:3px solid #bea4eb;border-radius:9px;background:linear-gradient(100deg,#32253c,#201b28);color:#f0e7fc}.special-status>div{flex:0 0 180px}.special-status strong{display:block;font:500 20px/1.5 var(--serif);margin-top:5px}.special-status .eyebrow{color:#d2b8f1;font-size:10px}.special-status p{margin:0;font:13px/1.85 var(--sans);color:#e0d5ec}.effect-chip.special-effect{border-color:#b59ed3;background:#46334a;color:#f2ddff}.num-card.generated{background:linear-gradient(130deg,#e5d9ee,#bdaacb);border-color:#d8b5f1;box-shadow:0 0 0 2px #b18ac744,0 5px 9px #0005}.generated .hole-label{background:#604676;color:#fff}.catalog .special-catalog{border-color:#9273af;background:#33253933}.catalog .special-catalog h4{color:#dab6f4}@media(max-width:600px){.special-status{display:block;padding:12px 14px}.special-status strong{font-size:18px;margin-bottom:6px}.special-status p{font-size:12px;line-height:1.75}}
+
+@layer components {
+
+.timeout-notice { position:sticky; top:12px; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; margin:12px 0; border:1px solid #d9a35c; border-radius:6px; background:#322219; color:#ffe4b8; box-shadow:0 4px 18px #0005; font-size:13px; }
+.timeout-notice p { margin:0; }
+.timeout-clock { font-size:12px; color:#eed2a9; }
+.timeout-stay { flex-shrink:0; border:1px solid #d9a35c; border-radius:4px; color:#ffe4b8; background:#503b28; padding:8px 12px; min-height:44px; font:inherit; cursor:pointer; }
+@media(max-width:600px) { .timeout-notice { flex-wrap:wrap; top:6px; padding:10px 12px; font-size:12px; } }
+}

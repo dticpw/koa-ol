@@ -8,3 +8,9 @@
 .ace21 .seat-map{min-height:300px}.ace21 .felt{inset:58px 38px;border-radius:50%;background:linear-gradient(#41232b99,#23131acc),url('/games/ace-21/assets/table.webp') center/cover;box-shadow:0 7px 0 #100b0e,inset 0 0 0 2px #b49d6555,inset 0 0 25px #12060d}
 .ace21 .felt b{font-size:18px}.ace21 .seat-button{width:124px;background:#2b1d24}.ace21 .seat-button.mine{background:#403529}.ace21 .seat-button.occupied{background:#3c2830}.ace21 .seat-button.mine.occupied{background:#403529}
 @media(max-width:600px){.ace21 .seat-map{min-height:280px}.ace21 .felt{inset:54px 15px}.ace21 .seat-button{width:112px}.ace21 .felt b{font-size:15px}}
+
+.timeout-notice { position:sticky; top:12px; z-index:20; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; margin:12px 0; border:1px solid #d9a35c; border-radius:6px; background:#322219; color:#ffe4b8; box-shadow:0 4px 18px #0005; font-size:13px; }
+.timeout-notice p { margin:0; }
+.timeout-clock { font-size:12px; color:#eed2a9; }
+.timeout-stay { flex-shrink:0; border:1px solid #d9a35c; border-radius:4px; color:#ffe4b8; background:#503b28; padding:8px 12px; min-height:44px; font:inherit; cursor:pointer; }
+@media(max-width:600px) { .timeout-notice { flex-wrap:wrap; top:6px; padding:10px 12px; font-size:12px; } }

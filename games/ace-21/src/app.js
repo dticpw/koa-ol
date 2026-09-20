@@ -1,8 +1,10 @@
+import { timeoutNotice } from './timeout-notice.js?v=060';
 import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe } from './engine.js?v=050';
 import { chooseAction } from './ai.js?v=050';
 import { RoomClient, savedRoom } from './network.js?v=041';
 
 const $ = id => document.getElementById(id);
+const timeout = timeoutNotice($('timeout-notice'), () => sendOnline({ type: 'stay' }));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const artMap = { shield: 'shield', sword: 'sword', star: 'crown', crown: 'crown', eye: 'eye', moon: 'moon', harvest: 'moon', cycle: 'scales', return: 'scales', swap: 'scales', break: 'sword', number: 'scales' };
 const seed = () => crypto.getRandomValues(new Uint32Array(1))[0];
@@ -307,9 +309,12 @@ function networkStatus(status, data, message) {
 }
 function receiveRoom(data) {
   const hadState = started, changed = !hadState || !room || data.revision > room.revision, old = state;
-  room = data;
+  room = data; timeout.update(data, data.serverNow);
   $('room-bar').hidden = false;
-  if (!data.you || !data.state) { exitOnline(); return; }
+  if (!data.you || !data.state) {
+    try { sessionStorage.setItem('koa-seat-notice', data.message || '座位或牌局已结束，请在大厅重新入座。'); } catch {}
+    exitOnline(); return;
+  }
   if (changed) {
     const before = captureCards(); state = data.state;
     paused = false; started = true;
