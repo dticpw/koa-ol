@@ -1,5 +1,5 @@
 import { ApiError } from './fiction-service.js';
-export function createTurnResolver({engine,HOST,NARRATOR,proposalFormat,narrationFormat,deadlineMs=90000,callTimeoutMs=45000}){
+export function createTurnResolver({engine,HOST,NARRATOR,proposalFormat,narrationFormat,deadlineMs=90000,callTimeoutMs=45000,reviewContext=x=>x}){
  const {hostContext,getActions,applyProposal}=engine;
 // At most one corrected proposal. Every attempt starts from the same saved state.
 // Diagnostics deliberately omit player text, narrative, credentials and cookie tokens.
@@ -39,7 +39,8 @@ return async function resolveTurn({state,body,call,diagnostic=entry=>console.war
    // Selected memory is not the entire ledger; keep the same bounded context.
    after.memories=[...new Map([...memoryChanges,...after.memories].map(m=>[m.id,m])).values()].slice(0,12);
    after.retrieval.selectedMemories=after.memories.length;
-   const rawNarrative=await invoke([{role:'developer',content:NARRATOR},{role:'user',content:JSON.stringify({player_action:action,before,confirmed_steps:applied.outcomes,decision:applied.state.pendingDecision,memory_changes:memoryChanges,evolution:applied.evolution,after,ending:applied.state.ending})}],{format:narrationFormat,maxTokens:2200});
+   const reviewInput=reviewContext({player_action:action,before,confirmed_steps:applied.outcomes,decision:applied.state.pendingDecision,memory_changes:memoryChanges,evolution:applied.evolution,after,ending:applied.state.ending});
+   const rawNarrative=await invoke([{role:'developer',content:NARRATOR},{role:'user',content:JSON.stringify(reviewInput)}],{format:narrationFormat,maxTokens:2200});
    let result;try{result=JSON.parse(rawNarrative);}catch{result={consistent:false,issue:'复核响应不是完整JSON',issue_code:'other'};}
    if(!result||Array.isArray(result)||typeof result!=='object')result={consistent:false,issue:'复核响应不是有效对象',issue_code:'other'};
    if(result.consistent!==true||typeof result.narration!=='string'||!result.narration.trim()){

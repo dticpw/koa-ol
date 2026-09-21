@@ -55,3 +55,16 @@ Adding a distinct story does not recreate existing D1 sessions. A visitor's load
 `authored-events.js` implements optional, script-owned milestone effects and willing companion movement. An event may update distant story entities, but never updates the player's old observation merely because the backend changed. Model narration review receives `scriptedChanges` and `companionMoves`; a hidden disguise must stay hidden in public prose. Milestone/ending `excludes` prevent mutually exclusive rescue/tragedy conclusions. Secret doors may have `hidden:true`; until discovered, the ordinary map and travel suggestions do not reveal the secret destination.
 
 There is no database migration or session reset. Optional fields default to empty for older stories and saved games. Story resource quantities are still tracked in natural-language facts and checked semantically, not a general numerical survival simulator. `tests/fiction-imported-stories.test.mjs` covers identity knowledge boundaries, event rollback, rescue exclusion, companion reach, locks, fuel/vaccine prerequisites, and author/permission presentation.
+
+
+## v10 完整候选：通信、阶段停点与复核差量
+
+相邻开放通路的 NPC 对话可使用 `communicate`，保持玩家原位，仅修改 NPC 的交谈/知情事实；不能传送、搬物、修复或改变完整性。无线电仍需要随身终端与原剧本条件。纯通信可取得的剧情标记由剧本在 milestone 中显式声明 `communication: true`（当前包括图书馆调查与钢铁猎犬协议），同时仍检查原有地点、前提与证据。该声明属于静态剧本规则，不增加玩家存档字段。
+
+同房准备与取放可合并；跨房移动和抵达后的操作仍分别结算。确有必要分段时保留已执行前缀、用 pendingDecision 保存剩余授权，复核接受合理阶段停点，不以“未一口气做完”拒绝整轮。执行满六步且末步 partial / decision.needed 时，程序向复核补充 stage_boundary，明确合理技术分段属于不重复确认原则的有限例外；不接受越权或漏掉前缀必要操作。已暂停时提供对应的继续/取消按钮。通信可达不代表 NPC 必然愿意回答；空间硬约束和语义复核各负其责。
+
+正式主持的输出 Schema 同步限制步数、数组长度和合法地点 ID，减少已知格式错误；不能给共享字符串 schema 对象直接加枚举，否则会污染其他叙述字段。相关回归测试见 `tests/fiction-candidate.test.mjs`。
+
+正式冒险复核采用 `world_delta_v1`，详见 `docs/ai-fiction-context.md`。地图公开名称来自已访问地点、叙述与实际观察，玩家猜测不计为发现；隐藏出口未揭露前不进入 publicNavigation。关键独立携带物须有独立实体或已有实体位置更新，不能仅藏在来源物件的 facts 描述中。并非自动扫描旧正文生成物品，旧存档不会凭空补发或复制钥匙。
+
+断线恢复使用原 requestId 与已有回执表，无数据库迁移；查询凭当前会话 Cookie 授权。未确认行动保存在本机 localStorage，完成后清除，隐私模式不可用时仍保留内存恢复。详细回退与隔离策略见 `docs/ai-fiction-release.md`。

@@ -143,12 +143,22 @@ export function createFictionHandler(engine, { fetchImpl = (...args) => fetch(..
       const ipHash = await hash(`fiction:${request.headers.get('CF-Connecting-IP') || 'unknown'}`);
       const date = new Date(now).toISOString().slice(0, 10);
       const traceQuery=request.method==='GET'&&new URL(request.url).searchParams.get('trace');
-      if (!await increment(db, `${traceQuery?'trace':'api'}:${gameKind}:${date}:${ipHash}`, traceQuery?500:100, now + 2 * 86400000)) throw new ApiError(429, '今日请求次数已达上限，请明天再来。', 'rate_limited');
+      const receiptQuery=request.method==='GET'&&new URL(request.url).searchParams.get('receipt');
+      if (!await increment(db, `${traceQuery?'trace':receiptQuery?'receipt':'api'}:${gameKind}:${date}:${ipHash}`, traceQuery?500:receiptQuery?1000:100, now + 2 * 86400000)) throw new ApiError(429, '今日请求次数已达上限，请明天再来。', 'rate_limited');
       const cookie = (request.headers.get('Cookie') || '').split(';').map(x => x.trim()).find(x => x.startsWith(`${cookieName}=`))?.slice(cookieName.length + 1);
       let tokenHash = cookie && /^[a-f0-9]{64}$/.test(cookie) ? await hash(cookie) : null;
       let session = tokenHash ? await first(db, `SELECT * FROM koa_fiction_sessions WHERE token_hash=? AND expires_at>?`, tokenHash, now) : null;
       if (session && (JSON.parse(session.state_json).gameKind || 'classic') !== gameKind) session = null;
       if (session && engine.normalizeGame) session = {...session,state_json:JSON.stringify(engine.normalizeGame(JSON.parse(session.state_json)))};
+      if(receiptQuery){
+        if(!/^[a-zA-Z0-9_-]{16,80}$/.test(receiptQuery))throw new ApiError(400,'行动记录编号无效。','invalid_request');
+        if(!session)throw new ApiError(401,'存档已过期，请重新开始。','session_expired');
+        const receipt=await first(db,`SELECT response_json FROM koa_fiction_receipts WHERE token_hash=? AND request_id=?`,tokenHash,receiptQuery);
+        // Return the latest view, not an old receipt that could rewind the UI.
+        const current=await first(db,`SELECT * FROM koa_fiction_sessions WHERE token_hash=? AND expires_at>?`,tokenHash,now);
+        if(!current)throw new ApiError(401,'存档已过期，请重新开始。','session_expired');
+        return json({requestStatus:receipt?'committed':current.lock_until>Date.now()?'processing':'uncommitted',game:engine.getView(JSON.parse(current.state_json)),retryAfterMs:current.lock_until>Date.now()?Math.min(5000,current.lock_until-Date.now()):0});
+      }
       if(traceQuery){
         if(!traceEnabled||!session)throw new ApiError(401,'请先进入当前试玩存档。','session_expired');
         if(traceQuery==='list'){

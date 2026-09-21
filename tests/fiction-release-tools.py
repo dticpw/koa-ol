@@ -38,9 +38,9 @@ class ReleaseTests(unittest.TestCase):
         path=self.repo/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text(text)
     def save(self,message):
         self.git('add','.');self.git('commit','-qm',message)
-    def run_rollback(self,apply=False,report=True):
+    def run_rollback(self,apply=False,report=True,review=None):
         from argparse import Namespace
-        return self.module.rollback(Namespace(target=self.baseline,apply=apply,compat=str(self.report) if report else None))
+        return self.module.rollback(Namespace(target=self.baseline,apply=apply,compat=str(self.report) if report else None,persistence_review=review))
     def test_whole_scope_restore_new_commit_and_unrelated_content_preserved(self):
         dry=self.run_rollback();self.assertTrue(dry['dryRun']);self.assertEqual(self.git('rev-parse','HEAD').strip(),self.head)
         result=self.run_rollback(True)
@@ -66,6 +66,12 @@ class ReleaseTests(unittest.TestCase):
         self.save('persistence');self.good['candidateCommit']=self.git('rev-parse','HEAD').strip()
         self.good['candidateFiles']=self.module.manifest('HEAD');self.report.write_text(json.dumps(self.good))
         with self.assertRaisesRegex(ValueError,'Persistence'):self.run_rollback(True)
+        review=self.root/'persistence-review.json'
+        data={'baselineCommit':self.baseline,'candidateCommit':self.good['candidateCommit'],'files':['functions/_lib/fiction-service.js'],'schemaUnchanged':True,'storedStateUnchanged':True,'checks':['Reviewed query-only change; schema and serialization unchanged'],'reviewer':'test'}
+        review.write_text(json.dumps({**data,'candidateCommit':self.baseline}))
+        with self.assertRaisesRegex(ValueError,'Persistence review'):self.run_rollback(True,review=str(review))
+        review.write_text(json.dumps(data))
+        self.assertFalse(self.run_rollback(True,review=str(review))['deployed'])
     def test_snapshot_verified_and_no_overwrite(self):
         path=self.root/'snapshot';self.module.snapshot(self.head,path)
         self.assertEqual(self.module.verify_source(path)['commit'],self.head)
