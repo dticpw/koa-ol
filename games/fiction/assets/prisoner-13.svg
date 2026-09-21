@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" role="img" aria-label="冰海悬崖上的监狱与一道金色钥匙纹样">
+<defs><linearGradient id="sky" x2=".6" y2="1"><stop stop-color="#203d50"/><stop offset=".6" stop-color="#0b1928"/><stop offset="1" stop-color="#080d17"/></linearGradient><linearGradient id="rock" x2=".7" y2="1"><stop stop-color="#426174"/><stop offset="1" stop-color="#0a1621"/></linearGradient><radialGradient id="halo"><stop stop-color="#88bec3" stop-opacity=".25"/><stop offset="1" stop-color="#88bec3" stop-opacity="0"/></radialGradient><pattern id="snow" width="127" height="191" patternUnits="userSpaceOnUse"><circle cx="23" cy="18" r="1.4" fill="#b7d1d5" opacity=".4"/><circle cx="97" cy="146" r="1" fill="#b7d1d5" opacity=".2"/></pattern></defs>
+<path fill="url(#sky)" d="M0 0h800v1200H0z"/><ellipse cx="470" cy="340" rx="400" ry="420" fill="url(#halo)"/>
+<g fill="none" stroke="#a9c5c4" opacity=".18"><circle cx="400" cy="436" r="283"/><circle cx="400" cy="436" r="272"/><path d="M400 139v32m0 530v32M100 436h30m540 0h30M186 222l23 23m382 382 23 23M186 650l23-23m382-382 23-23"/></g>
+<path d="m65 824 97-229 106-66 49-103 118-104 57 55 42 223 103 81 90 200-174 72-222 25Z" fill="url(#rock)"/>
+<path d="m317 426 57 294-74 220 65-13 55-258 15-347m57 55-37 327 99 249 40-37-76-260" fill="#0a1723" opacity=".7"/>
+<g fill="#11232f" stroke="#7498a6" stroke-width="2"><path d="M177 578h429v154H177zM209 531h39v47h-39zM549 521h40v57h-40zM369 384h84v237h-84zM355 374h111v30H355zM374 337h13v37h-13m31-37h13v37h-13m31-37h13v37h-13"/><path d="m252 580 65-62h194l59 62v141H252z"/><path d="M317 518v203m194-203v203" opacity=".5"/></g>
+<g fill="#ddbb73"><path d="M392 428h5v17h-5zm30 0h5v17h-5zm-30 47h5v17h-5zm30 0h5v17h-5zm-30 46h5v17h-5zm30 0h5v17h-5z"/><path d="M281 609h5v15h-5zm50 0h5v15h-5zm150 0h5v15h-5zm50 0h5v15h-5z" opacity=".6"/></g>
+<path d="M0 917q180-62 359 6t441-21v298H0Z" fill="#0b1721"/><g fill="none" stroke="#557786" opacity=".35"><path d="m23 956 164-17 47 19 149-6m105 18 180-28 88 16M83 1026l137-12 188 25 127-13m-150 78 183-27 150 14"/></g>
+<path d="M0 0h800v1200H0z" fill="url(#snow)"/><path d="M28 28h744v1144H28z" fill="none" stroke="#a39264" opacity=".55"/>
+<g stroke="#dec893" fill="none" stroke-width="3"><circle cx="400" cy="164" r="25"/><circle cx="400" cy="164" r="8"/><path d="M400 189v103m0-25h21v-16m-21 36h-15v-15"/></g>
+<text x="400" y="1025" text-anchor="middle" fill="#d9c596" font-family="Georgia,serif" font-size="95" letter-spacing="14">XIII</text><text x="400" y="1080" text-anchor="middle" fill="#bacdd3" font-family="sans-serif" font-size="15" letter-spacing="7">PRISONER 13</text>
+</svg>

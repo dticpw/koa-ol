@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#0b1016">
-  <meta name="description" content="挑选一段冒险，阅读剧本介绍，再用自己的行动续写故事。家族悬疑、灾变生存、奇幻图书馆与更多故事，免费单人试玩。">
+  <meta name="description" content="挑选一段冒险，阅读剧本介绍，再用自己的行动续写故事。家族悬疑、灾变生存、奇幻图书馆与更多故事，单人与多人合作试玩。">
   <title>百页行 · AI 互动小说 · Koa-OL</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./shelf.css?v=baiyexing-20260921">
+<link rel="stylesheet" href="./multiplayer.css?v=multi1">
 <link rel="stylesheet" href="/games/fiction/background.css?v=baiyexing-spacing-20260921">
 </head>
 <body class="fiction-shelf">
@@ -20,9 +21,11 @@
     <main id="main">
       <section class="shelf-heading" aria-labelledby="shelf-title">
         <div><p class="eyebrow">风起书间 · AI 互动小说</p><h1 id="shelf-title">百<span>页</span>行</h1><p class="lead">有些书，翻开便是一场远行。</p><a class="shelf-enter" href="#stories">选一篇，走进故事 <span aria-hidden="true">↓</span></a></div>
-        <p class="shelf-count"><strong>6</strong><span>篇在架</span></p>
+        <p class="shelf-count"><strong>7</strong><span>篇在架</span></p>
       </section>
-      <div id="stories" class="story-grid" aria-label="可游玩剧本">
+      <nav class="mode-nav" aria-label="选择游玩模式"><a href="#singleplayer">单人本</a><a href="#multiplayer">多人本</a></nav>
+<section id="singleplayer" aria-labelledby="single-heading"><div class="mode-heading"><h2 id="single-heading">单人本</h2><p>一个人，也能走进一整个世界。</p></div>
+<div id="stories" class="story-grid" aria-label="可游玩剧本">
 <!-- batch-one:start --><article class="story-card batch-story" data-story="bindi-shang"><a class="story-link" href="/games/fiction/bindi-shang/" aria-labelledby="title-bindi-shang"><div class="book-stage"><img class="story-cover" src="/games/fiction/assets/bindi-shang.webp" alt="并蒂殇主题插画" width="800" height="1200" loading="lazy"></div><div class="story-copy"><p class="eyebrow">新上架 · 中文单人改编</p><h2 id="title-bindi-shang">并蒂殇</h2><p class="original-title">原作 · 梅姐</p><p class="story-summary">生日宴前，一名侍从死在酒店。你受托调查神定家的秘密：两张相似的面孔、一段被抹去的往事，以及尚有机会阻止的下一桩悲剧。</p><ul class="tags"><li>现代悬疑</li><li>身份迷局</li><li>调查与营救</li></ul><div class="story-bottom"><span>13 处场景 · 剧情阶段推进</span><span class="text-link">查看剧本 ↗</span></div></div></a></article>
 <article class="story-card batch-story" data-story="downtown-island"><a class="story-link" href="/games/fiction/downtown-island/" aria-labelledby="title-downtown-island"><div class="book-stage"><img class="story-cover" src="/games/fiction/assets/downtown-island.webp" alt="市中心的孤岛主题插画" width="800" height="1200" loading="lazy"></div><div class="story-copy"><p class="eyebrow">新上架 · 中文单人改编</p><h2 id="title-downtown-island">市中心的孤岛</h2><p class="original-title">原作 · 梅姐</p><p class="story-summary">病毒让熟悉的街道成为孤岛。寻找补给，认识一个来历不明的白发女孩，在实验室和封锁线之间查明真相，决定如何离开这座城市。</p><ul class="tags"><li>灾变生存</li><li>同伴关系</li><li>真相与撤离</li></ul><div class="story-bottom"><span>17 处场景 · 剧情阶段推进</span><span class="text-link">查看剧本 ↗</span></div></div></a></article>
 <article class="story-card batch-story" data-story="library-delve"><a class="story-link" href="/games/fiction/library-delve/" aria-labelledby="title-library-delve"><div class="book-stage"><img class="story-cover" src="/games/fiction/assets/library-delve.webp" alt="深入图书馆主题插画" width="800" height="1200" loading="lazy"></div><div class="story-copy"><p class="eyebrow">新上架 · 中文单人改编</p><h2 id="title-library-delve">深入图书馆</h2><p class="original-title">THE LIBRARY DELVE</p><p class="story-summary">五位管理员失踪，古老图书馆紧闭。会飞的书、无声的猫头鹰与不肯离去的守书人，等待你回答：知识值得怎样的代价？</p><ul class="tags"><li>奇幻探索</li><li>记忆代价</li><li>交谈与选择</li></ul><div class="story-bottom"><span>5 处场景 · 无固定倒计时</span><span class="text-link">查看剧本 ↗</span></div></div></a></article>
@@ -36,6 +39,8 @@
           </a>
         </article>
       </div>
+      </section>
+<section id="multiplayer" aria-labelledby="multi-heading"><div class="mode-heading"><h2 id="multi-heading">多人本</h2><p>留一个座位，等同伴一起出发。</p></div><div class="story-grid"><article class="story-card multi-card" data-story="prisoner-13"><a class="story-link" href="/games/fiction/prisoner-13/" aria-labelledby="title-prisoner-13"><div class="book-stage"><img class="story-cover" src="/games/fiction/assets/prisoner-13.svg" alt="冰海悬崖上的监狱与金色钥匙" width="800" height="1200" loading="lazy"></div><div class="story-copy"><p class="eyebrow">多人合作 · 黄金宝库之钥</p><h2 id="title-prisoner-13">13号囚犯</h2><p class="original-title">PRISONER 13</p><p class="story-summary">潜入冰海深处的监狱，接近一位不愿离开的囚犯。与同伴分工、交涉，带回开启宝库的方法。</p><ul class="tags"><li>潜入与伪装</li><li>人物交涉</li><li>同场协作</li></ul><div class="story-bottom"><span>2—6 人 · 轻规则叙事试玩</span><span class="text-link">查看剧本 · 上桌 ↗</span></div></div></a></article></div></section>
       <section class="shelf-note" aria-labelledby="note-title"><h2 id="note-title">每段故事，各自留下后果。</h2><p>调查宅邸命案，走出封锁城市，探索奇幻图书馆、海岸亡魂与失联科研船，或回到最初的古墓。每篇分别保存进度，可以随时回来续读。</p></section>
     </main>
     <footer class="fiction-footer"><p>KOA · 百页行</p><p>免费非商业试玩 · 浏览器内游玩</p><a href="/">回到主页 ↗</a></footer>

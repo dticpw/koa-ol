@@ -25,4 +25,4 @@ for(const [id,s] of Object.entries(stories)){
 }
 let shelf=await readFile('games/fiction/index.html','utf8');shelf=shelf.replace(/<!-- batch-one:start -->[\s\S]*?<!-- batch-one:end -->\n?/,'').replace('<div id="stories" class="story-grid" aria-label="可游玩剧本">','<div id="stories" class="story-grid" aria-label="可游玩剧本">\n<!-- batch-one:start -->'+cards+'<!-- batch-one:end -->');shelf=shelf.replace('同一座古墓，两种走法。','每段故事，各自留下后果。').replace('想试试连贯的自由行动，选《门后的火光》；想沿着线索探索、交谈与寻找结局，选《蛇墓余火》。两篇分别保存进度，可以随时回来续读。','奇幻图书馆、海岸亡魂、失联科研船，或回到最初的古墓。每篇分别保存进度，可以随时回来续读。').replace('门后的火光、蛇墓余火，免费单人试玩。','图书馆、海岸亡魂、科研船与古墓，免费单人试玩。');shelf=shelf.replace(/(<p class="shelf-count"><strong>)\d+/,(_,prefix)=>prefix+(shelf.match(/class="story-card\b/g)||[]).length);await writeFile('games/fiction/index.html',shelf);
 
-let lobby=await readFile('games/index.html','utf8');lobby=lobby.replace(/\d+ 篇可试玩 · 无需注册/, `${Object.keys(stories).length+1} 篇可试玩 · 无需注册`);await writeFile('games/index.html',lobby);
+let lobby=await readFile('games/index.html','utf8');lobby=lobby.replace(/\d+ 篇可试玩 · 无需注册/, `${(shelf.match(/class="story-card\b/g)||[]).length} 篇可试玩 · 无需注册`);await writeFile('games/index.html',lobby);

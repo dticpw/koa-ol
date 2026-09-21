@@ -2,10 +2,21 @@
   "baselineTag": "fiction-baseline-20260921-r9",
   "baselineCommit": "f89a49024bbdf4357addadc98c278b28fc507215",
   "scope": [
-    "functions/_lib/adventures/", "functions/_lib/fiction-", "functions/api/adventures/",
-    "functions/api/fiction.js", "functions/api/fiction-lab.js", "functions/api/fiction-lab/",
-    "games/fiction/", "games/lantern-tomb/", "games/lantern-tomb-lab/",
-    "tests/fiction-", "tests/fixtures/fiction-", "scripts/build-adventure-pages.mjs", "scripts/eval-fiction-discretion.mjs"
+    "functions/_lib/adventures/",
+    "functions/_lib/fiction-",
+    "functions/api/adventures/",
+    "functions/api/fiction.js",
+    "functions/api/fiction-lab.js",
+    "functions/api/fiction-lab/",
+    "games/fiction/",
+    "games/lantern-tomb/",
+    "games/lantern-tomb-lab/",
+    "tests/fiction-",
+    "tests/fixtures/fiction-",
+    "scripts/build-adventure-pages.mjs",
+    "scripts/eval-fiction-discretion.mjs",
+    "functions/_lib/multiplayer/",
+    "functions/api/fiction-rooms.js"
   ],
   "policy": "Evaluate and release a complete candidate. Do not combine individually scored prompt fragments. Preserve player progress; schema changes require a tested migration and data backup."
 }
