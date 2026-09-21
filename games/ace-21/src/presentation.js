@@ -1,10 +1,10 @@
-import { toneOf } from './feedback.js?v=070';
+import { toneOf } from './feedback.js?v=100';
 
 // Display-only ordering: never reorder the authoritative hand (random discards use it).
 export const sortOrder = Object.fromEntries([
-  'add1', 'add2', 'desire', 'slam', 'perfect', 'perfect2', 'seelieInsight',
+  'allIn','blackjack','add1', 'add2', 'desire', 'slam', 'perfect', 'seelieInsight',
   'shield', 'shield2', 'seelieCute',
-  'joy', 'cycle', 'return', 'swap', 'remove', 'destroy', 'destroyAll',
+  'trapdoor','blindBet','curtain','multiplyingG','nurture','foresight','dismantle','cashOut','joy', 'cycle', 'return', 'swap', 'remove', 'destroy', 'destroyAll',
   'devil', 'harvest', 'curse', 'number', 'challenge',
   'seelieAngry', 'seelieWant', 'seelieForget', 'seelieDecision',
 ].map((type, index) => [type, index]));

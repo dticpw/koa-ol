@@ -132,7 +132,7 @@
   .trump.selected { transform:translateY(-5px); border-color:#e8c78d; background:#423333; box-shadow:0 0 0 1px #e8c78d44,0 7px 16px #0004; }
   .trump-top { display:flex; justify-content:space-between; align-items:center; font-size:8px; color:#bda88e; }
   .trump-cost { color:#d8b679; letter-spacing:2px; }
-  .trump-art { display:block; width:69px; height:68px; margin:2px auto 0; background-size:cover; background-position:center; border-radius:50%; mix-blend-mode:screen; }
+  .trump-art { display:block; width:69px; height:68px; margin:2px auto 0; background-size:cover; background-position:center; border-radius:5px; mix-blend-mode:screen; }
   .art-shield { background-image:url('./assets/trump-shield.webp'); }
   .art-sword { background-image:url('./assets/trump-sword.webp'); }
   .art-eye { background-image:url('./assets/trump-eye.webp'); }
@@ -474,3 +474,5 @@
 .burst-5 .shard { display:block; width:5px; height:3px; animation:shatter .8s ease-out both; background:#ffc496; }
 .burst-lethal .shard { width:14px; height:9px; background:linear-gradient(125deg,#eab7a0,#6d2a37); }
 @media (prefers-reduced-motion:reduce) { .life-energy *, .damage-burst,.damage-burst * { animation:none!important; } .damage-burst .shard { display:none; } }
+
+.solo-deck-label {display:block;font-size:12px;color:var(--muted);margin:12px 0}.solo-deck-label select,.selection-copy select,.selection-copy input {padding:8px;border:1px solid var(--line);background:#231b20;color:var(--ink);border-radius:4px;font:inherit;max-width:100%}.solo-deck-label select {display:block;width:100%;margin-top:6px}.choice-panel{position:relative;z-index:2;padding:16px 24px;background:#241a22f5;border:1px solid #d1ae73;box-shadow:0 8px 25px #0008;max-width:1000px;margin:12px auto}.choice-panel>div{display:flex;gap:12px}.choice-panel button{display:flex;flex:1;align-items:center;gap:10px;text-align:left;padding:10px;color:var(--ink);background:#382934;border:1px solid var(--line);border-radius:4px}.choice-panel .trump-art{width:65px;height:65px;flex-shrink:0;background-size:cover;background-position:center}.choice-panel button span:last-child{font-size:11px}.choice-panel button b{white-space:nowrap;flex-shrink:0}.choice-panel p{color:var(--muted);font-size:12px;margin:6px 0 12px}.selection-copy label{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-size:12px}@media(max-width:700px){.choice-panel>div{flex-direction:column}.choice-panel{padding:12px}.choice-panel button{min-height:60px}}

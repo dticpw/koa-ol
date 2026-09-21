@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "status": "release-1.0.0",
+  "deckRules": {
+    "status": "implemented",
+    "cardCount": 40,
+    "maxPower": 100,
+    "maxCopies": null,
+    "drawMode": "without-replacement",
+    "deckReset": "new-match-only",
+    "reshuffleWhenEmpty": false
+  },
+  "cards": [
+    {
+      "type": "number",
+      "power": 0,
+      "powerStatus": "user-set",
+      "deckEligible": true,
+      "values": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "type": "add1",
+      "power": 5,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "add2",
+      "power": 10,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "shield",
+      "power": 0,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "shield2",
+      "power": 5,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "joy",
+      "power": 5,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "cycle",
+      "power": 10,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "return",
+      "power": 3,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "swap",
+      "power": 10,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "remove",
+      "power": 5,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "destroy",
+      "power": 5,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "destroyAll",
+      "power": 15,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "desire",
+      "power": 15,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "slam",
+      "power": 15,
+      "powerStatus": "user-set",
+      "deckEligible": true,
+      "note": "已确认15牌力；不消耗护盾，保留入场至少两张护盾/护盾+的条件。"
+    },
+    {
+      "type": "perfect",
+      "power": 10,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "devil",
+      "power": 20,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "harvest",
+      "power": 40,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "curse",
+      "power": 10,
+      "powerStatus": "working-proposal",
+      "deckEligible": true
+    },
+    {
+      "type": "challenge",
+      "power": 10,
+      "powerStatus": "working-proposal",
+      "deckEligible": true,
+      "values": [
+        17,
+        24,
+        27
+      ]
+    },
+    {
+      "type": "seelieCute",
+      "power": null,
+      "powerStatus": "not-applicable",
+      "deckEligible": false
+    },
+    {
+      "type": "seelieAngry",
+      "power": null,
+      "powerStatus": "not-applicable",
+      "deckEligible": false
+    },
+    {
+      "type": "seelieInsight",
+      "power": null,
+      "powerStatus": "not-applicable",
+      "deckEligible": false
+    },
+    {
+      "type": "seelieWant",
+      "power": null,
+      "powerStatus": "not-applicable",
+      "deckEligible": false
+    },
+    {
+      "type": "seelieForget",
+      "power": null,
+      "powerStatus": "not-applicable",
+      "deckEligible": false
+    },
+    {
+      "type": "seelieDecision",
+      "power": null,
+      "powerStatus": "not-applicable",
+      "deckEligible": false
+    },
+    {
+      "type": "foresight",
+      "power": 5,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "dismantle",
+      "power": 8,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "allIn",
+      "power": 20,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "cashOut",
+      "power": 8,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "trapdoor",
+      "power": 6,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "blindBet",
+      "power": 10,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "curtain",
+      "power": 8,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "multiplyingG",
+      "power": 30,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "nurture",
+      "power": 10,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    },
+    {
+      "type": "blackjack",
+      "power": 21,
+      "powerStatus": "user-set",
+      "deckEligible": true
+    }
+  ]
+}

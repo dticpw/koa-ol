@@ -1,10 +1,13 @@
-import { reconcileHand, sortHand, danger, settlement, LifeEffects } from './presentation.js?v=090';
-import { numberStory, numberImage } from './number-deck.js?v=080';
-import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=070';
-import { timeoutNotice } from './timeout-notice.js?v=060';
-import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe, matchStats } from './engine.js?v=090';
-import { chooseAction } from './ai.js?v=090';
-import { RoomClient, savedRoom } from './network.js?v=041';
+import { cardArt } from './card-art.js';
+import { DEFAULT_DECK } from './deck-rules.js';
+import { populateDeckSelect } from './saved-decks.js';
+import { reconcileHand, sortHand, danger, settlement, LifeEffects } from './presentation.js?v=100';
+import { numberStory, numberImage } from './number-deck.js?v=100';
+import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=100';
+import { timeoutNotice } from './timeout-notice.js?v=100';
+import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe, matchStats, hiddenNumber } from './engine.js?v=100';
+import { chooseAction } from './ai.js?v=100';
+import { RoomClient, savedRoom } from './network.js?v=100';
 
 const $ = id => document.getElementById(id);
 const timeout = timeoutNotice($('timeout-notice'), () => sendOnline({ type: 'stay' }));
@@ -13,7 +16,8 @@ const artMap = { shield: 'shield', sword: 'sword', star: 'crown', crown: 'crown'
 const seed = () => crypto.getRandomValues(new Uint32Array(1))[0];
 // Choose the mode before showing any UI; a failed online connection is never solo.
 const multiplayerEntry = new URL(location.href).searchParams.has('table');
-let state = multiplayerEntry ? null : createGame(seed()), started = false, paused = false, selected = null;
+const soloDecks=populateDeckSelect(document.getElementById('solo-deck'));
+let state = multiplayerEntry ? null : createGame(seed(),{decks:[soloDecks?.find(d=>d.id===document.getElementById('solo-deck')?.value)?.entries||DEFAULT_DECK,DEFAULT_DECK]}), started = false, paused = false, selected = null;
 let aiTimer, toastTimer, fast = false, sound = false, audioContext;
 const animations = new Set();
 let handOrder = [], summaryShown = false, summaryTimer;
@@ -46,16 +50,16 @@ const cardError = id => online ? state.playErrors?.[id] || '' : playError(state,
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const anyDialog = () => Boolean(document.querySelector('dialog[open]'));
 
-function art(card) { return `<span class="trump-art art-${artMap[CATALOG[card.type].icon]}" aria-hidden="true"></span>`; }
+function art(card) { return `<span class="trump-art" style="background-image:url('./assets/trump-${cardArt(card.type)}.webp')" aria-hidden="true"></span>`; }
 function trumpHTML(c) {
   const def = CATALOG[c.type];
   return `<button class="trump ${selected === c.id ? 'selected' : ''}" data-hand="${c.id}" data-cid="${c.id}" aria-pressed="${selected === c.id}" aria-label="${esc(cardName(c))}，${def.cost} 格，${def.stay ? '持续' : '瞬时'}王牌，点击查看效果"><span class="trump-top"><span>${def.family}</span><span class="trump-cost">${'◇'.repeat(def.cost)}</span></span>${art(c)}${c.value ? `<span class="trump-value" aria-hidden="true">${c.value}</span>` : ''}<span class="trump-name">${esc(cardName(c))}</span><span class="trump-note">${def.stay ? '置于桌面' : '即时生效'}</span></button>`;
 }
 function numberHTML(c, owner, index) {
-  const hidden = owner === 1 && index === 0 && state.phase === 'playing';
+  const hidden = owner === 1 && hiddenNumber(c,index) && state.phase === 'playing';
   const story = !hidden && !c.generated ? numberStory(c.value) : null;
-  if (story) return `<button type="button" class="num-card story-card ${index === 0 ? 'hole' : ''}" data-cid="${index === 0 ? `hole-${state.round}-${owner}` : c.id}" data-face="front" data-number-story="${c.value}" aria-label="${index === 0 ? '底牌' : '明牌'} ${c.value} 点 · ${story.title}，查看卡面故事"><img class="number-illustration" src="${numberImage(story)}" alt="" decoding="async" draggable="false"><span class="corner">${c.value}</span><span class="pip">${c.value}</span><span class="number-title">${story.title}</span>${index === 0 ? '<span class="hole-label">底牌</span>' : ''}</button>`;
-  return `<div class="num-card ${hidden ? 'back' : ''} ${index === 0 ? 'hole' : ''} ${c.generated ? 'generated' : ''}" data-cid="${index === 0 ? `hole-${state.round}-${owner}` : c.id}" data-face="${hidden ? 'back' : 'front'}" aria-label="${hidden ? esc(enemyName()) + '的底牌，未知' : `${c.generated ? '创造牌' : index === 0 ? '底牌' : '明牌'} ${c.value} 点`}">${hidden ? '<span class="pip">?</span><span class="card-suit">底牌</span>' : `<span class="corner">${c.value}<br>♠</span><span class="pip">${c.value}</span><span class="corner bottom">${c.value}<br>♠</span>${c.generated ? '<span class="hole-label">创造</span>' : index === 0 ? '<span class="hole-label">底牌</span>' : ''}`}</div>`;
+  if (story) return `<button type="button" class="num-card story-card ${index === 0 ? 'hole' : ''}" data-cid="${index === 0 ? `hole-${state.round}-${owner}` : c.id}" data-face="front" data-number-story="${c.value}" aria-label="${index === 0 ? '底牌' : '明牌'} ${c.value} 点 · ${story.title}，查看卡面故事"><img class="number-illustration" src="${numberImage(story)}" alt="" decoding="async" draggable="false"><span class="corner">${c.value}</span><span class="pip">${c.value}</span><span class="number-title">${story.title}</span>${index === 0 ? '<span class="hole-label">底牌</span>' : c.hidden ? '<span class="hole-label">暗置 · 仅你可见</span>' : ''}</button>`;
+  return `<div class="num-card ${hidden ? 'back' : ''} ${index === 0 ? 'hole' : ''} ${c.generated ? 'generated' : ''}" data-cid="${index === 0 ? `hole-${state.round}-${owner}` : c.id}" data-face="${hidden ? 'back' : 'front'}" aria-label="${hidden ? esc(enemyName()) + '的底牌，未知' : `${c.generated ? '创造牌' : index === 0 ? '底牌' : '明牌'} ${c.value} 点`}">${hidden ? `<span class="pip">?</span><span class="card-suit">${index===0?'底牌':'暗牌'}</span>` : `<span class="corner">${c.value}<br>♠</span><span class="pip">${c.value}</span><span class="corner bottom">${c.value}<br>♠</span>${c.generated ? '<span class="hole-label">创造</span>' : index === 0 ? '<span class="hole-label">底牌</span>' : ''}`}</div>`;
 }
 
 function scheduleAI() {
@@ -150,7 +154,7 @@ function cardFeedback(card, actor) {
     seelieCute: [actor, '♡', '本轮免结算', 'silver'], seelieAngry: [actor, '╳', '双方王牌封锁', 'red'],
     seelieInsight: [actor, '◉', '创造数牌', 'gold'], seelieWant: [actor, '✧', '普通王牌 +3', 'gold'],
     seelieForget: [actor, '↺', '双方明牌洗回', 'silver'], seelieDecision: [actor, '♛', '目标已锁定', 'gold'],
-    perfect: [actor, '✧', '完美时机', 'gold'], perfect2: [actor, '✧', '完美时机', 'gold'],
+    perfect: [actor, '✧', '圆满', 'gold'],
   }[card.type];
   if (def) impact(...def);
   if (card.type === 'joy') { impact(0, '✧', '王牌 +1'); impact(1, '✧', '王牌 +1'); }
@@ -226,21 +230,22 @@ function render() {
   $('special-status').hidden = !special;
   $('special-status').innerHTML = special ? `<div><span class="eyebrow">希儿专属 · 已生效</span><strong>${esc(cardName(special))}${special.type === 'seelieDecision' ? ` · 目标 ${special.value}` : ''}</strong></div><p>${esc(CATALOG[special.type].text)}</p>` : '';
   $('deck-count').textContent = `牌池剩余 ${deckCount()} 张`;
-  $('enemy-hand').textContent = `手牌王牌 ${state.players[1].handCount ?? state.players[1].hand.length} 张`;
+  $('enemy-hand').textContent = `手牌 ${state.players[1].handCount ?? state.players[1].hand.length} · 王牌堆 ${state.players[1].drawCount??state.players[1].drawPile?.length??'—'} 张`;
   for (let actor = 0; actor < 2; actor++) {
     const p = state.players[actor];
     const active = started && !paused && state.phase === 'playing' && state.actor === actor;
     $('seat-' + actor).classList.toggle('is-active-turn', active);
     $('turn-badge-' + actor).textContent = active ? (actor === 0 ? '▶ 轮到你行动' : '▶ 正在行动') : '';
     $('hp-' + actor).innerHTML = `<strong>${p.hp}</strong> / ${p.maxHp} 生命`;
-    $('loss-' + actor).textContent = `败北 −${loss(actor)}`;
+    $('loss-' + actor).textContent = `败北最多 −${loss(actor)}`;
     lifeEffects.update(actor, danger(loss(actor), p.hp, special?.type === 'seelieCute'), started && !revealed);
     $('life-' + actor).style.width = `${p.hp / p.maxHp * 100}%`;
-    const sum = actor === 1 && !revealed ? total({ numbers: p.numbers.slice(1) }) : total(p);
-    $('score-' + actor).innerHTML = `<strong>${sum}${actor === 1 && !revealed ? '<small> + ?</small>' : ''}</strong>${actor === 1 && !revealed ? '明牌点数' : sum > target ? '已爆牌' : sum === target ? '正好命中' : '当前点数'}${state.stood[actor] && !revealed ? ' · 已停牌' : ''}`;
+    const hiddenCount=actor===1&&!revealed?p.numbers.filter((c,i)=>hiddenNumber(c,i)).length:0;
+    const sum = hiddenCount ? total({numbers:p.numbers.filter((c,i)=>!hiddenNumber(c,i))}) : total(p);
+    $('score-' + actor).innerHTML = `<strong>${sum}${hiddenCount ? `<small> + ${hiddenCount}张暗牌</small>` : ''}</strong>${hiddenCount ? '明牌点数' : sum > target ? '已爆牌' : sum === target ? '正好命中' : '当前点数'}${state.stood[actor] && !revealed ? ' · 已停牌' : ''}`;
     $('score-' + actor).classList.toggle('bust', (actor === 0 || revealed) && sum > target);
     $('numbers-' + actor).innerHTML = p.numbers.map((c, i) => numberHTML(c, actor, i)).join('');
-    $('slots-' + actor).textContent = `桌面王牌 ${slots(p)}/5`;
+    $('slots-' + actor).textContent = `桌面王牌 ${slots(p)}/5${p.gEffects?' · 增值的G ×'+p.gEffects:''}`;
     $('effects-' + actor).innerHTML = p.table.map(c => `<button class="effect-chip ${CATALOG[c.type].special ? 'special-effect' : ''}" data-effect="${c.id}" data-cid="${c.id}" aria-label="查看 ${esc(cardName(c))} 效果">${esc(cardName(c))}<small>${'◇'.repeat(CATALOG[c.type].cost)}</small></button>`).join('') + Array.from({ length: 5 - slots(p) }, () => '<span class="effect-slot" aria-hidden="true">·</span>').join('');
   }
   if (numberFocus) document.querySelector(`[data-number-story="${numberFocus}"]`)?.focus({ preventScroll: true });
@@ -249,8 +254,8 @@ function render() {
   const hand = handOrder.map(id => handMap.get(id));
   $('sort-hand').disabled = hand.length < 2;
   if (!hand.some(c => c.id === selected)) selected = null;
-  $('hand').innerHTML = hand.length ? hand.map(trumpHTML).join('') : '<p class="empty-hand">手中暂时没有王牌。下一局会补充一张。</p>';
-  $('hand-count').textContent = `${hand.length} 张`;
+  $('hand').innerHTML = hand.length ? hand.map(trumpHTML).join('') : '<p class="empty-hand">手中暂时没有王牌；剩余牌堆耗尽后无法补牌。</p>';
+  $('hand-count').textContent = `${hand.length} 张 · 牌堆 ${state.players[0].drawCount??state.players[0].drawPile?.length??'—'} 张`;
   if (focused) document.querySelector(`[data-hand="${focused}"]`)?.focus({ preventScroll: true });
   const yourTurn = started && (!online || (connected && !networkBusy)) && !paused && state.phase === 'playing' && state.actor === 0;
   $('turn-box').classList.toggle('your-turn', yourTurn);
@@ -258,12 +263,13 @@ function render() {
   $('turn-description').textContent = !started ? '准备开始你的牌局' : paused ? '继续时从当前状态恢复' : revealed ? '底牌揭晓，查看结算结果' : state.actor === 1 ? online ? '等待对手行动，可以查看牌效' : '思考中，你可以查看手牌效果' : '可以连续行动，停牌才交出回合';
   $('center-message').textContent = state.stood[1] && !revealed ? `${enemyName()}已停牌，现在由你决定。` : total(state.players[0]) > target && !revealed ? '你已爆牌，王牌仍能扭转局势。' : '离目标近一点，离危险远一点。';
   if (special && !revealed) $('center-message').textContent = ({seelieCute:'本轮结束不扣血，直接重新发牌。',seelieAngry:'王牌已封锁 · 仍可抽数牌或停牌',seelieDecision:`目标锁定 ${special.value} · 挑战牌不可用`,seelieInsight:'创造牌离场即消失，不进入共用牌池。',seelieWant:'破坏此牌会让希儿再获得 2 张普通王牌。',seelieForget:'破坏此牌，你将抽到池中最小数牌。'})[special.type];
+  const priorGuess=$('play-guess')?.value,priorTarget=$('play-target')?.value;
   const card = hand.find(c => c.id === selected);
   const reason = card ? !started ? '开始对局后可以使用。' : paused ? '请先继续对局。' : cardError(card.id) : '';
   $('selection').classList.toggle('has-card', Boolean(card));
   if (card) {
     const def = CATALOG[card.type];
-    $('selection').innerHTML = `<div class="selection-visual">${art(card)}</div><div class="selection-copy"><div class="selection-heading"><strong>${esc(cardName(card))}</strong><span>${def.stay ? '持续' : '瞬时'} · ${def.cost} 格</span><button id="clear-selection" class="close" aria-label="取消选牌">×</button></div><p>${esc(def.text)}</p>${reason ? `<div class="unavailable">${esc(reason)}</div>` : '<span class="selection-label">确认效果后，点击「打出王牌」</span>'}</div>`;
+    $('selection').innerHTML = `<div class="selection-visual">${art(card)}</div><div class="selection-copy"><div class="selection-heading"><strong>${esc(cardName(card))}</strong><span>${def.stay ? '持续' : '瞬时'} · ${def.cost} 格</span><button id="clear-selection" class="close" aria-label="取消选牌">×</button></div><p>${esc(def.text)}</p>${card.type==='blindBet'?'<label>宣告底牌点数 <input id="play-guess" type="number" step="1" min="-1000000" max="1000000" value="1"></label>':card.type==='dismantle'?`<label>拆解目标 <select id="play-target">${state.players[0].table.filter(c=>!CATALOG[c.type].special).map(c=>`<option value="${c.id}">${esc(cardName(c))}</option>`).join('')}</select></label>`:''}${reason ? `<div class="unavailable">${esc(reason)}</div>` : '<span class="selection-label">确认效果后，点击「打出王牌」</span>'}</div>`;
   } else $('selection').innerHTML = `<span class="selection-label">${yourTurn ? '由你决定' : '行动提示'}</span><p>${yourTurn ? '抽一张数牌，或选一张王牌改变局势。准备好就停牌。' : '点击手中或桌上的王牌，随时查看效果。'}</p>`;
   $('play').disabled = !card || !yourTurn || Boolean(reason);
   $('draw').disabled = !yourTurn || !deckCount();
@@ -272,6 +278,9 @@ function render() {
   $('pause').textContent = paused ? '继续对局' : '暂停对局';
   $('pause-overlay').hidden = !paused;
   const log = $('log'), wasBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 50;
+  if(priorGuess!==undefined&&$('play-guess'))$('play-guess').value=priorGuess;
+  if(priorTarget&&$('play-target'))$('play-target').value=priorTarget;
+  renderChoice();
   const logTop = log.scrollTop;
   log.innerHTML = state.log.map(logHTML).join('');
   if (!wasBottom) log.scrollTop = logTop;
@@ -313,7 +322,7 @@ function start() {
   if (multiplayerEntry || online) return;
   clearTimeout(aiTimer); animations.forEach(a => a.cancel()); broadcasts.clear(); $('broadcast-last').textContent = '等待对手出牌'; clearMetrics();
   resetPresentation();
-  state = createGame(seed()); selected = null; paused = false; started = true;
+  state = createGame(seed(),{decks:[soloDecks?.find(d=>d.id===document.getElementById('solo-deck')?.value)?.entries||DEFAULT_DECK,DEFAULT_DECK]}); selected = null; paused = false; started = true;
   document.querySelectorAll('dialog[open]').forEach(d => d.close());
   render(); scheduleAI(); $('help').focus({ preventScroll: true });
 }
@@ -358,7 +367,8 @@ $('table').addEventListener('click', e => {
   }
   if (e.target.closest('#next-round')) { if (online) { if (room.status === 'closed' || state.phase === 'finished') exitOnline(); else sendOnline({ type: 'ready' }); } else if (state.phase === 'finished') start(); else perform({ type: 'next' }); }
 });
-$('play').addEventListener('click', () => perform({ type: 'play', actor: 0, id: selected }));
+function playSelected(){const guess=$('play-guess');if(guess&&!guess.reportValidity())return;perform({type:'play',actor:0,id:selected,guess:guess?Number(guess.value):undefined,target:$('play-target')?.value});}
+$('play').addEventListener('click',playSelected);
 $('draw').addEventListener('click', () => perform({ type: 'draw', actor: 0 }));
 $('stand').addEventListener('click', () => perform({ type: 'stand', actor: 0 }));
 $('start').addEventListener('click', start);
@@ -400,7 +410,7 @@ document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 's') { e.preventDefault(); perform({ type: 'stand', actor: 0 }); }
 });
 
-$('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article class="${c.special ? 'special-catalog' : ''}"><h4>${c.name}${type === 'number' ? ' 2～7' : type === 'challenge' ? ' 17 / 24 / 27' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格${c.special ? ' · 场上最多一张' : ` · ${type === 'number' ? '每种 2' : type === 'challenge' ? '每种 3' : DRAW_POOL.filter(card => card.type === type).length}/108 抽取权重`}</small></article>`).join('');
+$('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article class="${c.special ? 'special-catalog' : ''}"><h4>${c.name}${type === 'number' ? ' 2～7' : type === 'challenge' ? ' 17 / 24 / 27' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格${c.special ? ' · 场上最多一张' : ' · 从各自40张王牌堆无放回抽取'}</small></article>`).join('');
 if (matchMedia('(max-width: 920px)').matches) document.querySelector('.chronicle').open = false;
 
 
@@ -470,3 +480,12 @@ if (multiplayerEntry) {
   render(); $('game-layout').hidden = false; openDialog('welcome');
 }
 new ResizeObserver(([entry]) => document.documentElement.style.setProperty('--dock-height', `${entry.target.getBoundingClientRect().height}px`)).observe($('controls'));
+
+function renderChoice(){
+ const pending=state.pending,box=$('choice-panel');
+ box.hidden=!pending||pending.actor!==0;
+ if(!box.hidden){const signature=pending.cards.map(c=>c.id).join(',');if(box.dataset.signature!==signature){box.dataset.signature=signature;box.innerHTML='<h3>占卜 · 选择一张加入手牌</h3><p>其余按原顺序放回牌堆底部。</p><div>'+pending.cards.map((c,i)=>`<button data-choice="${i}">${art(c)}<b>${esc(cardName(c))}</b><span>${esc(CATALOG[c.type].text)}</span></button>`).join('')+'</div>';requestAnimationFrame(()=>box.scrollIntoView({block:'center',behavior:'auto'}));}}
+ else box.dataset.signature='';
+ if(pending){$('draw').disabled=true;$('stand').disabled=true;$('play').disabled=true;}
+}
+$('choice-panel').addEventListener('click',e=>{const b=e.target.closest('[data-choice]');if(b)perform({type:'choose',actor:0,index:Number(b.dataset.choice)});});

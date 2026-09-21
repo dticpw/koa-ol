@@ -1,6 +1,7 @@
-import { total, slots } from './engine.js?v=090';
+import { total, slots } from './engine.js?v=100';
 
 export function chooseAction(view) {
+  if(view.pending)return {type:'choose',actor:view.actor,index:0};
   const actor = view.actor, p = view.players[actor], other = view.players[1 - actor];
   const sum = total(p), target = view.target;
   const known = view.players.flatMap(x => x.numbers).filter(c => c && !c.generated).map(c => c.value);
@@ -14,8 +15,18 @@ export function chooseAction(view) {
   const valueOfSum = n => n > target ? -12 - (n - target) : n;
   let best = null, score = 0.8;
   if (view.turnActions < 7) for (const c of p.hand.filter(c => view.legal.includes(c.id))) {
-    let v = -1;
+    let v = -1, extra={};
     switch (c.type) {
+      case 'foresight': v=p.drawCount>0?5:-1;break;
+      case 'dismantle': {const candidate=p.table.find(c=>['devil','curtain'].includes(c.type));if(candidate){v=p.drawCount>0?3:-1;extra.target=candidate.id;}break;}
+      case 'cashOut':v=p.drawCount>0&&sum>=target-3&&sum<=target?5:-1;break;
+      case 'trapdoor':v=-1;break;
+      case 'blindBet':extra.guess=other.numbers[0]?.value??unknown[0]??1;v=other.numbers[0]||unknown.length<=3?4:1;break;
+      case 'curtain':v=sum<target-6?2:-1;break;
+      case 'multiplyingG':v=p.drawCount>0&&other.handCount>1?4:-1;break;
+      case 'nurture':v=sum>target&&view.deckCount>0?3:-1;break;
+      case 'blackjack':v=sum===21&&chanceAhead>.5?4:-1;break;
+      case 'allIn':v=chanceAhead>.8?3:-1;break;
       case 'seelieCute': v = (sum > target || (chanceAhead < .3 && safeChance < .5)) && view.damage[actor] > 0 ? 13 : -1; break;
       case 'seelieAngry': v = sum <= target && chanceAhead > .75 ? 8 : -1; break;
       case 'seelieInsight': v = sum !== target ? 15 : 3; break;
@@ -24,7 +35,7 @@ export function chooseAction(view) {
       case 'seelieDecision': v = sum > 0 && sum >= otherOpen ? (sum > target ? 14 : sum >= target - 4 ? 10 : 4) : -1; break;
       case 'shield': case 'shield2': v = view.damage[actor] > 0 ? (chanceAhead < .6 ? 3 : 1) : -.5; break;
       case 'add1': case 'add2': v = sum <= target && chanceAhead > .35 ? 2.5 : .3; break;
-      case 'perfect': case 'perfect2': v = sum <= target ? (safe.length ? 7 : chanceAhead > .6 ? 3 : -1) : -1; break;
+      case 'perfect': v = sum <= target ? (safe.length ? 7 : chanceAhead > .6 ? 3 : -1) : -1; break;
       case 'number': v = unknown.includes(c.value) ? valueOfSum(sum + c.value) - valueOfSum(sum) : -1; break;
       case 'return': v = valueOfSum(sum - last) - valueOfSum(sum); break;
       case 'swap': v = valueOfSum(sum - last + (other.numbers.at(-1)?.generated ? 0 : theirs)) - valueOfSum(sum); break;
@@ -39,9 +50,9 @@ export function chooseAction(view) {
       case 'curse': v = otherOpen >= target - 9 ? 4 : -.5; break;
       case 'slam': v = p.table.filter(x => ['shield', 'shield2'].includes(x.type)).length >= 2 && chanceAhead > .7 ? 4 : -1; break;
     }
-    if (v > score) { best = c; score = v; }
+    if (v > score) { best = {...c,extra}; score = v; }
   }
-  if (best) return { type: 'play', actor, id: best.id };
+  if (best) return { type: 'play', actor, id: best.id, ...best.extra };
   if (view.deckCount && sum < target && view.turnActions < 9 && (sum <= target - 9 || (safeChance >= .52 && (chanceAhead < .72 || sum < target - 5)))) return { type: 'draw', actor };
   return { type: 'stand', actor };
 }

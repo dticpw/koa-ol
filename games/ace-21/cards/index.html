@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#171317"><meta name="description" content="查阅王牌21点卡牌效果，以40张卡、100牌力构筑自己的牌组。">
+  <title>卡牌图鉴与组牌 · 王牌21点</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./cards.css">
+  <script type="module" src="../src/cards.js"></script>
+</head>
+<body>
+  <a class="skip" href="#library">跳到卡牌图鉴</a>
+  <header class="topbar"><a class="brand" href="../lobby/"><span class="seal">A</span><span>王牌21点 <small>THE MIDNIGHT TABLE</small></span></a><a class="back-link" href="../lobby/">← 返回游戏大厅</a></header>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div><p class="eyebrow">THE CARD ATELIER / 王牌档案</p><h1 id="page-title">每一张，都有你的打算。</h1><p class="intro">查阅牌效，挑选组合，留下自己的王牌。</p><div class="rules"><span><b>40</b> 张组成牌组</span><span><b>100</b> 牌力上限</span><span>同名牌不限数量</span></div></div>
+      <div class="hero-cards" aria-hidden="true"><div><img src="../assets/trump-shield.webp" alt=""><span>守护</span></div><div><img src="../assets/trump-crown.webp" alt=""><span>王牌 21</span></div><div><img src="../assets/trump-sword.webp" alt=""><span>进攻</span></div></div>
+    </section>
+    <p class="release-note">牌组保存在当前浏览器。组好后在大厅或单人开局前选择；每场从各自40张王牌堆无放回抽取，抽完即止。</p>
+    <div id="storage-alert" class="warning" role="alert" hidden></div>
+    <p id="load-status" role="status">正在整理卡牌档案…</p>
+    <div id="workbench" class="workbench" hidden>
+      <section id="library" class="library" aria-labelledby="library-title">
+        <div class="section-heading"><h2 id="library-title">卡牌图鉴</h2><span id="result-count"></span></div>
+        <div class="scope" role="group" aria-label="卡牌范围"><button data-scope="ordinary" aria-pressed="true">普通王牌</button><button data-scope="special" aria-pressed="false">希儿专属</button><button data-scope="planned" aria-pressed="false">待实装</button></div>
+        <div class="filters"><label class="search"><span class="sr-only">搜索卡名或效果</span><input id="search" type="search" placeholder="搜索卡名或效果" autocomplete="off"></label><label><span class="sr-only">排序方式</span><select id="sort"><option value="category">按类别</option><option value="power">牌力从低到高</option><option value="power-desc">牌力从高到低</option><option value="name">按名称</option></select></label></div>
+        <div class="tones" role="group" aria-label="卡牌类别"><button data-tone="all" aria-pressed="true">全部</button><button data-tone="attack" aria-pressed="false">进攻</button><button data-tone="defense" aria-pressed="false">防御</button><button data-tone="utility" aria-pressed="false">功能</button></div>
+        <p id="scope-note" class="scope-note"></p>
+        <div id="card-grid" class="card-grid"></div><div id="no-results" class="empty" hidden><p>没有找到这样的王牌</p><button id="reset-filters">清除筛选</button></div>
+      </section>
+      <aside id="deck-panel" class="deck-panel" aria-labelledby="deck-title">
+        <div class="section-heading"><h2 id="deck-title">我的牌组</h2><button id="new-deck" class="text-button">＋ 新建</button></div>
+        <label class="sr-only" for="deck-select">切换牌组</label><select id="deck-select"></select>
+        <label class="deck-name">牌组名称<input id="deck-name" maxlength="32" placeholder="为这套牌起个名字"></label>
+        <div class="meters"><div><span>卡牌数量</span><strong><b id="deck-count">0</b><small> / 40</small></strong><progress id="count-meter" max="40" value="0" aria-label="卡牌数量"></progress></div><div><span>总牌力</span><strong><b id="deck-power">0</b><small> / 100</small></strong><progress id="power-meter" max="100" value="0" aria-label="总牌力"></progress></div></div>
+        <p id="deck-validity" role="status"></p>
+        <div id="deck-list" class="deck-list"></div>
+        <p id="save-status" class="save-status" role="status"></p>
+        <div class="deck-actions"><button id="export-deck">导出牌组</button><button id="import-deck">导入牌组</button></div>
+        <input id="import-file" type="file" accept=".json,application/json" hidden>
+        <div class="deck-tools"><button id="clear-deck" class="text-button">清空</button><button id="delete-deck" class="text-button">删除这套牌组</button></div>
+        <p class="deck-footnote">未凑齐的牌组也会保存为草稿。牌力用于组牌预算，不是对局中的出牌费用。</p>
+      </aside>
+    </div>
+    <noscript><p class="warning">请启用 JavaScript，以查阅卡牌和编辑牌组。</p></noscript>
+  </main>
+  <dialog id="card-detail" aria-labelledby="detail-title"><button id="close-detail" class="close" aria-label="关闭卡牌详情">×</button><div id="detail-content"></div><button id="detail-add" class="primary">加入牌组</button></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <footer class="page-footer"><span>ACE 21 · 卡牌图鉴与组牌</span><a href="../lobby/">返回大厅 ↗</a></footer>
+</body>
+</html>
