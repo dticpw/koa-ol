@@ -14,6 +14,19 @@ const update=(id,place,facts='状态已经变化。',integrity='intact')=>({id,p
 const apply=(e,s,...steps)=>e.applyProposal(s,proposal(...steps),'测试动作');
 const move=to=>step({scope:'travel',move_to:to});
 const fixtures={};for(const id of Object.keys(stories))fixtures[id]=engine(id);
+test('agreed NPC escort shares one open travel step without allowing remote transfers',()=>{
+ const e=fixtures['library-delve'],s=e.createGame();s.location='conjuration';s.flags=['open_conjuration'];
+ const escort=step({scope:'travel',move_to:'entry',refs:['sarah','jay'],updates:[update('sarah','entry','依已达成的交书协议随玩家前往大厅。'),update('jay','entry','依协议同行。')]});
+ const next=apply(e,s,escort).state;
+ assert.equal(next.location,'entry');for(const id of ['sarah','jay'])assert.equal(next.entities.find(x=>x.id===id).place,'entry');
+ assert.equal(s.entities.find(x=>x.id==='sarah').place,'conjuration');
+ assert.throws(()=>apply(e,{...s,flags:[]},escort),/travel/);
+ assert.throws(()=>apply(e,s,{...escort,move_to:'stay'}),/destination reach/);
+ assert.throws(()=>apply(e,s,{...escort,updates:[update('sarah','necromancy')]}),/destination reach/);
+ assert.throws(()=>apply(e,s,{...escort,updates:[update('matthias','entry')]}),/source reach/);
+ assert.throws(()=>apply(e,s,{...escort,updates:[update('stolen_sarah','entry')]}),/destination reach/);
+ assert.throws(()=>apply(e,s,{...escort,updates:[update('spirits','entry')]}),/source reach/);
+});
 test('each authored graph is connected, symmetric and all entity positions and flag dependencies resolve',()=>{for(const s of Object.values(stories)){const found=new Set([s.start]),queue=[s.start];while(queue.length){const id=queue.shift();for(const next of s.places[id].exits){assert.ok(s.places[next].exits.includes(id));if(!found.has(next)){found.add(next);queue.push(next);}}}assert.equal(found.size,Object.keys(s.places).length);for(const e of s.entities)assert.ok(e.place==='carried'||s.places[e.place]);for(const m of [...Object.values(s.milestones),...Object.values(s.endings)])for(const f of m.requires||[])assert.ok(s.milestones[f]);}});
 test('public start and restoration do not expose hidden NPC knowledge, research, or ending solution',()=>{for(const [id,e] of Object.entries(fixtures)){const s=e.createGame(),v=e.getView(s);assert.equal(e.getView(JSON.parse(JSON.stringify(s))).title,v.title);assert.equal(v.credits.source,stories[id].source);assert.ok(!('entities'in v));assert.ok(!('flags'in v));assert.ok(!('laws'in v));assert.equal(v.map.length,stories[id].places[stories[id].start].exits.length+1);}const v=fixtures['goodbye-shooting-star'].getView(fixtures['goodbye-shooting-star'].createGame());assert.doesNotMatch(JSON.stringify(v),/吞食|Cyrus|全体船员已死/);});
 test('locked map cannot be bypassed, teleporting and remote object pickup are rejected atomically',()=>{const e=fixtures['library-delve'],s=e.createGame();assert.throws(()=>apply(e,s,move('conjuration')),/travel/);assert.throws(()=>apply(e,s,move('divination')),/travel/);assert.throws(()=>apply(e,s,step({updates:[update('stolen_sarah','carried')]})),/source reach/);assert.equal(s.revision,0);assert.deepEqual(s.flags,[]);});
