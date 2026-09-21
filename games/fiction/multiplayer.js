@@ -7,9 +7,13 @@
  const pendingKey='fiction.multi.resolve:'+number;
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  function notice(text=''){ $('notice').textContent=text; }
- async function request(body,query=''){
+ async function request(body,query='',retry=0){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),body?.op==='resolve'?130000:20000);
-  try{const r=await fetch(API+query,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},credentials:'same-origin',cache:'no-store',...(body?{body:JSON.stringify(body)}:{}),signal:controller.signal});let d;try{d=await r.json();}catch{throw Error('连接返回异常，请刷新重试。');}if(!r.ok){const e=new Error(d.error||'操作没有完成。');e.code=d.code;throw e;}return d;}finally{clearTimeout(timer);}
+  try{const r=await fetch(API+query,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},credentials:'same-origin',cache:'no-store',...(body?{body:JSON.stringify(body)}:{}),signal:controller.signal});let d;try{d=await r.json();}catch{throw Error('连接返回异常，请刷新重试。');}if(!r.ok){
+   // Two players can submit together. A rejected short write has not executed;
+   // retry the same round after jitter, retaining all server authorization checks.
+   if(d.code==='table_busy'&&retry<3&&['join','leave','start','act','withdraw','close'].includes(body?.op)){clearTimeout(timer);await new Promise(resolve=>setTimeout(resolve,600+Math.random()*600));return request(body,query,retry+1);}
+   const e=new Error(d.error||'操作没有完成。');e.code=d.code;throw e;}return d;}finally{clearTimeout(timer);}
  }
  function errorMessage(e){return e.name==='AbortError'?'连接超时，进度可能仍在处理中。请刷新查看，不必重复声明行动。':e.message||'连接暂时中断，请稍后刷新。';}
  async function mutation(body){
