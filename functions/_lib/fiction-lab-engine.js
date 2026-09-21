@@ -56,7 +56,7 @@ export function getView(saved){
 }
 export function hostContext(saved,action=''){
  const s=normalizeGame(saved);
- return {rulesVersion:3,mode:"causal_no_clock",pendingDecision:s.pendingDecision,status:s.status,ending:s.ending,location:s.location,resolve:s.resolve,doorOpen:s.doorOpen,hammerFallen:s.hammerFallen,
+ return {rulesVersion:4,mode:"causal_no_clock",pendingDecision:s.pendingDecision,status:s.status,ending:s.ending,location:s.location,resolve:s.resolve,doorOpen:s.doorOpen,hammerFallen:s.hammerFallen,
  places,entities:s.entities,knownEntities:Object.values(s.knownEntities||knownSnapshot(s.entities)).map(({id,place,facts})=>({id,place,facts})),notes:s.observationHistory.slice(-16),...retrieveHistory(s,action),recent:s.log.slice(-6),recentEvents:s.events.slice(-3),
  laws:['人物所在、视线范围和投掷范围分别判断。outside与threshold相邻，threshold与chamber相邻，门控制outside与threshold。outside包含门槛外边缘和侧面安全站位，门槛边本身在手边，双栓与支撑石镇也在outside可直接触及。threshold特指门内约两步远的落点，不等同门槛边。开门时可从outside向threshold投物而不进入；门外系石镇无需先进入threshold。',
  '油灯是普通有热量的火，罩盖可打开。当前facts优先于初始外观。合理未预写用途由主持裁量，未知细节以不改变关键设定的常识处理。',
@@ -142,7 +142,7 @@ export function applyProposal(original,proposal,playerText){
   }
   if(step.move_to!=='stay'){s.location=step.move_to;if(!s.visited.includes(s.location))s.visited.push(s.location);}
   if(step.door!=='unchanged')s.doorOpen=step.door==='open';
-  const event={attempt:step.attempt,status:step.status,outcome:step.outcome,observations:[...step.observations],beat:step.beat,refs:[...step.refs],changes:step.updates.map(u=>({...u}))};outcomes.push(event);
+  const event={attempt:step.attempt,status:step.status,outcome:step.outcome,observations:[...step.observations],beat:step.beat,move_to:step.move_to,end:'continue',scope:step.scope,creates:structuredClone(step.creates),refs:[...step.refs],changes:step.updates.map(u=>({...u}))};outcomes.push(event);
   recordObservations(s,step.observations,original.revision+1,'step');
   if(!s.hammerFallen&&s.entities.find(e=>e.id==='weight').place!=='door_support'){
    s.hammerFallen=true;
@@ -154,7 +154,7 @@ export function applyProposal(original,proposal,playerText){
    break; // An authored unexpected event interrupts the proposed chain.
   }
   if(s.resolve<=0){finish(s,'hurt');break;}
-  if(step.end==='leave'){assert(s.location==='outside','exit');finish(s,'leave');break;}
+  if(step.end==='leave'){assert(s.location==='outside','exit');finish(s,'leave');event.end='leave';break;}
   if(step.status==='clarify'||step.status==='partial')break;
  }
  // Decisions and confirmation do not advance ongoing events. Other changes
