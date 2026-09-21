@@ -60,3 +60,5 @@ Stats 继续记录上游返回的 token 用量，尚不单独统计搜索次数�
 本地验证：`node --test scripts/test-stats-location.mjs`（Node 22+ 内置 SQLite，7 项测试），另运行既有 stats API 2 项回归，全数通过。系统 Chrome 使用合成数据检查 1440 / 390px，城市与旧数据提示正确、页面无横向溢出、无脚本错误；未调用付费模型。
 
 生产数据库已于 2026-09-22 通过用户授权的 Chrome 登录会话升级，新增 city / region；升级前记录了 D1 Time Travel 恢复点（本机 LOCAL_PROJECT_NOTES.md）。原有 108 条日志以及输入 1,564,741 / 输出 54,099 tokens 均核对未变，旧城市列均为 NULL。Cloudflare MCP 原连接仍缺少 D1 权限，本次没有修改其令牌权限。页面代码通过 main 分支发布；工作区其他未跟踪文件未纳入本次改动。
+
+线上回读：已确认统计 API 返回 city / region，未登录请求仍为 401，历史记录无回填。Chrome 曾复用旧脚本缓存，因此 stats/index.html 为统计脚本追加 `?v=20260922-city`，确保新 HTML 加载对应新版渲染器。
