@@ -10,12 +10,12 @@
  <div id="main" style="display:none"><div class="dashboard-heading"><div><p class="eyebrow">CONVERSATION / OVERVIEW</p><h1>对话的另一面<span>。</span></h1><p class="subtitle">网站 Chat 与 GPT 代理接口的用量概览</p></div><div class="dashboard-actions"><p id="updated-at" role="status">加载中…</p><div><button class="quiet-action" id="refresh-btn"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>刷新</button><button class="quiet-action" id="logout-btn">锁定面板 <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></button></div></div></div><p id="refresh-error" class="gate-error" role="status"></p>
  <section aria-label="累计用量总览"><div class="cards" id="overall-cards"></div></section>
  <div class="insight-grid"><section class="data-panel trend-panel"><div class="section-heading"><div><p class="eyebrow">LAST 30 DAYS · UTC</p><h2>对话的节奏</h2></div><div class="chart-switch" role="group" aria-label="趋势指标"><button data-metric="requests" aria-pressed="true">请求</button><button data-metric="tokens" aria-pressed="false">Tokens</button></div></div><div id="trend-chart" class="trend-chart" aria-label="近30天请求趋势"></div><div class="chart-caption"><span id="trend-start"></span><span>近 30 天 · 缺失日期按 0 展示</span><span id="trend-end"></span></div></section><section class="data-panel model-panel"><div class="section-heading"><div><p class="eyebrow">MODEL BREAKDOWN</p><h2>模型用量</h2></div><span class="scope-tag">累计</span></div><div id="model-usage"></div></section></div>
- <section class="data-panel" id="recent-section"><div class="section-heading"><div><p class="eyebrow">RECENT ACTIVITY</p><h2>最近调用</h2></div><label class="table-filter">模型<select id="recent-model-filter" aria-label="筛选最近20条记录的模型"><option value="">全部模型</option></select></label></div><p class="section-caption">展示最近 20 条记录；筛选仅作用于这些记录。</p><div class="table-scroll" tabindex="0" role="region" aria-label="最近调用记录"><table id="recent-table">
+ <section class="data-panel" id="recent-section"><div class="section-heading"><div><p class="eyebrow">RECENT ACTIVITY</p><h2>最近调用</h2></div><label class="table-filter">模型<select id="recent-model-filter" aria-label="筛选最近20条记录的模型"><option value="">全部模型</option></select></label></div><p class="section-caption">展示最近 20 条记录；筛选仅作用于这些记录。归属地为当次请求的 IP 定位。</p><div class="table-scroll" tabindex="0" role="region" aria-label="最近调用记录"><table id="recent-table">
                 <thead>
                     <tr>
                         <th>时间</th>
                         <th>IP</th>
-                        <th>国家</th>
+                        <th>归属地</th>
                         <th>模型</th>
                         <th class="num">in</th>
                         <th class="num">out</th>
@@ -26,11 +26,11 @@
                 </thead>
                 <tbody></tbody>
             </table></div></section>
- <section class="data-panel" id="visitors-section"><div class="section-heading"><div><p class="eyebrow">VISITORS / TOP 100</p><h2>访问来源</h2></div></div><div class="table-scroll" tabindex="0" role="region" aria-label="访问来源"><table id="ip-table">
+ <section class="data-panel" id="visitors-section"><div class="section-heading"><div><p class="eyebrow">VISITORS / TOP 100</p><h2>访问来源</h2></div></div><p class="section-caption">按 IP 与国家汇总，归属地取最近一次请求。IP 定位仅供参考，代理会显示出口位置；旧记录或未提供城市的请求显示“城市未记录”。</p><div class="table-scroll" tabindex="0" role="region" aria-label="访问来源"><table id="ip-table">
                 <thead>
                     <tr>
                         <th>IP</th>
-                        <th>国家</th>
+                        <th>归属地</th>
                         <th class="num">次数</th>
                         <th class="num">输入 tokens</th>
                         <th class="num">输出 tokens</th>

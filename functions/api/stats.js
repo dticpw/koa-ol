@@ -32,18 +32,27 @@ export async function onRequestGet(context) {
        FROM chat_logs`
     ).first();
 
-    // 2. 每个 IP 的统计
+    // 2. 保留 IP + 国家分组，归属地取该组最近一次请求（不回填历史）。
     const perIp = await env.DB.prepare(
-      `SELECT
+      `WITH located_logs AS (
+         SELECT *, ROW_NUMBER() OVER (
+           PARTITION BY ip, country
+           ORDER BY ts DESC, COALESCE(city, '') DESC, COALESCE(region, '') DESC
+         ) AS location_rank
+         FROM chat_logs
+       )
+       SELECT
          ip,
          country,
+         MAX(CASE WHEN location_rank = 1 THEN city END) AS city,
+         MAX(CASE WHEN location_rank = 1 THEN region END) AS region,
          COUNT(*)                         AS requests,
          COALESCE(SUM(input_tokens), 0)   AS total_input,
          COALESCE(SUM(output_tokens), 0)  AS total_output,
          MIN(ts)                          AS first_seen,
          MAX(ts)                          AS last_seen,
          SUM(CASE WHEN stage != 'success' THEN 1 ELSE 0 END) AS errors
-       FROM chat_logs
+       FROM located_logs
        GROUP BY ip, country
        ORDER BY requests DESC
        LIMIT 100`
@@ -62,7 +71,7 @@ export async function onRequestGet(context) {
 
     // 4. 最近 20 条（便于看最新活动）
     const recent = await env.DB.prepare(
-      `SELECT ts, ip, country, model, input_tokens, output_tokens,
+      `SELECT ts, ip, country, city, region, model, input_tokens, output_tokens,
               elapsed_ms, history_len, stage, error
        FROM chat_logs
        ORDER BY ts DESC

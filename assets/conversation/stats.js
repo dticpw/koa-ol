@@ -25,6 +25,14 @@ const STORAGE_KEY = 'koa_stats_pwd';
             }[c]));
         }
 
+        function formatLocation(row) {
+            const parts = [...new Set([row.country, row.region, row.city]
+                .filter(value => typeof value === 'string' && value.trim() && value !== 'XX')
+                .map(value => value.trim()))];
+            if (!row.city) parts.push('城市未记录');
+            return escape(parts.join(' · '));
+        }
+
         // ===== 密码门 =====
         enterBtn.onclick = () => {
             if (enterBtn.disabled) return;
@@ -124,7 +132,7 @@ const STORAGE_KEY = 'koa_stats_pwd';
             tbody.innerHTML = rows.map(r => `
                 <tr>
                     <td class="ip">${escape(r.ip)}</td>
-                    <td>${escape(r.country)}</td>
+                    <td>${formatLocation(r)}</td>
                     <td class="num">${fmtNum(r.requests)}</td>
                     <td class="num">${fmtNum(r.total_input)}</td>
                     <td class="num">${fmtNum(r.total_output)}</td>
@@ -177,7 +185,7 @@ const STORAGE_KEY = 'koa_stats_pwd';
                 <tr>
                     <td>${fmtTime(r.ts)}</td>
                     <td class="ip">${escape(r.ip)}</td>
-                    <td>${escape(r.country)}</td>
+                    <td>${formatLocation(r)}</td>
                     <td>${escape(r.model)}</td>
                     <td class="num">${fmtNum(r.input_tokens)}</td>
                     <td class="num">${fmtNum(r.output_tokens)}</td>

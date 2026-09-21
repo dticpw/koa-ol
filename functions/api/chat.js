@@ -8,20 +8,22 @@ export async function onRequestPost(context) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   const country = request.headers.get('CF-IPCountry') || 'XX';
   const userAgent = request.headers.get('User-Agent') || '';
+  const city = request.cf?.city || null;
+  const region = request.cf?.region || null;
 
   // --- 1. 解析请求体 ---
   let body;
   try {
     body = await request.json();
   } catch {
-    await logChat(env, { ip, country, userAgent, stage: 'parse', error: 'Invalid JSON' });
+    await logChat(env, { ip, country, city, region, userAgent, stage: 'parse', error: 'Invalid JSON' });
     return json({ error: 'Invalid JSON' }, 400);
   }
 
   const { messages, model: requestedProvider } = body || {};
 
   if (!Array.isArray(messages) || messages.length === 0) {
-    await logChat(env, { ip, country, userAgent, stage: 'parse', error: 'messages must be non-empty array' });
+    await logChat(env, { ip, country, city, region, userAgent, stage: 'parse', error: 'messages must be non-empty array' });
     return json({ error: 'messages must be a non-empty array' }, 400);
   }
 
@@ -39,7 +41,7 @@ export async function onRequestPost(context) {
       : { base: env.QWEN_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1', key: env.QWEN_API_KEY, model: env.QWEN_MODEL || 'qwen-plus' };
   const model = config.model;
   if (!config.key) {
-    await logChat(env, { ip, country, userAgent, model, stage: 'config', error: 'Provider API key not configured' });
+    await logChat(env, { ip, country, city, region, userAgent, model, stage: 'config', error: 'Provider API key not configured' });
     return json({ error: '所选模型尚未配置密钥', stage: 'config' }, 503);
   }
   let converted;
@@ -64,7 +66,7 @@ export async function onRequestPost(context) {
     payload.stream = true;
     if (provider !== 'gpt') payload.stream_options = { include_usage: true };
     return streamChat(context, { apiUrl, upstreamHeaders, payload, provider, model, searchRequested,
-      fields: { ip, country, userAgent, history_len: historyLen } });
+      fields: { ip, country, city, region, userAgent, history_len: historyLen } });
   }
 
   // --- 3. 调上游 ---
@@ -79,7 +81,7 @@ export async function onRequestPost(context) {
   } catch (err) {
     const elapsed = Date.now() - requestStart;
     await logChat(env, {
-      ip, country, userAgent, model, elapsed_ms: elapsed, history_len: historyLen,
+      ip, country, city, region, userAgent, model, elapsed_ms: elapsed, history_len: historyLen,
       stage: 'network', error: String(err),
     });
     return json({
@@ -96,7 +98,7 @@ export async function onRequestPost(context) {
     try { upstreamText = await apiResponse.text(); } catch (e) { upstreamText = `<read fail: ${e}>`; }
 
     await logChat(env, {
-      ip, country, userAgent, model, elapsed_ms: elapsed, history_len: historyLen,
+      ip, country, city, region, userAgent, model, elapsed_ms: elapsed, history_len: historyLen,
       stage: 'upstream_status',
       error: `${apiResponse.status} ${apiResponse.statusText}: ${upstreamText.slice(0, 500)}`,
     });
@@ -118,7 +120,7 @@ export async function onRequestPost(context) {
     data = await apiResponse.json();
   } catch (e) {
     await logChat(env, {
-      ip, country, userAgent, model, elapsed_ms: elapsed, history_len: historyLen,
+      ip, country, city, region, userAgent, model, elapsed_ms: elapsed, history_len: historyLen,
       stage: 'parse', error: `Non-JSON response: ${e}`,
     });
     return json({
@@ -133,7 +135,7 @@ export async function onRequestPost(context) {
       .map(block => block.text).join('\n')
     : data.choices?.[0]?.message?.content || '';
   if (!replyText) {
-    await logChat(env, { ip, country, userAgent, model: data.model || model,
+    await logChat(env, { ip, country, city, region, userAgent, model: data.model || model,
       input_tokens: data.usage?.input_tokens ?? data.usage?.prompt_tokens ?? 0,
       output_tokens: data.usage?.output_tokens ?? data.usage?.completion_tokens ?? 0,
       elapsed_ms: elapsed, history_len: historyLen, stage: 'parse', error: 'Upstream returned no text' });
@@ -145,7 +147,7 @@ export async function onRequestPost(context) {
   const outputTokens = usage.output_tokens ?? usage.completion_tokens ?? 0;
 
   await logChat(env, {
-    ip, country, userAgent,
+    ip, country, city, region, userAgent,
     model: data.model || model,
     input_tokens: inputTokens,
     output_tokens: outputTokens,
@@ -339,13 +341,15 @@ async function logChat(env, fields) {
   try {
     await env.DB.prepare(
       `INSERT INTO chat_logs
-         (ts, ip, country, user_agent, model, input_tokens, output_tokens,
+         (ts, ip, country, city, region, user_agent, model, input_tokens, output_tokens,
           elapsed_ms, history_len, stage, error)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(
       Date.now(),
       fields.ip || 'unknown',
       fields.country || 'XX',
+      typeof fields.city === "string" ? fields.city.trim().slice(0, 200) || null : null,
+      typeof fields.region === "string" ? fields.region.trim().slice(0, 200) || null : null,
       (fields.userAgent || '').slice(0, 500),
       fields.model || null,
       fields.input_tokens || 0,

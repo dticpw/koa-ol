@@ -237,13 +237,15 @@ async function logProxyUsage(env, fields) {
   try {
     await env.DB.prepare(
       `INSERT INTO chat_logs
-         (ts, ip, country, user_agent, model, input_tokens, output_tokens,
+         (ts, ip, country, city, region, user_agent, model, input_tokens, output_tokens,
           elapsed_ms, history_len, stage, error)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(
       Date.now(),
       fields.ip || "unknown",
       fields.country || "XX",
+      typeof fields.city === "string" ? fields.city.trim().slice(0, 200) || null : null,
+      typeof fields.region === "string" ? fields.region.trim().slice(0, 200) || null : null,
       String(fields.userAgent || "").slice(0, 500),
       fields.model || null,
       fields.input_tokens || 0,
@@ -272,6 +274,8 @@ function getClientInfo(request) {
   return {
     ip: request.headers.get("CF-Connecting-IP") || "unknown",
     country: request.headers.get("CF-IPCountry") || "XX",
+    city: request.cf?.city || null,
+    region: request.cf?.region || null,
     userAgent: request.headers.get("User-Agent") || "",
   };
 }
