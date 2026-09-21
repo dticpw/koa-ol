@@ -38,6 +38,9 @@ export function applyMemories(s,updates,playerText,outcomes,revision){
   else check(u.step>=0&&u.step<outcomes.length&&outcomes[u.step].observations.some(text=>text.includes(u.quote))&&(u.kind==='discovery'||previous),'observation source');
   if(u.id)check(previous&&!changed.has(u.id)&&previous.kind===u.kind,'identity');
   else check(u.status==='active','new status');
+  // A player statement can authorize a task, but cannot prove its completion.
+  // An observation may confirm prior work even in a non-physical help turn.
+  if(u.status==='fulfilled')check(previous&&['commitment','plan'].includes(previous.kind)&&u.source==='observation','fulfillment evidence');
   const evidence={revision,role:u.source,step:u.step,quote:u.quote};
   const id=previous?.id||`memory_${revision}_${s.memoryJournal.length}`;
   changed.add(id);
@@ -53,6 +56,17 @@ const families=[
 const tokens=text=>new Set((String(text).toLowerCase().match(/[a-z0-9_]+|[\p{Script=Han}]{2,}/gu)||[]).flatMap(x=>/^[a-z0-9_]+$/.test(x)?[x]:Array.from({length:x.length-1},(_,i)=>x.slice(i,i+2))));
 const overlap=(a,b)=>[...a].reduce((n,t)=>n+(b.has(t)?1:0),0);
 const mentions=(text,e)=>text.includes(e.id)||text.includes(e.name)||e.name.split('与').some(name=>name.length>1&&text.includes(name.slice(-1)))||overlap(tokens(text),tokens(e.name))>0;
+export function commitmentLedger(s){
+ const all=latestMemories(s).filter(m=>['commitment','plan'].includes(m.kind));
+ const recent=(a,b)=>b.updatedRevision-a.updatedRevision;
+ const active=all.filter(m=>m.status==='active').sort(recent);
+ const settled=all.filter(m=>m.status!=='active').sort(recent);
+ // Reserve space for settled promises even when many plans remain active.
+ const chosen=[...active.slice(0,12),...settled.slice(0,4)];
+ for(const m of [...active,...settled])if(chosen.length<16&&!chosen.includes(m))chosen.push(m);
+ return {items:chosen,total:all.length,complete:chosen.length===all.length,
+  notice:'原话是授权或意图，不是完成证明；依据statusSource核对兑现，取消事项不能自动恢复。未收录不代表不存在。'};
+}
 export function retrieveHistory(s,action=''){
  const query=tokens(action);
  const entityIds=s.entities.filter(e=>mentions(action,e)).map(e=>e.id);
@@ -86,5 +100,5 @@ export function retrieveHistory(s,action=''){
  if(temporal){const matching=ordered.filter(r=>r.entityMatch||r.category);take(matching[0]);take(matching.at(-1));if(earliest)take(matching[1]);}
  for(const row of [...rows].sort((a,b)=>b.score-a.score||(earliest?a.revision-b.revision:b.revision-a.revision)))take(row);
  const history=chosen.sort((a,b)=>a.revision-b.revision).map(({revision,messages})=>({id:`log_${revision}`,revision,temporal:'historical',knowledge:'player',messages:messages.map(m=>({...m,text:m.text.slice(0,1800),truncated:m.text.length>1800}))}));
- return {memories:selected,history,retrieval:{method:'lexical_entity_kind_revision',totalTurns:groups.size,selectedTurns:history.map(h=>h.revision),totalMemories:memories.length,selectedMemories:selected.length,complete:false,notice:'这是有界检索，不是全部历史。未取回不等于从未发生；玩家原话是意图或声明，已发生结果以当轮叙述和结算为准。'}};
+ return {memories:selected,commitmentLedger:commitmentLedger(s),history,retrieval:{method:'lexical_entity_kind_revision',totalTurns:groups.size,selectedTurns:history.map(h=>h.revision),totalMemories:memories.length,selectedMemories:selected.length,complete:false,notice:'这是有界检索，不是全部历史。未取回不等于从未发生；玩家原话是意图或声明，已发生结果以当轮叙述和结算为准。'}};
 }
