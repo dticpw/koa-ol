@@ -7,6 +7,15 @@
   let available = true;
   const lab = document.body.dataset.fiction === 'lab';
   const API = document.body.dataset.api || (lab ? '/api/fiction-lab' : '/api/fiction');
+  const pendingKey = 'fiction.pending.v1:' + API;
+  let pendingSession = null;
+  try { const saved = JSON.parse(localStorage.getItem(pendingKey));
+    if (saved?.body?.op === 'turn' && /^[a-zA-Z0-9_-]{16,80}$/.test(saved.body.requestId || '') && Number.isSafeInteger(saved.body.expectedRevision)) { pending = saved.body; pendingSession = saved.sessionId; }
+  } catch { /* Private browsing/storage restrictions: keep in-memory recovery. */ }
+  function savePending() {
+    try { if (pending?.op === 'turn') localStorage.setItem(pendingKey, JSON.stringify({ body: pending, sessionId: pendingSession })); else localStorage.removeItem(pendingKey); } catch {}
+  }
+  function clearPending() { pending = null; pendingSession = null; savePending(); }
   const uncommittedErrors = new Set([
     'budget_exhausted', 'model_unavailable', 'classification_failed', 'adjudication_failed', 'rate_limited',
     'invalid_request', 'invalid_choice', 'invalid_origin', 'start_limited', 'game_finished',
@@ -57,11 +66,11 @@
     $('retry').hidden = !pending;
   }
   function clearError() { $('error').hidden = true; }
-  async function request(body) {
+  async function request(body, query = '') {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), document.body.dataset.api ? 130000 : 100000);
     try {
-      const response = await fetch(API, {
+      const response = await fetch(API + query, {
         method: body ? 'POST' : 'GET',
         credentials: 'same-origin',
         cache: 'no-store',
@@ -183,7 +192,7 @@
       if (pending?.action || pending?.op === 'start') { $('action').value = ''; $('char-count').textContent = '0'; }
       notice(data.degraded ? (data.message || '这一轮 AI 连接暂时中断，已按剧本规则继续并保存结果。你可以继续冒险。') : '');
     }
-    pending = null;
+    clearPending();
   }
   async function restore() {
     if (busy) return;
@@ -192,14 +201,15 @@
     try {
       const data = await request();
       available = data.available !== false;
-      const previousSession = game?.sessionId;
+      const previousSession = pendingSession || game?.sessionId;
       render(data.game);
       notice(available ? '' : '主持暂时未开放，请稍后回来。');
       // A pending turn may have succeeded while the connection was interrupted.
       if (pending && data.game && (data.game.revision > pending.expectedRevision || data.game.sessionId !== previousSession)) {
         if (pending.action) { $('action').value = ''; $('char-count').textContent = '0'; }
-        pending = null;
+        clearPending();
       } else if (pending) {
+        if (pending.action) { $('action').value = pending.action; $('char-count').textContent = String(pending.action.length); }
         showError('存档尚未确认上一次行动。请重试这次行动，系统会避免重复推进。');
       }
     } catch (error) {
@@ -216,13 +226,13 @@
     try { applyResult(await request(pending), true); }
     catch (error) {
       if (error.code === 'session_expired') {
-        pending = null;
+        clearPending();
         available = true;
         render(null);
         notice(error.message);
         return;
       }
-      if (uncommittedErrors.has(error.code) || error.status === 400 || error.status === 422) pending = null;
+      if (uncommittedErrors.has(error.code) || error.status === 400 || error.status === 422) clearPending();
       showError(error.message);
       // A conflict can mean that a reply was already committed. Keep the same
       // request ID; an explicit retry checks GET before replaying the request.
@@ -233,8 +243,13 @@
     if (!pending) return restore();
     setBusy(true, '正在核对上次行动…');
     try {
-      const data = await request();
-      if (pending.op === 'turn' && data.game && (data.game.revision > pending.expectedRevision || data.game.sessionId !== game?.sessionId)) {
+      const data = await request(undefined, pending.op === 'turn' ? '?receipt=' + encodeURIComponent(pending.requestId) : '');
+      if (pending.op === 'turn' && data.requestStatus === 'processing') {
+        render(data.game);
+        showError('主持仍在处理上一轮，行动已保留。稍后重新连接即可，不必再次描述。');
+        return;
+      }
+      if (pending.op === 'turn' && data.game && (data.requestStatus === 'committed' || data.game.revision > pending.expectedRevision || data.game.sessionId !== (pendingSession || game?.sessionId))) {
         applyResult(data, true);
         notice('已恢复服务端保存的最新进度。');
         return;
@@ -244,12 +259,15 @@
         return;
       }
       if (pending.op === 'turn' && !data.game) {
-        pending = null;
+        clearPending();
         render(null);
         notice('当前存档已失效。可以重新开始；原行动仍保留在输入框中。');
         return;
       }
-    } catch (error) { showError(error.message); return; }
+    } catch (error) {
+      if (error.code === 'session_expired') { clearPending(); render(null); available = true; }
+      showError(error.message); return;
+    }
     finally { setBusy(false); }
     await postPending();
   }
@@ -262,12 +280,15 @@
       return;
     }
     pending = { op: 'turn', requestId: crypto.randomUUID(), expectedRevision: game.revision, ...input };
+    pendingSession = game.sessionId; savePending();
     postPending();
   }
   async function start(reset = false) {
     if (busy) return;
+    if (pending?.op === 'turn') { await retryPending(); return; }
     if (game && !reset) return;
     pending = { op: 'start', ...(reset ? { reset: true } : {}) };
+    savePending();
     await postPending();
   }
   $('start').addEventListener('click', () => start());
@@ -305,5 +326,5 @@
       if (next) { event.preventDefault(); selectTab(next); next.focus(); }
     });
   });
-  restore();
+  restore().then(() => { if (pending?.op === 'turn' && game) retryPending(); });
 })();

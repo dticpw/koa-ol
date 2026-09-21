@@ -180,8 +180,16 @@ def rollback(args):
     # Conservative: changed persistence code needs a separate migration/backup review.
     # The generic save sampler is NOT a database-schema migration proof.
     sensitive = {'functions/_lib/fiction-service.js', 'functions/_lib/fiction-archives.js', 'functions/_lib/fiction-trace.js'}
-    if sensitive.intersection(changed):
-        raise ValueError('Persistence code changed: manual database/migration review required before rollback')
+    persistence = sorted(sensitive.intersection(changed))
+    if persistence:
+        review_path = getattr(args, 'persistence_review', None)
+        if not review_path:
+            raise ValueError('Persistence code changed: manual database/migration review required before rollback')
+        review = json.loads(Path(review_path).read_text())
+        if not (review.get('baselineCommit') == target and review.get('candidateCommit') == head
+                and review.get('files') == persistence and review.get('schemaUnchanged') is True
+                and review.get('storedStateUnchanged') is True and review.get('checks') and review.get('reviewer')):
+            raise ValueError('Persistence review must match both commits/files and attest unchanged schema and stored state')
     # Added files can be ignored by .gitignore; never overwrite such files either.
     for p in changed:
         if p not in before and (REPO/p).exists():
@@ -198,7 +206,7 @@ def main():
     p=sub.add_parser('start');p.add_argument('--source', required=True);p.add_argument('--data', required=True);p.add_argument('--port', type=int, default=18882);p.add_argument('--label', default='candidate');p.add_argument('--mode', choices=['real','offline'], default='offline');p.add_argument('--node');p.add_argument('--vault-cli')
     for name in ('stop','status'):
         p=sub.add_parser(name);p.add_argument('--data', required=True)
-    p=sub.add_parser('rollback');p.add_argument('--target', default=CONFIG['baselineTag']);p.add_argument('--apply', action='store_true');p.add_argument('--compat')
+    p=sub.add_parser('rollback');p.add_argument('--target', default=CONFIG['baselineTag']);p.add_argument('--apply', action='store_true');p.add_argument('--compat');p.add_argument('--persistence-review')
     args=parser.parse_args()
     if args.command=='snapshot':
         result=snapshot(args.ref,args.out)
