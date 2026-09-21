@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {sqliteAdapter} from '../scripts/fiction-preview.mjs';
 import {createMultiplayerHandler} from '../functions/_lib/multiplayer/service.js';
-import {createAdventure,applyRuling,resolveMultiplayer} from '../functions/_lib/multiplayer/host.js';
+import {createAdventure,resolveMultiplayer} from '../functions/_lib/multiplayer/host.js';
+import {applyRuling} from '../functions/_lib/multiplayer/host-v1.js';
 import {createFictionHandler} from '../functions/_lib/fiction-service.js';
 import * as singleEngine from '../functions/_lib/fiction-engine.js';
 
@@ -35,7 +36,7 @@ test('minimum count, host-only start, full roster and repeat start are enforced'
  const f=fixture(),[a]=await seated(f,1);assert.equal((await a.req(start())).body.code,'not_enough_players');
  const b=f.client();await b.req({op:'hello',name:'朋友'});await b.req(op('join'));assert.equal((await b.req(start())).status,403);
  assert.equal((await a.req(start())).status,200);const g=(await a.req(null,'?table=20000')).body.table.game;
- assert.equal(g.characters.length,2);await a.req(start());assert.equal((await a.req(null,'?table=20000')).body.table.game.runId,g.runId);f.sql.close();
+ assert.equal(g.characters.length,2);assert.equal(g.hostRevision,'cooperative-v2');await a.req(start());assert.equal((await a.req(null,'?table=20000')).body.table.game.runId,g.runId);f.sql.close();
 });
 test('six seats maximum and a player cannot join two tables',async()=>{
  const f=fixture(),cs=await seated(f,6);assert.equal((await cs[0].req(op('join',{table:20001}))).body.code,'already_seated');
@@ -108,4 +109,10 @@ test('program checks reject teleportation, omitted actors, unowned items and mov
  assert.throws(()=>applyRuling(state,{...proposal,destination:'office'},actions));assert.throws(()=>applyRuling(state,{...proposal,outcomes:[proposal.outcomes[0]]},actions));
  assert.throws(()=>applyRuling(state,{...proposal,items:[{id:'key',name:'钥匙',owner:'stranger',condition:'完好'}]},actions));
  assert.throws(()=>applyRuling(state,{...proposal,destination:'lift'},[actions[0],{...actions[1],hold:true}]));
+});
+test('changing the default host affects new tables only; an existing game keeps its pinned revision',async()=>{
+ const revisions=[];const f=fixture(async({state})=>{revisions.push(state.hostRevision);return {state:{...state,round:state.round+1,drafts:{}}};});
+ f.env.FICTION_MULTIPLAYER_HOST_REVISION='cooperative-v1';const cs=await seated(f);await cs[0].req(start());
+ f.env.FICTION_MULTIPLAYER_HOST_REVISION='cooperative-v2';await ready(cs);await cs[0].req(op('resolve',{round:0,requestId:crypto.randomUUID()}));assert.deepEqual(revisions,['cooperative-v1']);
+ await cs[0].req(op('close'));for(const c of cs)await c.req(op('join'));await cs[0].req(start());await ready(cs);await cs[0].req(op('resolve',{round:0,requestId:crypto.randomUUID()}));assert.deepEqual(revisions,['cooperative-v1','cooperative-v2']);f.sql.close();
 });

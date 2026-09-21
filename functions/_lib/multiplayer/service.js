@@ -2,7 +2,7 @@ import {ApiError} from '../fiction-service.js';
 import {story} from './story.js';
 import {createAdventure,resolveMultiplayer} from './host.js';
 
-const COOKIE='koa_fiction_player',TTL=30*86400000,LOCK=150000;
+const COOKIE='koa_fiction_player',TTL=30*86400000,LOCK=180000;
 export const schema=[
  `CREATE TABLE IF NOT EXISTS koa_fiction_multi_players (token_hash TEXT PRIMARY KEY, player_id TEXT UNIQUE NOT NULL, name TEXT NOT NULL, table_no INTEGER, join_order INTEGER, last_seen INTEGER NOT NULL, expires_at INTEGER NOT NULL)`,
  `CREATE INDEX IF NOT EXISTS koa_fiction_multi_seats ON koa_fiction_multi_players(table_no,join_order)`,
@@ -47,7 +47,7 @@ async function view(db,row,player){
  const result={number:row.table_no,storyId:row.story_id,status:row.status,revision:row.revision,busy:row.lock_until>Date.now(),hostId:host,members:seats.map(publicPlayer),minPlayers:story.minPlayers,maxPlayers:story.maxPlayers};
  if(!seats.some(x=>x.player_id===player?.player_id)||!row.state_json)return result;
  const state=JSON.parse(row.state_json);
- result.game={runId:state.runId,round:state.round,location:story.places[state.location][0],ended:state.ended,log:state.log,
+ result.game={runId:state.runId,hostRevision:state.hostRevision||'cooperative-v1',round:state.round,location:story.places[state.location][0],ended:state.ended,log:state.log,
   inventory:state.items.filter(x=>x.owner===you.id),drafts:Object.fromEntries(Object.entries(state.drafts).map(([id,a])=>[id,{text:a.text,hold:a.hold}])),
   characters:state.characters,chat:await all(db,'SELECT id,player_id AS playerId,name,message AS text,created_at AS createdAt FROM (SELECT * FROM koa_fiction_multi_chat WHERE run_id=? ORDER BY id DESC LIMIT 80) ORDER BY id',state.runId)};
  return result;
@@ -130,7 +130,7 @@ export function createMultiplayerHandler({resolver=resolveMultiplayer}={}){
    if(body.op==='start'){
     if(state)return json({ok:true,table:body.table,started:true});
     if(seats.length<story.minPlayers)error(409,`至少需要${story.minPlayers}人才能开局。`,'not_enough_players');
-    state=createAdventure(seats.map(publicPlayer));await commit(state,'playing',body.requestId);return json({ok:true,table:body.table,started:true});
+    state=createAdventure(seats.map(publicPlayer),env.FICTION_MULTIPLAYER_HOST_REVISION||'cooperative-v2');await commit(state,'playing',body.requestId);return json({ok:true,table:body.table,started:true});
    }
    if(!state||state.ended)error(409,'当前没有正在进行的冒险。','not_playing');
    if(body.op==='resolve'){

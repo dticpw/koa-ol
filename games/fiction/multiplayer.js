@@ -8,7 +8,7 @@
  const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
  function notice(text=''){ $('notice').textContent=text; }
  async function request(body,query='',retry=0){
-  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),body?.op==='resolve'?130000:20000);
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),body?.op==='resolve'?165000:20000);
   try{const r=await fetch(API+query,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},credentials:'same-origin',cache:'no-store',...(body?{body:JSON.stringify(body)}:{}),signal:controller.signal});let d;try{d=await r.json();}catch{throw Error('连接返回异常，请刷新重试。');}if(!r.ok){
    // Two players can submit together. A rejected short write has not executed;
    // retry the same round after jitter, retaining all server authorization checks.

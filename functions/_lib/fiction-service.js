@@ -62,7 +62,7 @@ function modelText(data) {
   return (data.output || []).filter(x => x.type === 'message').flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\n');
 }
 
-export async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700, timeoutMs = 30000, deadlineAt = Infinity, traceCall } = {}) {
+export async function callModel(env, db, fetchImpl, input, { format, maxTokens = 700, timeoutMs = 30000, requestTimeoutLimitMs = 60000, deadlineAt = Infinity, traceCall } = {}) {
   if (Date.now() >= deadlineAt) throw new ApiError(503, '主持模型本轮已超时，请重试。', 'model_unavailable');
   if (!env.UPSTREAM_API_KEY) throw new ApiError(503, '主持模型尚未配置；你仍可使用建议行动探索。', 'model_unavailable');
   const payload = { model: 'gpt-5.6-sol', store: false, stream: false, reasoning: { effort: 'low' }, input, max_output_tokens: maxTokens };
@@ -83,13 +83,16 @@ export async function callModel(env, db, fetchImpl, input, { format, maxTokens =
     throw new ApiError(503, '主持模型本轮已超时，请重试。', 'model_unavailable');
   }
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), Math.min(60000, Math.max(1000, timeoutMs), deadlineAt - Date.now()));
+  // Existing callers retain their 60s ceiling. Longer multi-party contexts may
+  // explicitly opt in, still bounded by both the request and turn deadlines.
+  const timer = setTimeout(() => controller.abort(), Math.min(90000, Math.max(1000, requestTimeoutLimitMs), Math.max(1000, timeoutMs), deadlineAt - Date.now()));
   try {
     if(traceCall)Object.assign(traceCall,{request:structuredClone(payload),startedAt:Date.now(),status:'sent'});
     const response = await fetchImpl(`${(env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')}/responses`, {
       method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.UPSTREAM_API_KEY}` },
       body: JSON.stringify(payload), signal: controller.signal
     });
+    if(traceCall)traceCall.httpStatus=response.status;
     if (!response.ok) throw new ApiError(503, '主持模型暂时没有响应，请重试。', 'model_unavailable');
     const data = await response.json();
     const usage = data.usage;
