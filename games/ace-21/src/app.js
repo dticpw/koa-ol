@@ -1,13 +1,13 @@
-import { cardArt } from './card-art.js';
-import { DEFAULT_DECK } from './deck-rules.js';
-import { populateDeckSelect } from './saved-decks.js';
-import { reconcileHand, sortHand, danger, settlement, LifeEffects } from './presentation.js?v=100';
-import { numberStory, numberImage } from './number-deck.js?v=100';
-import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=100';
-import { timeoutNotice } from './timeout-notice.js?v=100';
-import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe, matchStats, hiddenNumber } from './engine.js?v=100';
-import { chooseAction } from './ai.js?v=100';
-import { RoomClient, savedRoom } from './network.js?v=100';
+import { cardArt } from './card-art.js?v=101';
+import { DEFAULT_DECK } from './deck-rules.js?v=101';
+import { populateDeckSelect } from './saved-decks.js?v=101';
+import { reconcileHand, sortHand, danger, settlement, LifeEffects } from './presentation.js?v=101';
+import { numberStory, numberImage } from './number-deck.js?v=101';
+import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=101';
+import { timeoutNotice } from './timeout-notice.js?v=101';
+import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe, matchStats, hiddenNumber } from './engine.js?v=101';
+import { chooseAction } from './ai.js?v=101';
+import { RoomClient, savedRoom } from './network.js?v=101';
 
 const $ = id => document.getElementById(id);
 const timeout = timeoutNotice($('timeout-notice'), () => sendOnline({ type: 'stay' }));

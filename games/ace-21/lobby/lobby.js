@@ -1,5 +1,5 @@
-import { populateDeckSelect } from '../src/saved-decks.js';
-import {timeoutNotice} from '../src/timeout-notice.js';
+import { populateDeckSelect } from '../src/saved-decks.js?v=101';
+import {timeoutNotice} from '../src/timeout-notice.js?v=101';
 import {esc,nickname,request,act} from '/games/table-client.js';
 const game=document.body.dataset.game, $=id=>document.getElementById(id);
 let initialLoaded=false, tables=[],busy=false,current=null,lastSignature='',pokerSignature='',polling=false,noticeTimer,clockOffset=0;

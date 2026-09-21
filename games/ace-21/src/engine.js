@@ -1,10 +1,10 @@
-import { DECK_RULES, CARD_META, DEFAULT_DECK } from './deck-rules.js';
+import { DECK_RULES, CARD_META, DEFAULT_DECK } from './deck-rules.js?v=101';
 // Pure state transitions. The UI never decides damage, legality or turn ownership.
 export const CATALOG = {
   foresight: { name: "占卜", icon: 'eye', family: '操控', cost: 1, stay: false, text: "查看自己王牌堆顶部至多3张，选1张加入手牌，其余按原相对顺序放到牌堆底部。" },
   dismantle: { name: "拆解", icon: 'scales', family: '操控', cost: 1, stay: false, text: "选择并移除自己桌上1张普通持续王牌，再从自己的王牌堆抽2张。" },
   allIn: { name: "孤注一掷", icon: 'sword', family: '进攻', cost: 1, stay: true, text: "在桌上时，双方本局败北时的伤害翻倍。先加减伤再倍增，多张倍率相乘，最终伤害上限最后生效。" },
-  cashOut: { name: "见好就收", icon: 'scales', family: '操控', cost: 1, stay: false, text: "从自己的王牌堆抽2张，然后立即停牌并移交行动权。" },
+  cashOut: { name: "见好就收", icon: 'scales', family: '操控', cost: 1, stay: false, text: "从自己的王牌堆抽1张，然后立即停牌并移交行动权。" },
   trapdoor: { name: "暗门", icon: 'moon', family: '操控', cost: 1, stay: false, text: "交换自己的底牌与当前最右侧明牌的位置。" },
   blindBet: { name: "盲注", icon: 'eye', family: '操控', cost: 1, stay: true, text: "宣告对手底牌数值。在桌上时，开牌猜中且获胜则对手伤害+3，猜中且败北则自己伤害−3。平局不受伤。" },
   curtain: { name: "帷幕", icon: 'moon', family: '操控', cost: 1, stay: true, text: "在桌上时，将自己下一张抽到的数牌暗置，自己可见；本王牌离场时该数牌明置。暗牌仍计点数，局末开牌。" },
@@ -265,7 +265,7 @@ export function dispatch(state, action) {
         else addLog(s,'王牌堆已空，占卜没有取得牌。');break;
       }
       case 'dismantle': destroyTrumps(s,actor,false,action.target);grant(s,actor,2);break;
-      case 'cashOut': grant(s,actor,2);break;
+      case 'cashOut': grant(s,actor,1);break;
       case 'blindBet': card.guess=action.guess;addLog(s,`${p.name}宣告对手底牌为 ${card.guess}。`);break;
       case 'multiplyingG': p.gEffects=(p.gEffects||0)+1;break;
       case 'nurture': card.poolAtPlay=s.deck.length;break;

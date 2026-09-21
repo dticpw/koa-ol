@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "release-1.0.0",
+  "status": "release-1.0.1",
   "deckRules": {
     "status": "implemented",
     "cardCount": 40,
@@ -195,7 +195,7 @@
     },
     {
       "type": "cashOut",
-      "power": 8,
+      "power": 5,
       "powerStatus": "user-set",
       "deckEligible": true
     },

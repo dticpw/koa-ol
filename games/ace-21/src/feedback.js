@@ -4,7 +4,7 @@ export const toneLabel = { attack: '进攻', defense: '防御', utility: '功能
 // Describe an opponent's card from the viewer's perspective, not the card owner's.
 export function opponentEffect(card) {
   return ({
-    trapdoor:'对手交换底牌与最右侧明牌的位置。',blindBet:`对手宣告你的底牌为 ${card.guess}；开牌猜中后，对手获胜增伤3，败北减伤3。`,curtain:'对手下一张数牌暗置；此牌离场后明置。',multiplyingG:'本局你每使用一张王牌，对手从剩余王牌堆补抽一张。',nurture:'数牌池相对入场时每少一张目标+1，每多一张目标−1。',blackjack:'对手以恰好21点获胜时，伤害翻倍。',allIn:'双方本局败北伤害翻倍。',foresight:'对手查看自己牌堆顶至多三张，选一张，其余沉底。',dismantle:'对手拆解自己一张普通桌面牌，补抽两张。',cashOut:'对手补抽两张并立即停牌，行动交给你。',
+    trapdoor:'对手交换底牌与最右侧明牌的位置。',blindBet:`对手宣告你的底牌为 ${card.guess}；开牌猜中后，对手获胜增伤3，败北减伤3。`,curtain:'对手下一张数牌暗置；此牌离场后明置。',multiplyingG:'本局你每使用一张王牌，对手从剩余王牌堆补抽一张。',nurture:'数牌池相对入场时每少一张目标+1，每多一张目标−1。',blackjack:'对手以恰好21点获胜时，伤害翻倍。',allIn:'双方本局败北伤害翻倍。',foresight:'对手查看自己牌堆顶至多三张，选一张，其余沉底。',dismantle:'对手拆解自己一张普通桌面牌，补抽两张。',cashOut:'对手补抽一张并立即停牌，行动交给你。',
     shield: '对手败北时，少受 1 点伤害。', shield2: '对手败北时，少受 2 点伤害。',
     add1: '你败北时，多受 1 点伤害；对手立即获得 1 张王牌。', add2: '你败北时，多受 2 点伤害；对手立即获得 1 张王牌。',
     desire: '你败北时，额外受到你手中王牌数量一半的伤害，向下取整。',

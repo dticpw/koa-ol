@@ -1,5 +1,5 @@
-import { DEFAULT_DECK, CARD_META, DECK_RULES } from './deck-rules.js';
-import { buildCatalog, loadCollection, validateDeck, STORAGE_KEY } from './deck-builder.js';
+import { DEFAULT_DECK, CARD_META, DECK_RULES } from './deck-rules.js?v=101';
+import { buildCatalog, loadCollection, validateDeck, STORAGE_KEY } from './deck-builder.js?v=101';
 export function availableDecks(){
   const fallback={id:'default',name:'初始牌组 · 98牌力',entries:DEFAULT_DECK};
   try{

@@ -1,5 +1,5 @@
-import { buildCatalog, validateDeck, parseDeck, serializeDeck, loadCollection, STORAGE_KEY } from './deck-builder.js';
-import { toneLabel } from './feedback.js';
+import { buildCatalog, validateDeck, parseDeck, serializeDeck, loadCollection, STORAGE_KEY } from './deck-builder.js?v=101';
+import { toneLabel } from './feedback.js?v=101';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let catalog,index,rules,state,scope='ordinary',tone='all',selected=null,toastTimer,writeBlocked=false;
@@ -63,7 +63,7 @@ function download(text,name){const url=URL.createObjectURL(new Blob([text],{type
 
 async function init(){
   try{
-    const responses=await Promise.all([fetch('../data/card-balance.json'),fetch('../data/planned-cards.json')]);
+    const responses=await Promise.all([fetch('../data/card-balance.json?v=101'),fetch('../data/planned-cards.json?v=101')]);
     if(responses.some(r=>!r.ok))throw new Error('卡牌资料加载失败');
     const [balance,planned]=await Promise.all(responses.map(r=>r.json()));rules=balance.deckRules;catalog=buildCatalog(balance,planned.cards);index=new Map(catalog.map(c=>[c.key,c]));
     try{state=loadCollection(localStorage.getItem(STORAGE_KEY),catalog,rules);}
