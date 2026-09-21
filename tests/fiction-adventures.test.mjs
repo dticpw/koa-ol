@@ -14,6 +14,21 @@ const update=(id,place,facts='状态已经变化。',integrity='intact')=>({id,p
 const apply=(e,s,...steps)=>e.applyProposal(s,proposal(...steps),'测试动作');
 const move=to=>step({scope:'travel',move_to:to});
 const fixtures={};for(const id of Object.keys(stories))fixtures[id]=engine(id);
+test('extracting an established container content does not require damaging its intact source',()=>{
+ const e=fixtures['library-delve'],s=e.createGame();
+ s.entities.push({id:'test_case',name:'工具盒',nature:'盒中装有一把钥匙。',place:'entry',facts:'完整，钥匙放在盒内。',integrity:'intact',movable:true,kind:'object'});
+ const child={id:'test_key',source:'test_case',name:'工具盒钥匙',place:'carried',facts:'从工具盒取出的一把钥匙，盒内不再有此钥匙。'};
+ const st=step({refs:['test_case'],updates:[update('test_case','entry','完整，钥匙已取出交由玩家携带，盒内已空。')],creates:[child]});
+ const result=apply(e,s,st).state;
+ assert.equal(result.entities.find(x=>x.id==='test_case').integrity,'intact');
+ assert.equal(result.entities.find(x=>x.id==='test_key').place,'carried');
+ assert.throws(()=>apply(e,s,{...st,updates:[]}),/derive source/);
+ assert.throws(()=>apply(e,s,{...st,updates:[update('test_case','entry','完整，钥匙放在盒内。')]}),/derive source/);
+ assert.throws(()=>apply(e,result,st),/derive source|derived id/);
+ const remote=structuredClone(s);remote.entities.find(x=>x.id==='test_case').place='conjuration';
+ assert.throws(()=>apply(e,remote,st),/source reach/);
+ assert.equal(s.entities.find(x=>x.id==='test_case').facts,'完整，钥匙放在盒内。');
+});
 test('agreed NPC escort shares one open travel step without allowing remote transfers',()=>{
  const e=fixtures['library-delve'],s=e.createGame();s.location='conjuration';s.flags=['open_conjuration'];
  const escort=step({scope:'travel',move_to:'entry',refs:['sarah','jay'],updates:[update('sarah','entry','依已达成的交书协议随玩家前往大厅。'),update('jay','entry','依协议同行。')]});
