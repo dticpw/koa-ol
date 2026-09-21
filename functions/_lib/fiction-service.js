@@ -69,7 +69,7 @@ export async function callModel(env, db, fetchImpl, input, { format, maxTokens =
   if (format) payload.text = { format };
   // Byte count (UTF-8) plus a generous framing allowance bounds input token spend.
   const reserved = (new TextEncoder().encode(JSON.stringify(payload)).length + 4096) * 4 + maxTokens * 20;
-  const configured = Number(env.FICTION_DAILY_BUDGET_USD ?? 20);
+  const configured = Number(env.FICTION_DAILY_BUDGET_USD ?? 5);
   const cap = Math.floor(Math.min(20, Math.max(0, Number.isFinite(configured) ? configured : 5)) * 1000000);
   const day = new Date().toISOString().slice(0, 10);
   const reservation = await run(db, `INSERT INTO koa_fiction_budget(day,spent_micro) SELECT ?,? WHERE ? <= ? ON CONFLICT(day) DO UPDATE SET spent_micro=spent_micro+excluded.spent_micro WHERE spent_micro+excluded.spent_micro <= ?`, day, reserved, reserved, cap, cap);
