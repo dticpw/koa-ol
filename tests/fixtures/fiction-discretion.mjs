@@ -12,9 +12,8 @@ export const story={
 export const step=(over={})=>({attempt:'原地确认',status:'completed',beat:'confirmation',requires_previous_success:false,scope:'observe',refs:[],move_to:'stay',end:'continue',updates:[],creates:[],outcome:'你留在原地。',observations:[],achievements:[],memory_offer:'',...over});
 export const memory=(quote,over={})=>({id:'',kind:'commitment',quote,source:'player',step:-1,entity_ids:['card'],place_ids:['desk'],status:'active',...over});
 export const proposal=(steps=[step()],memory_updates=[])=>({intent:'遵循玩家意图',steps,memory_updates,decision:{disposition:'none',needed:false,question:'',pending_action:'',reason:''},evolution:{basis:'none',updates:[],observations:[]}});
-export function promised(engine,{cancel=false,danger=false}={}){
+export function promised(engine,{cancel=false,danger=false,quote='离开时顺路把访客牌还给值班员，这件小事就拜托你处理了。'}={}){
  let s=engine.createGame();
- const quote='离开时顺路把访客牌还给值班员，这件小事就拜托你处理了。';
  s=engine.applyProposal(s,proposal(undefined,[memory(quote)]),quote).state;
  s.log.push({role:'narrator',turn:s.turn,text:'你约好离开时顺手归还访客牌，眼下仍拿着它。'});
  if(cancel)s=engine.applyProposal(s,proposal(undefined,[memory('取消刚才还牌的约定。',{id:s.memoryJournal[0].id,status:'superseded'})]),'取消刚才还牌的约定。').state;

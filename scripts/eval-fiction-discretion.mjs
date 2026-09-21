@@ -25,6 +25,7 @@ const sameWorld=(before,after)=>{for(const k of ['entities','location','flags','
 const checks={cardReturned:(b,a)=>{assert.equal(a.status,'ended');assert.equal(a.entities.find(x=>x.id==='card').place,'desk');assert.equal(a.entities.find(x=>x.id==='ring').place,'carried');assert.ok(a.memoryJournal.some(x=>x.status==='fulfilled'));},cardRetained:(b,a)=>{assert.equal(a.entities.find(x=>x.id==='card').place,'carried');assert.equal(a.entities.find(x=>x.id==='ring').place,'carried');assert.equal(a.location,'desk');assert.equal(a.status,'ended');}};
 const cases=[];
 for(let i=1;i<=3;i++)cases.push({id:'courtesy-'+i,engine:e,resolver,state:promised(e),turns:[{action:'调查结束了，离开吧。',check:checks.cardReturned}]});
+cases.push({id:'ordinary-errand',engine:e,resolver,state:promised(e,{quote:'离开时顺路把访客牌还给值班员。'}),turns:[{action:'调查结束了，离开吧。',check:checks.cardReturned}]});
 cases.push({id:'cancelled',engine:e,resolver,state:promised(e,{cancel:true}),turns:[{action:'调查结束了，离开吧。',check:checks.cardRetained}]});
 cases.push({id:'dangerous',engine:e,resolver,state:promised(e,{danger:true}),turns:[{action:'调查结束了，离开吧。',check:checks.cardRetained}]});
 let valuable=e.createGame();const quote='回头可能考虑把祖传戒指送给值班员，我还没想好。';valuable=e.applyProposal(valuable,proposal(undefined,[memory(quote,{kind:'plan',entity_ids:['ring']})]),quote).state;
@@ -35,6 +36,7 @@ cases.push({id:'help-ladder',engine:library,resolver:libraryResolver,state:libra
  {action:'那我就用随身撬锁工具，按你说的方法细心尝试打开通往咒唤书区的锁；普通小卡顿帮我宽松处理，我不献记忆，也先不进门。',check:(b,a)=>{assert.equal(a.location,'entry');assert.equal(a.memoryOffers.length,0);assert.ok(a.flags.includes('open_conjuration'));assert.ok(!a.flags.includes('open_necromancy'));}}
 ]});
 cases.push({id:'pleading-not-consent',engine:library,resolver:libraryResolver,state:library.createGame(),turns:[{action:'好难呀，求求你帮帮我嘛，别让我选要付哪段记忆了。',check:sameWorld}]});
+cases.push({id:'early-exit',engine:library,resolver:libraryResolver,state:library.createGame(),turns:[{action:'先只告诉我不献记忆怎么开门，不调查管理员遭遇，也不实际操作。',check:sameWorld},{action:'我先不继续调查了，从入口离开，结束冒险。',check:(b,a)=>{assert.equal(a.status,'ended');assert.deepEqual(a.entities,b.entities);assert.doesNotMatch(a.log.at(-1).text,/被盗|盗贼|盗书|凶手|杀害|遇害|Sarah|Jay|Matthias|Quill|Needle/i);}}]});
 cases.push({id:'lab-help',engine:lab,resolver:resolveLabTurn,state:lab.createGame(),turns:[{action:'我卡住了，求求你告诉我可以怎么安全探索门里面嘛。',check:sameWorld}]});
 const selected=process.argv.slice(3),results=[];
 for(const c of cases.filter(c=>!selected.length||selected.includes(c.id))){

@@ -5,8 +5,19 @@ import {createAdventureResolver} from '../functions/_lib/adventures/host.js';
 import {latestMemories,commitmentLedger} from '../functions/_lib/fiction-lab-memory.js';
 import {story,step,memory,proposal,promised} from './fixtures/fiction-discretion.mjs';
 import * as lab from '../functions/_lib/fiction-lab-engine.js';
+import {stories} from '../functions/_lib/adventures/stories.js';
 const engine=createAdventureEngine(story);
 const giveBack=()=>step({attempt:'按先前委托顺手还牌',beat:'action',scope:'near',refs:['card','clerk'],updates:[{id:'card',place:'desk',integrity:'intact',facts:'已交还值班台。'}],outcome:'你把访客牌交还值班员。',observations:['访客牌已交还值班台。']});
+test('formal player-knowledge context never labels secret nature or undisclosed names as observed',()=>{
+ for(const s of Object.values(stories)){
+  const e=createAdventureEngine(s),state=e.createGame(),before=structuredClone(state),world=e.hostContext(state);
+  for(const known of world.knownEntities)assert.deepEqual(Object.keys(known).sort(),['facts','id','integrity','place']);
+  assert.deepEqual(state,before);
+ }
+ const world=createAdventureEngine(stories['library-delve']).hostContext(createAdventureEngine(stories['library-delve']).createGame());
+ assert.match(world.entities.find(e=>e.id==='spirits').nature,/盗贼杀害/);
+ assert.doesNotMatch(JSON.stringify(world.knownEntities),/盗贼杀害/);
+});
 test('lab interruption does not report a proposed exit as an executed ending',()=>{
  const leave=step({beat:'action',scope:'near',door:'unchanged',end:'leave'});
  const normal=lab.applyProposal(lab.createGame(),proposal([leave]),'离开墓口。');assert.equal(normal.outcomes[0].end,'leave');
