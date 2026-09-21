@@ -1,4 +1,4 @@
-import { total, slots } from './engine.js?v=070';
+import { total, slots } from './engine.js?v=090';
 
 export function chooseAction(view) {
   const actor = view.actor, p = view.players[actor], other = view.players[1 - actor];

@@ -104,11 +104,19 @@ function beginRound(s) {
   const addedSpecials = s.players[1].hand.length - beforeSpecials;
   if (addedSpecials) addLog(s, `希儿额外获得 ${addedSpecials} 张手中尚未持有的专属王牌。`, 'bonus');
 }
+const emptyStats = () => ({ maxDamage: 0, trumpsPlayed: 0, hpTaken: 0, roundsWon: 0 });
+// Old saves cannot recover complete totals from the capped public log.
+export function matchStats(s) {
+  return s.stats || { complete: false, players: [emptyStats(), emptyStats()] };
+}
+function ensureStats(s) { s.stats ||= matchStats(s); }
+
 export function createGame(seed = Date.now(), options = {}) {
   const s = { version: 1, firstActor: options.multiplayer ? 0 : 1, rng: seed >>> 0, serial: 0, eventId: 0, round: 0, log: [], players: [
     { name: options.names?.[0] || '你', hp: 10, maxHp: 10, hand: [], table: [], numbers: [] },
     { name: options.names?.[1] || '希儿', hp: options.multiplayer ? 10 : 20, maxHp: options.multiplayer ? 10 : 20, hand: [], table: [], numbers: [] },
   ] };
+  s.stats = { complete: true, players: [emptyStats(), emptyStats()] };
   s.specials = !options.multiplayer && options.specials !== false;
   beginRound(s); return s;
 }
@@ -159,8 +167,14 @@ function settle(s) {
   }
   const victim = winner === null ? null : 1 - winner;
   const hit = victim === null ? 0 : damage(s, victim);
-  if (victim !== null) s.players[victim].hp = Math.max(0, s.players[victim].hp - hit);
-  s.result = { winner, victim, damage: hit, sums, bust, target };
+  const hpLoss = victim === null ? 0 : Math.min(s.players[victim].hp, hit);
+  if (victim !== null) {
+    s.players[victim].hp -= hpLoss;
+    const stats = s.stats.players[winner];
+    stats.maxDamage = Math.max(stats.maxDamage, hit);
+    stats.hpTaken += hpLoss; stats.roundsWon++;
+  }
+  s.result = { winner, victim, damage: hit, hpLoss, sums, bust, target };
   s.phase = s.players.some(p => p.hp === 0) ? 'finished' : 'roundEnd';
   addLog(s, `开牌：${s.players[0].name} ${sums[0]} 点，${s.players[1].name} ${sums[1]} 点。${winner === null ? '平局，双方不受伤害。' : `${s.players[winner].name}获胜，${s.players[victim].name}受到 ${hit} 点伤害。`}`, 'result');
 }
@@ -169,13 +183,14 @@ export function dispatch(state, action) {
   const actor = action.actor ?? state.actor;
   if (action.type === 'next') {
     if (state.phase !== 'roundEnd') return { state, error: '尚不能进入下一局。' };
-    const s = structuredClone(state); beginRound(s); return { state: s, error: '' };
+    const s = structuredClone(state); ensureStats(s); beginRound(s); return { state: s, error: '' };
   }
   if (state.phase !== 'playing' || actor !== state.actor) return { state, error: '现在不能执行这个行动。' };
   if (!['draw', 'stand', 'play'].includes(action.type)) return { state, error: '未知行动。' };
   if (action.type === 'draw' && !state.deck.length) return { state, error: '数牌池已空，可以使用王牌或停牌。' };
   if (action.type === 'play') { const error = playError(state, actor, action.id); if (error) return { state, error }; }
   const s = structuredClone(state), p = s.players[actor], enemy = s.players[1 - actor];
+  ensureStats(s);
   if (action.type === 'stand') {
     s.stood[actor] = true;
     addLog(s, `${p.name}停牌。`);
@@ -190,6 +205,7 @@ export function dispatch(state, action) {
     if (random(s) < 1 / 6) { grant(s, actor, 1); addLog(s, `${p.name}额外获得 1 张王牌。`, 'bonus'); }
   } else {
     const index = p.hand.findIndex(c => c.id === action.id), [card] = p.hand.splice(index, 1);
+    s.stats.players[actor].trumpsPlayed++;
     const harvestCount = p.table.filter(c => c.type === 'harvest').length;
     let stay = CATALOG[card.type].stay;
     const played = addLog(s, `${p.name}使用「${cardName(card)}」。`, 'trump');

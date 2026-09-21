@@ -7,8 +7,8 @@
   <meta name="description" content="王牌21点：共享1至11数牌池，用改变规则的王牌与希儿进行一场命运牌局。">
   <title>王牌21点 · Midnight Table</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css?v=080">
-  <script type="module" src="./src/app.js?v=080"></script>
+  <link rel="stylesheet" href="./style.css?v=090">
+  <script type="module" src="./src/app.js?v=090"></script>
 </head>
 <body>
   <a class="skip-link" href="#controls">跳到操作区</a>
@@ -73,14 +73,14 @@
       </section>
 
       <section class="hand-zone" aria-labelledby="hand-title">
-        <div class="hand-header"><h2 id="hand-title">你的王牌 <span id="hand-count"></span></h2><span>点击选牌，查看效果后打出 <i>·</i> 跨局保留</span></div>
+        <div class="hand-header"><h2 id="hand-title">你的王牌 <span id="hand-count"></span></h2><div class="hand-tools"><span>点击选牌，查看效果后打出 <i>·</i> 跨局保留</span><button id="sort-hand" class="quiet" title="按进攻、防御、功能及牌型整理">整理</button></div></div>
         <div class="hand-rack" id="hand" role="group" aria-label="王牌手牌"></div>
         <div class="action-dock" id="controls">
           <div id="selection" class="selection" aria-live="polite" aria-atomic="true"><span class="selection-label">行动提示</span><p>选一张王牌，改写这场牌局。</p></div>
           <div class="buttons"><button id="play" class="play-button" disabled>打出王牌</button><button id="draw" class="gold-button">抽一张 <kbd>D</kbd></button><button id="stand" class="stand-button">停牌 <kbd>S</kbd></button></div>
         </div>
       </section>
-      <footer class="game-footer"><span>每次抽数牌，有 1/6 概率额外获得一张王牌</span><span>ACE 21 <i>／</i> 版本 0.8</span></footer>
+      <footer class="game-footer"><span>每次抽数牌，有 1/6 概率额外获得一张王牌</span><span>ACE 21 <i>／</i> 版本 0.9</span></footer>
     </section>
   </main>
 
@@ -107,6 +107,12 @@
     <div class="number-story-copy"><span id="number-chapter" class="eyebrow"></span><h2 id="number-detail-title"></h2><p id="number-story-text"></p><span id="number-point-label" class="number-point-label"></span><small>一封邀请，一场赌局，十一幕命运。</small></div>
   </dialog>
   <dialog id="restart-dialog" class="confirm-dialog" aria-labelledby="restart-title"><h2 id="restart-title">重新入席？</h2><p id="restart-description">当前生命、手牌和牌局记录将清空。</p><div class="buttons"><button class="stand-button" data-close="restart-dialog">继续这场</button><button id="confirm-restart" class="gold-button">重新开局</button></div></dialog>
+  <dialog id="match-summary" class="match-dialog" aria-labelledby="match-title">
+    <button class="close" data-close="match-summary" aria-label="关闭本场战绩">×</button>
+    <span class="eyebrow">MATCH COMPLETE</span><h2 id="match-title"></h2>
+    <div id="match-comparison"></div><p id="match-note" class="match-note"></p>
+    <div class="buttons"><button class="stand-button" data-close="match-summary">回看牌桌</button><button id="match-next" class="gold-button">再来一场</button></div>
+  </dialog>
   <noscript><div class="noscript">王牌21点需要启用 JavaScript 才能游玩。</div></noscript>
 </body>
 </html>

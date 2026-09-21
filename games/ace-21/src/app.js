@@ -1,8 +1,9 @@
+import { reconcileHand, sortHand, danger, settlement, LifeEffects } from './presentation.js?v=090';
 import { numberStory, numberImage } from './number-deck.js?v=080';
 import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=070';
 import { timeoutNotice } from './timeout-notice.js?v=060';
-import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe } from './engine.js?v=070';
-import { chooseAction } from './ai.js?v=070';
+import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe, matchStats } from './engine.js?v=090';
+import { chooseAction } from './ai.js?v=090';
 import { RoomClient, savedRoom } from './network.js?v=041';
 
 const $ = id => document.getElementById(id);
@@ -13,8 +14,30 @@ const seed = () => crypto.getRandomValues(new Uint32Array(1))[0];
 // Choose the mode before showing any UI; a failed online connection is never solo.
 const multiplayerEntry = new URL(location.href).searchParams.has('table');
 let state = multiplayerEntry ? null : createGame(seed()), started = false, paused = false, selected = null;
-let aiTimer, toastTimer, fxTimer, fast = false, sound = false, audioContext;
+let aiTimer, toastTimer, fast = false, sound = false, audioContext;
 const animations = new Set();
+let handOrder = [], summaryShown = false, summaryTimer;
+const lifeEffects = new LifeEffects([$('seat-0'), $('seat-1')], reduced);
+function resetPresentation() {
+  handOrder = []; summaryShown = false; clearTimeout(summaryTimer); lifeEffects.clear();
+  $('match-summary').close();
+}
+function showSummary() {
+  if (state?.phase !== 'finished' || document.hidden || anyDialog()) return;
+  summaryShown = true;
+  const stats = matchStats(state);
+  $('match-title').textContent = state.result.forfeit ? '本场已结束' : state.result.winner === 0 ? '这场命运，属于你。' : `${enemyName()}赢得了这一场。`;
+  const rows = [['单次最高伤害','maxDamage'],['王牌使用数','trumpsPlayed'],['累计实际扣血','hpTaken'],['获胜局数','roundsWon']];
+  $('match-comparison').innerHTML = `<table class="match-table"><thead><tr><th scope="col">${esc(state.players[0].name)}</th><th scope="col">本场战绩</th><th scope="col">${esc(state.players[1].name)}</th></tr></thead><tbody>${rows.map(([label,key]) => `<tr><td>${stats.players[0][key]}</td><th scope="row">${label}</th><td>${stats.players[1][key]}</td></tr>`).join('')}</tbody></table>`;
+  $('match-note').textContent = `${state.result.forfeit ? '因玩家离开而结束。' : `共进行 ${state.round} 局。`} ${stats.complete ? '最高伤害按减伤后结算值统计；累计扣血不含溢出伤害。' : '本场开始于旧版本，仅统计更新后已记录的行动与结算，非完整战绩。'}`;
+  $('match-next').textContent = online ? '返回大厅' : '再来一场';
+  openDialog('match-summary');
+}
+function queueSummary(delay = 0) {
+  if (state?.phase !== 'finished' || summaryShown) return;
+  clearTimeout(summaryTimer);
+  summaryTimer = setTimeout(showSummary, delay);
+}
 let online = null, room = null, connected = false, networkBusy = false;
 const deckCount = () => online ? state.deckCount ?? 0 : state.deck.length;
 const enemyName = () => online && room?.state ? state.players[1].name : '希儿';
@@ -161,6 +184,10 @@ function logHTML(event) {
   return `<li class="log-trump tone-${tone}"><span class="log-speaker">${event.actor === 0 ? '你' : '对手'}${event.actor === 0 ? '' : ` · ${esc(who)}`}打出</span><button class="log-card" data-log-card="${event.id}" aria-label="查看 ${esc(cardName(event.card))} 的效果">${esc(cardName(event.card))}</button><span class="log-category">${toneLabel[tone]}</span>${event.note ? `<p class="log-note">${esc(event.note)}</p>` : ''}${changeText(event) ? `<p class="log-change">${esc(changeText(event))}</p>` : ''}</li>`;
 }
 function presentFeedback(old) {
+  if (old.round !== state.round || state.eventId < old.eventId) lifeEffects.clear();
+  const hit = settlement(old, state);
+  lifeEffects.hit(hit);
+  queueSummary(hit?.lethal && !reduced.matches ? 950 : 0);
   if (old.round !== state.round || state.eventId < old.eventId) { broadcasts.clear(); $('broadcast-last').textContent = '等待对手出牌'; clearMetrics(); }
   const events = newPlays(old, state);
   for (const event of events) if (event.round === state.round) cardFeedback(event.card, event.actor);
@@ -172,10 +199,7 @@ function presentFeedback(old) {
     metricChange('target', targetOf(old), targetOf(state), 'target-change');
     for (let actor = 0; actor < 2; actor++) {
       metricChange('loss-' + actor, online ? old.damage[actor] : damage(old, actor), loss(actor), 'loss-change-' + actor);
-      if (state.players[actor].hp < old.players[actor].hp) {
-        $('seat-' + actor).classList.add('hit');
-        clearTimeout(fxTimer); fxTimer = setTimeout(() => document.querySelectorAll('.hit').forEach(e => e.classList.remove('hit')), 450);
-      }
+
     }
   }
 }
@@ -195,6 +219,7 @@ function render() {
   const focused = document.activeElement?.dataset.hand, logFocus = document.activeElement?.dataset.logCard;
   const numberFocus = document.activeElement?.dataset.numberStory;
   const revealed = state.phase !== 'playing', target = targetOf(state);
+  document.documentElement.classList.toggle('visuals-paused', paused);
   $('round-label').textContent = `第 ${String(state.round).padStart(2, '0')} 局`;
   $('target').textContent = target;
   const special = state.players.flatMap(p => p.table).find(c => CATALOG[c.type].special);
@@ -209,6 +234,7 @@ function render() {
     $('turn-badge-' + actor).textContent = active ? (actor === 0 ? '▶ 轮到你行动' : '▶ 正在行动') : '';
     $('hp-' + actor).innerHTML = `<strong>${p.hp}</strong> / ${p.maxHp} 生命`;
     $('loss-' + actor).textContent = `败北 −${loss(actor)}`;
+    lifeEffects.update(actor, danger(loss(actor), p.hp, special?.type === 'seelieCute'), started && !revealed);
     $('life-' + actor).style.width = `${p.hp / p.maxHp * 100}%`;
     const sum = actor === 1 && !revealed ? total({ numbers: p.numbers.slice(1) }) : total(p);
     $('score-' + actor).innerHTML = `<strong>${sum}${actor === 1 && !revealed ? '<small> + ?</small>' : ''}</strong>${actor === 1 && !revealed ? '明牌点数' : sum > target ? '已爆牌' : sum === target ? '正好命中' : '当前点数'}${state.stood[actor] && !revealed ? ' · 已停牌' : ''}`;
@@ -218,7 +244,10 @@ function render() {
     $('effects-' + actor).innerHTML = p.table.map(c => `<button class="effect-chip ${CATALOG[c.type].special ? 'special-effect' : ''}" data-effect="${c.id}" data-cid="${c.id}" aria-label="查看 ${esc(cardName(c))} 效果">${esc(cardName(c))}<small>${'◇'.repeat(CATALOG[c.type].cost)}</small></button>`).join('') + Array.from({ length: 5 - slots(p) }, () => '<span class="effect-slot" aria-hidden="true">·</span>').join('');
   }
   if (numberFocus) document.querySelector(`[data-number-story="${numberFocus}"]`)?.focus({ preventScroll: true });
-  const hand = state.players[0].hand;
+  handOrder = reconcileHand(handOrder, state.players[0].hand);
+  const handMap = new Map(state.players[0].hand.map(c => [c.id, c]));
+  const hand = handOrder.map(id => handMap.get(id));
+  $('sort-hand').disabled = hand.length < 2;
   if (!hand.some(c => c.id === selected)) selected = null;
   $('hand').innerHTML = hand.length ? hand.map(trumpHTML).join('') : '<p class="empty-hand">手中暂时没有王牌。下一局会补充一张。</p>';
   $('hand-count').textContent = `${hand.length} 张`;
@@ -253,7 +282,7 @@ function render() {
     const r = state.result, finished = state.phase === 'finished';
     const heading = finished ? state.players[0].hp > 0 ? '这场命运，属于你。' : `这一场，${esc(enemyName())}胜出。` : r.winner === null ? '平局 · 无人受伤' : r.winner === 0 ? '你赢下了这一手' : `${esc(enemyName())}赢下了这一手`;
     const description = r.forfeit ? '对手或你已离开房间，本场结束。' : `你 ${r.sums[0]}${r.bust[0] ? '（爆牌）' : ''} · ${esc(enemyName())} ${r.sums[1]}${r.bust[1] ? '（爆牌）' : ''}${r.victim === null ? '' : ` ／ ${r.victim === 0 ? '你' : esc(enemyName())} −${r.damage} 生命`}`;
-    $('result').innerHTML = `<span class="eyebrow">${finished ? 'MATCH COMPLETE' : 'CARDS REVEALED'}</span><h2>${heading}</h2><p>${description}</p><button id="next-round" class="gold-button">${online ? room.status === 'closed' ? '返回入场页' : room.ready[0] ? '已准备，等待对手' : finished ? '返回大厅' : '准备下一局' : finished ? '再来一场' : '下一局'} <span aria-hidden="true">→</span></button>`;
+    $('result').innerHTML = `<span class="eyebrow">${finished ? 'MATCH COMPLETE' : 'CARDS REVEALED'}</span><h2>${heading}</h2><p>${description}</p><button id="next-round" class="gold-button">${online ? room.status === 'closed' ? '返回入场页' : room.ready[0] ? '已准备，等待对手' : finished ? '返回大厅' : '准备下一局' : finished ? '再来一场' : '下一局'} <span aria-hidden="true">→</span></button>${finished ? '<button id="show-summary" class="quiet">本场战绩</button>' : ''}`;
     if (online) $('next-round').disabled = room.status !== 'closed' && (!finished && room.ready[0] || networkBusy || !connected);
   }
   $('opponent-name').textContent = enemyName();
@@ -272,10 +301,7 @@ function perform(action) {
   render(); transitionCards(before); presentFeedback(old);
   if (state.round > old.round && action.type === 'stand') toast('「希儿很可爱」：本轮不扣血，已发下一局。');
   soundEffect(state.phase !== 'playing' ? 'result' : action.type);
-  if (state.result && old.phase === 'playing' && state.result.victim !== null) {
-    const victim = state.result.victim;
-    if (state.players[victim].table.some(c => c.type === 'shield' || c.type === 'shield2')) impact(victim, '◇', state.result.damage === 0 ? '护盾抵消了伤害' : '护盾减伤', 'silver');
-  }
+
   const events = state.log.filter(e => e.id > old.eventId).map(e => e.text);
   $('announcement').textContent = events.join(' ') + (state.phase === 'playing' && state.actor === 0 ? ' 轮到你了。' : '');
   if (state.phase !== 'playing') $('next-round')?.focus({ preventScroll: true });
@@ -286,12 +312,21 @@ function openDialog(id) { clearTimeout(aiTimer); broadcasts.suspend(); $(id).sho
 function start() {
   if (multiplayerEntry || online) return;
   clearTimeout(aiTimer); animations.forEach(a => a.cancel()); broadcasts.clear(); $('broadcast-last').textContent = '等待对手出牌'; clearMetrics();
+  resetPresentation();
   state = createGame(seed()); selected = null; paused = false; started = true;
   document.querySelectorAll('dialog[open]').forEach(d => d.close());
   render(); scheduleAI(); $('help').focus({ preventScroll: true });
 }
 function togglePause() { if (!started || state.phase !== 'playing') return; paused = !paused; render(); scheduleAI(); }
 
+$('sort-hand').addEventListener('click', () => {
+  if (!state) return;
+  const before = captureCards(); handOrder = sortHand(handOrder, state.players[0].hand);
+  render(); transitionCards(before);
+  $('announcement').textContent = '王牌已按进攻、防御、功能整理。';
+});
+$('match-next').addEventListener('click', () => online ? exitOnline() : start());
+$('match-summary').addEventListener('close', () => $('show-summary')?.focus({ preventScroll: true }));
 $('hand').addEventListener('click', e => {
   const button = e.target.closest('[data-hand]'); if (!button) return;
   button.focus({ preventScroll: true });
@@ -300,6 +335,7 @@ $('hand').addEventListener('click', e => {
   if (selected && !matchMedia('(max-width:600px)').matches) $('selection').scrollIntoView({ block: 'nearest', behavior: reduced.matches ? 'instant' : 'smooth' });
 });
 $('table').addEventListener('click', e => {
+  if (e.target.closest('#show-summary')) showSummary();
   const number = e.target.closest('[data-number-story]');
   if (number) {
     const card = numberStory(Number(number.dataset.numberStory));
@@ -345,12 +381,14 @@ $('sound').addEventListener('click', async () => {
   } catch { sound = false; $('sound').textContent = '音效：关'; $('sound').setAttribute('aria-pressed', false); toast('音效暂时不可用，牌局可以继续。'); }
 });
 document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => $(b.dataset.close).close()));
-document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', () => { scheduleAI(); broadcasts.resume(); }));
+document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', () => { scheduleAI(); broadcasts.resume(); queueSummary(); }));
 $('number-detail').addEventListener('close', () => {
   (document.querySelector(`[data-number-story="${inspectedNumber}"]`) || $('turn-title')).focus({ preventScroll: true });
 });
 $('welcome').addEventListener('cancel', e => e.preventDefault());
 document.addEventListener('visibilitychange', () => {
+  document.documentElement.classList.toggle('visuals-hidden', document.hidden);
+  if (document.hidden) { clearTimeout(summaryTimer); lifeEffects.clear(); } else queueSummary();
   if (document.hidden) { broadcasts.suspend(); clearTimeout(aiTimer); animations.forEach(a => a.cancel()); if (audioContext) audioContext.suspend().catch(() => {}); }
   else { if (sound && audioContext) audioContext.resume().catch(() => {}); scheduleAI(); broadcasts.resume(); }
 });
@@ -384,6 +422,7 @@ function networkStatus(status, data, message) {
 }
 function receiveRoom(data) {
   const hadState = started, changed = !hadState || !room || data.revision > room.revision, old = state;
+  if (room && (data.hand !== room.hand || (old?.phase === 'finished' && data.state?.phase === 'playing'))) resetPresentation();
   room = data; timeout.update(data, data.serverNow);
   $('room-bar').hidden = false;
   if (!data.you || !data.state) {
@@ -401,7 +440,7 @@ function receiveRoom(data) {
       $('announcement').textContent = '已进入双人牌局，你的底牌和王牌已发放。';
     }
     transitionCards(before);
-    if (hadState) presentFeedback(old);
+    if (hadState) presentFeedback(old); else queueSummary();
     if (hadState && state.eventId !== old.eventId) {
       soundEffect(state.phase !== 'playing' ? 'result' : 'play');
       $('announcement').textContent = state.log.filter(e => e.id > old.eventId).map(e => e.text).join(' ');

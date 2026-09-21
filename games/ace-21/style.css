@@ -399,3 +399,78 @@
     .number-point-label { margin-top:14px; } .number-story-copy small { margin-top:12px; }
   }
 }
+
+/* Life is a charged frame: numbers remain quiet and readable inside it. */
+.life-zone { position:relative; isolation:isolate; padding:9px 12px; margin:-9px -12px; min-width:244px; --charge:#c6a16b; --charge-alpha:.28; }
+.life-energy { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; z-index:-1; color:var(--charge); transition:color .4s,opacity .4s; }
+.life-energy path,.life-energy rect { fill:none; stroke:currentColor; vector-effect:non-scaling-stroke; }
+.energy-rim { stroke-width:1; opacity:var(--charge-alpha); }
+.energy-wire { opacity:0; stroke-width:1; filter:drop-shadow(0 0 3px currentColor); }
+.life-crack { opacity:0; stroke:#ee9686; stroke-width:1.4; transition:opacity .45s; }
+.life-zone[data-danger="0"] { --charge:#aad4da; --charge-alpha:.65; }
+.life-zone[data-danger="1"] .wire-a { opacity:.36; }
+.life-zone[data-danger="2"] { --charge:#e4b374; --charge-alpha:.5; }
+.life-zone[data-danger="2"] .energy-wire { opacity:.56; }
+.life-zone[data-danger="3"] { --charge:#ed936a; --charge-alpha:.7; }
+.life-zone[data-danger="5"] { --charge:#ff795e; --charge-alpha:.9; }
+.life-zone:is([data-danger="3"],[data-danger="5"]) .energy-wire { opacity:.85; stroke-dasharray:30 12 3 14; animation:charge-travel 4s linear infinite; }
+.life-zone[data-danger="5"] .energy-rim { stroke-width:2; filter:drop-shadow(0 0 6px #ec603f); animation:charge-breathe 2.8s ease-in-out infinite; }
+.life-zone[data-danger="5"] .wire-b { animation-direction:reverse; stroke-width:1.6; }
+.life-zone.is-lethal { --charge:#e76767; }
+.life-zone.is-lethal .life-crack,.life-shattered .life-crack { opacity:1; filter:drop-shadow(0 0 3px #cf3939); }
+.life-zone.is-lethal .energy-rim { stroke:#d75f62; filter:drop-shadow(0 0 5px #b62435); }
+.life-zone.is-protected .energy-rim { stroke-dasharray:4 3; stroke-width:2; }
+.life-zone[data-danger="idle"] .energy-rim { opacity:.12; }
+.life-shattered .energy-rim { stroke-dasharray:28 12 5 7; opacity:.38; }
+.damage-burst { position:absolute; inset:-10px; pointer-events:none; color:#efcc8c; z-index:3; animation:burst-out 1.15s ease-out both; }
+.damage-burst svg { position:absolute; width:100%; height:100%; overflow:visible; }
+.damage-burst svg path,.damage-burst svg ellipse { fill:none; stroke:currentColor; stroke-width:1.5; vector-effect:non-scaling-stroke; filter:drop-shadow(0 0 4px currentColor); }
+.damage-burst .bolt-b,.damage-burst .shock-ring { display:none; }
+.hit-number { position:absolute; right:0; top:-22px; font:600 26px var(--serif); text-shadow:0 2px 9px #100b10; }
+.burst-0 { color:#b8e4df; }
+.burst-0 .bolt { display:none; }
+.burst-0 .shock-ring { display:block; stroke-dasharray:3 4; }
+.burst-2 .bolt-b,.burst-3 .bolt-b,.burst-5 .bolt-b { display:block; }
+.burst-3,.burst-5 { color:#fba27f; }
+.burst-3 .shock-ring,.burst-5 .shock-ring { display:block; animation:shock-expand .75s ease-out both; transform-origin:center; }
+.burst-5 svg path { stroke-width:3; filter:drop-shadow(0 0 9px #ff754d); }
+.burst-5 .hit-number { font-size:34px; }
+.burst-lethal { color:#ff9285; }
+.shard { display:none; position:absolute; width:14px; height:9px; background:linear-gradient(125deg,#eab7a0,#6d2a37); clip-path:polygon(0 0,100% 28%,36% 100%); }
+.burst-lethal .shard { display:block; animation:shatter .9s cubic-bezier(.2,.7,.3,1) both; }
+.shard-a { left:0; top:0; --dx:-22px; --dy:-18px; }
+.shard-b { right:0; top:0; --dx:26px; --dy:-13px; }
+.shard-c { left:0; bottom:0; --dx:-20px; --dy:25px; }
+.shard-d { right:0; bottom:0; --dx:24px; --dy:29px; }
+@keyframes charge-travel { to { stroke-dashoffset:-118; } }
+@keyframes charge-breathe { 50% { opacity:.5; } }
+@keyframes burst-out { 0% { opacity:0; } 10%,45% { opacity:1; } 100% { opacity:0; } }
+@keyframes shock-expand { from { transform:scale(.55); opacity:1; } to { transform:scale(1.1); opacity:0; } }
+@keyframes shatter { to { translate:var(--dx) var(--dy); rotate:55deg; opacity:0; } }
+.visuals-hidden .life-energy *, .life-offscreen .life-energy *, .visuals-paused .life-energy * { animation-play-state:paused!important; }
+.hand-tools { display:flex; align-items:center; gap:14px; }
+#sort-hand { border:1px solid #a98a5470; padding:6px 12px; border-radius:4px; color:#edd7ab; font-size:12px; }
+#sort-hand:disabled { opacity:.4; }
+.match-dialog { width:660px; padding:34px; background:radial-gradient(ellipse at 50% 0,#4e3038,transparent 65%),#20191f; }
+.match-dialog h2 { font:30px var(--serif); margin:10px 0 24px; }
+.match-dialog .close { z-index:1; }
+.match-table { width:100%; border-collapse:collapse; table-layout:fixed; font-variant-numeric:tabular-nums; }
+.match-table th,.match-table td { padding:16px 10px; border-bottom:1px solid #b7996726; text-align:center; overflow-wrap:anywhere; }
+.match-table thead th { font:18px var(--serif); color:#efd8ad; }
+.match-table tbody th { width:38%; font-size:12px; font-weight:400; color:#c7b4aa; }
+.match-table td { font:24px var(--serif); }
+.match-table tr:first-child td { color:#f2bc91; font-size:32px; }
+.match-dialog .buttons { justify-content:flex-end; margin-top:26px; }
+.match-note { font-size:12px; color:#c7b4aa; margin-top:18px; }
+@media (prefers-reduced-motion:reduce) { .life-energy *, .damage-burst,.damage-burst * { animation:none!important; transition:none!important; } .burst-lethal .shard { display:none; } }
+@media (max-width:600px) { .life-zone { min-width:0; padding:7px; margin:-7px; } .hand-tools>span { display:none; } .match-dialog { padding:25px 16px; } .match-table th,.match-table td { padding:14px 4px; } }
+.match-dialog { position:relative; }
+.match-dialog>.close { position:absolute; top:16px; right:16px; }
+.life-zone[data-danger="1"] .wire-a { stroke-dasharray:46 16; animation:charge-travel 12s linear infinite; }
+.life-zone[data-danger="2"] .energy-wire { stroke-dasharray:40 19; animation:charge-travel 8s linear infinite; }
+.life-zone[data-danger="2"] .wire-b { animation-direction:reverse; }
+.energy-sparks { opacity:0; fill:currentColor; stroke:none; }
+.life-zone[data-danger="5"] .energy-sparks { opacity:.65; filter:drop-shadow(0 0 4px currentColor); animation:charge-breathe 3.8s ease-in-out infinite; }
+.burst-5 .shard { display:block; width:5px; height:3px; animation:shatter .8s ease-out both; background:#ffc496; }
+.burst-lethal .shard { width:14px; height:9px; background:linear-gradient(125deg,#eab7a0,#6d2a37); }
+@media (prefers-reduced-motion:reduce) { .life-energy *, .damage-burst,.damage-burst * { animation:none!important; } .damage-burst .shard { display:none; } }
