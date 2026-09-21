@@ -464,7 +464,7 @@
 .match-note { font-size:12px; color:#c7b4aa; margin-top:18px; }
 @media (prefers-reduced-motion:reduce) { .life-energy *, .damage-burst,.damage-burst * { animation:none!important; transition:none!important; } .burst-lethal .shard { display:none; } }
 @media (max-width:600px) { .life-zone { min-width:0; padding:7px; margin:-7px; } .hand-tools>span { display:none; } .match-dialog { padding:25px 16px; } .match-table th,.match-table td { padding:14px 4px; } }
-.match-dialog { position:relative; }
+.match-dialog { position:fixed; inset:0; margin:auto; }
 .match-dialog>.close { position:absolute; top:16px; right:16px; }
 .life-zone[data-danger="1"] .wire-a { stroke-dasharray:46 16; animation:charge-travel 12s linear infinite; }
 .life-zone[data-danger="2"] .energy-wire { stroke-dasharray:40 19; animation:charge-travel 8s linear infinite; }
