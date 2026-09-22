@@ -12,11 +12,11 @@
 
 24 个组合均通过上游真实 Responses 请求，返回模型、effort 与请求一致。这只能确认上游报告的模型，不是对第三方底层模型身份的独立鉴定。GPT-5.4 等未出现在当前上游可用列表，不提供名字映射。
 
-Fast / Ultrafast：上游接受 priority / ultrafast 请求，但全部返回 `service_tier=default`，因此本配置不提供加速菜单，新 Key 会明确拒绝这些参数。Ultra 是客户端目录中的自动委派模式，不是本次验证的普通 API 推理档位，暂不列入交付菜单。
+Fast / Ultrafast：上游接受 priority / ultrafast 请求，但全部返回 `service_tier=default`，因此本配置不提供加速菜单，新 Key 会明确拒绝这些参数。Ultra 是客户端目录中的自动委派模式；直接向上游发送 `effort=ultra`，Astra / Sol / Terra 均返回 400，仅接受 low 至 max，因此不列入交付菜单。
 
 ## Windows 配置
 
-1. 安装当前 Codex / ChatGPT Windows App，完全退出后，下载本目录的 `setup-windows.ps1` 与 `models.json` 到同一文件夹。
+1. 安装当前 Codex / ChatGPT Windows App，完全退出后，[下载配置包](https://koa-ol.com/docs/codex-client/koa-codex-windows.zip)并解压；`setup-windows.ps1` 与 `models.json` 须在同一文件夹。该包不包含 Key，不是 App 安装程序。
 2. 在该目录打开 PowerShell，执行：
 
    ```powershell

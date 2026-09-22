@@ -42,7 +42,7 @@ try {
     $clientKey = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer).Trim()
     if (!$clientKey.StartsWith('koa_') -or $clientKey.Length -lt 40) { throw 'Unexpected Koa key format.' }
     # Validate before changing local settings; never display the key.
-    $models = Invoke-RestMethod -Uri 'https://koa-ol.com/ai/v1/models' -Headers @{Authorization="Bearer $clientKey"} -TimeoutSec 30
+    $models = Invoke-RestMethod -Uri 'https://koa-ol.com/ai/v1/models' -Headers @{Authorization="Bearer $clientKey"} -UserAgent 'koa-codex-validation/1.0' -TimeoutSec 30
     $expected = @('gpt-6-astra', 'gpt-5.6-sol', 'gpt-5.6-terra', 'gpt-5.6-luna', 'gpt-5.5')
     foreach ($id in $expected) { if ($models.data.id -notcontains $id) { throw "Key does not grant $id" } }
     $null = New-Item -ItemType Directory -Path $codexDir -Force
