@@ -1,13 +1,18 @@
 // Cloudflare Pages Function: POST /ai/v1/responses
 // OpenAI-compatible Responses API proxy for Codex.
+import { authorizeClient, validateRequest } from '../../_lib/codex-access.js';
 
 export async function onRequestPost(context) {
+  return handleResponse(context, 'responses');
+}
+
+export async function handleResponse(context, endpoint) {
   const { request, env } = context;
   const requestStart = Date.now();
   const clientInfo = getClientInfo(request);
 
-  const authError = authorizeClient(request, env);
-  if (authError) return authError;
+  const access = await authorizeClient(request, env);
+  if (access.error) return jsonError(access.error, access.status);
 
   if (!env.UPSTREAM_API_KEY) {
     scheduleLog(context, logProxyUsage(env, {
@@ -45,13 +50,11 @@ export async function onRequestPost(context) {
     return jsonError("Request body must be a JSON object", 400);
   }
 
-  if (body.model !== undefined && body.model !== 'gpt-5.6-sol') {
-    return jsonError('Only gpt-5.6-sol is available on this endpoint', 400);
-  }
-  body.model = 'gpt-5.6-sol';
+  const validationError = validateRequest(body, access);
+  if (validationError) return jsonError(validationError, 400);
 
   const upstreamBase = normalizeBaseUrl(env.UPSTREAM_BASE_URL || "https://api.openai.com/v1");
-  const upstreamUrl = `${upstreamBase}/responses`;
+  const upstreamUrl = `${upstreamBase}/${endpoint}`;
 
   let upstreamResponse;
   try {
@@ -84,29 +87,6 @@ export async function onRequestPost(context) {
 
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: corsHeaders() });
-}
-
-function authorizeClient(request, env) {
-  const configuredKeys = parseClientKeys(env.CLIENT_API_KEYS);
-  if (configuredKeys.length === 0) {
-    return jsonError("CLIENT_API_KEYS is not configured", 500);
-  }
-
-  const auth = request.headers.get("Authorization") || "";
-  const token = auth.replace(/^Bearer\s+/i, "").trim();
-
-  if (!token || !configuredKeys.includes(token)) {
-    return jsonError("Unauthorized", 401);
-  }
-
-  return null;
-}
-
-function parseClientKeys(value) {
-  return String(value || "")
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
 }
 
 function buildUpstreamHeaders(request, env) {

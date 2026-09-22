@@ -1,0 +1,12 @@
+# Merge these root settings BEFORE any [table] in your user config.toml.
+model_provider = "koa_proxy"
+model = "gpt-6-astra"
+model_reasoning_effort = "medium"
+model_catalog_json = "C:/Users/YOUR_NAME/.codex/koa-models.json"
+
+[model_providers.koa_proxy]
+name = "Koa multi-model proxy"
+base_url = "https://koa-ol.com/ai/v1"
+env_key = "KOA_CODEX_API_KEY"
+wire_api = "responses"
+supports_websockets = false
