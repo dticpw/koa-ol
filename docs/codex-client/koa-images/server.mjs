@@ -117,11 +117,14 @@ export async function callImageTool(name, args, { fetchImpl = fetch, getKey = re
   const encoded = data.data?.[0]?.b64_json;
   if (typeof encoded !== 'string' || !encoded.length || !/^[A-Za-z0-9+/]+={0,2}$/.test(encoded)) throw new Error('Image service returned no valid base64 image');
   const png = Buffer.from(encoded, 'base64');
-  if (imageType(png) !== 'image/png') throw new Error('Image service did not return the requested PNG format');
+  if (imageType(png) !== 'image/png' || png.length < 24 || png.toString('ascii', 12, 16) !== 'IHDR') throw new Error('Image service did not return the requested PNG format');
+  const actualSize = `${png.readUInt32BE(16)}x${png.readUInt32BE(20)}`;
   await mkdir(dirname(args.output_path), { recursive: true });
   await writeFile(args.output_path, png, { flag: 'wx' });
   return { content: [
-    { type: 'text', text: JSON.stringify({ model: MODEL, saved_path: args.output_path, bytes: png.length, quality: payload.quality, size: payload.size }) },
+    { type: 'text', text: JSON.stringify({ model: MODEL, saved_path: args.output_path, bytes: png.length, requested_quality: payload.quality, requested_size: payload.size, actual_size: actualSize,
+      ...(payload.size !== 'auto' && payload.size !== actualSize ? { warning: 'The upstream returned different dimensions than requested. The image was saved as returned, without resizing or cropping.' } : {}),
+    }) },
     { type: 'image', data: encoded, mimeType: 'image/png' },
   ] };
 }

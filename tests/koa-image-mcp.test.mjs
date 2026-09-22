@@ -44,6 +44,9 @@ test('generation saves an image and returns both a path and image to Codex',asyn
   }});
   assert.deepEqual(await readFile(output),png);assert.equal(result.content[1].mimeType,'image/png');
   assert.equal(JSON.parse(result.content[0].text).saved_path,output);
+  assert.equal(JSON.parse(result.content[0].text).actual_size,'1x1');
+  assert.equal(JSON.parse(result.content[0].text).requested_size,'1024x1024');
+  assert.match(JSON.parse(result.content[0].text).warning,/different dimensions/);
 });
 
 test('existing output, invalid paths and invalid source data are rejected before any request',async t=>{

@@ -13,7 +13,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\install-images.ps1
 脚本无需管理员权限：备份当前 TOML，只追加一个 MCP 注册段，再复制工具文件。ExecutionPolicy 仅对这次进程生效。原有 `auth.json` 和 `koa-models.json` 不需要更新；已有聊天、插件、MCP 设置保留。更新包没有 Key，也不包含个人配置。
 
 ```text
-C:\Users\chenwenjin\.codex\
+C:\Users\YOUR_NAME\.codex\
   config.toml                # 增加 [mcp_servers.koa_images]
   auth.json                  # 原文件继续使用
   koa-models.json             # 原聊天模型目录继续使用
@@ -34,7 +34,7 @@ C:\Users\chenwenjin\.codex\
 
 - 固定使用 `gpt-image-2`，不静默换成其他模型。每次生成一张 PNG；质量 low/medium/high/auto，默认 auto，多张通过多次调用生成。
 - 支持文生图，以及以一张本地 PNG/JPEG/WebP 为参考的编辑；本地输入上限 16 MiB。
-- 不支持透明背景。支持 auto 或符合模型约束的尺寸，例如 1024x1024、1536x1024、1024x1536。
+- 不支持透明背景。可请求 auto 或符合模型约束的尺寸，例如 1024x1024、1536x1024、1024x1536。但本次上游将 1024x1024 请求返回为 1370x1148，不能保证精确遵循尺寸；工具回报实际像素尺寸并保留原图，不静默缩放或裁剪。
 - 图片调用消耗站主上游额度。超时或失败不自动重试，避免重复收费；收到成功结果才写新图片。
 - API 为 `/ai/v1/images/generations`（JSON）和 `/ai/v1/images/edits`（multipart）；图片权限与聊天权限独立。
 - 统计只记模型、操作、状态等元数据，不记录图片、提示词或 Key；token 数为 0，不可据此估算图片费用。
