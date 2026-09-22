@@ -1,13 +1,13 @@
-import { cardArt } from './card-art.js?v=102';
-import { DEFAULT_DECK } from './deck-rules.js?v=102';
-import { populateDeckSelect } from './saved-decks.js?v=102';
-import { reconcileHand, sortHand, danger, settlement, LifeEffects } from './presentation.js?v=102';
-import { numberStory, numberImage } from './number-deck.js?v=102';
-import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=102';
-import { timeoutNotice } from './timeout-notice.js?v=102';
-import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe, matchStats, hiddenNumber } from './engine.js?v=102';
-import { chooseAction } from './ai.js?v=102';
-import { RoomClient, savedRoom } from './network.js?v=102';
+import { cardArt } from './card-art.js?v=103';
+import { DEFAULT_DECK } from './deck-rules.js?v=103';
+import { populateDeckSelect } from './saved-decks.js?v=103';
+import { reconcileHand, sortHand, danger, settlement, LifeEffects } from './presentation.js?v=103';
+import { numberStory, numberImage } from './number-deck.js?v=103';
+import { toneOf, toneLabel, opponentEffect, newPlays, changeText, BroadcastQueue } from './feedback.js?v=103';
+import { timeoutNotice } from './timeout-notice.js?v=103';
+import { DRAW_POOL, CATALOG, createGame, dispatch, cardName, total, targetOf, slots, damage, playError, observe, matchStats, hiddenNumber } from './engine.js?v=103';
+import { chooseAction } from './ai.js?v=103';
+import { RoomClient, savedRoom } from './network.js?v=103';
 
 const $ = id => document.getElementById(id);
 const timeout = timeoutNotice($('timeout-notice'), () => sendOnline({ type: 'stay' }));
@@ -410,7 +410,7 @@ document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 's') { e.preventDefault(); perform({ type: 'stand', actor: 0 }); }
 });
 
-$('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article class="${c.special ? 'special-catalog' : ''}"><h4>${c.name}${type === 'number' ? ' 2～7' : type === 'challenge' ? ' 17 / 24 / 27' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格${c.special ? ' · 场上最多一张' : ' · 从各自24张王牌堆无放回抽取'}</small></article>`).join('');
+$('catalog').innerHTML = Object.entries(CATALOG).map(([type, c]) => `<article class="${c.special ? 'special-catalog' : ''}"><h4>${c.name}${type === 'number' ? ' 2～7' : type === 'challenge' ? ' 17 / 24 / 27' : ''}</h4><p>${c.text}</p><small>${c.family} · ${c.stay ? '持续' : '瞬时'} · ${c.cost} 格${c.special ? ' · 场上最多一张' : ' · 从各自30张王牌堆无放回抽取'}</small></article>`).join('');
 if (matchMedia('(max-width: 920px)').matches) document.querySelector('.chronicle').open = false;
 
 

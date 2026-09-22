@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "status": "release-1.0.2",
+  "status": "release-1.0.3",
   "deckRules": {
     "status": "implemented",
-    "cardCount": 24,
+    "cardCount": 30,
     "maxPower": 100,
     "maxCopies": null,
     "drawMode": "without-replacement",
@@ -40,25 +40,25 @@
     {
       "type": "shield",
       "power": 0,
-      "powerStatus": "working-proposal",
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "shield2",
       "power": 5,
-      "powerStatus": "working-proposal",
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "joy",
-      "power": 5,
-      "powerStatus": "working-proposal",
+      "power": 0,
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "cycle",
       "power": 10,
-      "powerStatus": "working-proposal",
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
@@ -69,32 +69,32 @@
     },
     {
       "type": "swap",
-      "power": 8,
+      "power": 6,
       "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "remove",
-      "power": 5,
+      "power": 4,
       "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "destroy",
       "power": 5,
-      "powerStatus": "working-proposal",
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "destroyAll",
       "power": 15,
-      "powerStatus": "working-proposal",
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "desire",
-      "power": 15,
-      "powerStatus": "working-proposal",
+      "power": 12,
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
@@ -118,14 +118,14 @@
     },
     {
       "type": "harvest",
-      "power": 40,
+      "power": 30,
       "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "curse",
       "power": 10,
-      "powerStatus": "working-proposal",
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
@@ -189,19 +189,19 @@
     },
     {
       "type": "allIn",
-      "power": 20,
+      "power": 16,
       "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "cashOut",
-      "power": 5,
+      "power": 0,
       "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "trapdoor",
-      "power": 6,
+      "power": 3,
       "powerStatus": "user-set",
       "deckEligible": true
     },
@@ -213,19 +213,19 @@
     },
     {
       "type": "curtain",
-      "power": 8,
+      "power": 6,
       "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "multiplyingG",
-      "power": 30,
+      "power": 24,
       "powerStatus": "user-set",
       "deckEligible": true
     },
     {
       "type": "nurture",
-      "power": 10,
+      "power": 8,
       "powerStatus": "user-set",
       "deckEligible": true
     },
