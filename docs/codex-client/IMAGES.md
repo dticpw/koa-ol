@@ -36,7 +36,7 @@ C:\Users\YOUR_NAME\.codex\
 - 支持文生图，以及以一张本地 PNG/JPEG/WebP 为参考的编辑；本地输入上限 16 MiB。
 - 不支持透明背景。可请求 auto 或符合模型约束的尺寸，例如 1024x1024、1536x1024、1024x1536。但本次上游将 1024x1024 请求返回为 1370x1148，不能保证精确遵循尺寸；工具回报实际像素尺寸并保留原图，不静默缩放或裁剪。
 - 图片调用消耗站主上游额度。超时或失败不自动重试，避免重复收费；收到成功结果才写新图片。
-- API 为 `/ai/v1/images/generations`（JSON）和 `/ai/v1/images/edits`（multipart）；图片权限与聊天权限独立。
+- API 为 `/ai/v1/images/generations`（JSON）和 `/ai/v1/images/edits`（multipart，一张参考图，不支持 mask）；图片权限与聊天权限独立。当前上游不解析 multipart，中转将编辑请求转换成 JSON 的 `images[].image_url` 数据 URL 再转发。
 - 统计只记模型、操作、状态等元数据，不记录图片、提示词或 Key；token 数为 0，不可据此估算图片费用。
 - 本包提供独立 `koa_images` 工具，不开通原生 ChatGPT 生图按钮、原生 image_gen 工具或账户订阅权限。
 

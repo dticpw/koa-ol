@@ -1,7 +1,7 @@
 import { authorizeClient } from './codex-access.js';
 
 const JSON_LIMIT = 128 * 1024;
-const EDIT_LIMIT = 52 * 1024 * 1024;
+const EDIT_LIMIT = 16 * 1024 * 1024 + 128 * 1024;
 const IMAGE_LIMIT = 16 * 1024 * 1024;
 const fields = ['model', 'prompt', 'n', 'size', 'quality', 'output_format', 'background'];
 const cors = {
@@ -46,6 +46,16 @@ function validSize(size) {
     w * h >= 655360 && w * h <= 8294400;
 }
 
+async function imageDataUrl(file) {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  // Multiples of three keep independently encoded chunks safe to join.
+  const parts = [];
+  for (let offset = 0; offset < bytes.length; offset += 24576) {
+    parts.push(btoa(String.fromCharCode(...bytes.subarray(offset, offset + 24576))));
+  }
+  return `data:${file.type};base64,${parts.join('')}`;
+}
+
 export async function handleImage(context, operation) {
   const { request, env } = context;
   const access = await authorizeClient(request, env);
@@ -72,7 +82,7 @@ export async function handleImage(context, operation) {
       if (body.n !== undefined) body.n = Number(body.n);
       const images = [...form.getAll('image'), ...form.getAll('image[]')];
       const masks = form.getAll('mask');
-      if (images.length < 1 || images.length > 3 || masks.length > 1) return error('Provide 1 to 3 images and at most one mask');
+      if (images.length !== 1 || masks.length) return error('Provide exactly one reference image; masks are not supported');
       for (const file of [...images, ...masks]) {
         if (typeof file === 'string' || !file.size || file.size > IMAGE_LIMIT ||
             !['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
@@ -98,14 +108,19 @@ export async function handleImage(context, operation) {
   if (body.size !== undefined && !validSize(body.size)) return error('Invalid GPT Image 2 size');
   if (body.output_format !== undefined && !['png', 'jpeg', 'webp'].includes(body.output_format)) return error('Invalid image output format');
   if (body.background !== undefined && !['auto', 'opaque'].includes(body.background)) return error('GPT Image 2 does not support a transparent background');
-  if (edit) form.set('model', body.model);
+  // The configured image provider accepts JSON image URLs, not multipart.
+  // Keep uploads convenient for clients and adapt only at this boundary.
+  if (edit) {
+    body.images = [{ image_url: await imageDataUrl(form.get('image') || form.get('image[]')) }];
+    form = undefined;
+  }
   const started = Date.now();
   const headers = new Headers({ Authorization: `Bearer ${env.UPSTREAM_API_KEY}` });
-  if (!edit) headers.set('Content-Type', 'application/json');
+  headers.set('Content-Type', 'application/json');
   let response;
   try {
     response = await fetch(`${String(env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')}/images/${operation}`, {
-      method: 'POST', headers, body: edit ? form : JSON.stringify(body), redirect: 'error',
+      method: 'POST', headers, body: JSON.stringify(body), redirect: 'error',
     });
   } catch {
     logStatus(context, body.model, operation, started, 'network');

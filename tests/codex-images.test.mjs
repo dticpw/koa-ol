@@ -60,12 +60,15 @@ test('bad shapes, sizes, batch counts, unsupported fields and oversized prompts 
   assert.equal(globalThis.fetch.mock.callCount(),0);
 });
 
-test('multipart edits preserve file bytes and let fetch choose a new boundary',async t=>{
+test('multipart edits become provider JSON data URLs with exact file bytes',async t=>{
   t.mock.method(globalThis,'fetch',async(url,options)=>{
     assert.equal(url,'https://upstream.invalid/v1/images/edits');
-    assert.equal(options.headers.has('Content-Type'),false);
-    assert.equal(options.body.get('model'),'gpt-image-2');
-    assert.deepEqual(new Uint8Array(await options.body.get('image').arrayBuffer()),png);
+    assert.equal(options.headers.get('Content-Type'),'application/json');
+    const body=JSON.parse(options.body);
+    assert.equal(body.model,'gpt-image-2');
+    assert.equal(body.prompt,'Make the cup red');
+    assert.equal(body.images.length,1);
+    assert.equal(body.images[0].image_url,'data:image/png;base64,'+Buffer.from(png).toString('base64'));
     return Response.json({data:[{b64_json:'test'}]});
   });
   assert.equal((await edit(context(editForm()))).status,200);
@@ -77,10 +80,25 @@ test('invalid edit uploads never reach upstream',async t=>{
   const text=editForm();text.set('image','not-a-file');
   const type=editForm();type.set('image',new Blob(['bad'],{type:'text/plain'}),'bad.txt');
   const duplicate=editForm();duplicate.append('model','gpt-image-2');
+  const masked=editForm();masked.set('mask',new Blob([png],{type:'image/png'}),'mask.png');
+  const multiple=editForm();multiple.append('image[]',new Blob([png],{type:'image/png'}),'second.png');
   const large=editForm();large.set('image',new Blob([new Uint8Array(16*1024*1024+1)],{type:'image/png'}),'large.png');
-  for(const form of [missing,text,type,duplicate,large])assert.equal((await edit(context(form))).status,400);
+  for(const form of [missing,text,type,duplicate,masked,multiple,large])assert.equal((await edit(context(form))).status,400);
   assert.equal((await edit(context())).status,415);
   assert.equal(globalThis.fetch.mock.callCount(),0);
+});
+
+test('image[] alias and chunked base64 encoding preserve larger images and default model',async t=>{
+  const bytes=Uint8Array.from({length:50003},(_,i)=>i%256);
+  const form=editForm();form.delete('model');form.delete('image');form.set('n','1');
+  form.set('image[]',new Blob([bytes],{type:'image/webp'}),'reference.webp');
+  t.mock.method(globalThis,'fetch',async(_url,options)=>{
+    const body=JSON.parse(options.body);
+    assert.equal(body.model,'gpt-image-2');assert.equal(body.n,1);
+    assert.equal(body.images[0].image_url,'data:image/webp;base64,'+Buffer.from(bytes).toString('base64'));
+    return Response.json({data:[]});
+  });
+  assert.equal((await edit(context(form))).status,200);
 });
 
 test('errors retain upstream status; logging never includes prompt or image content',async t=>{
