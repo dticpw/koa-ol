@@ -1,4 +1,4 @@
-import { DECK_RULES, CARD_META, DEFAULT_DECK } from './deck-rules.js?v=101';
+import { DECK_RULES, CARD_META, DEFAULT_DECK } from './deck-rules.js?v=102';
 // Pure state transitions. The UI never decides damage, legality or turn ownership.
 export const CATALOG = {
   foresight: { name: "占卜", icon: 'eye', family: '操控', cost: 1, stay: false, text: "查看自己王牌堆顶部至多3张，选1张加入手牌，其余按原相对顺序放到牌堆底部。" },
@@ -14,7 +14,7 @@ export const CATALOG = {
   shield: { name: '护盾', icon: 'shield', family: '守护', cost: 1, stay: true, text: '在桌上时，你输掉本局的伤害减少 1。' },
   joy: { name: '幸福', icon: 'star', family: '命运', cost: 1, text: '双方各获得 1 张王牌。' },
   add1: { name: '+1', icon: 'sword', family: '进攻', cost: 1, stay: true, text: '对手输掉本局的伤害增加 1；打出时获得 1 张王牌。' },
-  cycle: { name: '王牌变换', icon: 'cycle', family: '命运', cost: 1, text: '随机弃掉另外 2 张手牌王牌，再获得 3 张。至少需要另外 2 张手牌。' },
+  cycle: { name: '王牌变换', icon: 'cycle', family: '命运', cost: 1, text: '随机弃掉另外 1 张手牌王牌，再获得 3 张。手牌不足时无法打出。' },
   return: { name: '退回', icon: 'return', family: '操控', cost: 1, text: '将自己最右侧的数牌洗回数牌池，不能退回底牌。' },
   destroy: { name: '破坏', icon: 'break', family: '操控', cost: 1, text: '移除对手桌上最右侧的王牌。' },
   swap: { name: '交换', icon: 'swap', family: '操控', cost: 1, text: '交换双方最右侧的数牌并明置，不影响底牌。' },
@@ -66,10 +66,10 @@ export function deckError(entries) {
   if (!Array.isArray(entries)) return '牌组格式无效。';
   let count=0,power=0; const seen=new Set();
   for(const e of entries){const meta=CARD_META[e?.type];
-    if(!meta?.deckEligible || !Number.isSafeInteger(e.count) || e.count<1 || e.count>40 || (meta.values ? !meta.values.includes(e.value) : e.value!==undefined))return '牌组含无效卡牌或数量。';
+    if(!meta?.deckEligible || !Number.isSafeInteger(e.count) || e.count<1 || e.count>DECK_RULES.cardCount || (meta.values ? !meta.values.includes(e.value) : e.value!==undefined))return '牌组含无效卡牌或数量。';
     const key=e.type+':'+e.value;if(seen.has(key))return '请合并同名卡数量。';seen.add(key);count+=e.count;power+=e.count*meta.power;
   }
-  return count!==40?'牌组必须恰好40张。':power>100?'牌组总牌力不能超过100。':'';
+  return count!==DECK_RULES.cardCount?`牌组必须恰好${DECK_RULES.cardCount}张。`:power>DECK_RULES.maxPower?`牌组总牌力不能超过${DECK_RULES.maxPower}。`:'';
 }
 function shuffledDeck(s, entries){const error=deckError(entries);if(error)throw new Error(error);const cards=entries.flatMap(e=>Array.from({length:e.count},()=>({type:e.type,...(e.value===undefined?{}:{value:e.value}),id:`t${++s.serial}`})));for(let i=cards.length-1;i>0;i--){const j=pick(s,cards.slice(0,i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}return cards;}
 const lastVisibleIndex = p => p.numbers.findLastIndex((c,i)=>i>0&&!c.hidden);
@@ -182,7 +182,7 @@ export function playError(s, actor, id) {
   }
   if (card.type === 'challenge' && tableCard(s, 'seelieDecision')) return '「希儿的决定权」在场，不能打出挑战牌。';
   if (slots(p) + CATALOG[card.type].cost > 5) return `桌面空位不足，需要 ${CATALOG[card.type].cost} 格。`;
-  if (card.type === 'cycle' && p.hand.length < 3) return '需要另外 2 张手牌王牌。';
+  if (card.type === 'cycle' && p.hand.length < 2) return '手牌不足时无法打出。';
   if (card.type === 'curse' && p.hand.length < 2) return '需要另外 1 张手牌王牌。';
   if (card.type === 'curse' && !s.deck.length) return '数牌池已空，无法强制抽牌。';
   if (card.type === 'return' && p.numbers.length < 2) return '只有底牌，不能退回。';
@@ -288,7 +288,7 @@ export function dispatch(state, action) {
       case 'joy': grant(s, actor, 1); grant(s, 1 - actor, 1); break;
       case 'add1': case 'add2': grant(s, actor, 1); break;
       case 'cycle':
-        for (let i = 0; i < 2; i++) p.hand.splice(pick(s, p.hand), 1);
+        p.hand.splice(pick(s, p.hand), 1);
         grant(s, actor, 3); break;
       case 'return': case 'remove': {
         const owner = card.type === 'return' ? p : enemy;

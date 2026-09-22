@@ -2,21 +2,21 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#171317"><meta name="description" content="查阅王牌21点卡牌效果，以40张卡、100牌力构筑自己的牌组。">
+  <meta name="theme-color" content="#171317"><meta name="description" content="查阅王牌21点卡牌效果，以24张卡、100牌力构筑自己的牌组。">
   <title>卡牌图鉴与组牌 · 王牌21点</title>
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./cards.css">
-  <script type="module" src="../src/cards.js?v=101"></script>
+  <script type="module" src="../src/cards.js?v=102"></script>
 </head>
 <body>
   <a class="skip" href="#library">跳到卡牌图鉴</a>
   <header class="topbar"><a class="brand" href="../lobby/"><span class="seal">A</span><span>王牌21点 <small>THE MIDNIGHT TABLE</small></span></a><a class="back-link" href="../lobby/">← 返回游戏大厅</a></header>
   <main>
     <section class="hero" aria-labelledby="page-title">
-      <div><p class="eyebrow">THE CARD ATELIER / 王牌档案</p><h1 id="page-title">每一张，都有你的打算。</h1><p class="intro">查阅牌效，挑选组合，留下自己的王牌。</p><div class="rules"><span><b>40</b> 张组成牌组</span><span><b>100</b> 牌力上限</span><span>同名牌不限数量</span></div></div>
+      <div><p class="eyebrow">THE CARD ATELIER / 王牌档案</p><h1 id="page-title">每一张，都有你的打算。</h1><p class="intro">查阅牌效，挑选组合，留下自己的王牌。</p><div class="rules"><span><b>24</b> 张组成牌组</span><span><b>100</b> 牌力上限</span><span>同名牌不限数量</span></div></div>
       <div class="hero-cards" aria-hidden="true"><div><img src="../assets/trump-shield.webp" alt=""><span>守护</span></div><div><img src="../assets/trump-crown.webp" alt=""><span>王牌 21</span></div><div><img src="../assets/trump-sword.webp" alt=""><span>进攻</span></div></div>
     </section>
-    <p class="release-note">牌组保存在当前浏览器。组好后在大厅或单人开局前选择；每场从各自40张王牌堆无放回抽取，抽完即止。</p>
+    <p class="release-note">牌组保存在当前浏览器。组好后在大厅或单人开局前选择；每场从各自24张王牌堆无放回抽取，抽完即止。</p>
     <div id="storage-alert" class="warning" role="alert" hidden></div>
     <p id="load-status" role="status">正在整理卡牌档案…</p>
     <div id="workbench" class="workbench" hidden>
@@ -32,7 +32,7 @@
         <div class="section-heading"><h2 id="deck-title">我的牌组</h2><button id="new-deck" class="text-button">＋ 新建</button></div>
         <label class="sr-only" for="deck-select">切换牌组</label><select id="deck-select"></select>
         <label class="deck-name">牌组名称<input id="deck-name" maxlength="32" placeholder="为这套牌起个名字"></label>
-        <div class="meters"><div><span>卡牌数量</span><strong><b id="deck-count">0</b><small> / 40</small></strong><progress id="count-meter" max="40" value="0" aria-label="卡牌数量"></progress></div><div><span>总牌力</span><strong><b id="deck-power">0</b><small> / 100</small></strong><progress id="power-meter" max="100" value="0" aria-label="总牌力"></progress></div></div>
+        <div class="meters"><div><span>卡牌数量</span><strong><b id="deck-count">0</b><small> / 24</small></strong><progress id="count-meter" max="24" value="0" aria-label="卡牌数量"></progress></div><div><span>总牌力</span><strong><b id="deck-power">0</b><small> / 100</small></strong><progress id="power-meter" max="100" value="0" aria-label="总牌力"></progress></div></div>
         <p id="deck-validity" role="status"></p>
         <div id="deck-list" class="deck-list"></div>
         <p id="save-status" class="save-status" role="status"></p>

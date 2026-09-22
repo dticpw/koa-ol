@@ -1,7 +1,7 @@
-import { DEFAULT_DECK, CARD_META, DECK_RULES } from './deck-rules.js?v=101';
-import { buildCatalog, loadCollection, validateDeck, STORAGE_KEY } from './deck-builder.js?v=101';
+import { DEFAULT_DECK, CARD_META, DECK_RULES } from './deck-rules.js?v=102';
+import { buildCatalog, loadCollection, validateDeck, STORAGE_KEY } from './deck-builder.js?v=102';
 export function availableDecks(){
-  const fallback={id:'default',name:'初始牌组 · 98牌力',entries:DEFAULT_DECK};
+  const fallback={id:'default',name:`初始牌组 · ${DEFAULT_DECK.reduce((n,c)=>n+CARD_META[c.type].power*c.count,0)}牌力`,entries:DEFAULT_DECK};
   try{
     const catalog=buildCatalog({cards:Object.values(CARD_META)}),data=loadCollection(localStorage.getItem(STORAGE_KEY),catalog,DECK_RULES);
     const decks=data?.decks.filter(d=>validateDeck(d.entries,catalog,DECK_RULES).valid).map(d=>({...d,entries:d.entries.map(e=>{const [type,value]=e.key.split(':');return {type,count:e.count,...(value===undefined?{}:{value:Number(value)})};})}))||[];

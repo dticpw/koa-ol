@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "status": "release-1.0.1",
+  "status": "release-1.0.2",
   "deckRules": {
     "status": "implemented",
-    "cardCount": 40,
+    "cardCount": 24,
     "maxPower": 100,
     "maxCopies": null,
     "drawMode": "without-replacement",
@@ -69,8 +69,8 @@
     },
     {
       "type": "swap",
-      "power": 10,
-      "powerStatus": "working-proposal",
+      "power": 8,
+      "powerStatus": "user-set",
       "deckEligible": true
     },
     {
@@ -130,8 +130,8 @@
     },
     {
       "type": "challenge",
-      "power": 10,
-      "powerStatus": "working-proposal",
+      "power": 8,
+      "powerStatus": "user-set",
       "deckEligible": true,
       "values": [
         17,

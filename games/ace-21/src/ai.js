@@ -1,4 +1,4 @@
-import { total, slots } from './engine.js?v=101';
+import { total, slots } from './engine.js?v=102';
 
 export function chooseAction(view) {
   if(view.pending)return {type:'choose',actor:view.actor,index:0};
@@ -44,7 +44,7 @@ export function chooseAction(view) {
       case 'desire': v = sum <= target && chanceAhead > .55 && other.handCount >= 2 ? 2.5 : -1; break;
       case 'challenge': v = sum > target && sum <= c.value ? 12 : sum <= target && c.value - sum < 5 ? 1 : -1; break;
       case 'harvest': v = p.handCount >= 4 && slots(p) <= 1 ? 5 : -1; break;
-      case 'cycle': v = p.hand.filter(x => x.type === 'number' && !unknown.includes(x.value)).length >= 2 ? 2 : -.5; break;
+      case 'cycle': v = p.drawCount===0 ? -1 : p.hand.filter(x => x.type === 'number' && !unknown.includes(x.value)).length >= 1 ? 2 : -.5; break;
       case 'devil': v = p.handCount < 3 && view.damage[actor] <= 2 ? 2 : -.5; break;
       case 'joy': v = p.handCount <= 2 && other.handCount >= p.handCount ? 1.2 : -.5; break;
       case 'curse': v = otherOpen >= target - 9 ? 4 : -.5; break;
