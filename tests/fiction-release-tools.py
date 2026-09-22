@@ -72,6 +72,12 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Persistence review'):self.run_rollback(True,review=str(review))
         review.write_text(json.dumps(data))
         self.assertFalse(self.run_rollback(True,review=str(review))['deployed'])
+    def test_multiplayer_cannot_be_removed_by_single_player_compatibility_report(self):
+        self.put('functions/_lib/multiplayer/v3/host.js','versioned interpreter')
+        self.save('multiplayer');self.good['candidateCommit']=self.git('rev-parse','HEAD').strip()
+        self.good['candidateFiles']=self.module.manifest('HEAD');self.report.write_text(json.dumps(self.good))
+        with self.assertRaisesRegex(ValueError,'Multiplayer rollback'):self.run_rollback(True)
+        self.assertTrue((self.repo/'functions/_lib/multiplayer/v3/host.js').exists())
     def test_snapshot_verified_and_no_overwrite(self):
         path=self.root/'snapshot';self.module.snapshot(self.head,path)
         self.assertEqual(self.module.verify_source(path)['commit'],self.head)

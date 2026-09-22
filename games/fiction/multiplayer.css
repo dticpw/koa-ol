@@ -6,3 +6,5 @@ body.prison-story{--accent:#c4dce2;--line:#354953}body.prison-story::before{back
 @media(max-width:480px){.room-side{grid-template-columns:1fr}.mode-heading{gap:10px}.mode-heading p{font-size:11px}.room-title h1{font-size:23px}.seat{padding:4px 6px}.identity-form{gap:8px}.identity-form input{width:160px}.room-actions button{padding:8px 10px}.prison-story .detail-hero{gap:22px}.tables-title{align-items:flex-start}.tables-title > .eyebrow{max-width:100px;text-align:right}}
 
 .tables-panel > #refresh{margin-top:12px}
+
+.save-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:1rem 0;border-bottom:1px solid #40525c}.save-row strong{flex:1;min-width:10rem}.save-row select{padding:.65rem;background:#10202b;color:#e8f0f4;border:1px solid #50636e;border-radius:.3rem}#older{margin-bottom:.75rem}button:focus-visible,select:focus-visible{outline:2px solid #a7d2df;outline-offset:3px}

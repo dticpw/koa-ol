@@ -10,7 +10,7 @@ const args=Object.fromEntries(process.argv.slice(2).map(a=>{const i=a.indexOf('=
 const out=path.resolve(args['--out']);await fs.mkdir(out,{recursive:true});
 const sql=new DatabaseSync(path.join(out,'budget.sqlite')),db=sqliteAdapter(sql);await db.batch(schema.map(q=>db.prepare(q)));
 const env={...process.env,FICTION_DAILY_BUDGET_USD:'20'},members=[{id:'Pgreen',name:'青禾'},{id:'Pink',name:'墨川'}];
-let state=args['--checkpoint']?JSON.parse(await fs.readFile(args['--checkpoint'],'utf8')):createAdventure(members);
+let state=args['--checkpoint']?JSON.parse(await fs.readFile(args['--checkpoint'],'utf8')):createAdventure(members,'cooperative-v2');
 const report={kind:args['--checkpoint']?'ending-replay':'new-game-and-semantic-veto',checks:[],source:args['--checkpoint']||'new session',revision:state.hostRevision};
 async function run(label,texts,verify){
  const actions=texts.map((text,i)=>({...members[i],playerId:members[i].id,text,hold:false}));
@@ -48,7 +48,7 @@ try{
    assert.ok(next.journal.at(-1).outcomes.every(o=>o.text.trim()));
   });
   // Separate controlled scene, not presented as continuation of the long run.
-  state=createAdventure(members);state.location='council';
+  state=createAdventure(members,'cooperative-v2');state.location='council';
   state.log.push({id:'door-fixture',round:0,role:'host',name:'主持',text:'两人站在议事厅侧廊的典狱长办公室外。普通铁门上的魔法锁仍在，门前此刻无人，室内没有可听见的人声。任务地图可暂时压制附近一扇普通门的魔法锁；是否进去由你们决定。'});
   await run('source-door-fixture',['我明确同意现在试着潜入办公室。我使用任务地图短暂压制眼前普通铁门的魔法锁，轻推开门，和墨川一起进去后掩好门。愿承担正常潜入风险，不要求绝对安全。','我同意这次潜入，配合青禾留意侧廊动静，在地图压制门锁时一同进入并轻掩门。进屋后只观察柜子位置，不宣称已经打开柜子或拿到账册。'],next=>{
    assert.equal(next.location,'office');assert.equal(next.keyCopied,false);assert.equal(next.ended,false);

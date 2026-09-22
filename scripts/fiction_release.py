@@ -170,6 +170,11 @@ def rollback(args):
         raise ValueError('Worktree must be clean, including untracked files')
     if not changed:
         return {'changed': [], 'message': 'Already at requested fiction version'}
+    # The generic compatibility sampler covers single-player saves only.
+    # Keep every published multiplayer interpreter: route NEW sessions back
+    # instead of deleting code needed by pinned, externally stored histories.
+    if any(p.startswith('functions/_lib/multiplayer/') or p == 'functions/api/fiction-rooms.js' for p in changed):
+        raise ValueError('Multiplayer rollback is not covered by the single-player compatibility report; keep existing interpreters and switch the new-game host revision instead')
     if not args.compat:
         raise ValueError('--compat report is required')
     report = json.loads(Path(args.compat).read_text())

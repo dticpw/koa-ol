@@ -10,7 +10,7 @@ import * as singleEngine from '../functions/_lib/fiction-engine.js';
 
 function fixture(resolver){
  const sql=new DatabaseSync(':memory:'),env={DB:sqliteAdapter(sql)},calls=[];
- const handle=createMultiplayerHandler({resolver:resolver||(async({state,actions})=>{calls.push(actions);const next=structuredClone(state);next.round++;next.drafts={};next.facts.push({id:'private_secret',text:'SHOULD_NEVER_APPEAR'});next.log.push({id:'x'+next.round,round:next.round,role:'host',name:'主持',text:'队伍在码头交换了想法。'});return {state:next,trace:[]};})});
+ const handle=createMultiplayerHandler({resolver:resolver||(async({state,actions})=>{calls.push(actions);const next=structuredClone(state);next.round++;next.drafts={};next.facts.push({id:'private_secret',text:'SHOULD_NEVER_APPEAR'});next.log.push({id:'x'+next.round,round:next.round,audience:state.characters.map(c=>c.id),role:'host',name:'主持',text:'队伍在码头交换了想法。'});return {state:next,trace:[]};})});
  function client(){let cookie='';return {get cookie(){return cookie;},async req(body,query='',headers={}){const r=await handle({env,request:new Request('https://game.test/api/fiction-rooms'+query,{method:body?'POST':'GET',headers:{Cookie:cookie,...(body?{'Content-Type':'application/json',Origin:'https://game.test'}:{}),...headers},...(body?{body:JSON.stringify(body)}:{})})});if(r.headers.has('Set-Cookie'))cookie=r.headers.get('Set-Cookie').split(';')[0];return {status:r.status,body:await r.json(),headers:r.headers};}};}
  return {sql,env,calls,client};
 }
@@ -36,7 +36,7 @@ test('minimum count, host-only start, full roster and repeat start are enforced'
  const f=fixture(),[a]=await seated(f,1);assert.equal((await a.req(start())).body.code,'not_enough_players');
  const b=f.client();await b.req({op:'hello',name:'朋友'});await b.req(op('join'));assert.equal((await b.req(start())).status,403);
  assert.equal((await a.req(start())).status,200);const g=(await a.req(null,'?table=20000')).body.table.game;
- assert.equal(g.characters.length,2);assert.equal(g.hostRevision,'cooperative-v2');await a.req(start());assert.equal((await a.req(null,'?table=20000')).body.table.game.runId,g.runId);f.sql.close();
+ assert.equal(g.characters.length,2);assert.equal(g.hostRevision,'cooperative-v3');await a.req(start());assert.equal((await a.req(null,'?table=20000')).body.table.game.runId,g.runId);f.sql.close();
 });
 test('six seats maximum and a player cannot join two tables',async()=>{
  const f=fixture(),cs=await seated(f,6);assert.equal((await cs[0].req(op('join',{table:20001}))).body.code,'already_seated');
@@ -103,7 +103,7 @@ test('waiting disconnected players expire without evicting active adventures',as
  for(const x of cs)await x.req(op('join'));await cs[0].req(start());f.sql.prepare('UPDATE koa_fiction_multi_players SET last_seen=?').run(Date.now()-31*60000);assert.equal((await c.req()).body.tables[0].members.length,2);f.sql.close();
 });
 test('program checks reject teleportation, omitted actors, unowned items and movement of a holding player',()=>{
- const state=createAdventure([{id:'P1',name:'甲'},{id:'P2',name:'乙'}]),actions=[{playerId:'P1',text:'观察',hold:false},{playerId:'P2',text:'观察',hold:false}];
+ const state=createAdventure([{id:'P1',name:'甲'},{id:'P2',name:'乙'}],'cooperative-v1'),actions=[{playerId:'P1',text:'观察',hold:false},{playerId:'P2',text:'观察',hold:false}];
  const proposal={destination:'dock',suspicionDelta:0,suspicionReason:'',keyCopied:false,ended:false,facts:[],items:[],removeItems:[],outcomes:actions.map(a=>({playerId:a.playerId,text:'观察码头'})),narration:'船员卸货。'};
  assert.equal(applyRuling(state,proposal,actions).round,1);
  assert.throws(()=>applyRuling(state,{...proposal,destination:'office'},actions));assert.throws(()=>applyRuling(state,{...proposal,outcomes:[proposal.outcomes[0]]},actions));

@@ -1,14 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createAdventure,resolveMultiplayer} from '../functions/_lib/multiplayer/host.js';
+import {createAdventure as createVersionedAdventure,resolveMultiplayer} from '../functions/_lib/multiplayer/host.js';
 import {applyRuling,applyCorrections,schemasFor} from '../functions/_lib/multiplayer/host-v2.js';
 import {buildContext,retrieveHistory} from '../functions/_lib/multiplayer/context.js';
 import {story as legacyStory} from '../functions/_lib/multiplayer/story-v1.js';
 const members=[{id:'Pa',name:'青'},{id:'Pb',name:'墨'}];
+// This suite exercises v2 rulings even after the new-game default advances.
+const createAdventure=(members,revision='cooperative-v2')=>createVersionedAdventure(members,revision);
 const actions=[{playerId:'Pa',name:'青',text:'我在码头观察，借用船员的铅笔，答应离开时顺路归还。',hold:false},{playerId:'Pb',name:'墨',text:'接下来从码头到升降笼，我跟随青一起走；若有危险再停下决定。',hold:false}];
 const proposal=(state,acts=actions)=>({destination:state.location,route:[state.location],suspicionDelta:0,suspicionReason:'',keyCopied:false,ended:false,coordination:acts.map(a=>({playerId:a.playerId,basis:'stay',quote:'',agreementId:''})),outcomes:acts.map(a=>({playerId:a.playerId,kind:'observation',text:'船员借出铅笔；两人观察了码头。'})),items:[],removeItems:[],memoryUpdates:[],sceneSummary:{place:state.location,text:'两人在码头观察。'},narration:'船员搬运货物。'});
 const follow=()=>({id:'follow_dock',kind:'agreement',owner:'Pb',text:'从码头到升降笼跟随青，遇到新危险停下。',status:'active',places:['dock','lift'],knownBy:['Pa','Pb'],source:{round:1,actor:'Pb',quote:actions[1].text}});
-test('new sessions pin v2; explicit baseline and old saves remain usable, unknown revisions fail closed',async()=>{
+test('new sessions pin v3; explicit baselines and old saves remain usable, unknown revisions fail closed',async()=>{
+ assert.equal(createVersionedAdventure(members).hostRevision,'cooperative-v3');
  assert.equal(createAdventure(members).hostRevision,'cooperative-v2');assert.equal(createAdventure(members,'cooperative-v1').version,1);
  assert.match(createAdventure(members).log[0].text,/全队同行/);
  assert.equal(createAdventure(members,'cooperative-v1').log[0].text,legacyStory.opening);
