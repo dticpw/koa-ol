@@ -1,7 +1,7 @@
-import { cardArt } from './card-art.js?v=103';
-import { CATALOG } from './engine.js?v=103';
-import { toneOf } from './feedback.js?v=103';
-import { sortOrder } from './presentation.js?v=103';
+import { cardArt } from './card-art.js?v=104';
+import { CATALOG } from './engine.js?v=104';
+import { toneOf } from './feedback.js?v=104';
+import { sortOrder } from './presentation.js?v=104';
 
 export const STORAGE_KEY = 'koa-ace21-decks-v1';
 export const cardKey = (type, value) => value === undefined ? type : `${type}:${value}`;

@@ -1,5 +1,5 @@
-import { DEFAULT_DECK, CARD_META, DECK_RULES } from './deck-rules.js?v=103';
-import { buildCatalog, loadCollection, validateDeck, STORAGE_KEY } from './deck-builder.js?v=103';
+import { DEFAULT_DECK, CARD_META, DECK_RULES } from './deck-rules.js?v=104';
+import { buildCatalog, loadCollection, validateDeck, STORAGE_KEY } from './deck-builder.js?v=104';
 export function availableDecks(){
   const fallback={id:'default',name:`初始牌组 · ${DEFAULT_DECK.reduce((n,c)=>n+CARD_META[c.type].power*c.count,0)}牌力`,entries:DEFAULT_DECK};
   try{

@@ -1,4 +1,4 @@
-import { DECK_RULES, CARD_META, DEFAULT_DECK } from './deck-rules.js?v=103';
+import { DECK_RULES, CARD_META, DEFAULT_DECK } from './deck-rules.js?v=104';
 // Pure state transitions. The UI never decides damage, legality or turn ownership.
 export const CATALOG = {
   foresight: { name: "占卜", icon: 'eye', family: '操控', cost: 1, stay: false, text: "查看自己王牌堆顶部至多3张，选1张加入手牌，其余按原相对顺序放到牌堆底部。" },

@@ -1,4 +1,4 @@
-import { toneOf } from './feedback.js?v=103';
+import { toneOf } from './feedback.js?v=104';
 
 // Display-only ordering: never reorder the authoritative hand (random discards use it).
 export const sortOrder = Object.fromEntries([

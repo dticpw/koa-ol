@@ -1,4 +1,4 @@
-import { total, slots } from './engine.js?v=103';
+import { total, slots } from './engine.js?v=104';
 
 export function chooseAction(view) {
   if(view.pending)return {type:'choose',actor:view.actor,index:0};
