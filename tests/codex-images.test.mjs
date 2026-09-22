@@ -43,6 +43,7 @@ test('generation forwards exact model and returns image bytes and metadata uncha
   t.mock.method(globalThis,'fetch',async(url,options)=>{
     assert.equal(url,'https://upstream.invalid/v1/images/generations');
     assert.equal(options.headers.get('Authorization'),'Bearer test-upstream');
+    assert.equal(options.redirect,'manual');
     assert.deepEqual(JSON.parse(options.body),{model:'gpt-image-2',prompt:'A cup',quality:'low',size:'1024x1024',n:1});
     return Response.json(upstream,{headers:{'x-request-id':'image-123'}});
   });
@@ -109,4 +110,12 @@ test('errors retain upstream status; logging never includes prompt or image cont
   assert.equal(rows.length,1);assert.equal(JSON.stringify(rows).includes('private test prompt'),false);
   assert.equal(JSON.stringify(rows).includes('test-image-key'),false);
   assert.equal((await onRequestOptions()).status,204);
+});
+
+test('upstream redirects are not followed or exposed to clients',async t=>{
+  t.mock.method(globalThis,'fetch',async(_url,options)=>{
+    assert.equal(options.redirect,'manual');
+    return new Response(null,{status:307,headers:{Location:'https://unexpected.invalid/'}});
+  });
+  const r=await generate(context());assert.equal(r.status,502);assert.equal(r.headers.has('Location'),false);
 });

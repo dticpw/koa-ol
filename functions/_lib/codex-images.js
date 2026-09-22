@@ -120,13 +120,17 @@ export async function handleImage(context, operation) {
   let response;
   try {
     response = await fetch(`${String(env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '')}/images/${operation}`, {
-      method: 'POST', headers, body: JSON.stringify(body), redirect: 'error',
+      method: 'POST', headers, body: JSON.stringify(body), redirect: 'manual',
     });
   } catch {
     logStatus(context, body.model, operation, started, 'network');
     return error('Upstream image request failed', 502);
   }
   logStatus(context, body.model, operation, started, response.status);
+  if (response.status >= 300 && response.status < 400) {
+    await response.body?.cancel();
+    return error('Upstream image endpoint unexpectedly redirected', 502);
+  }
   const returnedHeaders = new Headers(cors);
   for (const name of ['content-type', 'x-request-id', 'retry-after']) {
     if (response.headers.has(name)) returnedHeaders.set(name, response.headers.get(name));
