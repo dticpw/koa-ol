@@ -6,13 +6,14 @@ export const MODEL_EFFORTS = Object.freeze({
   'gpt-5.6-luna': ['low', 'medium', 'high', 'xhigh', 'max'],
   'gpt-6-astra': ['low', 'medium', 'high', 'xhigh', 'max'],
 });
+export const IMAGE_MODELS = Object.freeze(['gpt-image-2']);
 
 export async function authorizeClient(request, env) {
   const token = /^Bearer\s+(.+)$/i.exec(request.headers.get('Authorization') || '')?.[1]?.trim();
   const legacy = String(env.CLIENT_API_KEYS || '').split(',').map(x => x.trim()).filter(Boolean);
   if (!token) return { error: 'Unauthorized', status: 401 };
   // Keep legacy keys and their original single-model behavior intact.
-  if (legacy.includes(token)) return { models: ['gpt-5.6-sol'], legacy: true };
+  if (legacy.includes(token)) return { models: ['gpt-5.6-sol'], imageModels: [], legacy: true };
   let policies;
   try {
     policies = JSON.parse(env.CODEX_CLIENT_POLICIES || '{}');
@@ -28,7 +29,11 @@ export async function authorizeClient(request, env) {
       policy.models.some(m => !Object.hasOwn(MODEL_EFFORTS, m))) {
     return { error: 'Invalid client model policy', status: 500 };
   }
-  return { models: [...new Set(policy.models)], legacy: false };
+  const imageModels = policy.image_models ?? [];
+  if (!Array.isArray(imageModels) || imageModels.some(m => !IMAGE_MODELS.includes(m))) {
+    return { error: 'Invalid client image model policy', status: 500 };
+  }
+  return { models: [...new Set(policy.models)], imageModels: [...new Set(imageModels)], legacy: false };
 }
 
 export function validateRequest(body, access) {

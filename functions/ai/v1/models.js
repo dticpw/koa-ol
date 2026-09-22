@@ -8,7 +8,7 @@ export async function onRequestGet(context) {
   const access = await authorizeClient(request, env);
   if (access.error) return jsonError(access.error, access.status);
 
-  const models = access.models;
+  const models = [...access.models, ...access.imageModels];
 
   return new Response(
     JSON.stringify({
