@@ -177,7 +177,7 @@ export function createMultiplayerHandler({resolver=resolveMultiplayer}={}){
    if(body.op==='start'){
     if(state)return json({ok:true,table:body.table,started:true});
     if(seats.length<story.minPlayers)error(409,`至少需要${story.minPlayers}人才能开局。`,'not_enough_players');
-    state=createAdventure(seats.map(publicPlayer),env.FICTION_MULTIPLAYER_HOST_REVISION||'cooperative-v3');await commit(state,'playing',body.requestId);return json({ok:true,table:body.table,started:true});
+    state=createAdventure(seats.map(publicPlayer),env.FICTION_MULTIPLAYER_HOST_REVISION||'cooperative-v4');await commit(state,'playing',body.requestId);return json({ok:true,table:body.table,started:true});
    }
    if(row.status==='paused')error(409,'冒险已暂停，等待队员返回后由房主继续。','game_paused');
    if(!state||state.ended)error(409,'当前没有正在进行的冒险。','not_playing');

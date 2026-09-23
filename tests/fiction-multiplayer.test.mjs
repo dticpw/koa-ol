@@ -36,7 +36,7 @@ test('minimum count, host-only start, full roster and repeat start are enforced'
  const f=fixture(),[a]=await seated(f,1);assert.equal((await a.req(start())).body.code,'not_enough_players');
  const b=f.client();await b.req({op:'hello',name:'朋友'});await b.req(op('join'));assert.equal((await b.req(start())).status,403);
  assert.equal((await a.req(start())).status,200);const g=(await a.req(null,'?table=20000')).body.table.game;
- assert.equal(g.characters.length,2);assert.equal(g.hostRevision,'cooperative-v3');await a.req(start());assert.equal((await a.req(null,'?table=20000')).body.table.game.runId,g.runId);f.sql.close();
+ assert.equal(g.characters.length,2);assert.equal(g.hostRevision,'cooperative-v4');await a.req(start());assert.equal((await a.req(null,'?table=20000')).body.table.game.runId,g.runId);f.sql.close();
 });
 test('six seats maximum and a player cannot join two tables',async()=>{
  const f=fixture(),cs=await seated(f,6);assert.equal((await cs[0].req(op('join',{table:20001}))).body.code,'already_seated');

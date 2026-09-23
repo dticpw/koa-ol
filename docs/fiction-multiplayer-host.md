@@ -1,6 +1,6 @@
 # 多人主持 v2：协调与长程记忆
 
-本文保留 v2 发布时的设计记录；v3 的适配、休局恢复、事件存储与回退边界见 [多人主持 v3](fiction-multiplayer-v3.md)。
+本文保留v2发布时的设计记录；当前新局与封测兼容策略见[多人主持v4](fiction-multiplayer-v4.md)，v3历史实现见[多人主持v3](fiction-multiplayer-v3.md)。
 
 ## 发布边界
 
