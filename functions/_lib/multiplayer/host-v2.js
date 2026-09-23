@@ -58,7 +58,7 @@ export function applyRuling(state,p,actions){
 }
 export async function resolveMultiplayer({env,db,state,actions,chat=[],fetchImpl=fetch}){
  const deadline=Date.now()+150000,trace=[],context=buildContext(state,actions,chat),schemas=schemasFor(state);
- const invoke=async(input,format,maxTokens)=>{const t={};trace.push(t);return callModel(env,db,fetchImpl,input,{format,maxTokens,timeoutMs:75000,requestTimeoutLimitMs:75000,deadlineAt:deadline,traceCall:t});};
+ const invoke=async(input,format,maxTokens)=>{const t={};trace.push(t);return callModel(env,db,fetchImpl,input,{modelId:state.hostModel,format,maxTokens,timeoutMs:75000,requestTimeoutLimitMs:75000,deadlineAt:deadline,traceCall:t});};
  let issue=null;
  try{for(let attempt=0;attempt<2;attempt++){
   const raw=await invoke([{role:'developer',content:RULES},{role:'user',content:JSON.stringify({...context,...(issue?{correction:issue}:{})})}],{type:'json_schema',name:'cooperative_ruling_v2',strict:true,schema:schemas.proposal},4200);

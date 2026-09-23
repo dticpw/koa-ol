@@ -42,7 +42,7 @@ ${HOST_DISCRETION}
 这是轻规则叙事试玩，不伪称投过真实骰子，不捏造角色法术与数值。调查、交涉要给具体回应；动作不可能时说明场内原因并提供线索，不说后台字段限制。不照本宣读主持秘密。不机械地每轮增加警戒，suspicionDelta必须有可见异常被目击和报告或事件证据；化解质疑可以保持不变。物品更新为完整现状，普通环境变化和NPC态度写facts并持续保留。不能因控制字数丢弃原有事实。items仅填写变化或实际取得的物品，owner必须为既有角色ID，取物必须在场且不能复制唯一物。每位行动者恰有一条outcomes。keyCopied仅在真实获取且正确记录目标纹身时为true；ended仅在队伍实际撤离且明确结束时为true，允许放弃撤离。正文通常350—650汉字，按发生先后融合队员动作，不逐人机械列清单、不反复清点未变物品。行动简单则可简短。`;
 export async function resolveMultiplayer({env,db,state,actions,chat,fetchImpl=fetch}){
  const deadline=Date.now()+120000,trace=[];
- const invoke=async(input,format,maxTokens)=>{const t={};trace.push(t);return callModel(env,db,fetchImpl,input,{format,maxTokens,timeoutMs:60000,deadlineAt:deadline,traceCall:t});};
+ const invoke=async(input,format,maxTokens)=>{const t={};trace.push(t);return callModel(env,db,fetchImpl,input,{modelId:state.hostModel,format,maxTokens,timeoutMs:60000,deadlineAt:deadline,traceCall:t});};
  const context={story,world:state,actions,chat:chat.slice(-12),note:'facts是主持确认事实；log是公开叙述。后台真相不能直接透露。'};
  let issue=null;
  for(let attempt=0;attempt<2;attempt++){

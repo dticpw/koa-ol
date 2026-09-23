@@ -8,3 +8,11 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 .action-notice{margin:24px 0 0;scroll-margin-top:28px}
+
+/* Compact host choice follows the existing book/desk palette. */
+.host-picker{display:flex;flex-direction:column;gap:6px;font-family:inherit;font-size:13px;line-height:1.5;color:inherit;max-width:100%;min-width:0;margin:8px 0}
+.host-picker select{font:inherit;max-width:100%;min-width:0;width:100%;min-height:44px;padding:8px 30px 8px 12px;border:1px solid #6b777e;border-radius:6px;background:#15212c;color:#e8edf0;color-scheme:dark}
+.host-picker select:focus-visible{outline:2px solid #d8b779;outline-offset:3px}
+.host-picker select:disabled{opacity:.6}
+.table-controls .host-picker{flex:1 1 240px;margin:0}
+@media(max-width:480px){.table-controls .host-picker{flex-basis:100%}.host-picker{width:100%}}

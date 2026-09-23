@@ -22,7 +22,7 @@ export async function startPreview({source,data,port=18882,label='candidate',mod
  const labArchives=(await import(new URL('functions/api/fiction-lab/archives.js',base))).onRequest;
  const classic=(await import(new URL('functions/api/fiction.js',base))).onRequest;
  const multiplayer=await stat(resolve(source,'functions/api/fiction-rooms.js')).then(async()=> (await import(new URL('functions/api/fiction-rooms.js',base))).onRequest).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
- const env={DB:sqliteAdapter(sql),FICTION_MULTIPLAYER_HOST_REVISION:process.env.FICTION_MULTIPLAYER_HOST_REVISION,UPSTREAM_API_KEY:modelMode==='real'?process.env.UPSTREAM_API_KEY:undefined,UPSTREAM_BASE_URL:process.env.UPSTREAM_BASE_URL,FICTION_DAILY_BUDGET_USD:process.env.FICTION_PREVIEW_BUDGET_USD||'5'};
+ const env={DB:sqliteAdapter(sql),DEEPSEEK_API_KEY:modelMode==='real'?process.env.DEEPSEEK_API_KEY:undefined,DEEPSEEK_BASE_URL:process.env.DEEPSEEK_BASE_URL,FICTION_MULTIPLAYER_HOST_REVISION:process.env.FICTION_MULTIPLAYER_HOST_REVISION,UPSTREAM_API_KEY:modelMode==='real'?process.env.UPSTREAM_API_KEY:undefined,UPSTREAM_BASE_URL:process.env.UPSTREAM_BASE_URL,FICTION_DAILY_BUDGET_USD:process.env.FICTION_PREVIEW_BUDGET_USD||'5'};
  const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.ico':'image/x-icon'};
  let activePort=port;
  const server=http.createServer(async(req,res)=>{

@@ -16,18 +16,22 @@
   function display(target,trace){
     target.replaceChildren(node('p',`你：${trace.action}`,'trace-action'),node('p',trace.status==='committed'?`第 ${trace.revision} 段 · 已保存进度`:`第 ${trace.revision} 段的尝试 · 未改变进度（${trace.errorCode||'未完成'}）`,'trace-outcome'));
     let attempt=0;
-    trace.calls.forEach((call,index)=>{
+    const calls=trace.calls.flatMap(call=>call.formatRepair?[call,call.formatRepair]:[call]);
+    calls.forEach((call,index)=>{
       if(call.phase==='ruling')attempt++;
-      const label=call.phase==='ruling'?'裁定':'复核与叙述';
+      const label=(call.phase==='ruling'?'裁定':'复核与叙述')+(call.reason==='format_retry'?' · 格式重试':'');
       const status={received:'收到返回',failed:'调用失败',not_sent:'未发出请求'}[call.status]||call.status;
       const d=node('details',undefined,'trace-call');d.append(node('summary',`${index+1}. ${label}${attempt>1?' · 内部修正':''} · ${status}`));
       if(call.durationMs!==undefined)d.append(node('p',`耗时 ${(call.durationMs/1000).toFixed(1)} 秒${call.response?.usage?` · 输入 ${call.response.usage.input_tokens??'—'} / 输出 ${call.response.usage.output_tokens??'—'} tokens`:''}`,'trace-help'));
+      if(call.response?.usage)section(d,'返回 · Token 用量（含缓存与推理统计）',call.response.usage);
+      if(call.cost)section(d,'费用估算 · 非账单',call.cost);
       if(call.request){
-        call.request.input.forEach(message=>section(d,message.role==='developer'?'发送 · 固定规则（developer）':'发送 · 世界与行动资料（user）',parsed(message.content)));
-        const {input,...settings}=call.request;section(d,'发送 · 模型参数与输出格式',settings);
+        (call.request.input||call.request.messages||[]).forEach(message=>section(d,['developer','system'].includes(message.role)?'发送 · 固定规则（'+message.role+'）':'发送 · 世界与行动资料（'+message.role+'）',parsed(message.content)));
+        const {input,messages,...settings}=call.request;section(d,'发送 · 模型参数与输出格式',settings);
         section(d,'发送 · 完整请求 JSON',call.request);
       }
       if(call.response){section(d,'返回 · 内容（JSON 排版）',parsed(call.response.output_text));section(d,'返回 · 原始文字',call.response.output_text);}
+      if(call.response?.redacted)d.append(node('p','返回混入思考分隔标记，已拒绝提交并省略该次文字；用量仍保留。','trace-help'));
       if(call.errorCode)d.append(node('p',`错误：${call.errorCode}。没有伪造缺失的模型返回。`,'trace-help'));
       target.append(d);
     });

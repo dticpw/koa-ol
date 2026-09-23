@@ -28,6 +28,18 @@
     if (className) node.className = className;
     return node;
   }
+  function renderHosts(hosts) {
+    if(!Array.isArray(hosts))return;
+    let saved;try{saved=localStorage.getItem('fiction.host-model');}catch{}
+    const selected=hosts.find(h=>h.id===saved&&h.available)?.id||'gpt-5.6-sol';
+    for(const [id,parent]of [['host-choice',$('start').parentElement],['restart-host-choice',$('reset-dialog').querySelector('.dialog-actions')]]){
+      let select=$(id);
+      if(!select){const label=element('label',id==='host-choice'?'本次冒险的主持':'新冒险的主持','host-picker');label.htmlFor=id;select=element('select');select.id=id;label.append(select);if(id==='host-choice')parent.prepend(label);else parent.before(label);
+        select.addEventListener('change',()=>{if(!game)$('model-label').textContent=select.selectedOptions[0]?.textContent||'GPT-5.6 Sol';document.querySelectorAll('.host-picker select').forEach(n=>n.value=select.value);try{localStorage.setItem('fiction.host-model',select.value);}catch{}});
+      }
+      select.replaceChildren(...hosts.map(h=>{const o=element('option',h.label+(h.available?'':' · 暂未开放'));o.value=h.id;o.disabled=!h.available;return o;}));select.value=selected;
+    }
+  }
   function setBusy(value, message = '主持正在回应…') {
     busy = value;
     if (lab) window.dispatchEvent(new CustomEvent('fiction-busy', { detail: value }));
@@ -36,6 +48,7 @@
     $('adventure').setAttribute('aria-busy', String(value));
     $('start').disabled = value || !available;
     $('restart').disabled = value;
+    document.querySelectorAll('.host-picker select').forEach(n=>n.disabled=value);
     $('action').disabled = value;
     $('send').disabled = value || !game || game.status !== 'playing';
     $('retry').disabled = value;
@@ -137,7 +150,7 @@
     $('location').textContent = game.location.name;
     $('location-description').textContent = game.location.description;
     $('turn-count').textContent = lab ? `第 ${game.turn} 段 · 自由探索` : `第 ${game.turn} 轮 · 余 ${game.remainingTurns} 轮`;
-    $('model-label').textContent = game.model || 'GPT-5.6 Sol';
+    $('model-label').textContent = game.modelLabel || game.model || 'GPT-5.6 Sol';
     renderLog(game.log);
     $('choices').replaceChildren();
     (game.choices || []).forEach((choice, index) => {
@@ -201,6 +214,7 @@
     try {
       const data = await request();
       available = data.available !== false;
+      renderHosts(data.hosts);
       const previousSession = pendingSession || game?.sessionId;
       render(data.game);
       notice(available ? '' : '主持暂时未开放，请稍后回来。');
@@ -287,7 +301,7 @@
     if (busy) return;
     if (pending?.op === 'turn') { await retryPending(); return; }
     if (game && !reset) return;
-    pending = { op: 'start', ...(reset ? { reset: true } : {}) };
+    pending = { op: 'start', hostModel:$(reset?'restart-host-choice':'host-choice')?.value||'gpt-5.6-sol', ...(reset ? { reset: true } : {}) };
     savePending();
     await postPending();
   }

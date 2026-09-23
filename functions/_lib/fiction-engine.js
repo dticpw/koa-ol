@@ -1,3 +1,4 @@
+import {hostView} from './fiction-models.js';
 // Snake Tomb / 蛇墓余火 — deterministic, server-only adventure rules.
 // Adapted from Tomb of the Serpent Kings by Skerples, CC BY-NC-SA 4.0.
 // See games/lantern-tomb/credits.html. Never send the private state to a model/client.
@@ -187,7 +188,7 @@ export function getView(s) {
     clues: [...s.clues.map(id => ({ id, ...clueBook[id] })), ...(s.fieldNotes || [])],
     map: [...visible].map(id => ({ id, name: rooms[id].name, visited: s.visited.includes(id), current: s.location === id })),
     choices: getActions(s), log: s.log.map(x => ({ role: x.role, text: x.text, turn: x.turn })),
-    stats: { resolve: s.resolve, treasure: treasure(s) }, model: 'gpt-5.6-sol', remainingTurns: MAX_TURNS - s.turn };
+    stats: { resolve: s.resolve, treasure: treasure(s) }, ...hostView(s), remainingTurns: MAX_TURNS - s.turn };
 }
 
 export function narrationContext(s, effect) {

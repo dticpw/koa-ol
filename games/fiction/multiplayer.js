@@ -36,13 +36,18 @@
  }
  function renderLobby(data){
   you=data.you;if(you){$('identity-id').textContent='ID · '+you.id;if(!$('player-name').value)$('player-name').value=you.name;}
-  const sig=JSON.stringify([data.you,data.tables,data.saves]);if(sig===lastSignature)return;lastSignature=sig;
+  const sig=JSON.stringify([data.you,data.tables,data.saves,data.hosts]);if(sig===lastSignature)return;lastSignature=sig;
   const rows=data.tables.map(t=>{const row=el('article',undefined,'table-row'+(you?.table===t.number?' mine':''));row.setAttribute('aria-label','第'+t.number+'桌');
    const no=el('div',String(t.number),'table-number');no.append(el('small',`${t.members.length} / ${t.maxPlayers} · ${t.status==='waiting'?'等待同伴':t.status==='ended'?'已结束':t.status==='paused'?'等候原队员':'冒险中'}`));
    const seats=el('div',undefined,'seats');for(const p of t.members){const seat=el('span',p.name+(p.id===t.hostId?' · 房主':''),'seat');seat.append(el('small',p.id+(p.id===you?.id?' · 你':'')));seats.append(seat);}if(!t.members.length)seats.append(el('span','空席 · 等待第一位冒险者','seat empty'));
    const controls=el('div',undefined,'table-controls');
    if(you?.table===t.number){
-    if(t.status==='waiting'&&t.hostId===you.id){const b=button(t.members.length<t.minPlayers?`还差 ${t.minPlayers-t.members.length} 人`:'开局',async()=>{const result=await mutation({op:'start',table:t.number,requestId:crypto.randomUUID()});if(result)location.href=playURL(t.number);});b.disabled=t.busy||t.members.length<t.minPlayers;controls.append(b);}
+    if(t.status==='waiting'&&t.hostId===you.id){
+     const label=el('label','主持','host-picker'),select=el('select');select.setAttribute('aria-label','第 '+t.number+' 桌主持');
+     for(const h of data.hosts||[{id:'gpt-5.6-sol',label:'GPT-5.6 Sol',available:true}]){const option=el('option',h.label+(h.available?'':' · 暂未开放'));option.value=h.id;option.disabled=!h.available;select.append(option);}
+     const preferred=storage.get('fiction.host-model');if([...select.options].some(o=>o.value===preferred&&!o.disabled))select.value=preferred;
+     select.disabled=t.busy;select.addEventListener('change',()=>storage.set('fiction.host-model',select.value));label.append(select);controls.append(label);
+     const b=button(t.members.length<t.minPlayers?`还差 ${t.minPlayers-t.members.length} 人`:'开局',async()=>{const result=await mutation({op:'start',table:t.number,hostModel:select.value,requestId:crypto.randomUUID()});if(result)location.href=playURL(t.number);});b.disabled=t.busy||t.members.length<t.minPlayers;controls.append(b);}
     else if(t.status==='waiting')controls.append(el('span','等待房主开局','identity-id'));
     else{const a=el('a','进入冒险');a.href=playURL(t.number);controls.append(a);}
     const leave=button('离桌',async()=>{if(t.status!=='waiting'&&!confirm('离桌会暂停冒险，原队员可返回。最后一位离桌时会自动保存到“未完的冒险”。继续吗？'))return;await mutation({op:'leave',table:t.number});},true);leave.disabled=t.busy;controls.append(leave);
@@ -55,7 +60,7 @@
   const previousGame=table?.game;you=data.you;table=data.table;$('room-number').textContent='冒险桌 / '+number;
   const g=table.game;if(g){if(historyRun!==g.runId){entries=[];historyRun=g.runId;historyOlder=false;lastLog='';lastChat='';}if(!entries.length||g.history.first!==null&&g.history.first<=entries[0].seq)historyOlder=g.history.hasOlder;const merged=new Map(entries.map(e=>[e.seq,e]));for(const e of g.log)merged.set(e.seq,e);entries=[...merged.values()].sort((a,b)=>a.seq-b.seq);g.log=entries;}if(g&&previousGame&&g.round>previousGame.round&&$('action').value.trim()===previousGame.drafts[you?.id]?.text)$('action').value='';$('room-content').hidden=!g;$('room-empty').hidden=!!g;
   if(!g){$('room-state').textContent=you?.table===number?'等待房主开局':'尚未加入此桌';renderBusy();return;}
-  $('room-state').textContent=`${g.location} · 第 ${g.round} 轮 · ${g.ended?'冒险已结束':table.status==='paused'?'已暂停 · 等候原队员':table.members.length+' 位同伴'}`;
+  $('room-state').textContent=`${g.location} · 第 ${g.round} 轮 · ${g.ended?'冒险已结束':table.status==='paused'?'已暂停 · 等候原队员':table.members.length+' 位同伴'} · 主持：${g.modelLabel||'GPT-5.6 Sol'}`;
   $('export').disabled=false;$('close').hidden=table.hostId!==you.id;$('advance').hidden=table.hostId!==you.id||g.ended;$('action-form').hidden=g.ended;
   $('pause').hidden=table.hostId!==you.id||g.ended;$('resume').hidden=table.hostId!==you.id||table.status!=='paused';$('older').hidden=!historyOlder;
   let pending;try{pending=JSON.parse(storage.get(pendingKey));}catch{}

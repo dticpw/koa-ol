@@ -1,3 +1,4 @@
+import {DEFAULT_HOST_MODEL,knownHostModel,hostProfile,hostView,hostOptions} from '../fiction-models.js';
 import {ApiError} from '../fiction-service.js';
 import {storyFor,defaultStory as story} from './stories/registry.js';
 import {historySchema,prepareHistory,hydrateHistory,historyPage} from './history-store.js';
@@ -39,11 +40,12 @@ async function bodyOf(request){
  const bytes=new Uint8Array(size);let at=0;for(const c of chunks){bytes.set(c,at);at+=c.length;}
  let body;try{body=JSON.parse(new TextDecoder().decode(bytes));}catch{error(400,'请求格式无效。','invalid_request');}
  if(!body||Array.isArray(body)||typeof body!=='object')error(400,'请求格式无效。','invalid_request');
- const fields={hello:['name'],join:['table'],leave:['table'],start:['table','requestId'],chat:['table','text','requestId'],act:['table','text','hold','round'],withdraw:['table','round'],resolve:['table','requestId','round'],close:['table'],pause:['table','title'],restore:['table','runId'],resume:['table']}[body.op];
+ const fields={hello:['name'],join:['table'],leave:['table'],start:['table','requestId','hostModel'],chat:['table','text','requestId'],act:['table','text','hold','round'],withdraw:['table','round'],resolve:['table','requestId','round'],close:['table'],pause:['table','title'],restore:['table','runId'],resume:['table']}[body.op];
  if(!fields||Object.keys(body).some(k=>k!=='op'&&!fields.includes(k)))error(400,'操作参数无效。','invalid_request');
  if(body.op!=='hello'&&!validTable(body.table))error(404,'没有这个桌号。','not_found');
  if(['start','resolve','chat'].includes(body.op)&&!/^[a-zA-Z0-9_-]{16,80}$/.test(body.requestId||''))error(400,'缺少请求标识。','invalid_request');
  if(['act','withdraw','resolve'].includes(body.op)&&(!Number.isSafeInteger(body.round)||body.round<0))error(400,'轮次无效。','invalid_request');
+ if(body.op==='start'&&body.hostModel!==undefined&&!knownHostModel(body.hostModel))error(400,'主持选择无效。','invalid_request');
  if(body.op==='pause'&&(typeof body.title!=='string'||body.title.length>80))error(400,'冒险名称最多80字。','invalid_request');
  if(body.op==='restore'&&!/^[a-zA-Z0-9-]{1,80}$/.test(body.runId||''))error(400,'存档标识无效。','invalid_request');
  if(body.op==='chat'&&(typeof body.text!=='string'||!body.text.trim()||body.text.length>500))error(400,'聊天内容需要在1—500字之间。','invalid_request');
@@ -57,7 +59,7 @@ async function view(db,row,player,url=new URL('https://local/')){
  if(!seats.some(x=>x.player_id===player?.player_id)||!row.state_json)return result;
  const state=JSON.parse(row.state_json),pack=storyFor(state),scene=state.version===3?sceneFor(state,you.id):null;
  const page=await historyPage(db,state,you.id,url);
- result.game={runId:state.runId,hostRevision:state.hostRevision||'cooperative-v1',round:state.round,location:pack.places[scene?.location||state.location][0],ended:state.ended,...page,
+ result.game={...hostView(state),runId:state.runId,hostRevision:state.hostRevision||'cooperative-v1',round:state.round,location:pack.places[scene?.location||state.location][0],ended:state.ended,...page,
   participants:scene?.participants||state.characters.map(c=>c.id),
   inventory:state.items.filter(x=>x.owner===you.id),drafts:Object.fromEntries(Object.entries(state.drafts).filter(([id])=>!scene||scene.participants.includes(id)).map(([id,a])=>[id,{text:a.text,hold:a.hold}])),
   characters:state.characters,chat:await all(db,'SELECT id,player_id AS playerId,name,message AS text,created_at AS createdAt FROM (SELECT * FROM koa_fiction_multi_chat WHERE run_id=? ORDER BY id DESC LIMIT 80) ORDER BY id',state.runId)};
@@ -86,7 +88,7 @@ export function createMultiplayerHandler({resolver=resolveMultiplayer}={}){
     const n=url.searchParams.has('table')?Number(url.searchParams.get('table')):null;
     if(n!==null&&!validTable(n))error(404,'没有这个桌号。','not_found');
     const saves=player?(await all(db,'SELECT s.run_id AS runId,s.title,s.saved_at AS savedAt FROM koa_fiction_multi_saves s JOIN koa_fiction_multi_save_members m ON m.run_id=s.run_id WHERE m.player_id=? ORDER BY s.saved_at DESC LIMIT 30',player.player_id)):[];
-    const base={saves,you:player?{...publicPlayer(player),table:player.table_no}:null,story:{id:story.id,title:story.title,minPlayers:story.minPlayers,maxPlayers:story.maxPlayers}};
+    const base={hosts:hostOptions(env),saves,you:player?{...publicPlayer(player),table:player.table_no}:null,story:{id:story.id,title:story.title,minPlayers:story.minPlayers,maxPlayers:story.maxPlayers}};
     if(n!==null)return json({...base,table:await view(db,await readRoom(db,n),player,url)});
     const rows=await all(db,'SELECT * FROM koa_fiction_multi_tables ORDER BY table_no');
     const tables=[];for(const row of rows){const seats=await roomPlayers(db,row.table_no);const saved=row.state_json?JSON.parse(row.state_json):null;tables.push({number:row.table_no,storyId:row.story_id,status:row.status,revision:row.revision,busy:row.lock_until>Date.now(),hostId:seats[0]?.player_id||null,members:seats.map(publicPlayer),minPlayers:story.minPlayers,maxPlayers:story.maxPlayers,canRejoin:!!saved?.characters.some(c=>c.id===player?.player_id)});}return json({...base,tables});
@@ -177,7 +179,9 @@ export function createMultiplayerHandler({resolver=resolveMultiplayer}={}){
    if(body.op==='start'){
     if(state)return json({ok:true,table:body.table,started:true});
     if(seats.length<story.minPlayers)error(409,`至少需要${story.minPlayers}人才能开局。`,'not_enough_players');
-    state=createAdventure(seats.map(publicPlayer),env.FICTION_MULTIPLAYER_HOST_REVISION||'cooperative-v4');await commit(state,'playing',body.requestId);return json({ok:true,table:body.table,started:true});
+    const modelId=body.hostModel||DEFAULT_HOST_MODEL;
+    if(modelId!==DEFAULT_HOST_MODEL&&!env[hostProfile(modelId).key])error(503,'DeepSeek 主持尚未开放，请稍后再试。','model_unavailable');
+    state=createAdventure(seats.map(publicPlayer),env.FICTION_MULTIPLAYER_HOST_REVISION||'cooperative-v4');state.hostModel=modelId;await commit(state,'playing',body.requestId);return json({ok:true,table:body.table,started:true});
    }
    if(row.status==='paused')error(409,'冒险已暂停，等待队员返回后由房主继续。','game_paused');
    if(!state||state.ended)error(409,'当前没有正在进行的冒险。','not_playing');

@@ -1,3 +1,4 @@
+import {hostView} from './fiction-models.js';
 import { initializeMemory, recordObservations, applyMemories, retrieveHistory } from './fiction-lab-memory.js';
 // Small authored world + generic ledger. Physical interpretation belongs to the
 // host; these checks bound resources, topology and the authored hammer.
@@ -52,7 +53,7 @@ export function getView(saved){
  location:{id:s.location,name:(s.status==='ended'?'最后所在 · ':'')+places[s.location].name,description:s.status==='ended'?'探查已经结束。这里标记你离开前最后经过的地点。':description(s)},status:s.status,ending:s.ending,
  inventory:s.entities.filter(e=>e.place==='carried'&&e.integrity!=='consumed').map(e=>({id:e.id,name:e.name,description:e.facts})),
  clues:[...Object.values(s.knownEntities||knownSnapshot(s.entities)).filter(e=>e.movable&&e.place!=='carried').map(e=>({id:e.id,title:`${e.name} · ${placeName(e.place)}${visible(s,e)?'':' · 上次所见'}`,text:e.facts})),...s.observationHistory.slice(-16).map(note=>({id:note.id,title:`历史观察 · ${note.revision===null?'旧存档，段次未知':'第 '+note.revision+' 段'}`,text:note.text}))],
- map:Object.entries(places).map(([id,p])=>({id,name:p.name,visited:s.visited.includes(id),current:s.location===id})),choices:getActions(s),log:s.log,stats:{resolve:s.resolve,treasure:s.notes.length},model:'gpt-5.6-sol'};
+ map:Object.entries(places).map(([id,p])=>({id,name:p.name,visited:s.visited.includes(id),current:s.location===id})),choices:getActions(s),log:s.log,stats:{resolve:s.resolve,treasure:s.notes.length},...hostView(s)};
 }
 export function hostContext(saved,action=''){
  const s=normalizeGame(saved);
