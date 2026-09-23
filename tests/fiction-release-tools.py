@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import sys
 import unittest
 
 REPO=Path(__file__).resolve().parents[1]
@@ -13,6 +14,24 @@ ARTIFACTS=Path(os.environ.get('FICTION_TEST_ARTIFACTS',REPO.parent/'agent-artifa
 ARTIFACTS.mkdir(parents=True,exist_ok=True)
 
 class ReleaseTests(unittest.TestCase):
+    def run(self, result=None):
+        # Wait until unittest has recorded setup/test/teardown failures before cleaning.
+        actual = result if result is not None else self.defaultTestResult()
+        completed = False
+        try:
+            returned = super().run(actual)
+            completed = True
+            return returned
+        finally:
+            root = getattr(self, 'root', None)
+            failed = any(case is self or getattr(case, 'test_case', None) is self
+                         for case, _ in actual.errors + actual.failures) or self in actual.unexpectedSuccesses
+            if root is not None and root.exists():
+                if completed and not failed and os.environ.get('FICTION_KEEP_TEST_ARTIFACTS') != '1':
+                    shutil.rmtree(root)
+                else:
+                    print(f'Preserved release test artifacts: {root}', file=sys.stderr)
+
     def setUp(self):
         self.root=Path(tempfile.mkdtemp(prefix='rollback-',dir=ARTIFACTS))
         self.repo=self.root/'repo';self.repo.mkdir()

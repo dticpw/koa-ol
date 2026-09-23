@@ -1,6 +1,6 @@
-import test from 'node:test';
+import nodeTest,{after} from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtemp,mkdir,readFile,writeFile} from 'node:fs/promises';
+import {mkdtemp,mkdir,readFile,writeFile,rm} from 'node:fs/promises';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
@@ -13,8 +13,19 @@ const repo=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const artifacts=process.env.FICTION_TEST_ARTIFACTS||resolve(repo,'../agent-artifacts/fiction-release-tests');
 await mkdir(artifacts,{recursive:true});
 const root=await mkdtemp(resolve(artifacts,'run-')),source=resolve(root,'source');
+// A failed/incomplete run remains inspectable; successful fixtures do not accumulate.
+let snapshotReady=false,startedTests=0,completedTests=0;
+function test(name,run){
+ return nodeTest(name,async t=>{startedTests++;await run(t);completedTests++;});
+}
+after(async()=>{
+ if(snapshotReady && completedTests===startedTests && process.env.FICTION_KEEP_TEST_ARTIFACTS!=='1'){
+  await rm(root,{recursive:true,force:true});
+ }else console.error(`Preserved release test artifacts: ${root}`);
+});
 const py=process.env.FICTION_PYTHON;if(!py)throw Error('Set FICTION_PYTHON to your Python interpreter');
 execFileSync(py,[resolve(repo,'scripts/fiction_release.py'),'snapshot','--ref','HEAD','--out',source]);
+snapshotReady=true;
 const path='/api/adventures/library-delve';
 async function call(port,url=path,body,cookies='',headers={}){
  const response=await fetch(`http://127.0.0.1:${port}${url}`,{method:body?'POST':'GET',headers:{'Content-Type':'application/json',Cookie:cookies,...headers},...(body?{body:JSON.stringify(body)}:{})});

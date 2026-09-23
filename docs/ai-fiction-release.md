@@ -2,7 +2,9 @@
 
 主持规则、上下文选择、结算约束和叙事审查会相互影响。优化以一个完整候选版作为评估、提交和发布单位，不将单项评分较高的提示词片段机械拼接。Git 的提交记录便于追踪，但不代表每个提交都应发布。
 
-## 当前基线
+> 本文保留 r9 阶段的工具与实验说明。当前模型/主持状态见 `fiction-host-models.md` 和 `fiction-multiplayer-v4.md`；用户已明确封测阶段不要求兼顾旧版本存档恢复。此处旧兼容检查仍可用于复现实验，不是新的发布要求。
+
+## 2026-09-21 工具基线（历史）
 
 - 标签：`fiction-baseline-20260921-r9`
 - 线上代码：`f89a49024bbdf4357addadc98c278b28fc507215`
@@ -14,13 +16,13 @@
 
 ## 隔离试玩
 
-工作仓库 `/mnt/e/PG/koa-ai-fiction`；工具仅依赖 Python 标准库和支持 `node:sqlite` 的 Node 22+。命令中的 `PY`、`NODE` 是本机工具路径；Python 脚本本身不硬编码这些路径。
+当前工作仓库 `/mnt/e/PG/koa-ai-fiction-multiplayer`；工具仅依赖 Python 标准库和支持 `node:sqlite` 的 Node 22+。命令中的 `PY`、`NODE` 是本机工具路径；Python 脚本本身不硬编码这些路径。
 
 ```bash
-cd /mnt/e/PG/koa-ai-fiction
+cd /mnt/e/PG/koa-ai-fiction-multiplayer
 PY=/home/dticpw/conda/envs/py310/bin/python
 NODE=/home/dticpw/.nvm/versions/node/v22.23.2/bin/node
-RELEASE=/mnt/e/PG/agent-artifacts/fiction-release-20260921
+RELEASE=/mnt/e/PG/koa-ai-fiction-resources/records/fiction-release-20260921
 ```
 
 从 Git 提交制作固定快照，必须使用尚不存在的输出目录；不能直接在快照中改代码。新候选使用新目录名。
@@ -30,7 +32,7 @@ RELEASE=/mnt/e/PG/agent-artifacts/fiction-release-20260921
 "$PY" scripts/fiction_release.py snapshot --ref HEAD --out "$RELEASE/candidate-source"
 ```
 
-这两个快照在本次交付时已经创建，不要重复执行以上创建命令。源文件和 Git blob 指纹一起保存；启动及兼容检查都会核对文件未被改动。
+这些是已迁入长期库的历史快照，不要重复执行创建命令或直接改写；新实验使用独立新目录。2026-09-24 清理的映射、校验和恢复入口见资源库 `maintenance/artifacts-cleanup-20260924/README.md`。源文件和 Git blob 指纹一起保存；启动及兼容检查都会核对文件未被改动。
 
 无模型离线检查：能新开局、恢复与操作收藏；提交自由行动会明确提示模型不可用，不伪造主持回复。
 
@@ -64,7 +66,7 @@ AGENTFLOW_CREDENTIALS_FILE=/mnt/e/PG/keys/credentials.md "$PY" scripts/fiction_r
 "$PY" scripts/fiction_release.py stop --data "$RELEASE/candidate-data"
 ```
 
-## 存档兼容门槛
+## 历史工具的存档兼容门槛
 
 使用服务器权威状态，而非网页导出的阅读记录。后者缺少隐藏世界状态，不能当成完整恢复存档。
 
@@ -111,4 +113,4 @@ FICTION_PYTHON="$PY" "$NODE" --test tests/fiction-*.test.mjs
 PYTHONDONTWRITEBYTECODE=1 "$PY" tests/fiction-release-tools.py
 ```
 
-测试将临时实例、模拟 Git 仓库与报告放入相邻 `agent-artifacts/fiction-release-tests/`，可用 `FICTION_TEST_ARTIFACTS` 指定其他获准产物位置。真实回退演练只在这些模拟仓库执行。
+测试将临时实例和模拟 Git 仓库放入相邻 `agent-artifacts/fiction-release-tests/`，可用 `FICTION_TEST_ARTIFACTS` 指定其他获准产物位置。成功后自动删除本次新建的隔离目录；失败、未完成或设置 `FICTION_KEEP_TEST_ARTIFACTS=1` 时保留并输出路径，不扫描或清理别人的历史目录。Node 按本文件已实际执行测试的完成情况判断，筛选测试同样支持；Python 在 unittest 记录 setup/test/teardown 结果后处理。真实回退演练只在这些模拟仓库执行。需长期保存的 TAP/报告应单独重定向至项目 records，而不是依赖临时工作区。
