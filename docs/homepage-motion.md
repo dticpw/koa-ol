@@ -6,6 +6,7 @@
 
 - index.html 引入 assets/home/experience.css、experience.js，新增轨道装饰和章节进度。
 - 原 home.css、home.js 与 shrine 场景保持原位，独立动态样式在原样式之后加载。
+- 2026-09-29：home.css、experience.css、library.css、immersive.css 已合并为唯一的 `assets/home/home.css`（按章节分段，响应式规则集中在文件末尾）；友链页不再引用它，只加载自包含的 `friends/friends.css`。
 
 ## 交互
 

@@ -1,9 +1,25 @@
+/* Self-contained: shares the homepage palette and brand mark, but not its chapter themes. */
+:root { --paper:#eee9df; --surface:#f7f3eb; --ink:#303e37; --muted:#71756b; --red:#aa4637; --line:#d8d4c8; --serif:"Iowan Old Style","Palatino Linotype","Songti SC","STSong","SimSun",serif; --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:28px; }
+body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased; }
+a { color:inherit; text-decoration:none; -webkit-tap-highlight-color:transparent; }
+a:focus-visible { outline:2px solid var(--red); outline-offset:6px; }
+::selection { background:#ddc6b9; color:var(--ink); }
+.wrap { width:min(1320px,calc(100% - 112px)); margin-inline:auto; }
+.skip-link { position:fixed; left:20px; top:-100px; padding:14px 20px; z-index:20; background:var(--ink); color:white; }
+.skip-link:focus { top:20px; }
+.brand { display:flex; align-items:center; gap:13px; font:600 23px/1.15 Georgia,serif; letter-spacing:-.04em; }
+.brand-mark { font:italic 43px/1 Georgia,serif; letter-spacing:-.12em; margin-right:8px; }
+.brand-mark>span { color:var(--red); }
+.brand-caption { display:block; font:8px/1.5 var(--sans); letter-spacing:.16em; margin-top:5px; color:var(--muted); }
+
 body { min-height:100svh; display:flex; flex-direction:column; --muted:#636b61; }
 .friends-header { display:flex; justify-content:space-between; align-items:center; gap:24px; padding-block:28px; border-bottom:1px solid var(--line); }
 .back-home { font-size:12px; white-space:nowrap; }
 .back-home:hover,.friends-footer a:hover { color:var(--red); }
 .friends-main { flex:1; padding-block:76px 80px; }
-.friends-intro .eyebrow { margin:0 0 22px; font-size:10px; letter-spacing:.16em; }
+.friends-intro .eyebrow { display:flex; align-items:center; gap:10px; margin:0 0 22px; font-size:10px; font-weight:500; letter-spacing:.16em; }
 .friends-intro h1 { margin:0; font:400 clamp(42px,5vw,64px)/1.3 var(--serif); letter-spacing:-.04em; }
 .friends-intro h1>span { color:var(--red); }
 .friends-lead { margin:20px 0 0; color:var(--muted); font-size:14px; line-height:1.9; }
@@ -33,7 +49,9 @@ body { min-height:100svh; display:flex; flex-direction:column; --muted:#636b61; 
 .site-info a { text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:4px; }
 .site-info a:hover { color:var(--red); }
 .friends-footer { display:flex; justify-content:space-between; gap:24px; border-top:1px solid var(--line); padding-block:24px; color:var(--muted); font-size:11px; }
+@media(max-width:1150px) { .wrap { width:calc(100% - 64px); } }
 @media(max-width:1100px) { .friends-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:850px) { .wrap { width:calc(100% - 48px); } }
 @media(max-width:650px) {
   .wrap { width:calc(100% - 40px); }
   .friends-header { padding-block:22px; }
@@ -44,4 +62,14 @@ body { min-height:100svh; display:flex; flex-direction:column; --muted:#636b61; 
   .friend-details { margin-top:40px; }
   .brand-caption { font-size:7px; }
 }
-@media(prefers-reduced-motion:reduce) { .friend-card:hover,.friend-card:focus-visible { transform:none; } }
+@media(max-width:540px) {
+  html { scroll-padding-top:18px; }
+  .brand { font-size:20px; gap:9px; }
+  .brand-mark { font-size:36px; margin-right:5px; }
+  .brand-caption { letter-spacing:.11em; }
+}
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  *,*::before,*::after { transition:none!important; animation:none!important; }
+  .friend-card:hover,.friend-card:focus-visible { transform:none; }
+}

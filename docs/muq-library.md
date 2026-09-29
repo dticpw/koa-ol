@@ -9,6 +9,6 @@
 
 不要向本仓库加入原始日志、明文日记、密码本或馆主口令。浏览器使用口令本地解密，页面不向服务器传送口令。保留 HTTPS 才能使用 WebCrypto。
 
-内容更新从独立 muQ 项目生成；不要直接编辑 catalogue 或密文。`assets/home/library.css` 仅为主页新增入口样式，保持原有主页组件和动效。
+内容更新从独立 muQ 项目生成；不要直接编辑 catalogue 或密文。主页入口样式位于 `assets/home/home.css` 的「02 muQ library」段，保持原有主页组件和动效。
 
 本次上线不新增 Cloudflare KV/D1 表，不改现有站点 API 配置。主项目、来源日志和原始产物仍保存在用户本机共享目录。
