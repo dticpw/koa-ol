@@ -60,6 +60,41 @@ test('stats authentication still precedes database access', async () => {
   assert.equal(response.status,401);
 });
 
+test('active view uses a five minute window, deduplicates IPs and never borrows an older city', async () => {
+  const {db, DB} = database(), now = Date.now();
+  try {
+    const insert = db.prepare('INSERT INTO chat_logs (ts,ip,country,city,region) VALUES (?,?,?,?,?)');
+    insert.run(now-10000,'192.0.2.1','CN','Hangzhou','Zhejiang');
+    insert.run(now-5000,'192.0.2.1','JP',null,null);
+    insert.run(now-600000,'192.0.2.2','CN','Shanghai','Shanghai');
+    insert.run(now-1000,'unknown','CN',null,null);
+    insert.run(now+60000,'192.0.2.3','CN',null,null);
+    const request = new Request('https://test/api/stats?view=active', {headers:{Authorization:'Bearer test'}});
+    const response = await onRequestGet({request,env:{DB,STATS_PASSWORD:'test'}});
+    assert.equal(response.headers.get('Cache-Control'),'no-store');
+    const data = await response.json();
+    assert.equal(data.window_seconds,300);
+    assert.equal(data.total_ips,1);
+    assert.equal(data.truncated,false);
+    assert.deepEqual(data.visitors,[{ip:'192.0.2.1',requests:2,last_seen:now-5000,country:'JP',city:null,region:null}]);
+    assert.equal(data.overall,undefined);
+  } finally {db.close();}
+});
+
+test('active list limit does not undercount; empty activity is zero, authentication still required', async () => {
+  const {db, DB} = database(), env={DB,STATS_PASSWORD:'test'};
+  const request = (key='test') => new Request('https://test/api/stats?view=active',{headers:{Authorization:'Bearer '+key}});
+  try {
+    assert.equal((await onRequestGet({request:request('wrong'),env})).status,401);
+    const empty=await (await onRequestGet({request:request(),env})).json();
+    assert.equal(empty.total_ips,0);assert.deepEqual(empty.visitors,[]);
+    const insert=db.prepare('INSERT INTO chat_logs (ts,ip) VALUES (?,?)');
+    for(let i=0;i<205;i++)insert.run(Date.now()-1000,`192.0.2.${i}`);
+    const data=await (await onRequestGet({request:request(),env})).json();
+    assert.equal(data.total_ips,205);assert.equal(data.visitors.length,200);assert.equal(data.truncated,true);
+  } finally {db.close();}
+});
+
 for (const [name, handler] of [['chat', chat], ['proxy', proxy]]) {
   for (const cf of [{city:'Hangzhou',region:'Zhejiang'}, undefined]) {
     test(`${name} logs ${cf ? 'trusted city/region' : 'missing metadata as null'} on errors`, async () => {

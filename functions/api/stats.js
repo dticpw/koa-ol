@@ -4,7 +4,8 @@
 export async function onRequestGet(context) {
   const { request, env } = context;
   const url = new URL(request.url);
-  const key = url.searchParams.get('key');
+  const bearer = request.headers.get('Authorization');
+  const key = bearer ? bearer.replace(/^Bearer /, '') : url.searchParams.get('key');
 
   // --- 认证 ---
   if (!env.STATS_PASSWORD) {
@@ -19,6 +20,28 @@ export async function onRequestGet(context) {
   }
 
   try {
+    // MA4 needs recent activity, not the full historical statistics on every poll.
+    if (url.searchParams.get('view') === 'active') {
+      const now = Date.now(), windowSeconds = 300;
+      const rows = await env.DB.prepare(`
+        WITH recent AS (
+          SELECT *, ROW_NUMBER() OVER (PARTITION BY ip ORDER BY ts DESC, rowid DESC) AS latest
+          FROM chat_logs
+          WHERE ts >= ? AND ts <= ? AND ip IS NOT NULL AND TRIM(ip) != '' AND ip != 'unknown'
+        ), visitors AS (
+          SELECT ip, COUNT(*) AS requests, MAX(ts) AS last_seen,
+            MAX(CASE WHEN latest = 1 THEN country END) AS country,
+            MAX(CASE WHEN latest = 1 THEN city END) AS city,
+            MAX(CASE WHEN latest = 1 THEN region END) AS region
+          FROM recent GROUP BY ip
+        )
+        SELECT *, COUNT(*) OVER () AS total_ips FROM visitors
+        ORDER BY last_seen DESC, ip LIMIT 200
+      `).bind(now - windowSeconds * 1000, now).all();
+      const total = rows.results[0]?.total_ips || 0;
+      return json({ window_seconds: windowSeconds, generated_at: now, total_ips: total,
+        visitors: rows.results.map(({total_ips, ...visitor}) => visitor), truncated: total > rows.results.length });
+    }
     // 1. 总览
     const overall = await env.DB.prepare(
       `SELECT
@@ -119,6 +142,6 @@ export async function onRequestGet(context) {
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj, null, 2), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
   });
 }
