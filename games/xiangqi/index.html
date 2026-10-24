@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1016">
+  <meta name="description" content="中国象棋大厅：四张双人棋桌，仅同步座位；独立中象自战辅助入口。">
+  <title>中国象棋大厅 · Koa-OL Games</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./lobby.css?v=1">
+  <script type="module" src="./lobby.js?v=1"></script>
+</head>
+<body>
+  <a class="skip" href="#tables">跳到棋桌</a>
+  <main class="hall">
+    <header class="hall-top"><a href="../">← Koa-OL Games</a><span>TABLE CLUB / 03</span></header>
+    <section class="hall-title" aria-labelledby="title">
+      <div><p class="eyebrow">XIANGQI · 中国象棋</p><h1 id="title">一方棋盘，楚河汉界。</h1><p>双人对弈尚未开放，棋桌目前仅同步座位。</p></div>
+      <span class="chess-seal" aria-hidden="true">象</span>
+    </section>
+    <section class="assist" aria-labelledby="assist-title">
+      <div><p class="eyebrow">独立使用 · 无需落座</p><h2 id="assist-title">中象自战辅助</h2><p>个人推演独立进行，不向棋桌同步走棋。</p><small id="assist-note">随局面对照三书着法与原注。</small></div>
+      <a id="assist-link" href="./assist/" aria-describedby="assist-note">前往自战辅助 <span aria-hidden="true">↗</span></a>
+    </section>
+    <section class="seating" aria-labelledby="seating-title">
+      <div class="seating-head"><div><h2 id="seating-title">棋桌</h2><p>4 张桌 · 每桌 2 座</p></div><label class="nickname" for="nickname">入座昵称<input id="nickname" maxlength="24" autocomplete="nickname" placeholder="入座时再填写" required aria-describedby="name-note"><small id="name-note">浏览器记住昵称，同桌玩家可见</small></label></div>
+      <div class="connection-row"><p id="connection" role="status">正在连接座位服务…</p><button id="retry" type="button" hidden>重新连接</button></div>
+      <aside id="timeout-notice" class="timeout-notice" hidden aria-label="闲置提醒"></aside>
+      <p id="notice" role="alert" hidden></p>
+      <div id="tables" class="tables" aria-label="象棋座位"></div>
+      <noscript><p>启用 JavaScript 后可查看和使用座位。自战入口仍可直接访问。</p></noscript>
+    </section>
+    <footer class="hall-footer"><p>在同一标签页返回或刷新，可恢复尚未过期的座位；主动离开请点「离座」。关闭页面或断线超过 2 分钟，座位自动释放。</p><p>10 分钟无有效操作自动离座，最后 60 秒可点「我还在」留座。刷新、轮询和前往自战均不续期；前往自战也不会自动入座。</p></footer>
+  </main>
+</body>
+</html>

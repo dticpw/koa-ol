@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1016">
+<title>中象自战辅助 · Koa Games</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e7c592'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='38' fill='%23962e29'%3E象%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="./style.css"><script type="module" src="./main.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#board">跳到棋盘</a>
+<div class="page">
+<header class="topbar"><a href="../" class="back">← 象棋大厅</a><span class="brand">KOA GAMES <span>/</span> 棋谱研究</span><span class="personal">个人研究</span></header>
+<main>
+<div class="heading"><div><p class="eyebrow">XIANGQI · STUDY BOARD</p><h1>中象自战辅助<span class="seal" aria-hidden="true">弈</span></h1><p class="intro">自己走红黑双方，随局面对照三书着法与原注。</p></div><button id="browse" class="primary">浏览三书 <span>117 局 ↗</span></button></div>
+<div class="workspace">
+<section class="board-section" aria-label="自战棋盘">
+<div class="board-heading"><div><span id="turn-dot" class="turn-dot"></span><strong id="turn">红方行棋</strong><span id="step" class="muted">第 0 手</span></div><span class="board-top-note">黑方在上 · 红方在下</span></div>
+<div id="board" class="board" role="group" tabindex="-1" aria-label="象棋棋盘，方向键移动焦点，回车选择棋子与落点"><svg id="board-lines" viewBox="0 0 564 650" aria-hidden="true"></svg><div id="squares"></div><svg id="arrows" viewBox="0 0 564 650" aria-hidden="true"></svg></div>
+<div class="board-tools"><button id="undo">↶ 撤回</button><button id="redo">↷ 重走</button><button id="reset">重置本局</button><button id="standard" class="quiet">标准开局</button></div>
+<p id="move-message" class="move-message" role="status" aria-live="polite">点选棋子，再点带圆点的落点。方向键与回车也可操作。</p>
+<div class="current-game"><span class="eyebrow">当前棋局</span><h2 id="game-title">自由自战 · 标准开局</h2><p id="game-note" class="muted">红黑双方均由你走棋。</p><div id="line-controls" hidden><label>谱中线路<select id="line-select"></select></label><div class="line-actions"><button id="line-start">原始局面</button><button id="line-prev">← 谱中上一手</button><button id="line-next">谱中下一手 →</button></div><p id="line-status" class="muted"></p></div></div>
+<details class="history"><summary>本次走子 <span id="history-count">0 手</span></summary><ol id="history"></ol></details>
+</section>
+<aside class="study" aria-labelledby="study-title">
+<div class="study-heading"><p class="eyebrow">与古谱对照</p><h2 id="study-title">这一手，书中怎么走</h2><p id="match-count" role="status">正在加载三书…</p></div>
+<div id="data-error" class="notice" hidden><p id="error-text"></p><button id="retry">重新加载棋谱</button></div>
+<div id="match-body" hidden>
+<section class="next-section"><div class="section-label"><h3>谱中下一手</h3><label class="toggle"><input id="show-arrow" type="checkbox" checked>棋盘箭头</label></div><div id="next-moves" class="next-moves"></div><p id="next-note" class="muted"></p><button id="play-choice" class="primary">走这一步</button></section>
+<section class="source-section"><div class="section-label"><h3>出处与原注</h3><span id="source-total" class="muted"></span></div><label class="field-label" for="source-select">选择棋谱来源</label><select id="source-select"></select><label class="field-label" for="path-select">该谱的匹配路径</label><select id="path-select"></select><div id="source-content"></div></section>
+</div>
+<div id="no-match" class="notice" hidden><strong>三书中暂无相同局面</strong><p>可以继续自战。每走一步都会重新查找，换个走子顺序也可能与书中相遇。</p></div>
+</aside>
+</div>
+<footer><span>梅花谱 31 局 · 自出洞来无敌手 35 局 · 橘中秘全局谱 51 局</span><p>仅供个人研究。原注按出处保留，上传者不等于原作者或评注者。支持基本合法走子，不作长将、长捉等完整竞赛裁定；无 AI 自动对弈或联机同步。</p></footer>
+</main>
+</div>
+<dialog id="library-dialog" aria-labelledby="library-title"><div class="dialog-head"><div><p class="eyebrow">三书 · 117 局</p><h2 id="library-title">从原谱开始</h2></div><button id="close-library" aria-label="关闭棋谱书架">关闭 ✕</button></div><p class="muted">选一局，从它自己的原始布子开始；让马局保留原有缺子。</p><div class="library-filters"><label>作品<select id="book-filter"><option value="">全部作品</option><option value="meihua">梅花谱 · 31 局</option><option value="zichudonglai">自出洞来无敌手 · 35 局</option><option value="juzhongmi">橘中秘全局谱 · 51 局</option></select></label><label>查找局名<input id="search" type="search" placeholder="例如：让左马、顺炮"></label></div><p id="library-count" class="muted"></p><div id="game-list"></div></dialog>
+<noscript><p>棋盘需要启用 JavaScript。</p></noscript>
+</body></html>
