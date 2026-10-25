@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1016">
 <title>中象自战辅助 · Koa Games</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e7c592'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='38' fill='%23962e29'%3E象%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="./style.css?v=8eee54571e73"><script type="module" src="./main.mjs?v=148c73bc499b"></script>
+<link rel="stylesheet" href="./style.css?v=c36bf1f98bb3"><script type="module" src="./main.mjs?v=e64f20c3fdd5"></script>
 </head>
 <body>
 <a class="skip" href="#board">跳到棋盘</a>
@@ -16,6 +16,7 @@
 <section class="board-section" aria-label="自战棋盘">
 <div class="board-heading"><div><span id="turn-dot" class="turn-dot"></span><strong id="turn">红方行棋</strong><span id="step" class="muted">第 0 手</span></div><span class="board-top-note">黑方在上 · 红方在下</span></div>
 <div id="board" class="board" role="group" tabindex="-1" aria-label="象棋棋盘，方向键移动焦点，回车选择棋子与落点"><svg id="board-lines" viewBox="0 0 564 650" aria-hidden="true"></svg><div id="squares"></div><svg id="arrows" viewBox="0 0 564 650" aria-hidden="true"></svg></div>
+<p class="arrow-note"><span id="arrow-count"></span>箭头越粗深，收录记载越多；不代表优劣或胜率。</p>
 <div class="board-tools"><button id="undo">↶ 撤回</button><button id="redo">↷ 重走</button><button id="reset">重置本局</button><button id="standard" class="quiet">标准开局</button></div>
 <p id="move-message" class="move-message" role="status" aria-live="polite">点选棋子，再点带圆点的落点。方向键与回车也可操作。</p>
 <div class="current-game"><span class="eyebrow">当前棋局</span><h2 id="game-title">自由自战 · 标准开局</h2><p id="game-note" class="muted">红黑双方均由你走棋。</p><p id="game-warning" class="partial-notice" hidden></p><div id="line-controls" hidden><label>谱中线路<select id="line-select"></select></label><div class="line-actions"><button id="line-start">原始局面</button><button id="line-prev">← 谱中上一手</button><button id="line-next">谱中下一手 →</button></div><p id="line-status" class="muted"></p></div></div>

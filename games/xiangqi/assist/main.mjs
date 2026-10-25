@@ -36,11 +36,31 @@ function renderBoard(){
   $('undo').disabled=cursor===0;$('redo').disabled=cursor===timeline.length-1;
 }
 function drawArrow(){
-  const layer=$('arrows');layer.replaceChildren();if(!$('show-arrow').checked||!choice||!found?.moves.has(choice)||!legal.includes(choice))return;
-  const [a,b]=coords(choice),x1=42+a%9*60,y1=55+Math.floor(a/9)*60,x2=42+b%9*60,y2=55+Math.floor(b/9)*60,dist=Math.hypot(x2-x1,y2-y1),dx=(x2-x1)/dist,dy=(y2-y1)/dist;
-  const defs=svg('defs',{}),marker=svg('marker',{id:'arrow-tip',viewBox:'0 0 10 10',refX:8,refY:5,markerWidth:4,markerHeight:4,orient:'auto'});marker.append(svg('path',{d:'M 0 0 L 10 5 L 0 10 z',fill:'#145b70'}));defs.append(marker);layer.append(defs);
-  layer.append(svg('line',{x1:x1+dx*21,y1:y1+dy*21,x2:x2-dx*13,y2:y2-dy*13,stroke:'#145b70','stroke-width':6,'stroke-linecap':'round','marker-end':'url(#arrow-tip)',opacity:.85}));
-  const title=svg('title',{});title.textContent=`谱中着法 ${notation(state,choice)}，${choice}`;layer.append(title);
+  const layer=$('arrows');layer.replaceChildren();$('arrow-count').textContent='';
+  if(cursor===0&&positionKey(state)===positionKey(START)){$('arrow-count').textContent='红方首着不显示箭头。';return;}
+  if(!$('show-arrow').checked){$('arrow-count').textContent='棋盘箭头已隐藏。';return;}
+  if(!found||found.key!==positionKey(state))return;
+  const moves=[...found.moves].filter(([uci])=>legal.includes(uci)).map(([uci,refs])=>{
+    const [a,b]=coords(uci),x1=42+a%9*60,y1=55+Math.floor(a/9)*60,x2=42+b%9*60,y2=55+Math.floor(b/9)*60,dist=Math.hypot(x2-x1,y2-y1);
+    return {uci,count:new Set(refs.map(r=>r.gameId)).size,a,x1,y1,x2,y2,dist,dx:(x2-x1)/dist,dy:(y2-y1)/dist};
+  }).sort((a,b)=>b.count-a.count||a.uci.localeCompare(b.uci));
+  if(!moves.length)return;
+  $('arrow-count').textContent=`${moves.length} 种谱中着法。`;
+  const min=Math.min(...moves.map(m=>m.count)),max=Math.max(...moves.map(m=>m.count)),defs=svg('defs',{});layer.append(defs);
+  moves.forEach((m,i)=>{
+    const weight=max===min?.5:(Math.log1p(m.count)-Math.log1p(min))/(Math.log1p(max)-Math.log1p(min));
+    const width=2.8+4.2*weight,opacity=.72+.24*weight,color=`rgb(18 ${105-Math.round(36*weight)} ${124-Math.round(38*weight)})`;
+    // Separate collinear moves from the same square; each still ends at its own real destination.
+    const ray=moves.filter(n=>n.a===m.a&&Math.abs(n.dx-m.dx)<1e-6&&Math.abs(n.dy-m.dy)<1e-6).sort((a,b)=>a.dist-b.dist);
+    const bend=Math.max(-24,Math.min(24,(ray.indexOf(m)-(ray.length-1)/2)*18));
+    const sx=m.x1+m.dx*18,sy=m.y1+m.dy*18,ex=m.x2-m.dx*25,ey=m.y2-m.dy*25;
+    const d=`M ${sx} ${sy} Q ${(sx+ex)/2-m.dy*bend*2} ${(sy+ey)/2+m.dx*bend*2} ${ex} ${ey}`;
+    const marker=svg('marker',{id:`arrow-tip-${i}`,viewBox:'0 0 12 12',refX:12,refY:6,markerWidth:13+3*weight,markerHeight:13+3*weight,markerUnits:'userSpaceOnUse',orient:'auto'});
+    marker.append(svg('path',{d:'M 0 0 L 12 6 L 0 12 L 3 6 z',fill:color}));defs.append(marker);
+    const group=svg('g',{'class':'move-arrow','data-move':m.uci,'data-game-count':m.count});
+    const title=svg('title',{});title.textContent=`${notation(state,m.uci)} · ${m.uci} · ${m.count} 局记载`;group.append(title);
+    group.append(svg('path',{d,'class':'arrow-edge',fill:'none',stroke:'#f7dfb8','stroke-width':width+2.4,'stroke-linecap':'round',opacity:.9}),svg('path',{d,'class':'arrow-shaft',fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','marker-end':`url(#arrow-tip-${i})`,opacity}));layer.append(group);
+  });
 }
 function message(text){$('move-message').textContent=text;}
 function clickSquare(i){
@@ -111,7 +131,7 @@ function renderNext(){
       $('source-search').value='';renderSourceOptions();renderNext();drawArrow();
     });return b;
   }));
-  $('next-note').textContent=choice?'选着法看箭头与走后原注，点下方按钮落子。':'这些来源已到已核实内容的末尾，仍可继续自战。';
+  $('next-note').textContent=choice?'选着法看出处与走后原注，点下方按钮落子。':'这些来源已到已核实内容的末尾，仍可继续自战。';
   $('play-choice').disabled=!choice||!legal.includes(choice);$('play-choice').textContent=choice?`走这一步 · ${notation(state,choice)}`:'没有谱中后续着法';
 }
 function annotationBlock(parent,game,node,label){
