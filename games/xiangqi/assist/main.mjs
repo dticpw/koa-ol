@@ -15,7 +15,7 @@ function drawGrid(){
   for(let y=0;y<10;y++)line(30,30+y*60,510,30+y*60);
   for(let x=0;x<9;x++){if(x===0||x===8)line(30+x*60,30,30+x*60,570);else{line(30+x*60,30,30+x*60,270);line(30+x*60,330,30+x*60,570);}}
   for(const y of [30,450]){line(210,y,330,y+120);line(330,y,210,y+120);}
-  for(let x=0;x<9;x++){for(const [y,t]of [[-1,String(x+1)],[603,'九八七六五四三二一'[x]]]){const tx=svg('text',{x:30+x*60,y,'text-anchor':'middle','font-size':11,fill:'#795936'});tx.textContent=t;boardGroup.append(tx);}}
+  for(let x=0;x<9;x++){for(const [y,t]of [[-1,String(x+1)],[614,'九八七六五四三二一'[x]]]){const tx=svg('text',{x:30+x*60,y,'text-anchor':'middle','font-size':11,fill:'#795936'});tx.textContent=t;boardGroup.append(tx);}}
   for(const [x,t]of [[150,'楚 河'],[390,'漢 界']]){const tx=svg('text',{x,y:309,'text-anchor':'middle','font-size':23,'font-family':'serif',fill:'#957147','letter-spacing':8});tx.textContent=t;boardGroup.append(tx);}
   for(const [x,y]of [[1,2],[7,2],[1,7],[7,7],...[0,2,4,6,8].flatMap(x=>[[x,3],[x,6]])]){
     for(const dx of [-1,1])for(const dy of [-1,1]){if((x===0&&dx===-1)||(x===8&&dx===1))continue;const a=30+x*60,b=30+y*60;line(a+dx*7,b+dy*7,a+dx*15,b+dy*7);line(a+dx*7,b+dy*7,a+dx*7,b+dy*15);}
@@ -39,7 +39,7 @@ function renderBoard(){
 }
 function arrowGeometry(sx,sy,cx,cy,ex,ey,headSize){
   const len=Math.hypot(ex-cx,ey-cy),ux=(ex-cx)/len,uy=(ey-cy)/len;
-  const headLength=Math.min(headSize,((ex-sx)*ux+(ey-sy)*uy)*.6),bx=ex-ux*headLength,by=ey-uy*headLength;
+  const headLength=Math.min(headSize,len*.85,Math.hypot(ex-sx,ey-sy)*.4),bx=ex-ux*headLength,by=ey-uy*headLength;
   const tailLength=Math.hypot(bx-sx,by-sy),controlLength=Math.min(Math.max(len-headLength,tailLength*.2),tailLength*.5),tx=bx-ux*controlLength,ty=by-uy*controlLength;
   // The butt-ended shaft stops at the head base. A half-unit internal overlap
   // avoids raster seams; opacity is applied once to the entire arrow group.
@@ -49,6 +49,27 @@ function arrowGeometry(sx,sy,cx,cy,ex,ey,headSize){
     head:`M ${bx-uy*headSize/2} ${by+ux*headSize/2} L ${ex} ${ey} L ${bx+uy*headSize/2} ${by-ux*headSize/2}`
   };
 }
+// All targets use the same rim/center rule. Short captures bend around the
+// enlarged disks; choose the clearer side using actual occupied intersections.
+function arrowRoute(x1,y1,x2,y2,occupied,width,bend,obstacles=[]){
+  const dist=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/dist,uy=(y2-y1)/dist,nx=-uy,ny=ux;
+  const headSize=13+3*(width-2.8)/4.2,detour=occupied?Math.max(0,88-dist)*1.6:0;
+  const offsets=detour?[Math.max(detour,Math.abs(bend)*2),-Math.max(detour,Math.abs(bend)*2)]:[bend*2];
+  const choices=offsets.map(offset=>{
+    const cx=(x1+x2)/2+nx*offset,cy=(y1+y2)/2+ny*offset,len=Math.hypot(x2-cx,y2-cy),retreat=occupied?32:8;
+    const shape=arrowGeometry(x1,y1,cx,cy,x2-(x2-cx)/len*retreat,y2-(y2-cy)/len*retreat,headSize);
+    const q=shape.edge.match(/-?[\d.]+/g).map(Number);let score=0;
+    for(let j=1;j<=20;j++){
+      const t=j/20,x=(1-t)**2*q[0]+2*t*(1-t)*q[2]+t*t*q[4],y=(1-t)**2*q[1]+2*t*(1-t)*q[3]+t*t*q[5];
+      score+=Math.max(0,12-x,x-552,12-y,y-638)*100;
+      for(const [px,py]of obstacles){if(Math.hypot(px-x1,py-y1)<1||Math.hypot(px-x2,py-y2)<1)continue;score+=Math.max(0,30+width/2-Math.hypot(px-x,py-y))**2;}
+    }
+    // Stable tie break towards the interior of the board.
+    score-=Math.sign(offset)*(nx*(282-(x1+x2)/2)+ny*(325-(y1+y2)/2))*.0001;
+    return {shape,score};
+  });
+  return choices.sort((a,b)=>a.score-b.score)[0].shape;
+}
 function drawArrow(){
   const layer=$('arrows');layer.replaceChildren();$('arrow-count').textContent='';
   if(cursor===0&&positionKey(state)===positionKey(START)){$('arrow-count').textContent='红方首着不显示箭头。';return;}
@@ -56,19 +77,19 @@ function drawArrow(){
   if(!found||found.key!==positionKey(state))return;
   const moves=[...found.moves].filter(([uci])=>legal.includes(uci)).map(([uci,refs])=>{
     const [a,b]=coords(uci),x1=42+a%9*60,y1=55+Math.floor(a/9)*60,x2=42+b%9*60,y2=55+Math.floor(b/9)*60,dist=Math.hypot(x2-x1,y2-y1);
-    return {uci,count:new Set(refs.map(r=>r.gameId)).size,a,x1,y1,x2,y2,dist,dx:(x2-x1)/dist,dy:(y2-y1)/dist};
+    return {uci,count:new Set(refs.map(r=>r.gameId)).size,a,b,x1,y1,x2,y2,dist,dx:(x2-x1)/dist,dy:(y2-y1)/dist};
   }).sort((a,b)=>b.count-a.count||a.uci.localeCompare(b.uci));
   if(!moves.length)return;
   $('arrow-count').textContent=`${moves.length} 种谱中着法。`;
   const min=Math.min(...moves.map(m=>m.count)),max=Math.max(...moves.map(m=>m.count));
+  const obstacles=state.board.flatMap((p,i)=>p?[[42+i%9*60,55+Math.floor(i/9)*60]]:[]);
   moves.forEach(m=>{
     const weight=max===min?.5:(Math.log1p(m.count)-Math.log1p(min))/(Math.log1p(max)-Math.log1p(min));
     const width=2.8+4.2*weight,opacity=.72+.24*weight,color=`rgb(18 ${105-Math.round(36*weight)} ${124-Math.round(38*weight)})`;
     // Separate collinear moves from the same square; each still ends at its own real destination.
     const ray=moves.filter(n=>n.a===m.a&&Math.abs(n.dx-m.dx)<1e-6&&Math.abs(n.dy-m.dy)<1e-6).sort((a,b)=>a.dist-b.dist);
     const bendLimit=Math.min(24,(m.dist-43)/8),bend=Math.max(-bendLimit,Math.min(bendLimit,(ray.indexOf(m)-(ray.length-1)/2)*18));
-    const sx=m.x1+m.dx*18,sy=m.y1+m.dy*18,ex=m.x2-m.dx*25,ey=m.y2-m.dy*25;
-    const shape=arrowGeometry(sx,sy,(sx+ex)/2-m.dy*bend*2,(sy+ey)/2+m.dx*bend*2,ex,ey,13+3*weight);
+    const shape=arrowRoute(m.x1,m.y1,m.x2,m.y2,Boolean(state.board[m.b]),width,bend,obstacles);
     const group=svg('g',{'class':'move-arrow','data-move':m.uci,'data-game-count':m.count,opacity});
     const title=svg('title',{});title.textContent=`${notation(state,m.uci)} · ${m.uci} · ${m.count} 局记载`;group.append(title);
     group.append(
@@ -305,11 +326,11 @@ function miniBoard(key,lastUci,index){
   for(let x=0;x<9;x++)for(const [a,b]of (x===0||x===8?[[20,290]]:[[20,140],[170,290]]))grid.append(svg('line',{x1:15+x*30,y1:a,x2:15+x*30,y2:b}));
   for(const y of [20,230])for(const [a,b]of [[105,165],[165,105]])grid.append(svg('line',{x1:a,y1:y,x2:b,y2:y+60}));
   const river=svg('text',{x:135,y:159,'text-anchor':'middle',fill:'#80613b','font-size':12,'letter-spacing':12});river.textContent='楚河 漢界';board.append(river);
-  if(lastUci){for(const i of coords(lastUci))board.append(svg('rect',{x:15+i%9*30-13,y:20+Math.floor(i/9)*30-13,width:26,height:26,rx:3,fill:'#d8e4d3',stroke:'#28636e','stroke-width':1.8}));}
+  if(lastUci){for(const i of coords(lastUci))board.append(svg('rect',{x:15+i%9*30-14.2,y:20+Math.floor(i/9)*30-14.2,width:28.4,height:28.4,rx:3,fill:'#d8e4d3',stroke:'#28636e','stroke-width':1.2}));}
   const description=[];
   position.board.forEach((p,i)=>{if(!p)return;const x=15+i%9*30,y=20+Math.floor(i/9)*30,red=side(p)==='w';description.push(`${red?'红':'黑'}${pieceName(p)} ${square(i)}`);
-    board.append(svg('circle',{cx:x,cy:y,r:11.8,fill:'#fae4bd',stroke:red?'#9c3028':'#40382c','stroke-width':.8}),svg('circle',{cx:x,cy:y,r:10.1,fill:'none',stroke:red?'#9c3028':'#40382c','stroke-width':.5}));
-    const text=svg('text',{x,y,'text-anchor':'middle','dominant-baseline':'central',dy:'-0.035em',class:'comparison-piece',color:red?'#9c3028':'#302d28',fill:'currentColor'});text.textContent=faceName(p);board.append(text);
+    board.append(svg('circle',{cx:x,cy:y,r:13.8,fill:'#fae4bd',stroke:red?'#9c3028':'#40382c','stroke-width':.9}),svg('circle',{cx:x,cy:y,r:11.8,fill:'none',stroke:red?'#9c3028':'#40382c','stroke-width':.6}));
+    const text=svg('text',{x,y,'text-anchor':'middle','dominant-baseline':'central',dy:'-0.075em',class:'comparison-piece',color:red?'#9c3028':'#302d28',fill:'currentColor'});text.textContent=faceName(p);board.append(text);
   });
   const desc=svg('desc',{});desc.textContent=description.join('，');board.append(desc);return board;
 }
@@ -380,4 +401,6 @@ $('book-filter').addEventListener('change',()=>{libraryLimit=50;renderLibrary();
 $('more-games').addEventListener('click',()=>{libraryLimit+=50;renderLibrary();});
 $('line-select').addEventListener('change',e=>{lineId=e.target.value;const l=currentLine();goLine(l.id==='0'?0:l.start_ply-1);});
 $('line-start').addEventListener('click',()=>goLine(0));$('line-prev').addEventListener('click',()=>goLine(lineIndex-1));$('line-next').addEventListener('click',()=>goLine(lineIndex+1));$('retry').addEventListener('click',()=>void loadData());
+// Only lettering changes when the shared subset is ready; disks/hit areas stay fixed.
+void document.fonts.load('16px "Xiangqi Piece Kai"','帅仕相馬車炮兵将士象卒').then(faces=>{if(faces.length)document.documentElement.classList.add('piece-font-ready');}).catch(()=>{});
 drawGrid();refresh();void loadData();
