@@ -3,6 +3,17 @@ import {timeoutNotice} from '../ace-21/src/timeout-notice.js?v=104';
 
 const $ = id => document.getElementById(id);
 const ids = ['10200', '10201', '10202', '10203'];
+// Decorative board only: seat 0 stays north, seat 1 stays south; protocol is unchanged.
+const boardMarkup = `<svg class="board-lines" viewBox="0 0 420 470" aria-hidden="true" focusable="false">
+  <g class="board-grid">
+    <rect x="10" y="10" width="400" height="448" rx="2"/>
+    <path d="${Array.from({length: 10}, (_, row) => `M18 ${18 + row * 48}H402`).join(' ')}"/>
+    <path d="M18 18V450 M402 18V450 ${Array.from({length: 7}, (_, col) => `M${66 + col * 48} 18V210 M${66 + col * 48} 258V450`).join(' ')}"/>
+    <path class="palace north" d="M162 18L258 114 M258 18L162 114"/>
+    <path class="palace south" d="M162 354L258 450 M258 354L162 450"/>
+  </g>
+  <g class="river"><text x="114" y="240">楚 河</text><text x="306" y="240">汉 界</text></g>
+</svg>`;
 let tables = [], connection = 'loading', busy = false, polling = false, epoch = 0, signature = '';
 const name = $('nickname');
 name.value = nickname();
@@ -31,7 +42,7 @@ function render() {
     const status = ready ? `${people.length} / 2 人` : t ? '上次记录 · 未连接' : '座位状态未知';
     return `<article class="chess-table ${me ? 'my-table' : ''} ${ready ? '' : 'unavailable'}" data-table="${id}" aria-labelledby="table-${id}">
       <header><h3 id="table-${id}"><small>TABLE</small>${id}</h3><span class="table-status">${status}</span></header>
-      <div class="seat-map"><span class="river" aria-hidden="true">楚河<span>汉界</span></span>${[0, 1].map(i => {
+      <div class="seat-map">${boardMarkup}${[0, 1].map(i => {
         const p = t?.seats[i];
         const label = p ? p.name : ready ? '＋ 入座' : '暂不可入座';
         const detail = p ? `${p.you ? '你 · ' : ''}${p.host ? '房主' : '玩家'}${p.online ? '' : ' · 离线'}` : `${i + 1} 号座`;

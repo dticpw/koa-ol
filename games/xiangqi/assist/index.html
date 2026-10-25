@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1016">
 <title>中象自战辅助 · Koa Games</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e7c592'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='38' fill='%23962e29'%3E象%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="./style.css?v=9524154f555f"><script type="module" src="./main.mjs"></script>
+<link rel="stylesheet" href="./style.css?v=215151955ba5"><script type="module" src="./main.mjs?v=2ac604ee203e"></script>
 </head>
 <body>
 <a class="skip" href="#board">跳到棋盘</a>
@@ -26,7 +26,7 @@
 <div id="data-error" class="notice" hidden><p id="error-text"></p><button id="retry">重新加载棋谱</button></div>
 <div id="match-body" hidden>
 <section class="next-section"><div class="section-label"><h3>谱中下一手</h3><label class="toggle"><input id="show-arrow" type="checkbox" checked>棋盘箭头</label></div><div id="next-moves" class="next-moves"></div><p id="next-note" class="muted"></p><button id="play-choice" class="primary">走这一步</button></section>
-<section class="source-section"><div class="section-label"><h3>出处与原注</h3><span id="source-total" class="muted"></span></div><label class="field-label" for="source-select">选择棋谱来源</label><input id="source-search" type="search" aria-label="筛选匹配来源" placeholder="按书名或局名筛选来源"><select id="source-select"></select><label class="field-label" for="path-select">该谱的匹配路径</label><select id="path-select"></select><div id="source-content"></div></section>
+<section class="source-section"><div class="section-label"><div class="source-heading"><h3>出处与原注</h3><span id="annotation-cue" class="annotation-cue" role="status" aria-live="polite" aria-atomic="true" hidden></span></div><span id="source-total" class="muted"></span></div><label class="field-label" for="source-select">选择棋谱来源</label><input id="source-search" type="search" aria-label="筛选匹配来源" placeholder="按书名或局名筛选来源"><select id="source-select"></select><div id="source-content"></div></section>
 </div>
 <div id="no-match" class="notice" hidden><strong>收录棋谱中暂无相同局面</strong><p>可以继续自战。每走一步都会重新查找，换个走子顺序也可能与书中相遇。</p></div>
 </aside>

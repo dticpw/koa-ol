@@ -6,4 +6,34 @@
 
 .source-title{font-size:14px;font-weight:550;line-height:1.7;margin-top:17px;overflow-wrap:anywhere}
 /* The shelf and source picker list verified catalogue summaries, never all bodies. */
-#source-search{margin-bottom:8px}#source-select,#path-select,#book-filter{min-width:0;max-width:100%}.partial-notice{padding:12px 14px;border-left:3px solid var(--gold);background:#e6c48d0b;color:#ddc69e;font-size:12px;line-height:1.9;overflow-wrap:anywhere}.body-error{font-size:13px;color:#ecc2a0;margin:18px 0}#source-content>button{margin:4px 8px 0 0}.next-moves{max-height:290px;overflow:auto;padding:3px;margin:-3px;scrollbar-color:#526171 #18212b}#game-list{max-height:46dvh;overflow:auto;padding:4px;margin:-4px;scrollbar-color:#526171 #18212b}.game-item{overflow-wrap:anywhere}.game-item:focus-visible{outline-offset:0}#more-games{width:100%;margin-top:14px}#library-message{font-size:13px;color:var(--gold)}#source-content[aria-busy=true]{min-height:100px}#board:focus-visible{outline:3px solid #8dd8ea;outline-offset:4px}@media(max-width:760px){.next-moves{max-height:245px}#game-list{max-height:40dvh}.library-filters{gap:10px}.partial-notice{font-size:13px}}
+#source-search{margin-bottom:8px}#source-select,#book-filter{min-width:0;max-width:100%}.partial-notice{padding:12px 14px;border-left:3px solid var(--gold);background:#e6c48d0b;color:#ddc69e;font-size:12px;line-height:1.9;overflow-wrap:anywhere}.body-error{font-size:13px;color:#ecc2a0;margin:18px 0}#source-content>button{margin:4px 8px 0 0}.next-moves{max-height:290px;overflow:auto;padding:3px;margin:-3px;scrollbar-color:#526171 #18212b}#game-list{max-height:46dvh;overflow:auto;padding:4px;margin:-4px;scrollbar-color:#526171 #18212b}.game-item{overflow-wrap:anywhere}.game-item:focus-visible{outline-offset:0}#more-games{width:100%;margin-top:14px}#library-message{font-size:13px;color:var(--gold)}#source-content[aria-busy=true]{min-height:100px}#board:focus-visible{outline:3px solid #8dd8ea;outline-offset:4px}@media(max-width:760px){.next-moves{max-height:245px}#game-list{max-height:40dvh}.library-filters{gap:10px}.partial-notice{font-size:13px}}
+
+/* Warm paper separates source reading from the dark move controls. */
+.source-section{--muted:#695c4c;--line:#d5c8b5;background:#f6f0e5;color:#30291f;color-scheme:light;padding-top:24px;padding-bottom:26px}
+.source-section .section-label{align-items:flex-start;flex-wrap:wrap;gap:8px 14px;margin-bottom:18px}
+.source-heading{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.source-heading h3{font-size:16px;color:#3a3023}
+.source-section .field-label{font-size:12px}
+.source-section select,.source-section input[type=search]{background:#fffcf6;border-color:#9a876e;color:#30291f}
+.source-section input::placeholder{color:#796a58;opacity:1}
+.source-section select:disabled{background:#eee5d6;color:#695c4c}
+.source-section button{background:#eee2ce;border-color:#9a876e;color:#40301c}
+.source-section button.quiet{background:transparent}
+.source-section button:hover{background:#e2d2b8}
+.source-section a{color:#72501f}
+.source-section :is(button,a,select,input,summary):focus-visible{outline-color:#17677a}
+.source-section .source-title{font-size:16px;font-weight:650;margin-top:22px}
+.source-section .source-link{margin:8px 0 16px}
+.annotation-cue{font-size:11px;line-height:1.6;letter-spacing:1px;font-weight:650;border:1px solid #af8549;border-radius:4px;background:#efdfbf;color:#654315;padding:2px 7px}
+.annotation-block{padding:15px 0;margin:8px 0;border-top:1px solid #d5c8b5}
+.annotation-block .annotation-label{font-size:12px;letter-spacing:.5px;font-weight:550;color:#695c4c;margin:0 0 8px;line-height:1.8}
+.annotation-block .annotation-path{color:#695c4c;margin:0 0 6px}
+.annotation-block .empty-note{margin-bottom:0}
+.annotation-block.has-annotation{background:#fffbf4;border:0;border-left:3px solid #9b682d;padding:14px 16px;margin:18px 0}
+.has-annotation .annotation-label{color:#714919;font-size:13px;font-weight:750}
+.annotation-block .annotation{font-size:15px;color:#30291f;padding:0;border:0;margin:0 0 14px;line-height:2}
+.annotation-block .annotation:last-child{margin-bottom:0}
+.source-section .summary p{color:#4c4033}
+.source-section .partial-notice{background:#ede1cc;color:#67471e;border-color:#997039;margin:0 0 18px}
+.source-section .body-error{background:#f3e3d8;color:#803b25;border-left:3px solid #a55738;padding:12px 14px}
+@media(max-width:760px){.source-section{padding:22px 20px}.annotation-block.has-annotation{padding:12px 13px}}

@@ -57,7 +57,12 @@ function move(uci){
 function cancelOpen(){openSerial++;openRequest?.abort();}
 function syncLineIndex(){if(!openedGame)return;lineIndex=currentLine().node_ids.findIndex(n=>positionKey(openedGame.nodes[n].fen)===positionKey(state));}
 function refresh(){legal=legalMoves(state);renderBoard();renderContext();renderHistory();void refreshMatches();}
-function clearMatches(){found=null;choice=null;$('match-body').hidden=true;$('no-match').hidden=true;drawArrow();}
+function setAnnotationCue(present){$('annotation-cue').hidden=!present;$('annotation-cue').textContent=present?'有原注':'';}
+function clearSource(){
+  sourceRequest?.abort();sourceSerial++;setAnnotationCue(false);
+  $('source-content').replaceChildren();$('source-content').setAttribute('aria-busy','false');
+}
+function clearMatches(){found=null;choice=null;clearSource();$('match-body').hidden=true;$('no-match').hidden=true;drawArrow();}
 async function refreshMatches(){
   const ticket=++matchSerial,lib=library;
   matchRequest?.abort();sourceRequest?.abort();sourceSerial++;matchRequest=new AbortController();
@@ -73,7 +78,7 @@ async function refreshMatches(){
     if(!count)return;
     choice=found.moves.keys().next().value||null;
     if(!found.sources.has(sourceId))sourceId=found.sources.has(opened)?opened:found.sources.keys().next().value;
-    $('source-search').value='';renderSourceOptions();renderNext();renderPaths();drawArrow();
+    $('source-search').value='';renderSourceOptions();renderNext();drawArrow();
   }catch(error){if(ticket!==matchSerial||lib!==library||error.name==='AbortError')return;
     $('match-count').textContent='局面查找未完成';$('data-error').hidden=false;$('error-text').textContent=`查找当前局面时读取失败，尚不能判断是否有匹配。${error.userMessage||''} 自战仍可继续。`;
   }
@@ -81,12 +86,15 @@ async function refreshMatches(){
 function renderSourceOptions(){
   if(!found)return;const query=$('source-search').value.trim();
   const list=[...found.sources.values()].filter(({game})=>!query||`${game.title} ${library.bookNames(game)}`.includes(query));
-  $('source-select').replaceChildren(...list.map(({game,paths})=>{const o=el('option',`${library.bookNames(game)} · ${game.title}（${paths.length} 路径）${game.status==='partial'?' · 部分可用':''}`);o.value=game.id;return o;}));
+  const source=found.sources.get(sourceId);if(source&&!source.paths.includes(pathId))pathId=source.paths[0];
+  $('source-select').replaceChildren(...list.flatMap(({game,paths})=>paths.map(id=>{
+    const o=el('option',`${paths.length>1?`${pathLabel(id)} · `:''}${library.bookNames(game)} · ${game.title}${game.status==='partial'?' · 部分可用':''}`);
+    o.value=JSON.stringify([game.id,id]);o.dataset.game=game.id;o.dataset.path=id;return o;
+  })));
   $('source-total').textContent=query?`筛选 ${list.length} / ${found.sources.size} 局`:`全部 ${found.sources.size} 局可选`;
-  $('source-select').value=sourceId;$('source-select').disabled=!list.length;
-  if(query&&!list.some(({game})=>game.id===sourceId)){
-    sourceRequest?.abort();sourceSerial++;$('source-content').replaceChildren(el('p',list.length?'请选择筛选结果中的一局。':'没有符合筛选的来源；清空关键词可查看全部。','muted'));$('path-select').replaceChildren();
-  }
+  $('source-select').value=JSON.stringify([sourceId,pathId]);$('source-select').disabled=!list.length;
+  if($('source-select').value)void renderSource();
+  else{clearSource();$('source-content').append(el('p',list.length?'请选择筛选结果中的一局。':'没有符合筛选的来源；清空关键词可查看全部。','muted'));}
 }
 function renderNext(){
   $('next-moves').replaceChildren(...[...found.moves].map(([uci,refs])=>{
@@ -95,30 +103,26 @@ function renderNext(){
     b.addEventListener('click',()=>{
       choice=uci;const matching=refs.filter(r=>r.gameId===sourceId);
       if(!matching.length){sourceId=refs[0].gameId;pathId=refs[0].nodeId;}else if(!matching.some(r=>r.nodeId===pathId))pathId=matching[0].nodeId;
-      $('source-search').value='';renderSourceOptions();renderNext();renderPaths();drawArrow();
+      $('source-search').value='';renderSourceOptions();renderNext();drawArrow();
     });return b;
   }));
   $('next-note').textContent=choice?'选着法看箭头与走后原注，点下方按钮落子。':'这些来源已到已核实内容的末尾，仍可继续自战。';
   $('play-choice').disabled=!choice||!legal.includes(choice);$('play-choice').textContent=choice?`走这一步 · ${notation(state,choice)}`:'没有谱中后续着法';
 }
-function renderPaths(){
-  const source=found?.sources.get(sourceId);if(!source)return;
-  if(!source.paths.includes(pathId))pathId=source.paths[0];
-  $('path-select').replaceChildren(...source.paths.map(id=>{const o=el('option',pathLabel(id));o.value=id;return o;}));$('path-select').value=pathId;
-  void renderSource();
-}
 function annotationBlock(parent,game,node,label){
-  parent.append(el('p',label,'annotation-label'));const ann=annotations(game,node);
-  if(!ann.length){parent.append(el('p','此处暂无可对应到这一步的原注。','empty-note'));return;}
-  for(const a of ann)parent.append(el('p',`${a.source_line_id==='0'?'主线':`分支 ${a.source_line_id}`} · 走后第 ${a.source_after_ply} 手`,'annotation-path'),el('p',a.text,'annotation'));
+  const ann=annotations(game,node),block=el('section',undefined,`annotation-block${ann.length?' has-annotation':''}`);
+  block.append(el('h4',label,'annotation-label'));parent.append(block);
+  if(!ann.length){block.append(el('p','此处暂无可对应到这一步的原注。','empty-note'));return;}
+  for(const a of ann)block.append(el('p',`${a.source_line_id==='0'?'主线':`分支 ${a.source_line_id}`} · 走后第 ${a.source_after_ply} 手`,'annotation-path'),el('p',a.text,'annotation'));
 }
 async function renderSource(){
+  setAnnotationCue(false);
   const ticket=++sourceSerial,lib=library,gameId=sourceId,nodeId=pathId,moveChoice=choice,position=found?.key;
   sourceRequest?.abort();sourceRequest=new AbortController();const box=$('source-content');
   box.replaceChildren(el('p','正在读取所选棋谱原文…','muted'));box.setAttribute('aria-busy','true');
   try{
     const game=await lib.game(gameId,sourceRequest.signal);
-    if(ticket!==sourceSerial||lib!==library||position!==found?.key)return;
+    if(ticket!==sourceSerial||lib!==library||position!==found?.key||gameId!==sourceId||nodeId!==pathId||moveChoice!==choice)return;
     const node=game.nodes[nodeId];if(!node)throw new Error('Missing indexed node');
     box.replaceChildren();box.append(el('h3',game.title,'source-title'));
     const link=el('a','永乐象棋棋谱 · 查看原出处 ↗','source-link');if(/^https:\/\//.test(game.url))link.href=game.url;link.target='_blank';link.rel='noopener noreferrer';box.append(link);
@@ -134,8 +138,10 @@ async function renderSource(){
     const author=game.metadata?.DhtmlXQ_author?.filter(Boolean).join('、');
     box.append(el('p',`${legacy[game.book_id]||'原著与转录、评注的署名分别保留。'}${author?` 来源页署名：${author}，不据此判断评注者。`:''} 网页上传者：${ctx.uploader||'未注明'}。上传者不等于原作者或评注者。`,'source-meta'));
     const open=el('button','从这局的标准开局打开','quiet');open.addEventListener('click',()=>void openGame(gameId));box.append(open);
+    setAnnotationCue(!!box.querySelector('.has-annotation'));
   }catch(error){
     if(ticket!==sourceSerial||lib!==library||error.name==='AbortError')return;
+    setAnnotationCue(false);
     box.replaceChildren(el('p',`所选棋谱原文读取失败。${error.userMessage||''} 来源与箭头仍可查看，原注暂不可读。`,'body-error'));
     const retry=el('button','重试所选棋谱');retry.id='retry-body';retry.addEventListener('click',()=>void renderSource());
     const reload=el('button','重新读取书目','quiet');reload.addEventListener('click',()=>void loadData());box.append(retry,reload);
@@ -204,9 +210,8 @@ $('redo').addEventListener('click',()=>{cancelOpen();if(cursor>=timeline.length-
 $('reset').addEventListener('click',()=>{cancelOpen();lineIndex=0;fresh(START);message('已重置到本局标准开局。');});
 $('standard').addEventListener('click',()=>{cancelOpen();opened=null;openedGame=null;lineId='0';fresh(START);message('已回到标准开局。');});
 $('show-arrow').addEventListener('change',drawArrow);$('play-choice').addEventListener('click',()=>choice&&move(choice));
-$('source-search').addEventListener('input',()=>{renderSourceOptions();if($('source-select').value)renderPaths();});
-$('source-select').addEventListener('change',e=>{sourceId=e.target.value;pathId=null;renderPaths();});
-$('path-select').addEventListener('change',e=>{pathId=e.target.value;void renderSource();});
+$('source-search').addEventListener('input',renderSourceOptions);
+$('source-select').addEventListener('change',e=>{if(!e.target.value)return;[sourceId,pathId]=JSON.parse(e.target.value);void renderSource();});
 $('browse').addEventListener('click',()=>{libraryLimit=50;renderLibrary();$('library-dialog').showModal();});$('close-library').addEventListener('click',()=>$('library-dialog').close());
 $('library-dialog').addEventListener('close',cancelOpen);
 $('book-filter').addEventListener('change',()=>{libraryLimit=50;renderLibrary();});$('search').addEventListener('input',()=>{libraryLimit=50;renderLibrary();});
