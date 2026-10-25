@@ -46,5 +46,9 @@
 @media(max-width:1100px){#comparison-groups{grid-template-columns:1fr}.comparison-setup{padding:20px}.comparison-results{padding:20px 16px}.comparison-card{padding:14px}.comparison-last{min-height:0}.comparison-side{gap:12px}.comparison-side legend{margin-right:10px}}
 @media(max-width:760px){#position-panel>#match-count{padding:14px 20px}.comparison-setup{padding:20px}.comparison-results{padding:20px}.comparison-card h4{font-size:13px}.comparison-source-title{font-size:12px}.comparison-orientation{font-size:11px}}
 
-@font-face{font-family:"Xiangqi Piece Kai";src:url("./fonts/piece-kai.woff2?v=387678867da2") format("woff2");font-style:normal;font-weight:400;font-display:swap;ascent-override:88%;descent-override:12%;line-gap-override:0%;unicode-range:U+4ED5,U+5175,U+5352,U+58EB,U+5C06,U+5E05,U+70AE,U+76F8,U+8C61,U+8F66,U+9A6C}
+@font-face{font-family:"Xiangqi Piece Kai";src:url("./fonts/piece-kai.woff2?v=442425d2fa0f") format("woff2");font-style:normal;font-weight:400;font-display:swap;ascent-override:88%;descent-override:12%;line-gap-override:0%;unicode-range:U+4ED5,U+5175,U+5352,U+58EB,U+5C06,U+5E05,U+70AE,U+76F8,U+8C61,U+8ECA,U+99AC}
 .comparison-piece{font-family:"Xiangqi Piece Kai","KaiTi","STKaiti",serif;font-size:14.5px;font-weight:400;font-synthesis:none}
+
+/* Board lettering only: the disk, rings, square and focus geometry stay fixed. */
+.piece-glyph{display:block;line-height:1;transform:translateY(-.045em);-webkit-text-stroke:.022em currentColor}
+.comparison-piece{paint-order:stroke fill;stroke:currentColor;stroke-width:.022em;stroke-linejoin:round}

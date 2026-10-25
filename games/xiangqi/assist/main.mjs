@@ -2,6 +2,8 @@ import {START,parseFen,fen,side,square,coords,legalMoves,apply,status,pieceName,
 import {Library,annotations,pathLabel,partialText} from './library.mjs';
 import {Comparison,conditionFromHistory,originalPath} from './comparison.mjs?v=d0e0359847ba';
 const $=id=>document.getElementById(id);
+// Traditional forms are restricted to the two board faces; notation stays original.
+const faceName=p=>({车:'車',马:'馬'}[pieceName(p)]||pieceName(p));
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 let library=null, loading=false, openedGame=null, matchRequest=null, sourceRequest=null, openRequest=null, matchSerial=0, sourceSerial=0, openSerial=0, session=0, libraryLimit=50,  state=parseFen(START),timeline=[state],cursor=0,selected=null,legal=[],found=null,choice=null,sourceId=null,pathId=null,opened=null,lineId='0',lineIndex=0,focusIndex=85;
 const squares=[];
@@ -29,7 +31,7 @@ function renderFocus(){squares.forEach((b,i)=>b.tabIndex=i===focusIndex?0:-1);}
 function renderBoard(){
   const st=status(state,legal),dest=new Set(selected===null?[]:legal.filter(u=>coords(u)[0]===selected).map(u=>coords(u)[1]));
   const prev=cursor?findMove(timeline[cursor-1],state):null,last=prev?coords(prev):[];
-  squares.forEach((b,i)=>{const p=state.board[i];b.replaceChildren();b.className='square';b.classList.toggle('selected',selected===i);b.classList.toggle('legal',dest.has(i));b.classList.toggle('last',last.includes(i));b.classList.toggle('checked',st.check&&p===(state.turn==='w'?'K':'k'));b.setAttribute('aria-pressed',String(selected===i));b.setAttribute('aria-label',`${square(i)} ${p?(side(p)==='w'?'红':'黑')+pieceName(p):'空位'}${dest.has(i)?'，可落子':''}`);if(p)b.append(el('span',pieceName(p),`piece ${side(p)==='w'?'red':'black'}`));});
+  squares.forEach((b,i)=>{const p=state.board[i];b.replaceChildren();b.className='square';b.classList.toggle('selected',selected===i);b.classList.toggle('legal',dest.has(i));b.classList.toggle('last',last.includes(i));b.classList.toggle('checked',st.check&&p===(state.turn==='w'?'K':'k'));b.setAttribute('aria-pressed',String(selected===i));b.setAttribute('aria-label',`${square(i)} ${p?(side(p)==='w'?'红':'黑')+pieceName(p):'空位'}${dest.has(i)?'，可落子':''}`);if(p){const disk=el('span',undefined,`piece ${side(p)==='w'?'red':'black'}`);disk.append(el('span',faceName(p),'piece-glyph'));b.append(disk);}});
   renderFocus();drawArrow();
   const turn=state.turn==='w'?'红':'黑';$('turn').textContent=st.ended?`${st.winner==='w'?'红':'黑'}方胜 · ${st.reason}`:`${turn}方行棋${st.check?' · 将军，须应将':''}`;
   $('turn-dot').classList.toggle('black',state.turn==='b');$('step').textContent=`第 ${cursor} 手`;
@@ -307,7 +309,7 @@ function miniBoard(key,lastUci,index){
   const description=[];
   position.board.forEach((p,i)=>{if(!p)return;const x=15+i%9*30,y=20+Math.floor(i/9)*30,red=side(p)==='w';description.push(`${red?'红':'黑'}${pieceName(p)} ${square(i)}`);
     board.append(svg('circle',{cx:x,cy:y,r:11.8,fill:'#fae4bd',stroke:red?'#9c3028':'#40382c','stroke-width':.8}),svg('circle',{cx:x,cy:y,r:10.1,fill:'none',stroke:red?'#9c3028':'#40382c','stroke-width':.5}));
-    const text=svg('text',{x,y,'text-anchor':'middle','dominant-baseline':'central',class:'comparison-piece',fill:red?'#9c3028':'#302d28'});text.textContent=pieceName(p);board.append(text);
+    const text=svg('text',{x,y,'text-anchor':'middle','dominant-baseline':'central',dy:'-0.035em',class:'comparison-piece',color:red?'#9c3028':'#302d28',fill:'currentColor'});text.textContent=faceName(p);board.append(text);
   });
   const desc=svg('desc',{});desc.textContent=description.join('，');board.append(desc);return board;
 }
