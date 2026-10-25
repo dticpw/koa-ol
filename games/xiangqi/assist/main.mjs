@@ -35,6 +35,18 @@ function renderBoard(){
   $('turn-dot').classList.toggle('black',state.turn==='b');$('step').textContent=`第 ${cursor} 手`;
   $('undo').disabled=cursor===0;$('redo').disabled=cursor===timeline.length-1;
 }
+function arrowGeometry(sx,sy,cx,cy,ex,ey,headSize){
+  const len=Math.hypot(ex-cx,ey-cy),ux=(ex-cx)/len,uy=(ey-cy)/len;
+  const headLength=Math.min(headSize,((ex-sx)*ux+(ey-sy)*uy)*.6),bx=ex-ux*headLength,by=ey-uy*headLength;
+  const tailLength=Math.hypot(bx-sx,by-sy),controlLength=Math.min(Math.max(len-headLength,tailLength*.2),tailLength*.5),tx=bx-ux*controlLength,ty=by-uy*controlLength;
+  // The butt-ended shaft stops at the head base. A half-unit internal overlap
+  // avoids raster seams; opacity is applied once to the entire arrow group.
+  return {
+    shaft:`M ${sx} ${sy} Q ${tx} ${ty} ${bx} ${by} L ${bx+ux*.5} ${by+uy*.5}`,
+    edge:`M ${sx} ${sy} Q ${tx} ${ty} ${bx} ${by}`,
+    head:`M ${bx-uy*headSize/2} ${by+ux*headSize/2} L ${ex} ${ey} L ${bx+uy*headSize/2} ${by-ux*headSize/2}`
+  };
+}
 function drawArrow(){
   const layer=$('arrows');layer.replaceChildren();$('arrow-count').textContent='';
   if(cursor===0&&positionKey(state)===positionKey(START)){$('arrow-count').textContent='红方首着不显示箭头。';return;}
@@ -46,20 +58,23 @@ function drawArrow(){
   }).sort((a,b)=>b.count-a.count||a.uci.localeCompare(b.uci));
   if(!moves.length)return;
   $('arrow-count').textContent=`${moves.length} 种谱中着法。`;
-  const min=Math.min(...moves.map(m=>m.count)),max=Math.max(...moves.map(m=>m.count)),defs=svg('defs',{});layer.append(defs);
-  moves.forEach((m,i)=>{
+  const min=Math.min(...moves.map(m=>m.count)),max=Math.max(...moves.map(m=>m.count));
+  moves.forEach(m=>{
     const weight=max===min?.5:(Math.log1p(m.count)-Math.log1p(min))/(Math.log1p(max)-Math.log1p(min));
     const width=2.8+4.2*weight,opacity=.72+.24*weight,color=`rgb(18 ${105-Math.round(36*weight)} ${124-Math.round(38*weight)})`;
     // Separate collinear moves from the same square; each still ends at its own real destination.
     const ray=moves.filter(n=>n.a===m.a&&Math.abs(n.dx-m.dx)<1e-6&&Math.abs(n.dy-m.dy)<1e-6).sort((a,b)=>a.dist-b.dist);
-    const bend=Math.max(-24,Math.min(24,(ray.indexOf(m)-(ray.length-1)/2)*18));
+    const bendLimit=Math.min(24,(m.dist-43)/8),bend=Math.max(-bendLimit,Math.min(bendLimit,(ray.indexOf(m)-(ray.length-1)/2)*18));
     const sx=m.x1+m.dx*18,sy=m.y1+m.dy*18,ex=m.x2-m.dx*25,ey=m.y2-m.dy*25;
-    const d=`M ${sx} ${sy} Q ${(sx+ex)/2-m.dy*bend*2} ${(sy+ey)/2+m.dx*bend*2} ${ex} ${ey}`;
-    const marker=svg('marker',{id:`arrow-tip-${i}`,viewBox:'0 0 12 12',refX:12,refY:6,markerWidth:13+3*weight,markerHeight:13+3*weight,markerUnits:'userSpaceOnUse',orient:'auto'});
-    marker.append(svg('path',{d:'M 0 0 L 12 6 L 0 12 L 3 6 z',fill:color}));defs.append(marker);
-    const group=svg('g',{'class':'move-arrow','data-move':m.uci,'data-game-count':m.count});
+    const shape=arrowGeometry(sx,sy,(sx+ex)/2-m.dy*bend*2,(sy+ey)/2+m.dx*bend*2,ex,ey,13+3*weight);
+    const group=svg('g',{'class':'move-arrow','data-move':m.uci,'data-game-count':m.count,opacity});
     const title=svg('title',{});title.textContent=`${notation(state,m.uci)} · ${m.uci} · ${m.count} 局记载`;group.append(title);
-    group.append(svg('path',{d,'class':'arrow-edge',fill:'none',stroke:'#f7dfb8','stroke-width':width+2.4,'stroke-linecap':'round',opacity:.9}),svg('path',{d,'class':'arrow-shaft',fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','marker-end':`url(#arrow-tip-${i})`,opacity}));layer.append(group);
+    group.append(
+      svg('path',{d:shape.edge,class:'arrow-edge',fill:'none',stroke:'#f7dfb8','stroke-width':width+2.4,'stroke-linecap':'butt'}),
+      svg('path',{d:shape.head,class:'arrow-head-edge',fill:'#f7dfb8',stroke:'#f7dfb8','stroke-width':1.2,'stroke-linejoin':'miter','stroke-miterlimit':2}),
+      svg('path',{d:shape.shaft,class:'arrow-shaft',fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'butt'}),
+      svg('path',{d:shape.head+' Z',class:'arrow-head',fill:color})
+    );layer.append(group);
   });
 }
 function message(text){$('move-message').textContent=text;}
@@ -291,8 +306,8 @@ function miniBoard(key,lastUci,index){
   if(lastUci){for(const i of coords(lastUci))board.append(svg('rect',{x:15+i%9*30-13,y:20+Math.floor(i/9)*30-13,width:26,height:26,rx:3,fill:'#d8e4d3',stroke:'#28636e','stroke-width':1.8}));}
   const description=[];
   position.board.forEach((p,i)=>{if(!p)return;const x=15+i%9*30,y=20+Math.floor(i/9)*30,red=side(p)==='w';description.push(`${red?'红':'黑'}${pieceName(p)} ${square(i)}`);
-    board.append(svg('circle',{cx:x,cy:y,r:11.8,fill:'#fae4bd',stroke:red?'#9c3028':'#40382c','stroke-width':1}));
-    const text=svg('text',{x,y:y+5.5,'text-anchor':'middle',fill:red?'#9c3028':'#302d28','font-family':'serif','font-weight':700,'font-size':17});text.textContent=pieceName(p);board.append(text);
+    board.append(svg('circle',{cx:x,cy:y,r:11.8,fill:'#fae4bd',stroke:red?'#9c3028':'#40382c','stroke-width':.8}),svg('circle',{cx:x,cy:y,r:10.1,fill:'none',stroke:red?'#9c3028':'#40382c','stroke-width':.5}));
+    const text=svg('text',{x,y,'text-anchor':'middle','dominant-baseline':'central',class:'comparison-piece',fill:red?'#9c3028':'#302d28'});text.textContent=pieceName(p);board.append(text);
   });
   const desc=svg('desc',{});desc.textContent=description.join('，');board.append(desc);return board;
 }
