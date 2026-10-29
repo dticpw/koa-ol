@@ -54,7 +54,7 @@
         const attachmentsEl = document.getElementById('attachments');
         const modelSelect  = document.getElementById('model-select');
 
-        const modelLabels = { gpt: 'GPT · gpt-5.6-sol', deepseek: 'DeepSeek', qwen: '千问' };
+        const modelLabels = { gpt: 'GPT · gpt-6.1-sol', deepseek: 'DeepSeek', qwen: '千问' };
         let sending = false;
         let attachmentLoading = false;
 

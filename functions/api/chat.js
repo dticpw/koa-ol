@@ -35,7 +35,7 @@ export async function onRequestPost(context) {
     return json({ error: 'Unsupported model selection' }, 400);
   }
   const config = provider === 'gpt'
-    ? { base: env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1', key: env.UPSTREAM_API_KEY, model: 'gpt-5.6-sol' }
+    ? { base: env.UPSTREAM_BASE_URL || 'https://api.openai.com/v1', key: env.UPSTREAM_API_KEY, model: 'gpt-6.1-sol' }
     : provider === 'deepseek'
       ? { base: 'https://api.deepseek.com', key: env.DEEPSEEK_API_KEY, model: 'deepseek-chat' }
       : { base: env.QWEN_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1', key: env.QWEN_API_KEY, model: env.QWEN_MODEL || 'qwen-plus' };
