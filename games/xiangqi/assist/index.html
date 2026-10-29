@@ -1,46 +1,50 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b1016">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eeece5">
 <title>中象自战辅助 · Koa Games</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23e7c592'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='38' fill='%23962e29'%3E象%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="./style.css?v=1ea09087254c"><script type="module" src="./main.mjs?v=c9e4519a649e"></script>
+<link rel="stylesheet" href="./style.css?v=9716231870e9"><script type="module" src="./main.mjs?v=5f733df167cf"></script>
+<script type="module" src="./activity.mjs?v=726998951a83"></script>
 </head>
 <body>
 <a class="skip" href="#board">跳到棋盘</a>
 <div class="page">
-<header class="topbar"><a href="../" class="back">← 象棋大厅</a><span class="brand">KOA GAMES <span>/</span> 棋谱研究</span><span class="personal">个人研究</span></header>
+<header class="topbar"><a href="../" class="back">← 象棋大厅</a><span class="brand">KOA GAMES <span>/</span> 研谱</span><span class="personal">自由推演 · 名著对照</span></header>
 <main>
-<div class="heading"><div><p class="eyebrow">XIANGQI · STUDY BOARD</p><h1>中象自战辅助<span class="seal" aria-hidden="true">弈</span></h1><p class="intro">自己走红黑双方，随局面对照名著棋谱的着法与原注。</p></div><button id="browse" class="primary">浏览棋谱 <span id="browse-count">读取中</span></button></div>
+<div class="heading"><div><h1>中象自战辅助<span class="seal" aria-hidden="true">弈</span></h1><p class="intro">落一子，读一段棋谱。</p></div><button id="browse" class="quiet">浏览棋谱 <span id="browse-count">读取中</span></button></div>
+<section class="scope-bar" aria-label="当前研究范围"><div class="scope-current"><span class="eyebrow">研究范围</span><p id="scope-summary" role="status">书目读取后可选择</p></div><div class="scope-actions"><button id="scope-edit" disabled>选择研究范围</button><button id="scope-restore" class="quiet" hidden>恢复全部</button></div><p id="scope-notice" role="status"></p><p id="scope-relation" role="status"></p></section>
 <div class="workspace">
+<section id="note-reader" class="note-reader" aria-label="所选来源原注"></section>
 <section class="board-section" aria-label="自战棋盘">
 <div class="board-heading"><div><span id="turn-dot" class="turn-dot"></span><strong id="turn">红方行棋</strong><span id="step" class="muted">第 0 手</span></div><span class="board-top-note">黑方在上 · 红方在下</span></div>
 <div id="board" class="board" role="group" tabindex="-1" aria-label="象棋棋盘，方向键移动焦点，回车选择棋子与落点"><svg id="board-lines" viewBox="0 0 564 650" aria-hidden="true"></svg><div id="squares"></div><svg id="arrows" viewBox="0 0 564 650" aria-hidden="true"></svg></div>
-<p class="arrow-note"><span id="arrow-count"></span>箭头越粗深，收录记载越多；不代表优劣或胜率。</p>
 <div class="board-tools"><button id="undo">↶ 撤回</button><button id="redo">↷ 重走</button><button id="reset">重置本局</button><button id="standard" class="quiet">标准开局</button></div>
-<p id="move-message" class="move-message" role="status" aria-live="polite">点选棋子，再点带圆点的落点。方向键与回车也可操作。</p>
-<div class="current-game"><span class="eyebrow">当前棋局</span><h2 id="game-title">自由自战 · 标准开局</h2><p id="game-note" class="muted">红黑双方均由你走棋。</p><p id="game-warning" class="partial-notice" hidden></p><div id="line-controls" hidden><label>谱中线路<select id="line-select"></select></label><div class="line-actions"><button id="line-start">原始局面</button><button id="line-prev">← 谱中上一手</button><button id="line-next">谱中下一手 →</button></div><p id="line-status" class="muted"></p></div></div>
-<details class="history"><summary>本次走子 <span id="history-count">0 手</span></summary><ol id="history"></ol></details>
+<p id="move-message" class="move-message" role="status" aria-live="polite">点选棋子，再点合法落点；方向键与回车也可操作。</p>
+<div class="board-caption"><p class="arrow-note"><span id="arrow-count"></span>箭头粗深表示记载较多。</p><details class="sound-settings"><summary>声音设置</summary><div class="board-sound" role="group" aria-label="棋具音效"><button id="sound-toggle" class="quiet" aria-pressed="true">音效：开</button><label for="sound-volume">音量</label><input id="sound-volume" type="range" min="0" max="60" value="22" aria-label="棋具音量"><button id="sound-preview" class="quiet">试听</button></div><p id="sound-note" class="sound-note" aria-live="polite">偏好保存在本机</p></details></div>
+<div class="current-game"><div class="section-label"><span class="eyebrow">当前推演</span><details class="history"><summary>走子记录 <span id="history-count">0 手</span></summary><ol id="history"></ol></details></div><h2 id="game-title">自由自战 · 标准开局</h2><p id="game-note" class="muted">红黑双方均由你走棋。</p><p id="game-warning" class="partial-notice" hidden></p><div id="line-controls" hidden><label>谱中线路<select id="line-select"></select></label><div class="line-actions"><button id="line-start">原始局面</button><button id="line-prev">← 谱中上一手</button><button id="line-next">谱中下一手 →</button></div><p id="line-status" class="muted"></p></div></div>
 </section>
-<aside class="study" aria-labelledby="study-title">
-<div class="study-heading"><p class="eyebrow">与棋谱对照</p><h2 id="study-title">这一手，书中怎么走</h2><div class="study-modes" aria-label="对照方式"><button id="mode-position" aria-pressed="true">完整局面对照</button><button id="mode-comparison" aria-pressed="false">按己方走法比较</button></div></div>
-<div id="position-panel"><p id="match-count" role="status">正在读取书目…</p>
+<aside class="study" aria-label="棋谱对照">
+<nav class="study-modes" aria-label="对照方式"><button id="mode-position" aria-pressed="true">当前局面<span>看着法与原注</span></button><button id="mode-comparison" aria-pressed="false">应法比较<span>固定己方走法</span></button></nav>
+<div id="position-panel"><p id="match-count" class="match-count" role="status">正在读取书目…</p>
 <div id="data-error" class="notice" hidden><p id="error-text"></p><button id="retry">重新加载棋谱</button></div>
 <div id="match-body" hidden>
-<section class="next-section"><div class="section-label"><h3>谱中下一手</h3><label class="toggle"><input id="show-arrow" type="checkbox" checked>棋盘箭头</label></div><div id="next-moves" class="next-moves"></div><p id="next-note" class="muted"></p><button id="play-choice" class="primary">走这一步</button></section>
-<section class="source-section"><div class="section-label"><div class="source-heading"><h3>出处与原注</h3><span id="annotation-cue" class="annotation-cue" role="status" aria-live="polite" aria-atomic="true" hidden></span></div><span id="source-total" class="muted"></span></div><label class="field-label" for="source-select">选择棋谱来源</label><input id="source-search" type="search" aria-label="筛选匹配来源" placeholder="按书名或局名筛选来源"><select id="source-select"></select><div id="source-content"></div></section>
+<section class="next-section"><div class="section-label"><h2>谱中着法</h2><label class="toggle"><input id="show-arrow" type="checkbox" checked>棋盘箭头</label></div><div id="next-moves" class="next-moves"></div><div class="move-confirm"><p id="next-note" class="muted"></p><button id="play-choice" class="primary">走这一步</button></div></section>
+<section class="source-section"><div class="section-label"><h2>来源与后续</h2><span id="annotation-cue" class="annotation-cue" role="status" aria-live="polite" aria-atomic="true" hidden></span></div><details id="source-picker" class="source-picker"><summary>更换棋谱与路径 <span id="source-total"></span></summary><div class="picker-fields"><label class="field-label" for="source-search">搜索范围内来源</label><input id="source-search" type="search" placeholder="书名或局名"><label class="field-label" for="source-select">棋谱与路径</label><select id="source-select"></select><p id="source-filter-status" class="muted" role="status"></p></div></details><div id="source-content"></div></section>
 </div>
-<div id="no-match" class="notice" hidden><strong>收录棋谱中暂无相同局面</strong><p>可以继续自战。每走一步都会重新查找，换个走子顺序也可能与书中相遇。</p></div>
+<div id="no-match" class="notice" hidden><strong id="no-match-title">当前研究范围内暂无相同局面</strong><p>可继续自战，或在上方修改研究范围。不会自动扩大到全部棋谱。</p></div>
 </div>
-<section id="comparison-panel" class="comparison-panel" aria-label="按己方走法比较" hidden>
-<div class="comparison-setup"><h3>己方走法相同，对方如何应对</h3><p class="muted">固定一方从标准开局起的走法，比较谱中的不同应法。预览不改变当前棋盘。</p><fieldset class="comparison-side"><legend>固定哪一方</legend><label><input type="radio" name="comparison-side" value="w" checked>红方</label><label><input type="radio" name="comparison-side" value="b">黑方</label></fieldset><button id="comparison-freeze" class="primary">固定当前走法</button><details id="comparison-sequence"><summary id="comparison-fixed">尚未固定走法</summary><ol id="comparison-moves"></ol></details><p id="comparison-stage" class="muted"></p><p class="comparison-hint">条件会保留；继续推演后，可重新固定或换一方比较。</p></div>
-<div class="comparison-results"><p id="comparison-status" role="status"></p><div id="comparison-error" hidden><p id="comparison-error-text"></p><button id="comparison-retry">重试比较</button><button id="comparison-reload" class="quiet">重新读取书目</button></div><label class="field-label" for="comparison-search">筛选比较结果</label><input id="comparison-search" type="search" placeholder="按书名或局名筛选"><p id="comparison-count" class="muted"></p><p id="comparison-entry-message" role="status"></p><div id="comparison-groups"></div><nav class="comparison-pages" aria-label="比较结果分页"><button id="comparison-prev">← 上一页</button><span id="comparison-page"></span><button id="comparison-next">下一页 →</button></nav></div>
+<section id="comparison-panel" aria-label="按己方走法比较" hidden>
+<p id="comparison-scope" class="comparison-scope"></p>
+<div class="comparison-setup"><div class="section-label"><h2>固定比较条件</h2><fieldset class="comparison-side"><legend class="sr-only">固定哪一方</legend><label><input type="radio" name="comparison-side" value="w" checked>红方</label><label><input type="radio" name="comparison-side" value="b">黑方</label></fieldset></div><details id="comparison-sequence"><summary id="comparison-fixed">尚未固定走法</summary><ol id="comparison-moves"></ol></details><p id="comparison-stage" class="muted"></p><div class="comparison-update"><p id="comparison-progress" role="status"></p><button id="comparison-freeze">用当前走法更新</button></div></div>
+<div class="comparison-results"><p id="comparison-status" role="status"></p><div id="comparison-error" hidden><p id="comparison-error-text"></p><button id="comparison-retry">重试比较</button><button id="comparison-reload" class="quiet">重新读取书目</button></div><label class="field-label" for="comparison-search">筛选结果中的棋谱</label><input id="comparison-search" type="search" placeholder="书名或局名"><p id="comparison-count" class="muted"></p><p id="comparison-entry-message" role="status"></p><div id="comparison-groups"></div><nav class="comparison-pages" aria-label="比较结果分页"><button id="comparison-prev">← 上一页</button><span id="comparison-page"></span><button id="comparison-next">下一页 →</button></nav></div>
 </section>
 </aside>
 </div>
-<footer><span id="collection-summary">棋谱书目读取中</span><p>仅供个人研究。原注按出处保留，上传者不等于原作者或评注者。支持基本合法走子，不作长将、长捉等完整竞赛裁定；无 AI 自动对弈或联机同步。</p></footer>
+<footer><span id="collection-summary">棋谱书目读取中</span><p>自行走红黑双方，无自动对弈。支持基本合法走子，不作长将、长捉等完整竞赛裁定。</p></footer>
 </main>
 </div>
-<dialog id="library-dialog" aria-labelledby="library-title"><div class="dialog-head"><div><p class="eyebrow" id="library-summary">名著棋谱目录</p><h2 id="library-title">从原谱开始</h2></div><button id="close-library" aria-label="关闭棋谱书架">关闭 ✕</button></div><p class="muted">从标准布子、红方先行的棋谱开始；随谱走到的中局和残局同样保留。目录中无可用棋谱的作品会单独注明。</p><div class="library-filters"><label>作品<select id="book-filter"><option value="">全部目录</option></select></label><label>查找局名<input id="search" type="search" placeholder="例如：顺炮、基本定式"></label></div><p id="library-count" class="muted"></p><p id="library-message" role="status"></p><div id="game-list"></div><button id="more-games" hidden>再显示 50 局</button></dialog>
+<dialog id="library-dialog" aria-labelledby="library-title"><div class="dialog-head"><div><p class="eyebrow" id="library-summary">名著棋谱目录</p><h2 id="library-title">从原谱开始</h2></div><button id="close-library" aria-label="关闭棋谱书架">关闭 ✕</button></div><p id="library-scope" class="muted"></p><p class="muted">从标准开局开始，沿谱推演或自行探索。</p><div class="library-filters"><label>范围内按作品细筛<select id="book-filter"><option value="">全部目录</option></select></label><label>查找局名<input id="search" type="search" placeholder="例如：顺炮、基本定式"></label></div><p id="library-count" class="muted"></p><p id="library-message" role="status"></p><div id="game-list"></div><button id="more-games" hidden>再显示 50 局</button></dialog>
+<dialog id="scope-dialog" aria-labelledby="scope-title"><div class="scope-dialog-layout"><div class="dialog-head"><div><p class="eyebrow">全页共用 · 不改变盘面</p><h2 id="scope-title">选择研究范围</h2></div><button id="scope-cancel">取消</button></div><fieldset class="scope-kind"><legend class="sr-only">选择范围方式</legend><label><input type="radio" name="scope-kind" value="books" checked>按作品多选</label><label><input type="radio" name="scope-kind" value="game">单局精读</label></fieldset><label class="field-label" for="scope-search">搜索书名或局名</label><input id="scope-search" type="search" placeholder="例如：梅花谱、顺炮"><div class="scope-toolbar"><p id="scope-search-status" role="status"></p><button id="scope-clear" class="quiet">清空选择</button><button id="scope-all-draft" class="quiet">选择全部</button></div><div class="scope-options"><p class="scope-help">简介仅指当前收录。短注含标记，长短只按字数统计；每步原注见阅读区。</p><div id="scope-books"></div><div id="scope-games" hidden></div><button id="scope-more" hidden>再显示 40 局</button></div><div class="scope-commit"><p id="scope-draft-summary" role="status"></p><button id="scope-apply" class="primary">应用范围</button></div></div></dialog>
 <noscript><p>棋盘需要启用 JavaScript。</p></noscript>
 </body></html>
