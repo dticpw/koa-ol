@@ -1,7 +1,8 @@
-// One current preference, one membership set. Raw library/comparison caches stay untouched.
+// One preference stores the active range and, only while reading one game, one return target.
 export const SCOPE_KEY='xiangqi-research-scope-v1';
 export const allScope=()=>({version:1,mode:'all'});
 export const emptyScope=()=>({version:1,mode:'books',bookIds:[]});
+const scopeShape=v=>v?.version===1&&(v.mode==='all'||v.mode==='game'&&typeof v.gameId==='string'||v.mode==='books'&&Array.isArray(v.bookIds)&&v.bookIds.every(id=>typeof id==='string'));
 export function normalizeScope(value,catalogue,books){
   const bad=()=>({value:emptyScope(),notice:'保存的研究范围无法识别，现为空范围。请重新选择或主动恢复全部。'});
   if(!value||value.version!==1)return bad();
@@ -19,11 +20,18 @@ export class ResearchScope {
   constructor(catalogue,books,value=allScope()){
     this.catalogue=catalogue;this.books=books;
     const normalized=normalizeScope(value,catalogue,books);this.value=normalized.value;this.notice=normalized.notice;
+    this.returnTo=null;this.returnNotice='';
+    if(value&&Object.hasOwn(value,'returnTo')){
+      if(!scopeShape(value.returnTo))this.notice=[this.notice,'保存的原范围返回记录已损坏，无法返回原范围；当前范围仍按有效标识使用，请重新选择。'].filter(Boolean).join(' ');
+      else{const target=normalizeScope(value.returnTo,catalogue,books);this.returnTo=target.value;this.returnNotice=target.notice;this.notice=[this.notice,target.notice&&`原范围：${target.notice}`].filter(Boolean).join(' ');}
+    }
     const v=this.value,selected=new Set(v.bookIds||[]);
     this.ids=new Set(Object.values(catalogue.games).filter(g=>v.mode==='all'||(v.mode==='game'?g.id===v.gameId:g.book_ids.some(id=>selected.has(id)))).map(g=>g.id));
     this.identity=JSON.stringify(v.mode==='books'?{...v,bookIds:[...selected].sort()}:v);
   }
   has(id){return this.ids.has(id);}
+  get preference(){return this.returnTo?{...this.value,returnTo:this.returnTo}:this.value;}
+  onlyGame(gameId){return new ResearchScope(this.catalogue,this.books,{version:1,mode:'game',gameId,returnTo:this.returnTo||this.value});}
   get label(){
     const v=this.value;
     if(v.mode==='all')return `全部可用 · ${this.ids.size} 局`;
@@ -48,6 +56,6 @@ export function readScope(catalogue,books){
   catch{const scope=new ResearchScope(catalogue,books,emptyScope());scope.notice='无法读取本机范围偏好，现为空范围。请重新选择或恢复全部；本次选择仍可使用。';return scope;}
 }
 export function saveScope(scope){
-  try{localStorage.setItem(SCOPE_KEY,JSON.stringify(scope.value));return '';}
-  catch{return '本机无法保存范围偏好；本页选择已生效，刷新后需重新选择。';}
+  try{localStorage.setItem(SCOPE_KEY,JSON.stringify(scope.preference));return '';}
+  catch{return '本机无法保存范围偏好；本页选择及返回仍可使用，刷新可能恢复旧记录，请核对范围。';}
 }

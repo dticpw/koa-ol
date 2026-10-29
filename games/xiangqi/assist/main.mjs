@@ -3,7 +3,7 @@ import {Library,annotations,pathLabel,partialText} from './library.mjs';
 import {Comparison,conditionFromHistory,originalPath} from './comparison.mjs?v=d0e0359847ba';
 import {createBoardAudio} from './board-audio.mjs?v=7aba1a51d8b3';
 import {createBoardMotion} from './board-motion.mjs?v=447f4abe6fc1';
-import {ResearchScope,readScope,saveScope,allScope,emptyScope} from './research-scope.mjs?v=9e79361bcab7';
+import {ResearchScope,readScope,saveScope,allScope,emptyScope} from './research-scope.mjs?v=0cb409da1af4';
 import {createScopePicker} from './scope-picker.mjs?v=e22779776713';
 import {followupLines,lineConclusions,gameResult} from './followup.mjs?v=317d49d8736d';
 import {createNoteReader,afterNotes} from './note-reader.mjs?v=92959c5479c8';
@@ -24,14 +24,18 @@ function renderScope(){
   $('scope-relation').textContent=scopeRelation;
   $('scope-edit').disabled=!researchScope||loading||!library?.catalogue;$('scope-restore').disabled=$('scope-edit').disabled;
   $('scope-restore').hidden=researchScope?.value.mode==='all';
+  $('scope-return').hidden=!researchScope?.returnTo;$('scope-return').disabled=$('scope-edit').disabled;
+  const origin=researchScope?.returnTo?new ResearchScope(researchScope.catalogue,researchScope.books,researchScope.returnTo).label:'';
+  $('scope-return-summary').textContent=origin?`返回目标：${origin}`:'';
+  $('scope-return').setAttribute('aria-label',origin?`返回原范围：${origin}`:'返回原范围');
   $('comparison-scope').textContent=researchScope?`研究范围：${researchScope.label}`:'';
   if(researchScope)$('browse-count').textContent=`${researchScope.ids.size} 局 ↗`;
 }
-function applyResearchScope(value){
+function applyResearchScope(value,notice=''){
   if(!library?.catalogue)return;
   const previousSource=sourceId;
   researchScope=new ResearchScope(library.catalogue,library.manifest.books,value);
-  researchScope.notice=saveScope(researchScope);
+  researchScope.notice=[notice,researchScope.notice,saveScope(researchScope)].filter(Boolean).join(' ');
   cancelOpen();matchSerial++;sourceSerial++;comparisonSerial++;
   matchRequest?.abort();sourceRequest?.abort();comparisonRequest?.abort();
   boardAudio.stop();boardMotion.cancel();selected=null;renderBoard();
@@ -44,6 +48,7 @@ function applyResearchScope(value){
   if(fixedCondition)void queryComparison();
 }
 createScopePicker({getScope:()=>researchScope,apply:applyResearchScope,ResearchScope,allScope,emptyScope});
+$('scope-return').addEventListener('click',()=>{if(!researchScope?.returnTo)return;applyResearchScope(researchScope.returnTo,researchScope.returnNotice);$('scope-edit').focus({preventScroll:true});});
 const boardAudio=createBoardAudio({toggle:$('sound-toggle'),volume:$('sound-volume'),preview:$('sound-preview'),note:$('sound-note')});
 const boardMotion=createBoardMotion($('board'),squares,boardAudio);let renderedState=null;
 const svg=(tag,attrs)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,v);return n;};
@@ -243,7 +248,7 @@ function renderNext(){
       fields.append(el('p','此着法的棋谱与来源路径','move-source-label'),searchLabel,search,select,status);
     }
     const only=el('button','只看本谱','quiet move-only');only.dataset.control='only';only.dataset.game=ref.gameId;only.setAttribute('aria-label','只看本谱：'+game.title);
-    only.addEventListener('click',()=>{sourceId=ref.gameId;pathId=ref.nodeId;applyResearchScope({version:1,mode:'game',gameId:ref.gameId});});sourceLine.append(only);
+    only.addEventListener('click',()=>{sourceId=ref.gameId;pathId=ref.nodeId;applyResearchScope(researchScope.onlyGame(ref.gameId).preference);$('scope-return').focus({preventScroll:true});});sourceLine.append(only);
     const cached=library.bodies.get(ref.gameId);
     if(cached&&afterNotes(cached,ref,uci).length){const read=el('button','走后原注','quiet move-read-note');read.dataset.control='read-note';read.setAttribute('aria-label',`阅读走后原注：${game.title} · ${pathLabel(ref.childId)}`);read.addEventListener('click',()=>chooseMoveSource(uci,ref,true));head.append(read);}
     if(toggle)head.append(toggle);row.append(head,sourceLine);if(fields)row.append(fields);return row;
@@ -416,7 +421,7 @@ async function loadData(){
   $('browse-count').textContent='读取中';$('collection-summary').textContent='棋谱书目读取中';renderLibrary();renderScope();
   try{
     await lib.open();if(ticket!==session)return;
-    researchScope=researchScope?new ResearchScope(lib.catalogue,lib.manifest.books,researchScope.value):readScope(lib.catalogue,lib.manifest.books);
+    researchScope=researchScope?new ResearchScope(lib.catalogue,lib.manifest.books,researchScope.preference):readScope(lib.catalogue,lib.manifest.books);
     const m=lib.manifest,available=m.books.filter(b=>b.game_ids.length).length;
     $('browse-count').textContent=`${m.counts.runtime_games} 局 ↗`;
     $('collection-summary').textContent=`${m.books.length} 部目录 · ${available} 部含可用棋谱 · 共 ${m.counts.runtime_games} 局，其中 ${m.counts.game_statuses.partial||0} 局部分可用`;
